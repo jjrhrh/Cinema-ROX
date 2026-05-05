@@ -19,15 +19,25 @@
 <div id="heroSection" class="hero-section">
   <div class="hero-backdrop" id="heroBackdrop"></div>
   <div class="hero-gradient"></div>
-  <div class="hero-content">
-    <div class="hero-logo">Cinema <span>ROX</span></div>
-    <div class="hero-info" id="heroInfo"></div>
-    <div class="hero-search-wrap">
-      <input type="text" id="searchInput"
-        class="hero-search-input"
-        placeholder="🔍 ابحث عن فيلم أو مسلسل..."
-        oninput="handleSearch(this.value)">
+  <div class="hero-logo">Cinema <span>ROX</span></div>
+
+  <div class="swiper hero-swiper" id="heroSwiper">
+    <div class="swiper-wrapper" id="heroSwiperWrapper">
+      <!-- slides injected by JS -->
     </div>
+  </div>
+
+  <div class="hero-info-panel" id="heroInfoPanel">
+    <div class="hero-info-year" id="heroInfoYear"></div>
+    <div class="hero-info-title" id="heroInfoTitle"></div>
+    <div class="hero-info-caps" id="heroInfoCaps"></div>
+  </div>
+
+  <div class="hero-search-wrap">
+    <input type="text" id="searchInput"
+      class="hero-search-input"
+      placeholder="🔍 ابحث عن فيلم أو مسلسل..."
+      oninput="handleSearch(this.value)">
   </div>
 </div>
 <!-- PAGES -->
