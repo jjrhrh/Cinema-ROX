@@ -466,5 +466,5 @@ document.addEventListener('DOMContentLoaded', async () => {
   }, 1500);
 
   bnavGo('home');
-  await Promise.all([loadHeroSlider(), loadHomePage()]);
+  await Promise.all([loadHeroBanner(), loadHomePage()]);
 });
