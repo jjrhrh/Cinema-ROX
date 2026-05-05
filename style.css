@@ -471,7 +471,9 @@ html, body {
   position: relative !important;
   width: 100% !important;
   height: auto !important;
-  padding-bottom: 80px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  padding-bottom: 24px !important;
   overflow: visible !important;
   background: var(--bg) !important;
 }
@@ -519,7 +521,14 @@ html, body {
   align-items: flex-end !important;
 }
 .hero-search-wrap {
+  position: relative !important;
   width: 100% !important;
+  padding: 0 16px !important;
+  bottom: unset !important;
+  left: unset !important;
+  transform: none !important;
+  margin-top: 10px !important;
+  z-index: 3 !important;
 }
 .hero-search-input {
   width: 100% !important;
