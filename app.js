@@ -462,7 +462,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   bnavGo('home');
   try {
-    await Promise.all([loadHeroBanner(), loadHomePage()]);
+    await Promise.all([loadHeroSlider(), loadHomePage()]);
   } catch(e) {
     console.error('خطأ في التحميل:', e);
   }
