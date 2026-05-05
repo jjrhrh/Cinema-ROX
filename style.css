@@ -484,3 +484,77 @@ html, body {
   padding: 40px 16px; text-align: center;
   color: var(--text3); font-size: 0.9rem;
 }
+/* ===== HERO BACKDROP ===== */
+.hero-section {
+  position: relative !important;
+  width: 100% !important;
+  height: 70vh !important;
+  overflow: hidden !important;
+  background: var(--bg) !important;
+}
+.hero-backdrop {
+  position: absolute !important;
+  inset: 0 !important;
+  background-size: cover !important;
+  background-position: center top !important;
+  background-repeat: no-repeat !important;
+  transform: scale(1.05);
+  transition: background-image 1s ease, transform 8s ease !important;
+  filter: brightness(0.75) !important;
+}
+.hero-backdrop.loaded { transform: scale(1) !important; }
+.hero-gradient {
+  position: absolute !important;
+  inset: 0 !important; z-index: 2 !important;
+  background: linear-gradient(
+    to bottom,
+    rgba(10,10,15,0.15) 0%,
+    rgba(10,10,15,0.45) 50%,
+    var(--bg) 100%
+  ) !important;
+}
+.hero-content {
+  position: absolute !important;
+  inset: 0 !important; z-index: 3 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  padding: 20px 16px 24px !important;
+}
+.hero-logo {
+  font-size: 1.5rem !important;
+  font-weight: 900 !important;
+  color: var(--text) !important;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.8) !important;
+  align-self: flex-end !important;
+}
+.hero-logo span { color: var(--accent) !important; }
+.hero-info {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  align-items: flex-end !important;
+}
+.hero-search-wrap {
+  width: 100% !important;
+}
+.hero-search-input {
+  width: 100% !important;
+  padding: 14px 22px !important;
+  background: rgba(0,0,0,0.45) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1.5px solid rgba(255,255,255,0.15) !important;
+  border-radius: var(--radius-full) !important;
+  color: var(--text) !important;
+  font-family: 'Cairo', sans-serif !important;
+  font-size: 1rem !important;
+  outline: none !important;
+  transition: border-color 0.3s, box-shadow 0.3s !important;
+  text-align: right !important;
+}
+.hero-search-input::placeholder { color: rgba(255,255,255,0.45) !important; }
+.hero-search-input:focus {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 24px var(--accent-glow) !important;
+}
+/* ===== END HERO BACKDROP ===== */
