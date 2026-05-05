@@ -297,3 +297,137 @@ function playTrailer(key) {
     frame.src = '';
   }, { once: true });
 }
+// ===== LIBRARY HELPERS =====
+function getLib(key) {
+  try { return JSON.parse(localStorage.getItem(key) || '[]'); } catch { return []; }
+}
+function saveLib(key, arr) {
+  localStorage.setItem(key, JSON.stringify(arr));
+}
+function addToWatchlist(id, type) {
+  const list = getLib('rox_watchlist');
+  if (list.find(i => i.id === id)) { showToast('✅ موجود في قائمتك مسبقاً'); return; }
+  list.unshift({ id, type, addedAt: Date.now() });
+  saveLib('rox_watchlist', list);
+  showToast('❤️ تمت الإضافة إلى قائمتك');
+}
+function addToWatchLater(id, type) {
+  const list = getLib('rox_watchlater');
+  if (list.find(i => i.id === id)) { showToast('⏰ موجود في سأشاهده مسبقاً'); return; }
+  list.unshift({ id, type, addedAt: Date.now() });
+  saveLib('rox_watchlater', list);
+  showToast('⏰ تمت الإضافة إلى سأشاهده لاحقاً');
+}
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.className = 'rox-toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.classList.add('show'), 10);
+  setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 400); }, 2500);
+}
+
+// ===== LIBRARY PAGE =====
+async function loadLibraryPage() {
+  const page = document.getElementById('libraryPage');
+  if (!page) return;
+  page.innerHTML = '<div class="loading">⏳ جاري تحميل المكتبة...</div>';
+
+  const watchlist  = getLib('rox_watchlist');
+  const watchlater = getLib('rox_watchlater');
+
+  const fetchCards = async (items) => {
+    const cards = await Promise.all(items.slice(0, 12).map(async item => {
+      try {
+        const ep  = item.type === 'tv' ? `/tv/${item.id}` : `/movie/${item.id}`;
+        const res = await fetch(buildTMDBUrl(ep));
+        const d   = await res.json();
+        const title  = item.type === 'movie' ? (d.title || d.original_title) : (d.name || d.original_name);
+        const poster = d.poster_path ? `${CONFIG.IMAGES.POSTER_MD}${d.poster_path}` : CONFIG.IMAGES.PLACEHOLDER;
+        const rating = d.vote_average ? d.vote_average.toFixed(1) : '';
+        return `
+          <div class="movie-card" onclick="openDetail(${item.id},'${item.type}')">
+            <div class="movie-poster-wrap">
+              <img class="movie-poster" src="${poster}" alt="${title}" loading="lazy"
+                   onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+              ${rating ? `<span class="movie-rating">⭐ ${rating}</span>` : ''}
+              <div class="movie-overlay"><span class="play-icon">▶</span></div>
+            </div>
+          </div>`;
+      } catch { return ''; }
+    }));
+    return cards.join('');
+  };
+
+  const wlHTML  = watchlist.length  ? await fetchCards(watchlist)  : '<p class="lib-empty">لا يوجد أفلام في قائمتك بعد 🎬</p>';
+  const wlrHTML = watchlater.length ? await fetchCards(watchlater) : '<p class="lib-empty">لم تضف شيئاً لسأشاهده بعد ⏰</p>';
+
+  page.innerHTML = `
+    <div class="lib-header"><h2 class="lib-title">📚 مكتبتي</h2></div>
+    <div class="lib-section">
+      <div class="section-header">
+        <span class="section-bar"></span>
+        <h3 class="section-title">❤️ قائمتي</h3>
+      </div>
+      <div class="movies-row">${wlHTML}</div>
+    </div>
+    <div class="lib-section">
+      <div class="section-header">
+        <span class="section-bar"></span>
+        <h3 class="section-title">⏰ سأشاهده لاحقاً</h3>
+      </div>
+      <div class="movies-row">${wlrHTML}</div>
+    </div>`;
+}
+
+// ===== SEARCH =====
+let searchDebounce = null;
+function handleSearch(val) {
+  clearTimeout(searchDebounce);
+  const q = val.trim();
+  if (q.length < CONFIG.SEARCH.MIN_CHARS) {
+    const c = document.getElementById('searchResults');
+    if (c) c.innerHTML = '';
+    return;
+  }
+  searchDebounce = setTimeout(() => runSearch(q), CONFIG.SEARCH.DEBOUNCE_MS);
+}
+
+async function runSearch(q) {
+  const container = document.getElementById('searchResults');
+  if (!container) return;
+  container.innerHTML = '<div class="loading">🔍 جاري البحث...</div>';
+  try {
+    const res  = await fetch(buildTMDBUrl('/search/multi', { query: q, page: 1 }));
+    const data = await res.json();
+    const results = (data.results || [])
+      .filter(i => (i.media_type === 'movie' || i.media_type === 'tv') && i.poster_path)
+      .slice(0, CONFIG.SEARCH.MAX_RESULTS);
+    if (!results.length) {
+      container.innerHTML = '<p class="lib-empty">لا توجد نتائج 😕</p>';
+      return;
+    }
+    container.innerHTML = `<div class="movies-row">
+      ${results.map(m => buildMovieCard(m, m.media_type)).join('')}
+    </div>`;
+  } catch {
+    container.innerHTML = '<p class="lib-empty">حدث خطأ في البحث ❌</p>';
+  }
+}
+
+// ===== STUBS =====
+function openMovieOfDay() {}
+function openStats()      {}
+function openSurprise()   {}
+function openAI()         {}
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', async () => {
+  setTimeout(() => {
+    const s = document.getElementById('splash-screen');
+    if (s) { s.style.opacity = '0'; setTimeout(() => s.remove(), 600); }
+  }, 1500);
+
+  bnavGo('home');
+  await Promise.all([loadHeroSlider(), loadHomePage()]);
+});
