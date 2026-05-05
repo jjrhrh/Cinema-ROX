@@ -144,3 +144,4 @@ function buildTMDBUrl(endpoint, params = {}) {
   }
   return url.toString();
 }
+const IMG_W300  = 'https://image.tmdb.org/t/p/w300';
