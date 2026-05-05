@@ -471,6 +471,7 @@ html, body {
   position: relative !important;
   width: 100% !important;
   height: auto !important;
+  padding-bottom: 80px !important;
   overflow: visible !important;
   background: var(--bg) !important;
 }
@@ -579,7 +580,7 @@ html, body {
   transform: scale(1);
   box-shadow: 0 20px 60px rgba(0,0,0,0.85);
 }
-.hero-info-panel {
+.hero-info-container {
   text-align: center;
   padding: 16px 20px 0;
   position: relative; z-index: 3;
@@ -606,3 +607,11 @@ html, body {
   padding: 5px 14px; border-radius: var(--radius-full);
 }
 .hero-cap-rating { color: var(--gold); border-color: rgba(245,197,24,0.3); }
+.hero-info-genres {
+  display: flex; justify-content: center;
+  flex-wrap: wrap; gap: 8px;
+  margin-bottom: 6px;
+}
+.hero-info-rating {
+  display: flex; justify-content: center;
+} 
