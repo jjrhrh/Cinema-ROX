@@ -426,17 +426,23 @@ function openAI()         {}
 
 async function loadHeroBanner() {
   try {
-    const url  = `${CONFIG.API.TMDB_BASE}/movie/popular?api_key=${CONFIG.KEYS.TMDB}&language=ar-SA`;
+    const url  = buildTMDBUrl('/trending/movie/week', { page: 1 });
     const res  = await fetch(url);
     const data = await res.json();
-    heroMovies = (data.results || []).filter(m => m.backdrop_path);
-    if (!heroMovies.length) return;
-    updateHeroBanner(heroMovies[0]);
-    heroAutoTimer = setInterval(() => {
-      heroIdx = (heroIdx + 1) % heroMovies.length;
-      updateHeroBanner(heroMovies[heroIdx]);
-    }, 6000);
-  } catch(e) {}
+    const movies = (data.results || []).filter(m => m.backdrop_path);
+    if (!movies.length) return;
+
+    // اختر فيلم عشوائي من أول 5
+    const m = movies[Math.floor(Math.random() * Math.min(5, movies.length))];
+    updateHeroBanner(m);
+
+    // تبديل تلقائي كل 7 ثواني
+    let idx = 0;
+    setInterval(() => {
+      idx = (idx + 1) % Math.min(7, movies.length);
+      updateHeroBanner(movies[idx]);
+    }, 7000);
+  } catch(e) { console.warn('Hero:', e); }
 }
 
 function updateHeroBanner(movie) {
