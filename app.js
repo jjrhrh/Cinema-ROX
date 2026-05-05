@@ -124,3 +124,53 @@ async function loadHeroSlider() {
 
   startHeroTimer();
 }
+// ===== HOME PAGE =====
+function buildMovieCard(movie, type = 'movie') {
+  const title  = type === 'movie'
+    ? (movie.title || movie.original_title)
+    : (movie.name  || movie.original_name);
+  const poster = movie.poster_path
+    ? `${CONFIG.IMAGES.POSTER_MD}${movie.poster_path}`
+    : CONFIG.IMAGES.PLACEHOLDER;
+  const rating = movie.vote_average ? movie.vote_average.toFixed(1) : '';
+  return `
+    <div class="movie-card" onclick="openDetail(${movie.id},'${type}')">
+      <div class="movie-poster-wrap">
+        <img class="movie-poster" src="${poster}" alt="${title}" loading="lazy"
+             onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+        ${rating ? `<span class="movie-rating">⭐ ${rating}</span>` : ''}
+        <div class="movie-overlay"><span class="play-icon">▶</span></div>
+      </div>
+    </div>`;
+}
+
+function buildSection(title, movies, type = 'movie') {
+  if (!movies.length) return '';
+  return `
+    <div class="home-section">
+      <div class="section-header">
+        <span class="section-bar"></span>
+        <h2 class="section-title">${title}</h2>
+      </div>
+      <div class="movies-row">
+        ${movies.map(m => buildMovieCard(m, type)).join('')}
+      </div>
+    </div>`;
+}
+
+async function loadHomePage() {
+  const page = document.getElementById('homePage');
+  if (!page) return;
+  page.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
+
+  const [trending, topRated, series] = await Promise.all([
+    fetchMovies('/movie/popular'),
+    fetchMovies('/movie/top_rated'),
+    fetchMovies('/tv/popular'),
+  ]);
+
+  page.innerHTML =
+    buildSection('🔥 الأفلام الرائجة', trending,  'movie') +
+    buildSection('⭐ الأعلى تقييماً',  topRated,  'movie') +
+    buildSection('📺 المسلسلات',        series,    'tv');
+}
