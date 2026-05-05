@@ -280,7 +280,7 @@ async function openDetail(id, type = 'movie') {
   } catch (err) {
     page.innerHTML = `
       <div class="loading">❌ تعذّر تحميل التفاصيل<br><small>${err.message}</small></div>
-      <div style="text-align:center;padding:20px">
+      <div class="loading">
         <button class="detail-btn detail-btn-watch" onclick="goBack()">← رجوع</button>
       </div>`;
   }
