@@ -460,10 +460,13 @@ function updateHeroBanner(movie) {
 // ===== END HERO =====
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', async () => {
-  setTimeout(() => {
-    const s = document.getElementById('splash-screen');
-    if (s) { s.style.opacity = '0'; setTimeout(() => s.remove(), 600); }
-  }, 1500);
+  const s = document.getElementById('splash-screen');
+  if (s) {
+    setTimeout(() => {
+      s.style.opacity = '0';
+      setTimeout(() => { if(s.parentNode) s.remove(); }, 700);
+    }, 1800);
+  }
 
   bnavGo('home');
   await Promise.all([loadHeroBanner(), loadHomePage()]);
