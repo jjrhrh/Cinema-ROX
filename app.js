@@ -171,14 +171,17 @@ function buildMovieCard(movie, type = 'movie') {
     ? `${CONFIG.IMAGES.POSTER_MD}${movie.poster_path}`
     : CONFIG.IMAGES.PLACEHOLDER;
   const rating = movie.vote_average ? movie.vote_average.toFixed(1) : '';
+  const year   = (movie.release_date || movie.first_air_date || '').slice(0,4);
   return `
     <div class="movie-card" onclick="openDetail(${movie.id},'${type}')">
       <div class="movie-poster-wrap">
         <img class="movie-poster" src="${poster}" alt="${title}" loading="lazy"
              onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+        ${year   ? `<span class="movie-year-badge">${year}</span>` : ''}
         ${rating ? `<span class="movie-rating">⭐ ${rating}</span>` : ''}
         <div class="movie-overlay"><span class="play-icon">▶</span></div>
       </div>
+      <div class="movie-title-bar">${title}</div>
     </div>`;
 }
 
