@@ -481,20 +481,11 @@ html, body {
   overflow: hidden !important;
   background: var(--bg) !important;
 }
-.hero-backdrop {
-  position: absolute !important;
-  inset: 0 !important;
-  z-index: 1 !important;
-  background-size: cover !important;
-  background-position: center !important;
-  filter: blur(15px) brightness(0.4) !important;
-  transform: scale(1.1) !important;
-  opacity: 0;
-  transition: opacity 0.6s ease !important;
+..hero-backdrop {
+  display: none !important;
 }
 .hero-backdrop.loaded {
-  opacity: 1 !important;
-  display: block !important;
+  display: none !important;
 }
 .hero-gradient {
   position: absolute !important;
@@ -714,16 +705,19 @@ html, body {
 }
 /* ===== TRENDING BADGE ===== */
 .hero-trending-badge {
-  display: inline-block;
+  display: block;
   background: #e50914;
   color: #ffffff;
   font-size: 0.72rem;
   font-weight: 900;
   padding: 5px 16px;
   border-radius: var(--radius-full);
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   box-shadow: 0 0 18px rgba(229,9,20,0.6);
   letter-spacing: 0.5px;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
 }
 /* ===== GOLD RATING CAP ===== */
 .hero-cap-gold {
