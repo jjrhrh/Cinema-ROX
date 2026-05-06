@@ -228,7 +228,7 @@ html, body {
 
 /* ===== MOVIE CARD ===== */
 .movie-card {
-  flex: 0 0 125px;
+  flex: 0 0 130px;
   scroll-snap-align: start;
   cursor: pointer;
   border-radius: 25px;
@@ -592,7 +592,7 @@ html, body {
   width: 240px !important;
   transition: transform 0.5s, box-shadow 0.5s, opacity 0.5s, filter 0.5s;
   cursor: pointer;
-  box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+  box-shadow: 0 40px 80px rgba(0,0,0,0.9);
 }
 .hero-swiper-slide:not(.swiper-slide-active) {
   opacity: 0.2 !important;
@@ -604,12 +604,12 @@ html, body {
   filter: brightness(1.1) grayscale(0) !important;
   transform: scale(1.15) !important;
   z-index: 999 !important;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.9) !important;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.9) !important;
   background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
 }
 .hero-info-container {
   text-align: center !important;
-  margin-top: 20px !important;
+  margin-top: 5px !important;
   padding: 0 20px 0 !important;
   position: relative !important;
   z-index: 3 !important;
