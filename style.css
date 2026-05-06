@@ -712,3 +712,23 @@ html, body {
 .hero-cap {
   animation: neonPulse 4s ease-in-out infinite;
 }
+/* ===== TRENDING BADGE ===== */
+.hero-trending-badge {
+  display: inline-block;
+  background: #e50914;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 900;
+  padding: 5px 16px;
+  border-radius: var(--radius-full);
+  margin-bottom: 10px;
+  box-shadow: 0 0 18px rgba(229,9,20,0.6);
+  letter-spacing: 0.5px;
+}
+/* ===== GOLD RATING CAP ===== */
+.hero-cap-gold {
+  background: rgba(0,0,0,0.55) !important;
+  border: 1px solid rgba(245,197,24,0.55) !important;
+  color: var(--gold) !important;
+  box-shadow: 0 0 10px rgba(245,197,24,0.25) !important;
+}
