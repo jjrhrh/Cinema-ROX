@@ -72,8 +72,8 @@ async function loadHeroSwiper() {
   const wrapper = document.getElementById('heroSwiperWrapper');
   if (!wrapper) return;
 
-  let movies = await fetchMovies('/trending/movie/week', { limit: 10, requirePoster: true });
-  if (!movies.length) movies = await fetchMovies('/movie/popular', { limit: 10, requirePoster: true });
+  let movies = await fetchMovies('/trending/movie/week', { limit: 5, requirePoster: true });
+  if (!movies.length) movies = await fetchMovies('/movie/popular', { limit: 5, requirePoster: true });
   if (!movies.length) return;
 
   wrapper.innerHTML = movies.map(m => {
