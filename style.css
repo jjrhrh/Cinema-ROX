@@ -471,10 +471,11 @@ html, body {
 .hero-section {
   position: relative !important;
   width: 100% !important;
-  min-height: 82vh !important;
+  height: auto !important;
+  max-height: 75vh !important;
   display: flex !important;
   flex-direction: column !important;
-  padding-bottom: 24px !important;
+  padding-bottom: 0 !important;
   overflow: visible !important;
   background: var(--bg) !important;
 }
@@ -587,7 +588,7 @@ html, body {
 .hero-info-container {
   text-align: center !important;
   margin-top: 16px !important;
-  padding: 0 20px 40px !important;
+  padding: 0 20px 20px !important;
   position: relative !important;
   z-index: 3 !important;
   width: 100% !important;
