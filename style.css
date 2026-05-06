@@ -603,8 +603,8 @@ flex: 0 0 152px;
 }
 .hero-info-container {
   text-align: center !important;
-  margin-top: 10% !important;
-  padding: 0 20px 40px !important;
+  margin-top: 40px !important;
+  padding: 0 20px 0 !important;
   position: relative !important;
   z-index: 3 !important;
   width: 100% !important;
@@ -613,15 +613,15 @@ flex: 0 0 152px;
 @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
 .hero-info-year {
   display: inline-block;
-  font-size: 0.68rem;
-  color: #cccccc;
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.6);
   text-align: center;
   font-weight: 400;
-  margin-bottom: 12px;
-  letter-spacing: 4px;
+  margin-bottom: 10px;
+  letter-spacing: 5px;
   background: transparent;
   border: none;
-  padding: 4px 0;
+  padding: 0;
 }
 .hero-info-title {
   text-align: center !important;
@@ -631,8 +631,11 @@ flex: 0 0 152px;
   letter-spacing: 0.5px;
 }
 .hero-info-caps {
-  display: flex; justify-content: center;
-  flex-wrap: wrap; gap: 8px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 50px;
 }
 .hero-cap {
   background: rgba(255, 255, 255, 0.10);
