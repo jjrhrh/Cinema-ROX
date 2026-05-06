@@ -476,8 +476,8 @@ html, body {
 .hero-section {
   position: relative !important;
   width: 100% !important;
-  height: auto !important;
-  min-height: 650px !important;
+  height: 550px !important;
+  min-height: 550px !important;
   padding-top: 20px !important;
   display: flex !important;
   flex-direction: column !important;
@@ -579,7 +579,7 @@ html, body {
 /* ===== HERO SWIPER NEW ===== */
 .hero-swiper {
   width: 100% !important;
-  height: 400px !important;
+  height: 380px !important;
   padding: 10px 0 16px !important;
   overflow: visible !important;
   position: relative !important;
@@ -608,7 +608,7 @@ html, body {
 }
 .hero-info-container {
   text-align: center !important;
-  margin-top: 5px !important;
+  margin-top: 20px !important;
   padding: 0 20px 0 !important;
   position: relative !important;
   z-index: 3 !important;
