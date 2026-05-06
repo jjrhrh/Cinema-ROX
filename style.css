@@ -482,7 +482,7 @@ html, body {
   display: flex !important;
   flex-direction: column !important;
   padding-bottom: 0 !important;
-  overflow: hidden !important;
+  overflow: visible !important;
   background: var(--bg) !important;
 }
 .hero-backdrop {
