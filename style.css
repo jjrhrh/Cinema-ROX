@@ -585,7 +585,6 @@ html, body {
   position: relative !important;
   z-index: 100 !important;
   perspective: 1000px !important;
-  direction: ltr;
 }
 .hero-swiper-slide {
   border-radius: 50px;
