@@ -211,7 +211,8 @@ async function loadHomePage() {
     fetchMovies('/tv/popular'),
   ]);
 
-  buildSection('الأفلام الرائجة', trending,  'movie') +
+  page.innerHTML =
+    buildSection('الأفلام الرائجة', trending,  'movie') +
     buildSection('الأعلى تقييماً',  topRated,  'movie') +
     buildSection('المسلسلات',        series,    'tv');
 }
