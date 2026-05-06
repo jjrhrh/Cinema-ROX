@@ -198,7 +198,7 @@ html, body {
   box-shadow: 0 0 24px var(--accent-glow);
   }
 /* ===== SECTIONS ===== */
-.home-section { padding: 20px 0 8px; }
+.home-section { padding: 40px 0 8px; }
 #homePage > .home-section:first-child { margin-top: -30px; }
 .section-header {
   display: flex; align-items: center;
@@ -218,7 +218,7 @@ html, body {
 }
 /* ===== MOVIES ROW ===== */
 .movies-row {
-  display: flex; gap: 18px;
+  display: flex; gap: 15px;
   overflow-x: auto; padding: 0 16px 16px;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
@@ -228,10 +228,10 @@ html, body {
 
 /* ===== MOVIE CARD ===== */
 .movie-card {
-  flex: 0 0 184px;
+  flex: 0 0 145px;
   scroll-snap-align: start;
   cursor: pointer;
-  border-radius: 22px;
+  border-radius: 14px;
   overflow: hidden;
   background: var(--card-bg);
   border: 1px solid rgba(229,9,20,0.32);
@@ -754,3 +754,13 @@ html, body {
   0%   { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
+.movie-title-bar {
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 6px 8px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+} 
