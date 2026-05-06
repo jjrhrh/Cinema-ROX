@@ -592,7 +592,7 @@ html, body {
   width: 240px !important;
   transition: transform 0.5s, box-shadow 0.5s, opacity 0.5s, filter 0.5s;
   cursor: pointer;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.8);
 }
 .hero-swiper-slide:not(.swiper-slide-active) {
   opacity: 0.2 !important;
