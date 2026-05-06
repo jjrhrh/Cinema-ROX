@@ -589,8 +589,7 @@ html, body {
 .swiper-slide-active.hero-swiper-slide {
   opacity: 1;
   filter: blur(0);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-}
+  box-shadow: 0 0 50px var(--accent-glow), 0 20px 60px rgba(0,0,0,0.8);
 .hero-info-container {
   text-align: center !important;
   padding: 20px 20px 40px !important;
@@ -613,12 +612,14 @@ html, body {
   flex-wrap: wrap; gap: 8px;
 }
 .hero-cap {
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(8px);
-  border: 1px solid var(--glass-border);
-  color: var(--text2);
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(0,212,255,0.3);
+  color: var(--text);
   font-size: 0.75rem; font-weight: 700;
   padding: 5px 14px; border-radius: var(--radius-full);
+  box-shadow: 0 0 10px rgba(0,212,255,0.15);
 }
 .hero-cap-rating { color: var(--gold); border-color: rgba(245,197,24,0.3); }
 .hero-info-genres {
