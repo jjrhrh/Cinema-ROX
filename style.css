@@ -470,7 +470,7 @@ html, body {
 .hero-section {
   position: relative !important;
   width: 100% !important;
-  height: auto !important;
+  min-height: 82vh !important;
   display: flex !important;
   flex-direction: column !important;
   padding-bottom: 24px !important;
@@ -593,9 +593,11 @@ html, body {
   box-shadow: 0 20px 50px rgba(0,0,0,0.5);
 }
 .hero-info-container {
-  text-align: center;
-  padding: 16px 20px 0;
-  position: relative; z-index: 3;
+  text-align: center !important;
+  padding: 14px 20px 8px !important;
+  position: relative !important;
+  z-index: 3 !important;
+  width: 100% !important;
 }
 .hero-info-year {
   font-size: 0.82rem; color: var(--text2);
