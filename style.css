@@ -584,6 +584,7 @@ html, body {
   overflow: visible !important;
   position: relative !important;
   z-index: 3 !important;
+  perspective: 1000px !important;
 }
 .hero-swiper-slide {
   border-radius: 50px;
@@ -596,7 +597,7 @@ html, body {
 }
 .hero-swiper-slide:not(.swiper-slide-active) {
   opacity: 0.2 !important;
-  filter: brightness(0.3) blur(4px) !important;
+  filter: brightness(0.2) !important;
   transform: scale(0.82) !important;
 }
 .swiper-slide-active.hero-swiper-slide {
