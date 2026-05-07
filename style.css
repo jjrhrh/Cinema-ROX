@@ -234,10 +234,10 @@ html, body {
 
 /* ===== MOVIE CARD ===== */
 .movie-card {
-  flex: 0 0 120px;
+  flex: 0 0 100px;
   scroll-snap-align: start;
   cursor: pointer;
-  border-radius: 25px;
+  border-radius: 18px;
   overflow: hidden;
   background: var(--card-bg);
   border: 1px solid rgba(229,9,20,0.32);
@@ -735,7 +735,7 @@ html, body {
 }
 /* ===== SKELETON LOADER ===== */
 .skeleton-card {
-  flex: 0 0 120px;
+  flex: 0 0 100px;
   aspect-ratio: 2/3;
   border-radius: 26px;
   background: linear-gradient(90deg, #111 25%, #1e1e1e 50%, #111 75%);
@@ -749,14 +749,7 @@ html, body {
   100% { background-position: -200% 0; }
 }
 .movie-title-bar {
-  color: #ffffff;
-  font-size: 0.72rem;
-  font-weight: 700;
-  padding: 5px 6px;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  display: none;
 }
 .hero-swiper-slide {
   border-radius: 30px !important;
