@@ -94,9 +94,9 @@ async function loadHeroSwiper() {
     rtl: false,
   coverflowEffect: {
     rotate: 50,
-    stretch: 10,
+    stretch: -50,
     depth: 500,
-    modifier: 1,
+    modifier: 2,
     slideShadows: false,
   },
   on: {
