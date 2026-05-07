@@ -821,3 +821,5 @@ html, body {
 .swiper-slide-active.hero-swiper-slide {
   animation: neonPulseRed 4s ease-in-out infinite !important;
 }
+/* ===== HERO: إخفاء عند غير الرئيسية ===== */
+#heroSection[style*="display: none"] { display: none !important; }
