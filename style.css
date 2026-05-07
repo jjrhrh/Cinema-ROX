@@ -581,6 +581,7 @@ html, body {
   width: 100% !important;
   height: 380px !important;
   padding: 10px 0 16px !important;
+  direction: ltr;
   overflow: visible !important;
   position: relative !important;
   z-index: 100 !important;
