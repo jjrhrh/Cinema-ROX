@@ -506,10 +506,9 @@ html, body {
   position: absolute !important;
   inset: 0 !important;
   z-index: 1 !important;
-  background:
-    linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 20%, transparent 45%, rgba(0,0,0,0.98) 80%, #000 100%),
+  linear-gradient(to bottom, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.4) 18%, transparent 40%, rgba(0,0,0,0.98) 80%, #000 100%),
     linear-gradient(to top, #000 0%, transparent 20%)
-  !important;tant;
+  !important;
 }
 .hero-content {
   position: relative !important;
@@ -616,32 +615,34 @@ html, body {
   text-align: center !important;
   font-size: 2.6rem; font-weight: 900;
   color: #FFFFFF !important;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
   margin-top: -10px;
   letter-spacing: 0.3px;
   text-shadow:
-    0 2px 4px rgba(0,0,0,1),
-    0 4px 30px rgba(0,0,0,1),
-    0 0 60px rgba(0,0,0,0.8);
+    0 2px 0px rgba(0,0,0,1),
+    0 4px 8px rgba(0,0,0,1),
+    0 8px 30px rgba(0,0,0,1),
+    0 0 80px rgba(0,0,0,1);
   transition: opacity 0.6s ease, transform 0.6s ease;
 }
 .hero-cap {
-  background: rgba(0,0,0,0.35);
-  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.18);
   color: rgba(255,255,255,0.95);
   font-size: 0.72rem;
   font-weight: 700;
-  padding: 5px 14px;
+  padding: 6px 16px;
   border-radius: var(--radius-full);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   transition: box-shadow 0.3s ease;
 }
-.hero-cap.genre-action   { border-color: rgba(255,60,60,0.7);  box-shadow: 0 0 10px rgba(255,60,60,0.3);  color: #ff6b6b; }
-.hero-cap.genre-drama    { border-color: rgba(0,180,255,0.7);  box-shadow: 0 0 10px rgba(0,180,255,0.3);  color: #4fc3f7; }
-.hero-cap.genre-adventure{ border-color: rgba(60,220,80,0.7);  box-shadow: 0 0 10px rgba(60,220,80,0.3);  color: #69f0ae; }
-.hero-cap.genre-horror   { border-color: rgba(180,0,255,0.7);  box-shadow: 0 0 10px rgba(180,0,255,0.3);  color: #ce93d8; }
-.hero-cap.genre-comedy   { border-color: rgba(255,165,0,0.7);  box-shadow: 0 0 10px rgba(255,165,0,0.3);  color: #ffcc02; }
-.hero-cap.genre-scifi    { border-color: rgba(0,243,255,0.7);  box-shadow: 0 0 10px rgba(0,243,255,0.3);  color: #00f3ff; }
+.hero-cap.genre-action   { border-color: rgba(255,50,50,0.9);  box-shadow: 0 0 12px rgba(255,50,50,0.5),  0 0 24px rgba(255,50,50,0.2);  color: #ff5555; background: rgba(255,50,50,0.12); }
+.hero-cap.genre-drama    { border-color: rgba(0,160,255,0.9);  box-shadow: 0 0 12px rgba(0,160,255,0.5),  0 0 24px rgba(0,160,255,0.2);  color: #40b4ff; background: rgba(0,160,255,0.12); }
+.hero-cap.genre-adventure{ border-color: rgba(50,210,80,0.9);  box-shadow: 0 0 12px rgba(50,210,80,0.5),  0 0 24px rgba(50,210,80,0.2);  color: #50e870; background: rgba(50,210,80,0.12); }
+.hero-cap.genre-horror   { border-color: rgba(180,0,255,0.9);  box-shadow: 0 0 12px rgba(180,0,255,0.5),  0 0 24px rgba(180,0,255,0.2);  color: #d070ff; background: rgba(180,0,255,0.12); }
+.hero-cap.genre-comedy   { border-color: rgba(255,160,0,0.9);  box-shadow: 0 0 12px rgba(255,160,0,0.5),  0 0 24px rgba(255,160,0,0.2);  color: #ffb020; background: rgba(255,160,0,0.12); }
+.hero-cap.genre-scifi    { border-color: rgba(0,230,255,0.9);  box-shadow: 0 0 12px rgba(0,230,255,0.5),  0 0 24px rgba(0,230,255,0.2);  color: #00e6ff; background: rgba(0,230,255,0.12); }
 .hero-cap-rating {
   background: rgba(0,0,0,0.5) !important;
   border: 1px solid rgba(245,197,24,0.45) !important;
