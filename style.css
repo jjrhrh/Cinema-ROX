@@ -746,15 +746,6 @@ html, body {
   overflow: hidden;
   text-overflow: ellipsis;
 } 
-.hero-section::after {
-  content: '';
-  position: absolute;
-  bottom: -40px; left: 0; right: 0;
-  height: 80px;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
-  z-index: 6;
-  pointer-events: none;
-} 
 .hero-swiper-slide {
   border-radius: 40px !important;
   overflow: hidden !important;
