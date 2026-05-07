@@ -106,16 +106,15 @@ async function loadHeroSwiper() {
 }
 
 function updateHeroInfo(movies, index) {
-  const m = movies[index % movies.length];
-  if (!m) return;
-
   const backdrop = document.getElementById('heroBackdrop');
-  if (backdrop && m.poster_path) {
+  if (backdrop) {
+    const imgUrl = m.backdrop_path
+      ? `${CONFIG.IMAGES.BACKDROP}${m.backdrop_path}`
+      : `${CONFIG.IMAGES.POSTER_LG}${m.poster_path}`;
     backdrop.classList.remove('loaded');
-    backdrop.style.backgroundImage = `url('${CONFIG.IMAGES.BACKDROP}${m.backdrop_path || m.poster_path}')`;
-backdrop.style.filter = 'blur(60px) brightness(0.25) saturate(2)';
-backdrop.style.transform = 'scale(1.1)';
-    backdrop.style.filter = 'blur(80px) brightness(0.3) saturate(1.8)';
+    backdrop.style.backgroundImage = `url('${imgUrl}')`;
+    backdrop.style.filter = 'blur(55px) brightness(0.22) saturate(2.2)';
+    backdrop.style.transform = 'scale(1.15)';
     setTimeout(() => backdrop.classList.add('loaded'), 80);
   }
 
