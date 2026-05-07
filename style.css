@@ -611,8 +611,8 @@ html, body {
   z-index: -1 !important;
 }
 .swiper-slide-active.hero-swiper-slide {
-  opacity: 0.1 !important;
-  filter: brightness(0.2) blur(4px) !important;
+  opacity: 1 !important;
+  filter: brightness(1.05) !important;
   transform: scale(1.1) !important;
   z-index: 10 !important;
   box-shadow: 0 40px 80px rgba(0,0,0,0.9) !important;
