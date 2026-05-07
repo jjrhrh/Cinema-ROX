@@ -506,8 +506,8 @@ html, body {
   position: absolute !important;
   inset: 0 !important;
   z-index: 1 !important;
-  linear-gradient(to bottom, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.4) 18%, transparent 40%, rgba(0,0,0,0.98) 80%, #000 100%),
-    linear-gradient(to top, #000 0%, transparent 20%)
+  linear-gradient(to bottom, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.4) 18%, transparent 38%, rgba(0,0,0,0.99) 78%, #000 100%),
+    linear-gradient(to top, #000 0%, transparent 22%)
   !important;
 }
 .hero-content {
@@ -615,23 +615,23 @@ html, body {
   text-align: center !important;
   font-size: 2.6rem; font-weight: 900;
   color: #FFFFFF !important;
-  margin-bottom: 10px;
+  margin-bottom: 14px;
   margin-top: -10px;
   letter-spacing: 0.3px;
   text-shadow:
     0 2px 0px rgba(0,0,0,1),
     0 4px 8px rgba(0,0,0,1),
     0 8px 30px rgba(0,0,0,1),
-    0 0 80px rgba(0,0,0,1);
+    0 0 60px rgba(255,255,255,0.08);
   transition: opacity 0.6s ease, transform 0.6s ease;
 }
 .hero-cap {
   background: rgba(0,0,0,0.5);
   border: 1px solid rgba(255,255,255,0.18);
   color: rgba(255,255,255,0.95);
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 700;
-  padding: 6px 16px;
+  padding: 5px 13px;
   border-radius: var(--radius-full);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -721,6 +721,11 @@ html, body {
   width: fit-content;
   margin-left: auto;
   margin-right: auto;
+  animation: badgePulse 2.5s ease-in-out infinite;
+}
+@keyframes badgePulse {
+  0%,100% { box-shadow: 0 0 18px rgba(229,9,20,0.6); }
+  50%      { box-shadow: 0 0 32px rgba(229,9,20,0.95), 0 0 60px rgba(229,9,20,0.3); }
 }
 /* ===== GOLD RATING CAP ===== */
 .hero-cap-gold {
