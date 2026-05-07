@@ -85,19 +85,13 @@ async function loadHeroSwiper() {
   }).join('');
 
   heroSwiper = new Swiper('#heroSwiper', {
-    effect: 'coverflow',
+    effect: 'fade',
+    fadeEffect: { crossFade: true },
     grabCursor: true,
     centeredSlides: true,
-    slidesPerView: 'auto',
+    slidesPerView: 1,
     loop: true,
-    speed: 600,
-    coverflowEffect: {
-      rotate: 40,
-      stretch: 10,
-      depth: 300,
-      modifier: 1.5,
-      slideShadows: false,
-    },
+    speed: 1000,
     on: {
       init: function() { updateHeroInfo(movies, 0); },
       slideChange: function() { updateHeroInfo(movies, this.realIndex); }
@@ -163,7 +157,7 @@ function updateHeroInfo(movies, index) {
   return `
     <div class="movie-card" onclick="openDetail(${movie.id},'${type}')">
       <div class="movie-poster-wrap">
-        <img class="movie-poster" src="${poster}" alt="${title}"
+        <img class="movie-poster" src="${poster}" alt="${title}" loading="lazy"
              onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
         ${year   ? `<span class="movie-year-badge">${year}</span>` : ''}
         ${rating ? `<span class="movie-rating">⭐ ${rating}</span>` : ''}
