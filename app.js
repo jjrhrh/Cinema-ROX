@@ -115,6 +115,8 @@ function updateHeroInfo(movies, index) {
 
   const backdrop = document.getElementById('heroBackdrop');
   if (backdrop) backdrop.style.backgroundImage = `url('${imgUrl}')`;
+  document.body.style.backgroundImage = '';
+  document.body.style.background = 'var(--bg)';
   const GENRES = {
     28:'أكشن',12:'مغامرة',16:'رسوم متحركة',35:'كوميديا',80:'جريمة',
     99:'وثائقي',18:'دراما',10751:'عائلي',14:'خيال',36:'تاريخي',
