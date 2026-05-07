@@ -85,19 +85,13 @@ async function loadHeroSwiper() {
   }).join('');
 
   heroSwiper = new Swiper('#heroSwiper', {
-    effect: 'coverflow',
+    effect: 'fade',
+    fadeEffect: { crossFade: true },
     grabCursor: true,
     centeredSlides: true,
-    slidesPerView: 1.5,
-    spaceBetween: 20,
+    slidesPerView: 1,
     loop: true,
-    coverflowEffect: {
-      rotate: 50,
-      stretch: -100,
-      depth: 400,
-      modifier: 1,
-      slideShadows: false,
-    },
+    speed: 1000,
     on: {
       init: function() { updateHeroInfo(movies, 0); },
       slideChange: function() { updateHeroInfo(movies, this.realIndex); }
