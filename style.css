@@ -605,7 +605,7 @@ html, body {
   display: block;
 }
 .hero-swiper-slide:not(.swiper-slide-active) {
-  opacity: 0.4 !important;
+  opacity: 0.2 !important;
   filter: brightness(0.3) blur(1px) !important;
   transform: scale(0.78) !important;
   z-index: -1 !important;
@@ -614,7 +614,7 @@ html, body {
   opacity: 1 !important;
   filter: brightness(1.2) !important;
   transform: scale(1.1) !important;
-  z-index: 10 !important;
+  z-index: 999 !important;
   box-shadow: 0 40px 80px rgba(0,0,0,0.9) !important;
 }
 .hero-info-container {
