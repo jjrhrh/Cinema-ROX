@@ -110,18 +110,35 @@ function updateHeroInfo(movies, index) {
   const m = movies[index % movies.length];
   if (!m) return;
 
-  const backdrop = document.getElementById('heroBackdrop');
-  if (backdrop && m.poster_path) {
-    backdrop.style.backgroundImage = `url('https://image.tmdb.org/t/p/w780${m.poster_path}')`;
-    backdrop.classList.remove('loaded');
-    setTimeout(() => backdrop.classList.add('loaded'), 80);
+  // ── Dynamic Aura ──
+  const aura = document.getElementById('heroBackdrop');
+  if (aura && m.poster_path) {
+    const auraImg = new Image();
+    auraImg.crossOrigin = 'anonymous';
+    auraImg.src = `${CONFIG.IMAGES.POSTER_MD}${m.poster_path}`;
+    auraImg.onload = () => {
+      try {
+        const c = document.createElement('canvas');
+        c.width = 8; c.height = 8;
+        const x = c.getContext('2d');
+        x.drawImage(auraImg, 0, 0, 8, 8);
+        const d = x.getImageData(0, 0, 8, 8).data;
+        let r=0,g=0,b=0,n=0;
+        for(let i=0;i<d.length;i+=4){ r+=d[i];g+=d[i+1];b+=d[i+2];n++; }
+        r=Math.round(r/n); g=Math.round(g/n); b=Math.round(b/n);
+        aura.style.background = `radial-gradient(ellipse at center, rgba(${r},${g},${b},0.55) 0%, rgba(${r},${g},${b},0.15) 50%, transparent 80%)`;
+        aura.style.transition = 'background 1s ease, opacity 1s ease';
+        aura.classList.remove('loaded');
+        setTimeout(() => aura.classList.add('loaded'), 50);
+      } catch(e){}
+    };
   }
 
   const GENRES = {
-    28:'أكشن', 12:'مغامرة', 16:'رسوم متحركة', 35:'كوميديا', 80:'جريمة',
-    99:'وثائقي', 18:'دراما', 10751:'عائلي', 14:'خيال', 36:'تاريخي',
-    27:'رعب', 10402:'موسيقى', 9648:'غموض', 10749:'رومانسي',
-    878:'خيال علمي', 53:'إثارة', 10752:'حرب'
+    28:'أكشن',12:'مغامرة',16:'رسوم متحركة',35:'كوميديا',80:'جريمة',
+    99:'وثائقي',18:'دراما',10751:'عائلي',14:'خيال',36:'تاريخي',
+    27:'رعب',10402:'موسيقى',9648:'غموض',10749:'رومانسي',
+    878:'خيال علمي',53:'إثارة',10752:'حرب'
   };
 
   const yearEl   = document.getElementById('heroInfoYear');
@@ -129,46 +146,30 @@ function updateHeroInfo(movies, index) {
   const genresEl = document.getElementById('heroInfoGenres');
   const ratingEl = document.getElementById('heroInfoRating');
 
-  if (yearEl)  yearEl.textContent  = m.release_date ? m.release_date.slice(0,4) : '';
+  if (yearEl) yearEl.textContent = m.release_date ? m.release_date.slice(0,4) : '';
+
   if (titleEl) {
     titleEl.style.opacity = '0';
-    titleEl.style.transform = 'scale(0.92)';
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.src = `${CONFIG.IMAGES.POSTER_MD}${m.poster_path}`;
-    img.onload = () => {
-      try {
-        const canvas = document.createElement('canvas');
-        canvas.width = 10; canvas.height = 10;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, 10, 10);
-        const d = ctx.getImageData(0, 0, 10, 10).data;
-        let r=0,g=0,b=0,count=0;
-        for(let i=0;i<d.length;i+=4){
-          r+=d[i]; g+=d[i+1]; b+=d[i+2]; count++;
-        }
-        r=Math.round(r/count); g=Math.round(g/count); b=Math.round(b/count);
-        titleEl.style.textShadow = `0 0 20px rgba(${r},${g},${b},0.9), 0 4px 15px rgba(0,0,0,1)`;
-      } catch(e) {}
-    };
+    titleEl.style.transform = 'translateY(10px)';
     setTimeout(() => {
       titleEl.textContent = m.title || m.original_title || '';
-      titleEl.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      titleEl.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
       titleEl.style.opacity = '1';
-      titleEl.style.transform = 'scale(1)';
-    }, 150);
+      titleEl.style.transform = 'translateY(0)';
+    }, 200);
   }
 
   if (genresEl) {
-    const typeLabel = (m.media_type === 'tv') ? '📺 مسلسل' : '🎬 فيلم';
-    const year      = m.release_date ? `📅 ${m.release_date.slice(0,4)}` : '';
-    const rating    = m.vote_average ? `⭐ ${m.vote_average.toFixed(1)}` : '';
-    genresEl.innerHTML =
-      `<span class="hero-cap">${typeLabel}</span>` +
-      (year   ? `<span class="hero-cap">${year}</span>` : '') +
-      (rating ? `<span class="hero-cap hero-cap-gold">${rating}</span>` : '');
+    const names = (m.genre_ids || []).slice(0,3).map(id => GENRES[id]).filter(Boolean);
+    genresEl.innerHTML = names.map(n =>
+      `<span class="hero-cap">${n}</span>`).join('');
   }
-  if (ratingEl) ratingEl.innerHTML = '';
+
+  if (ratingEl) {
+    const rating = m.vote_average ? m.vote_average.toFixed(1) : '';
+    ratingEl.innerHTML = rating
+      ? `<span class="hero-cap hero-cap-rating">⭐ ${rating}</span>` : '';
+  }
 }
 // ===== HOME PAGE =====
 function buildMovieCard(movie, type = 'movie') {
