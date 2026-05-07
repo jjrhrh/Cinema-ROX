@@ -85,25 +85,24 @@ async function loadHeroSwiper() {
   }).join('');
 
   heroSwiper = new Swiper('#heroSwiper', {
-  effect: 'coverflow',
-  grabCursor: true,
-  centeredSlides: true,
-  slidesPerView: 1.5,
-  spaceBetween: 20,
-  loop: true,
-    rtl: false,
-  coverflowEffect: {
-    rotate: 45,
-    stretch: -20,
-    depth: 250,
-    modifier: 1.2,
-    slideShadows: false,
-  },
-  on: {
-    init: function() { updateHeroInfo(movies, 0); },
-    slideChange: function() { updateHeroInfo(movies, this.realIndex); }
-  }
-});
+    effect: 'coverflow',
+    grabCursor: true,
+    centeredSlides: true,
+    slidesPerView: 1.4,
+    spaceBetween: 30,
+    loop: true,
+    coverflowEffect: {
+      rotate: 0,
+      stretch: -60,
+      depth: 350,
+      modifier: 1.5,
+      slideShadows: false,
+    },
+    on: {
+      init: function() { updateHeroInfo(movies, 0); },
+      slideChange: function() { updateHeroInfo(movies, this.realIndex); }
+    }
+  });
 }
 
 function updateHeroInfo(movies, index) {
