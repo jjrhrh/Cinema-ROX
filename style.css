@@ -500,14 +500,9 @@ html, body {
   position: relative !important;
   width: 100% !important;
   height: auto !important;
-  min-height: 460px !important;
-  max-height: 85vh !important;
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: flex-end !important;
-  padding-bottom: 16px !important;
   overflow: hidden !important;
   background: #000 !important;
+  padding-top: 50px !important;
 }
 .hero-backdrop {
   position: absolute !important;
@@ -610,8 +605,30 @@ html, body {
   pointer-events: auto !important;
   z-index: 2 !important;
 }
+.hero-swiper-slide {
+  width: 58vw !important;
+  max-width: 230px !important;
+  height: 360px !important;
+  border-radius: 24px !important;
+  overflow: hidden !important;
+  cursor: pointer !important;
+}
+.hero-swiper-slide img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+.hero-swiper-slide:not(.swiper-slide-active) {
+  filter: brightness(0.3) blur(3px) !important;
+  opacity: 0.6 !important;
+}
+.swiper-slide-active.hero-swiper-slide {
+  filter: brightness(1.1) !important;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.9) !important;
+} 
 .hero-info-container {
-  margin-top: auto !important;
+  margin-top: 12px !important;
   padding: 0 24px 32px !important;
   position: relative !important;
   z-index: 10 !important;
