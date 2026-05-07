@@ -109,23 +109,23 @@ function updateHeroInfo(movies, index) {
   const m = movies[index % movies.length];
   if (!m) return;
 
-  const backdrop = document.getElementById('heroBackdrop');
-  if (backdrop) {
-    const imgUrl = m.backdrop_path
-      ? `${CONFIG.IMAGES.BACKDROP}${m.backdrop_path}`
-      : `${CONFIG.IMAGES.POSTER_LG}${m.poster_path}`;
-    backdrop.style.backgroundImage = `url('${imgUrl}')`;
-    backdrop.style.filter = 'blur(80px) brightness(0.2) saturate(2.5)';
-    backdrop.style.transform = 'scale(1.2)';
-    backdrop.style.transition = 'background-image 1s ease';
-  }
-const bodyBg = m.backdrop_path
+  const imgUrl = m.backdrop_path
     ? `${CONFIG.IMAGES.BACKDROP}${m.backdrop_path}`
     : `${CONFIG.IMAGES.POSTER_LG}${m.poster_path}`;
-  document.body.style.backgroundImage = `url('${bodyBg}')`;
+
+  const bodyImg = `linear-gradient(rgba(5,5,5,0.72), rgba(5,5,5,0.72)), url('${imgUrl}')`;
+  document.body.style.backgroundImage = bodyImg;
   document.body.style.backgroundSize = 'cover';
   document.body.style.backgroundPosition = 'center';
   document.body.style.backgroundAttachment = 'fixed';
+  document.body.style.transition = 'background-image 0.8s ease-in-out';
+
+  const backdrop = document.getElementById('heroBackdrop');
+  if (backdrop) {
+    backdrop.style.backgroundImage = `url('${imgUrl}')`;
+    backdrop.style.filter = 'blur(80px) brightness(0.2) saturate(2.5)';
+    backdrop.style.transform = 'scale(1.2)';
+  }
   const GENRES = {
     28:'أكشن',12:'مغامرة',16:'رسوم متحركة',35:'كوميديا',80:'جريمة',
     99:'وثائقي',18:'دراما',10751:'عائلي',14:'خيال',36:'تاريخي',
