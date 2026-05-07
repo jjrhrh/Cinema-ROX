@@ -747,10 +747,10 @@ html, body {
 }
 /* ===== SKELETON LOADER ===== */
 .skeleton-card {
-  flex: 0 0 160px;
+  flex: 0 0 152px;
   aspect-ratio: 2/3;
-  border-radius: 26px;
-  background: linear-gradient(90deg, #111 25%, #1e1e1e 50%, #111 75%);
+  border-radius: 20px;
+  background: linear-gradient(90deg, #1a0000 25%, #2d0000 50%, #1a0000 75%);
   background-size: 200% 100%;
   animation: shimmer 1.4s infinite;
   border: 1px solid rgba(229,9,20,0.1);
