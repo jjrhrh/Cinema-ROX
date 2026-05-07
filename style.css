@@ -77,10 +77,10 @@ html, body {
   box-shadow: 0 0 20px var(--accent2-glow);
   flex: 0 0 56px;
   transition: transform 0.3s, box-shadow 0.3s;
-}
-.bnav-center:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 32px var(--accent2-glow);
+}.page {
+  display: none;
+  min-height: auto;
+  padding-bottom: calc(var(--nav-height) + 16px);
 }
 /* ===== PAGES ===== */
 .page {
@@ -499,12 +499,13 @@ html, body {
 .hero-section {
   position: relative !important;
   width: 100% !important;
-  height: 92vh !important;
-  min-height: 580px !important;
+  height: auto !important;
+  min-height: 460px !important;
+  max-height: 85vh !important;
   display: flex !important;
   flex-direction: column !important;
   justify-content: flex-end !important;
-  padding-bottom: 24px !important;
+  padding-bottom: 16px !important;
   overflow: hidden !important;
   background: #000 !important;
 }
@@ -601,12 +602,13 @@ html, body {
 } 
 /* ===== HERO SWIPER NEW ===== */
 .hero-swiper {
-  width: 1px !important;
-  height: 1px !important;
-  overflow: hidden !important;
-  opacity: 0 !important;
-  position: absolute !important;
-  pointer-events: none !important;
+  width: 100% !important;
+  height: 380px !important;
+  overflow: visible !important;
+  opacity: 1 !important;
+  position: relative !important;
+  pointer-events: auto !important;
+  z-index: 2 !important;
 }
 .hero-info-container {
   margin-top: auto !important;
