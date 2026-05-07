@@ -27,24 +27,22 @@
 /* ===== BASE ===== */
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 html, body {
-  background: var(--bg);
+  background-color: #050505;
   color: var(--text);
   font-family: 'Cairo', sans-serif;
   min-height: 100vh;
   overflow-x: clip;
   background-size: cover !important;
-  background-position: center !important;
+  background-position: center top !important;
   background-attachment: fixed !important;
-  transition: background-image 1.2s ease !important;
+  transition: background-image 0.8s ease-in-out !important;
 }
 
-html::before, body::before {
+body::before {
   content: '';
   position: fixed;
   inset: 0;
-  backdrop-filter: blur(100px);
-  -webkit-backdrop-filter: blur(100px);
-  background: rgba(5,5,5,0.82);
+  background: transparent;
   z-index: 0;
   pointer-events: none;
 }
