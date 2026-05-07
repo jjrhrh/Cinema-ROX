@@ -586,14 +586,8 @@ html, body {
 /* ===== HERO SWIPER NEW ===== */
 .hero-swiper {
   width: 100% !important;
-  height: 360px !important;
+  height: 378px !important;
   padding: 14px 0 0 !important;
-  direction: ltr;
-  overflow: visible !important;
-  position: relative !important;
-  z-index: 100 !important;
-  perspective: 1000px !important;
-}
 .hero-info-container {
   text-align: center !important;
   margin-top: -55px !important;
@@ -604,9 +598,9 @@ html, body {
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
-  background: rgba(0,0,0,0.35) !important;
-  backdrop-filter: blur(18px) !important;
-  -webkit-backdrop-filter: blur(18px) !important;
+  background: rgba(0,0,0,0.45) !important;
+  backdrop-filter: blur(21px) !important;
+  -webkit-backdrop-filter: blur(21px) !important;
   border-top: 1px solid rgba(229,9,20,0.6) !important;
   box-shadow: 0 -8px 24px rgba(0,0,0,0.6) !important;
 }
@@ -633,7 +627,7 @@ html, body {
   font-size: 2.8rem;
   font-weight: 900;
   color: transparent !important;
-  -webkit-text-stroke: 1px white;
+  -webkit-text-stroke: 0.7px white;
   margin-bottom: 14px;
   letter-spacing: 4px;
   line-height: 1.2;
@@ -789,7 +783,7 @@ html, body {
   border: 1px solid red !important;
   box-shadow:
     0 0 6px rgba(229,9,20,0.5),
-    0 20px 60px rgba(0,0,0,0.95) !important;
+    0 24px 72px rgba(0,0,0,1) !important;
 }
 .swiper-slide-active.hero-swiper-slide::after {
   content: '';
@@ -811,11 +805,11 @@ html, body {
 @keyframes neonPulseRed {
   0%, 100% {
     border-color: rgba(229,9,20,0.6) !important;
-    box-shadow: 0 0 6px rgba(229,9,20,0.4), 0 30px 80px rgba(0,0,0,0.95);
+    box-shadow: 0 0 6px rgba(229,9,20,0.4), 0 36px 96px rgba(0,0,0,1);
   }
   50% {
     border-color: red !important;
-    box-shadow: 0 0 14px rgba(229,9,20,0.9), 0 0 28px rgba(229,9,20,0.4), 0 30px 80px rgba(0,0,0,0.95);
+    box-shadow: 0 0 14px rgba(229,9,20,0.9), 0 0 28px rgba(229,9,20,0.4), 0 36px 96px rgba(0,0,0,1);
   }
 }
 .swiper-slide-active.hero-swiper-slide {
