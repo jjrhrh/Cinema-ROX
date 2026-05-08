@@ -119,10 +119,6 @@ html, body {
               0 0 30px var(--accent-glow);
 }
 .rox-item {
-  document.body.style.backgroundImage = bdUrl ? `url('${bdUrl}')` : '';
-  document.body.style.backgroundBlendMode = 'luminosity';
-  document.body.style.filter = bdUrl ? 'blur(60px) brightness(0.25) saturate(2)' : '';
-  document.body.style.filter = bdUrl ? 'blur(0px) brightness(0.35)' : '';
   align-items: center; gap: 6px; cursor: pointer;
 }
 .rox-circle {
@@ -599,7 +595,8 @@ html, body {
 }
 .hero-swiper-slide.swiper-slide-active {
   border-radius: 28px !important;
-  animation: neonPulse 3s ease-in-out infinite !important;
+  animation: neonPulse 2.5s ease-in-out infinite !important;
+  box-shadow: 0 0 0 2px rgba(229,9,20,0.4), 0 0 40px rgba(229,9,20,0.3) !important;
 }
 @keyframes neonPulse {
   0%,100% { box-shadow: 0 0 20px rgba(229,9,20,0.2); }
@@ -611,8 +608,8 @@ html, body {
   position: relative !important;
   z-index: 1000 !important;
   width: 100% !important;
-  margin-top: -70px !important;
-  background: rgba(0,0,0,0.5) !important;
+  margin-top: -90px !important;
+  background: rgba(0,0,0,0.45) !important;
   backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
   border-radius: 28px 28px 0 0 !important;
