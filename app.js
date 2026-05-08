@@ -373,21 +373,35 @@ function playTrailer(key) {
     frame.src = '';
   }, { once: true });
 }
-function watchNow() {
-  document.getElementById('detailPlayerWrap')
-    ?.scrollIntoView({ behavior: 'smooth' });
-}
-function selectServer(card) {
-  document.querySelectorAll('.server-card').forEach(c => c.classList.remove('active'));
+function wsSelectServer(card) {
+  document.querySelectorAll('.ws-card').forEach(c => {
+    c.classList.remove('active');
+    const chk = c.querySelector('.ws-check');
+    if (chk) chk.remove();
+  });
   card.classList.add('active');
-  document.getElementById('detailPlayerFrame').src = card.dataset.url;
-  document.getElementById('detailPlayerOverlay').style.display = 'none';
+  const chk = document.createElement('span');
+  chk.className = 'ws-check'; chk.textContent = '✔';
+  card.prepend(chk);
+  const overlay = document.getElementById('wsOverlay');
+  if (overlay && overlay.style.display === 'none')
+    document.getElementById('wsFrame').src = card.dataset.url;
 }
-function startStream() {
-  const card = document.querySelector('.server-card.active');
-  if (!card) return;
-  document.getElementById('detailPlayerFrame').src = card.dataset.url;
-  document.getElementById('detailPlayerOverlay').style.display = 'none';
+function wsStartStream() {
+  const active = document.querySelector('.ws-card.active');
+  if (!active) return;
+  document.getElementById('wsFrame').src = active.dataset.url;
+  document.getElementById('wsOverlay').style.display = 'none';
+}
+function wsGoBack() {
+  const dp = document.getElementById('detailPage');
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  if (dp && dp.innerHTML.trim().length > 50) {
+    dp.classList.add('active');
+    const hero = document.getElementById('heroSection');
+    if (hero) hero.style.display = 'none';
+  } else { goBack(); }
+  window.scrollTo(0, 0);
 }
 // ===== LIBRARY HELPERS =====
 function getLib(key) {
