@@ -384,8 +384,18 @@ function wsSelectServer(card) {
   chk.className = 'ws-check'; chk.textContent = '✔';
   card.prepend(chk);
   const overlay = document.getElementById('wsOverlay');
-  if (overlay && overlay.style.display === 'none')
-    document.getElementById('wsFrame').src = card.dataset.url;
+  if (overlay && overlay.style.display === 'none') {
+    const sw = document.getElementById('wsSwitchOverlay');
+    if (sw) {
+      sw.style.display = 'flex';
+      setTimeout(() => {
+        document.getElementById('wsFrame').src = card.dataset.url;
+        setTimeout(() => { sw.style.display = 'none'; }, 1800);
+      }, 400);
+    } else {
+      document.getElementById('wsFrame').src = card.dataset.url;
+    }
+  }
 }
 function wsStartStream() {
   const active = document.querySelector('.ws-card.active');
