@@ -588,6 +588,7 @@ html, body {
 .hero-swiper {
   width: 100% !important;
   height: 378px !important;
+  margin-bottom: -20px !important;
   padding: 14px 0 0 !important;
 .hero-info-container {
   text-align: center !important;
@@ -599,11 +600,11 @@ html, body {
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
-  background: rgba(0,0,0,0.45) !important;
-  backdrop-filter: blur(21px) !important;
-  -webkit-backdrop-filter: blur(21px) !important;
-  border-top: 1px solid rgba(229,9,20,0.6) !important;
-  box-shadow: 0 -8px 24px rgba(0,0,0,0.6) !important;
+  background: rgba(0,0,0,0.3) !important;
+  backdrop-filter: blur(15px) !important;
+  -webkit-backdrop-filter: blur(15px) !important;
+  border-top: 1px solid rgba(229,9,20,0.9) !important;
+  box-shadow: 0 -1px 12px rgba(229,9,20,0.3), 0 -8px 24px rgba(0,0,0,0.6) !important;
 }
 @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
 .hero-info-year {
@@ -625,10 +626,10 @@ html, body {
 .hero-info-title {
   display: block;
   text-align: center !important;
-  font-size: 2.8rem;
+  font-size: 3.1rem;
   font-weight: 900;
   color: transparent !important;
-  -webkit-text-stroke: 0.7px white;
+  -webkit-text-stroke: 0.9px white;
   margin-bottom: 14px;
   letter-spacing: 4px;
   line-height: 1.2;
