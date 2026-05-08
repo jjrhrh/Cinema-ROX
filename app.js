@@ -168,7 +168,7 @@ document.body.style.backgroundImage = '';
     ratingEl.innerHTML = rating ? `<span class="hero-cap hero-cap-rating">⭐ ${rating}</span>` : '';
   }
 }
-    function buildMovieCard(movie, type = 'movie') {
+    function buildMovieCard(movie, type = 'movie', extraClass = '') {
   const title  = type === 'movie'
     ? (movie.title || movie.original_title)
     : (movie.name  || movie.original_name);
@@ -178,7 +178,7 @@ document.body.style.backgroundImage = '';
   const rating = movie.vote_average ? movie.vote_average.toFixed(1) : '';
   const year   = (movie.release_date || movie.first_air_date || '').slice(0,4);
   return `
-    <div class="movie-card" onclick="openDetail(${movie.id},'${type}')">
+    <div class="movie-card ${extraClass}" onclick="openDetail(${movie.id},'${type}')">
       <div class="movie-poster-wrap">
         <img class="movie-poster" src="${poster}" alt="${title}" loading="lazy"
              onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
@@ -209,9 +209,13 @@ async function loadHomePage() {
   if (!page) return;
 
   const SECTIONS = [
-    { id: 'sec_popular',  title: 'الأفلام الرائجة',  endpoint: '/movie/popular',   type: 'movie' },
-    { id: 'sec_toprated', title: 'الأعلى تقييماً',   endpoint: '/movie/top_rated', type: 'movie' },
-    { id: 'sec_tvseries', title: 'أحدث المسلسلات',   endpoint: '/tv/popular',      type: 'tv'    },
+    { id: 'sec_popular',  title: 'الأفلام الرائجة',        endpoint: '/movie/popular',   type: 'movie' },
+    { id: 'sec_toprated', title: 'الأعلى تقييماً',         endpoint: '/movie/top_rated', type: 'movie' },
+    { id: 'sec_tvseries', title: 'أحدث المسلسلات',         endpoint: '/tv/popular',      type: 'tv'    },
+    { id: 'sec_anime',    title: '🔥 أنميات الموسم',        endpoint: '/discover/tv',     type: 'tv',
+      cardClass: 'anime-card', params: { with_genres:'16', with_origin_country:'JP', sort_by:'popularity.desc' } },
+    { id: 'sec_topanime', title: '🏆 الأنمي الأعلى تقييماً', endpoint: '/discover/tv',   type: 'tv',
+      cardClass: 'anime-card', params: { with_genres:'16', with_origin_country:'JP', sort_by:'vote_average.desc', 'vote_count.gte':'200' } },
   ];
 
   // عرض الـ Skeleton فوراً بدون انتظار
@@ -229,7 +233,7 @@ async function loadHomePage() {
   // كل قسم يتحمل بشكل مستقل
   SECTIONS.forEach(async s => {
     try {
-      const movies = await fetchMovies(s.endpoint, { type: s.type });
+      const movies = await fetchMovies(s.endpoint, { type: s.type, params: s.params || {} });
       const row = document.getElementById(`${s.id}_row`);
       const container = document.getElementById(s.id);
       if (!row || !container) return;
@@ -238,7 +242,7 @@ async function loadHomePage() {
         container.remove();
         return;
       }
-      row.innerHTML = movies.map(m => buildMovieCard(m, s.type)).join('');
+      row.innerHTML = movies.map(m => buildMovieCard(m, s.type, s.cardClass || '')).join('');
     } catch (e) {
       const container = document.getElementById(s.id);
       if (container) container.remove();
