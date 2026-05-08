@@ -370,6 +370,19 @@ html, body {
   background: var(--glass); color: var(--text2);
   border: 1px solid var(--glass-border);
 }
+.detail-btn-now {
+  width: 100%;
+  padding: 14px;
+  font-size: 1rem;
+  background: #e50914;
+  color: #fff;
+  box-shadow: 0 0 22px rgba(229,9,20,0.6);
+  animation: btnPulse 2s ease-in-out infinite;
+}
+@keyframes btnPulse {
+  0%,100% { box-shadow: 0 0 22px rgba(229,9,20,0.6); }
+  50%     { box-shadow: 0 0 45px rgba(229,9,20,0.95), 0 0 70px rgba(229,9,20,0.35); }
+} 
 .detail-section { margin-top: 24px; }
 .detail-section-title {
   font-size: 0.95rem; font-weight: 900; color: var(--accent);
