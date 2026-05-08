@@ -75,12 +75,12 @@ async function loadHeroSwiper() {
   const wrapper = document.getElementById('heroSwiperWrapper');
   if (!wrapper) return;
 
-  let movies = await fetchMovies('/trending/movie/week', { limit: 5, requirePoster: true });
-  if (!movies.length) movies = await fetchMovies('/movie/popular', { limit: 5, requirePoster: true });
+let movies = await fetchMovies('/trending/movie/week', { limit: CONFIG.HERO.LIMIT, requirePoster: true });
+  if (!movies.length) movies = await fetchMovies('/movie/popular', { limit: CONFIG.HERO.LIMIT, requirePoster: true });
   if (!movies.length) return;
 
   wrapper.innerHTML = movies.map(m => {
-    const poster = `${CONFIG.IMAGES.POSTER_MD}${m.poster_path}`;
+    const poster = `${CONFIG.IMAGES[CONFIG.HERO.POSTER_SIZE]}${m.poster_path}`;
     return `<div class="swiper-slide hero-swiper-slide" onclick="openDetail(${m.id},'movie')">
       <img src="${poster}" alt="${m.title || m.original_title}"
            onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
@@ -113,13 +113,13 @@ function updateHeroInfo(movies, index) {
   if (!m) return;
 
   const imgUrl = m.backdrop_path
-    ? `${CONFIG.IMAGES.BACKDROP}${m.backdrop_path}`
+    ? `${CONFIG.IMAGES[CONFIG.HERO.BACKDROP_SIZE]}${m.backdrop_path}`
     : `${CONFIG.IMAGES.POSTER_LG}${m.poster_path}`;
 
   const backdrop = document.getElementById('heroBackdrop');
   if (backdrop) {
     backdrop.style.filter = 'blur(60px) brightness(0.4) saturate(3)';
-    backdrop.style.backgroundImage = `url('${CONFIG.IMAGES.BACKDROP}${m.backdrop_path || m.poster_path}')`;
+    backdrop.style.backgroundImage = `url('${CONFIG.IMAGES[CONFIG.HERO.BACKDROP_SIZE]}${m.backdrop_path || m.poster_path}')`;
     backdrop.classList.remove('loaded');
     setTimeout(() => backdrop.classList.add('loaded'), 80);
   }
