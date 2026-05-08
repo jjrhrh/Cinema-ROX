@@ -120,6 +120,7 @@ html, body {
 }
 .rox-item {
   document.body.style.backgroundImage = bdUrl ? `url('${bdUrl}')` : '';
+  document.body.style.backgroundBlendMode = 'luminosity';
   document.body.style.filter = bdUrl ? 'blur(60px) brightness(0.25) saturate(2)' : '';
   document.body.style.filter = bdUrl ? 'blur(0px) brightness(0.35)' : '';
   align-items: center; gap: 6px; cursor: pointer;
@@ -596,6 +597,14 @@ html, body {
   padding: 10px 0 0 !important;
   overflow: visible !important;
 }
+.hero-swiper-slide.swiper-slide-active {
+  border-radius: 28px !important;
+  animation: neonPulse 3s ease-in-out infinite !important;
+}
+@keyframes neonPulse {
+  0%,100% { box-shadow: 0 0 20px rgba(229,9,20,0.2); }
+  50%      { box-shadow: 0 0 40px rgba(229,9,20,0.5); }
+} 
 .hero-info-container {
   text-align: center !important;
   padding: 20px 16px !important;
