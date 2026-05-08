@@ -234,7 +234,7 @@ html, body {
 
 /* ===== MOVIE CARD ===== */
 .movie-card {
-  flex: 0 0 120px;
+  flex: 0 0 130px;
   scroll-snap-align: start;
   cursor: pointer;
   border-radius: 18px;
@@ -736,7 +736,7 @@ html, body {
 }
 /* ===== SKELETON LOADER ===== */
 .skeleton-card {
-  flex: 0 0 100px;
+  flex: 0 0 130px;
   aspect-ratio: 2/3;
   border-radius: 26px;
   background: linear-gradient(90deg, #111 25%, #1e1e1e 50%, #111 75%);
