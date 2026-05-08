@@ -598,23 +598,16 @@ html, body {
 }
 .hero-info-container {
   text-align: center !important;
-  padding: 24px 16px 20px !important;
+  padding: 20px 16px !important;
   position: relative !important;
   z-index: 1000 !important;
   width: 100% !important;
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  background: rgba(0,0,0,0.3) !important;
+  margin-top: -70px !important;
+  background: rgba(0,0,0,0.5) !important;
   backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
-  border-top: 1px solid rgba(229,9,20,0.8) !important;
-margin-top: -80px !important;
-  background: rgba(0,0,0,0.55) !important;
-  border-radius: 24px 24px 0 0 !important;
-  background: rgba(0,0,0,0.55) !important;
-  border-radius: 24px 24px 0 0 !important;
-  backdrop-filter: blur(15px) !important;
+  border-radius: 28px 28px 0 0 !important;
+  border-top: 1px solid rgba(229,9,20,0.6) !important;
 }
 @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
 .hero-info-year {
