@@ -63,22 +63,14 @@ VIDEO: Object.freeze({
     TMDB_VIDEO_PATH : '/videos',
   }),
   SERVERS: Object.freeze({
-    V1_MOV  : 'https://vidsrc.xyz/embed/movie/',
-    V1_TV   : 'https://vidsrc.xyz/embed/tv/',
-    V2_MOV  : 'https://vidsrc.me/embed/movie?id=',
-    V2_TV   : 'https://vidsrc.me/embed/tv?id=',
-    E2_MOV  : 'https://www.2embed.cc/embed/',
-    E2_TV   : 'https://www.2embed.cc/embedtv/',
-    ME      : 'https://multiembed.mov/?video_id=',
-    ME_SFX  : '&tmdb=1',
-    VIP_MOV : 'https://vidsrc.pro/embed/movie/',
-    VIP_TV  : 'https://vidsrc.pro/embed/tv/',
-    ANI_MOV : 'https://vidsrc.to/embed/movie/',
-    ANI_TV  : 'https://vidsrc.to/embed/tv/',
-    GLB_MOV : 'https://autoembed.to/movie/tmdb/',
-    GLB_TV  : 'https://autoembed.to/tv/tmdb/',
-    CLD_MOV : 'https://embed.su/embed/movie/',
-    CLD_TV  : 'https://embed.su/embed/tv/',
+  SERVERS: Object.freeze({
+    // ── vidsrc.to (أفلام ومسلسلات) ─────────
+    MOV       : 'https://vidsrc.to/embed/movie/',
+    TV        : 'https://vidsrc.to/embed/tv/',
+    TV_SEASON : 'https://vidsrc.to/embed/tv/',
+    TV_EP     : 'https://vidsrc.to/embed/tv/',
+    // ── vidsrc.cc (أنمي) ───────────────────
+    ANIME_EP  : 'https://vidsrc.cc/v2/embed/anime/',
   }),
   // ─────────────────────────────────────────
   //  🎬  إعدادات عرض المحتوى
