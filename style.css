@@ -5,7 +5,7 @@
   --accent-soft:   rgba(229,9,20,0.10);
   --accent2:       #e50914;
   --accent2-glow:  rgba(229,9,20,0.40);
-  --bg:            #2e0000;
+  --bg: #080000;
   --bg2:           #200000;
   --bg3:           #380000;
   --card-bg:       #1e0505;
@@ -27,7 +27,7 @@
 /* ===== BASE ===== */
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 html, body {
-  background: var(--bg);
+  background: #0a0000;
   color: var(--text);
   font-family: 'Cairo', sans-serif;
   min-height: 100vh;
@@ -490,7 +490,7 @@ html, body {
   justify-content: flex-end !important;
   padding-bottom: 24px !important;
   overflow: hidden !important;
-  background: #000 !important;
+  background: transparent !important;
 }
 .hero-backdrop {
   position: absolute !important;
