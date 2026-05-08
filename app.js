@@ -432,9 +432,11 @@ async function openWatchPage(id, type) {
     const overview = det.overview || 'لا يوجد وصف.';
     const S = CONFIG.SERVERS;
     const tvPath  = `${id}/1/1`;
+        const aioUrl = `${S.AIO}${type}/${id}${type === 'tv' ? '/1/1' : ''}`;
+          { icon:'🎥', name:'Cinema-ROX (All-in-One)', desc:'أفلام + أنمي', url:aioUrl, active:true },
 const tvQuery = `${id}&season=1&episode=1`;
 const srvs = [
-  { icon:'🚀', name:'Cinema-ROX (Ultra 4K)',    desc:'دقة خارقة',   url: type==='tv' ? S.V1_TV+tvPath  : S.V1_MOV+id,  active:true },
+        { icon:'🚀', name:'Cinema-ROX (VidSrc 1)',      desc:'سريع وموثوق',     url:(type==='tv'? S.V1_TV+tvPath : S.V1_MOV+id) },
   { icon:'👑', name:'Cinema-ROX (VIP)',          desc:'جودة ملكية',  url: type==='tv' ? `${S.V2_TV}${id}&season=1&episode=1` : S.V2_MOV+id },
   { icon:'🌍', name:'Cinema-ROX (Arabic/Global)',desc:'عربي وعالمي', url: type==='tv' ? S.GLB_TV+id+'/1/1' : S.GLB_MOV+id },
   { icon:'⚡', name:'Cinema-ROX (Anime Speed)',  desc:'فائق السرعة', url: type==='tv' ? S.ANI_TV+tvPath  : S.ANI_MOV+id },
