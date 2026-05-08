@@ -967,3 +967,29 @@ html, body {
 .ws-prod-item { display:flex; flex-direction:column; align-items:flex-end; }
 .ws-prod-val { font-size:1.55rem; font-weight:900; color:#f5c518; }
 .ws-prod-label { font-size:0.78rem; color:rgba(255,255,255,0.45); }
+/* ===== SERVER SWITCH OVERLAY ===== */
+.ws-switch-overlay {
+  position:absolute; inset:0; z-index:10;
+  background:rgba(0,0,0,0.88);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:14px;
+}
+.ws-switch-spinner {
+  width:48px; height:48px; border-radius:50%;
+  border:3px solid rgba(229,9,20,0.2);
+  border-top-color:var(--accent);
+  animation:wspin 0.8s linear infinite;
+}
+@keyframes wspin { to { transform:rotate(360deg); } }
+.ws-switch-txt {
+  color:rgba(255,255,255,0.85); font-size:0.82rem;
+  text-align:center; padding:0 20px;
+  text-shadow:0 0 12px rgba(229,9,20,0.6);
+}
+/* نيون أيقونات السيرفرات */
+.ws-card:nth-child(1) .ws-icon { filter:drop-shadow(0 0 8px gold); }
+.ws-card:nth-child(2) .ws-icon { filter:drop-shadow(0 0 8px #e50914); }
+.ws-card:nth-child(3) .ws-icon { filter:drop-shadow(0 0 8px #00aaff); }
+.ws-card:nth-child(4) .ws-icon { filter:drop-shadow(0 0 8px #22c55e); }
+.ws-card:nth-child(5) .ws-icon { filter:drop-shadow(0 0 8px #ffffff); }
+.ws-card:nth-child(6) .ws-icon { filter:drop-shadow(0 0 8px #ff8800); }
