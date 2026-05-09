@@ -597,10 +597,6 @@ html, body {
   transform: none !important;
 }
 .hero-backdrop.loaded { opacity: 1 !important; }
-@keyframes kenBurns {
-  from { transform: scale(1.08) translate(0, 0); }
-  to   { transform: scale(1.18) translate(-1%, -1%); }
-}
 .hero-gradient {
   position: absolute !important;
   inset: 0 !important;
