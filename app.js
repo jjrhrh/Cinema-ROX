@@ -219,7 +219,28 @@ async function loadHomePage() {
   ];
 
   // عرض الـ Skeleton فوراً بدون انتظار
-  page.innerHTML = SECTIONS.map(s => `
+  const cwItems = cwGetAll();
+  const cwHTML = cwItems.length ? `
+    <div id="continueSection" class="continue-section">
+      <div class="section-header">
+        <span class="section-bar"></span>
+        <h2 class="section-title">▶️ أكمل المشاهدة</h2>
+      </div>
+      <div id="continueList" class="continue-list">
+        ${cwItems.map(i => `
+          <div class="cw-card" onclick="cwResume(${i.id},'${i.type}',${i.seconds},'${i.server}')">
+            <img class="cw-thumb" src="${i.poster}" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+            <div class="cw-info">
+              <div class="cw-title">${i.title}</div>
+              <div class="cw-bar-wrap"><div class="cw-bar" style="width:${Math.min(i.seconds/7200*100,100).toFixed(1)}%"></div></div>
+              <div class="cw-time">${Math.floor(i.seconds/60)} دقيقة</div>
+            </div>
+            <button class="cw-del" onclick="event.stopPropagation();cwDelete(${i.id})">✕</button>
+          </div>`).join('')}
+      </div>
+    </div>` : '';
+
+  page.innerHTML = cwHTML + SECTIONS.map(s => `
     <div class="home-section" id="${s.id}">
       <div class="section-header">
         <span class="section-bar"></span>
@@ -674,21 +695,8 @@ function cwDelete(id) {
 }
 
 function cwRender() {
-  const sec  = document.getElementById('continueSection');
-  const list = document.getElementById('continueList');
-  if (!sec || !list) return;
-  const items = cwGetAll();
-  sec.style.display = items.length ? 'block' : 'none';
-  list.innerHTML = items.map(i => `
-    <div class="cw-card" onclick="cwResume(${i.id},'${i.type}',${i.seconds},'${i.server}')">
-      <img class="cw-thumb" src="${i.poster}" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
-      <div class="cw-info">
-        <div class="cw-title">${i.title}</div>
-        <div class="cw-bar-wrap"><div class="cw-bar" style="width:${Math.min(i.seconds/7200*100,100).toFixed(1)}%"></div></div>
-        <div class="cw-time">${Math.floor(i.seconds/60)} دقيقة</div>
-      </div>
-      <button class="cw-del" onclick="event.stopPropagation();cwDelete(${i.id})">✕</button>
-    </div>`).join('');
+function cwRender() {
+  loadHomePage();
 }
 
 function cwResume(id, type, seconds, server) {
