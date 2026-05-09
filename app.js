@@ -11,8 +11,8 @@ function bnavGo(tab) {
   document.getElementById(pageMap[tab])?.classList.add('active');
   document.getElementById(btnMap[tab])?.classList.add('active');
   if (hero) {
-  hero.style.display = tab === 'home' ? '' : 'none';
-  hero.style.visibility = tab === 'home' ? '' : 'hidden';
+  hero.style.display = (tab === 'home' || tab === 'otaku') ? '' : 'none';
+hero.style.visibility = (tab === 'home' || tab === 'otaku') ? '' : 'hidden';
 }
   if (tab === 'library') loadLibraryPage();
   if (tab === 'home' && _otakuOn) { _otakuOn = false; document.getElementById('htmlRoot').classList.remove('otaku-mode'); loadHomePage(); loadHeroSwiper(); }
@@ -80,12 +80,12 @@ let movies = await fetchMovies('/trending/movie/week', { limit: CONFIG.HERO.LIMI
   if (!movies.length) return;
 
   wrapper.innerHTML = movies.map(m => {
-    const poster = `${CONFIG.IMAGES[CONFIG.HERO.POSTER_SIZE]}${m.poster_path}`;
-    return `<div class="swiper-slide hero-swiper-slide" onclick="openDetail(${m.id},'movie')">
-      <img src="${poster}" alt="${m.title || m.original_title}"
-           onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
-    </div>`;
-  }).join('');
+  const bg = m.backdrop_path
+    ? `${CONFIG.IMAGES.BACKDROP}${m.backdrop_path}`
+    : `${CONFIG.IMAGES.POSTER_LG}${m.poster_path}`;
+  return `<div class="swiper-slide hero-swiper-slide" onclick="openDetail(${m.id},'movie')"
+    style="background-image:url('${bg}')"></div>`;
+}).join('');
 
   heroSwiper = new Swiper('#heroSwiper', {
     effect: 'coverflow',
