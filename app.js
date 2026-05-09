@@ -527,7 +527,7 @@ const isAnime = (det.genres||[]).some(g => g.id === 16)
              && (det.origin_country||[]).includes('JP');
 
 const animeParams = '&ds_lang=jp&audio=ja&sub_pref=Arabic';
-const animeCC = `https://vidsrc.cc/v2/embed/tv/${id}/${season}/${episode}/sub`;
+const animeCC = `https://vidsrc.to/embed/tv/${id}/${season}/${episode}`;
 const srvs = isAnime ? [
   { icon:'🎌', name:'PRIME',   desc:'#01 رئيسي', url:`${S.ANIME}${id}/${season}/${episode}${animeParams}`,  active:true },
   { icon:'⚡', name:'NEXUS',   desc:'#02',        url:`${S.ANIME2}${id}/${season}/${episode}`              },
