@@ -632,6 +632,55 @@ const srvs = isAnime ? [
     page.innerHTML = `<div class="loading">❌ خطأ<br><button onclick="wsGoBack()" class="detail-btn">← رجوع</button></div>`;
   }
 }
+// ===== CONTINUE WATCHING =====
+const CW_KEY = 'rox_continue';
+const CW_TTL = 604800000; // 7 أيام
+
+function cwSave(id, type, poster, title, seconds, server) {
+  const list = cwGetAll();
+  const idx  = list.findIndex(i => i.id === id);
+  const item = { id, type, poster, title, seconds, server, savedAt: Date.now() };
+  if (idx > -1) list[idx] = item; else list.unshift(item);
+  localStorage.setItem(CW_KEY, JSON.stringify(list.slice(0, 20)));
+  cwRender();
+}
+
+function cwGetAll() {
+  try {
+    const all = JSON.parse(localStorage.getItem(CW_KEY) || '[]');
+    const valid = all.filter(i => Date.now() - i.savedAt < CW_TTL);
+    if (valid.length !== all.length) localStorage.setItem(CW_KEY, JSON.stringify(valid));
+    return valid;
+  } catch { return []; }
+}
+
+function cwDelete(id) {
+  const list = cwGetAll().filter(i => i.id !== id);
+  localStorage.setItem(CW_KEY, JSON.stringify(list));
+  cwRender();
+}
+
+function cwRender() {
+  const sec  = document.getElementById('continueSection');
+  const list = document.getElementById('continueList');
+  if (!sec || !list) return;
+  const items = cwGetAll();
+  sec.style.display = items.length ? 'block' : 'none';
+  list.innerHTML = items.map(i => `
+    <div class="cw-card" onclick="cwResume(${i.id},'${i.type}',${i.seconds},'${i.server}')">
+      <img class="cw-thumb" src="${i.poster}" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+      <div class="cw-info">
+        <div class="cw-title">${i.title}</div>
+        <div class="cw-bar-wrap"><div class="cw-bar" style="width:${Math.min(i.seconds/7200*100,100).toFixed(1)}%"></div></div>
+        <div class="cw-time">${Math.floor(i.seconds/60)} دقيقة</div>
+      </div>
+      <button class="cw-del" onclick="event.stopPropagation();cwDelete(${i.id})">✕</button>
+    </div>`).join('');
+}
+
+function cwResume(id, type, seconds, server) {
+  openWatchPage(id, type, 1, 1, seconds, server);
+}
 // ===== LIBRARY HELPERS =====
 function getLib(key) {
   try { return JSON.parse(localStorage.getItem(key) || '[]'); } catch { return []; }
@@ -762,6 +811,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   bnavGo('home');
   try {
     await Promise.all([loadHeroSwiper(), loadHomePage()]);
+cwRender();
   } catch(e) {
     console.error('خطأ في التحميل:', e);
   }
