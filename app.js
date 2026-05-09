@@ -533,17 +533,30 @@ const reviewsHTML = `
 async function loadSeasonEps(tvId, seasonNum) {
   const wrap = document.getElementById(`epsWrap_${tvId}`);
   if (!wrap) return;
+  wrap.style.opacity = '0';
+  wrap.style.transform = 'translateX(30px)';
   wrap.innerHTML = '<div class="loading" style="padding:16px">⏳</div>';
   try {
     const data = await fetch(buildTMDBUrl(`/tv/${tvId}/season/${seasonNum}`)).then(r=>r.json());
+    const poster = data.poster_path ? `${CONFIG.IMAGES.BACKDROP}${data.poster_path}` : '';
+    if (poster) {
+      const dp = document.getElementById('detailPage');
+      if (dp) dp.style.backgroundImage = `linear-gradient(to bottom, rgba(0,0,0,0.7), #080000), url('${poster}')`;
+    }
     wrap.innerHTML = (data.episodes||[]).map(e=>`
       <div class="swiper-slide ep-card" onclick="openWatchPage(${tvId},'tv',${seasonNum},${e.episode_number})">
         <img data-src="${e.still_path?CONFIG.IMAGES.POSTER_MD+e.still_path:CONFIG.IMAGES.PLACEHOLDER}"
              src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
              class="lazy-img ep-thumb" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
         <div class="ep-num">ح ${e.episode_number}</div>
-        <div class="ep-title">${(e.name||'').slice(0,22)}</div>
+        <div class="ep-title">${(e.name||'').slice(0,24)}</div>
+        <div class="ep-overview">${(e.overview||'').slice(0,60)}</div>
       </div>`).join('');
+    setTimeout(() => {
+      wrap.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+      wrap.style.opacity = '1';
+      wrap.style.transform = 'translateX(0)';
+    }, 50);
     const o2 = new IntersectionObserver(en=>{en.forEach(e=>{if(e.isIntersecting){e.target.src=e.target.dataset.src;o2.unobserve(e.target);}});});
     wrap.querySelectorAll('.lazy-img').forEach(i=>o2.observe(i));
     if(window.Swiper) new Swiper(`#epsSwiper_${tvId}`,{slidesPerView:2.3,spaceBetween:10,freeMode:true,grabCursor:true});
