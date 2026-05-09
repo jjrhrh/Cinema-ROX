@@ -1112,3 +1112,19 @@ html, body {
   font-size: .85rem; cursor: pointer; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
 }
+/* ===== ANIME JP BUTTON ===== */
+.ws-jp-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 20;
+  background: linear-gradient(135deg, #bc002d, #8B0000);
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: .82rem;
+  font-family: Cairo, sans-serif;
+  cursor: pointer;
+  box-shadow: 0 0 12px #bc002d88;
+}
