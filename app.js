@@ -550,7 +550,7 @@ async function loadSeasonEps(tvId, seasonNum) {
     const poster = data.poster_path ? `${CONFIG.IMAGES.BACKDROP}${data.poster_path}` : '';
     if (poster) {
       const dp = document.getElementById('detailPage');
-      if (dp) dp.style.backgroundImage = `linear-gradient(to bottom, rgba(0,0,0,0.7), #080000), url('${poster}')`;
+      if (dp) { dp.style.backgroundImage = `linear-gradient(to bottom, rgba(0,0,0,0.7), #080000), url('${poster}')`; dp.style.backgroundSize = 'cover'; }
     }
     wrap.innerHTML = (data.episodes||[]).map(e=>`
       <div class="swiper-slide ep-card" onclick="openWatchPage(${tvId},'tv',${seasonNum},${e.episode_number})">
