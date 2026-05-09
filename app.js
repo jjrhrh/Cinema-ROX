@@ -233,7 +233,7 @@ async function loadHomePage() {
             <div class="cw-info">
               <div class="cw-title">${i.title}</div>
               <div class="cw-bar-wrap"><div class="cw-bar" style="width:${Math.min(i.seconds/7200*100,100).toFixed(1)}%"></div></div>
-              <div class="cw-time">${Math.floor(i.seconds/60)} دقيقة</div>
+              <div class="cw-time">${Math.floor(i.seconds/60)} دقيقة ${i.server ? '· '+i.server : ''}</div>
             </div>
             <button class="cw-del" onclick="event.stopPropagation();cwDelete(${i.id})">✕</button>
           </div>`).join('')}
