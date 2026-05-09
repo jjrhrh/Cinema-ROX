@@ -33,7 +33,20 @@ function bnavGo(tab) {
   window.scrollTo(0, 0);
 }
 
-function goBack() { bnavGo('home'); }
+function goBack() {
+  const hero = document.getElementById('heroSection');
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('homePage').classList.add('active');
+  if (_otakuOn) {
+    document.getElementById('bnavOtaku').classList.add('active');
+    if (hero) { hero.style.display = ''; hero.style.visibility = ''; }
+  } else {
+    document.getElementById('bnavHome').classList.add('active');
+    if (hero) { hero.style.display = ''; hero.style.visibility = ''; }
+  }
+  window.scrollTo(0, 0);
+}
 
 // ===== ROX MENU =====
 let roxOpen = false;
