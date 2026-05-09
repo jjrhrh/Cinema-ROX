@@ -381,6 +381,7 @@ async function openDetail(id, type = 'movie') {
   const hero = document.getElementById('heroSection');
   if (hero) hero.style.display = 'none';
   window.scrollTo(0, 0);
+  page.style.backgroundImage = '';
   page.innerHTML = '<div class="loading">⏳ جاري تحميل التفاصيل...</div>';
 
   try {
