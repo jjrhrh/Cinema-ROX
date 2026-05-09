@@ -6,9 +6,8 @@ function bnavGo(tab) {
 
   if (tab === 'browse') { toggleRoxMenu(); return; }
 
-  const pageMap = { home:'homePage', search:'searchPage', library:'libraryPage', profile:'profilePage' };
-  const btnMap  = { home:'bnavHome', search:'bnavSearch', library:'bnavLibrary', profile:'bnavProfile' };
-
+  const pageMap = { home:'homePage', search:'searchPage', library:'libraryPage', profile:'profilePage', otaku:'homePage' };
+  const btnMap  = { home:'bnavHome', search:'bnavSearch', library:'bnavLibrary', profile:'bnavProfile', otaku:'bnavOtaku' };
   document.getElementById(pageMap[tab])?.classList.add('active');
   document.getElementById(btnMap[tab])?.classList.add('active');
   if (hero) {
