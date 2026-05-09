@@ -112,7 +112,7 @@ HERO: Object.freeze({
   TV21 : 'https://111movies.net/tv/',
   TV22 : 'https://multiembed.mov/directstream.php?video_id=',
   TV23 : 'https://vidsrc.me/embed/tv/',
-  TV24 : 'https://autoembed.cc/tv/tmdb/',
+  TV24 : 'https://vidsrc.to/embed/tv/',
   TV25 : 'https://embed.su/embed/tv/',
   // ── أنمي ──
   ANIME  : 'https://vidsrc-embed.ru/embed/tv/',
@@ -136,7 +136,7 @@ HERO: Object.freeze({
   ANIME19: 'https://111movies.net/tv/',
   ANIME20: 'https://multiembed.mov/directstream.php?video_id=',
   ANIME21: 'https://vidsrc.me/embed/tv/',
-  ANIME22: 'https://autoembed.cc/tv/tmdb/',
+  ANIME22: 'https://vidsrc.to/embed/tv/',
   ANIME23: 'https://embed.su/embed/tv/',
 }),
   // ─────────────────────────────────────────
