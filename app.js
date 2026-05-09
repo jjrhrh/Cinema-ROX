@@ -80,7 +80,7 @@ let movies = await fetchMovies('/trending/movie/week', { limit: CONFIG.HERO.LIMI
   if (!movies.length) return;
 
   wrapper.innerHTML = movies.map(m => {
-    const poster = `${CONFIG.IMAGES[CONFIG.HERO.POSTER_SIZE]}${m.poster_path}`;
+    const poster = `${CONFIG.IMAGES.POSTER_XL}${m.poster_path}`;
     return `<div class="swiper-slide hero-swiper-slide" onclick="openDetail(${m.id},'movie')">
       <img src="${poster}" alt="${m.title || m.original_title}"
            onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
