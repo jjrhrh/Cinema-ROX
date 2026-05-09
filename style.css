@@ -1117,7 +1117,7 @@ html, body {
 .bnav-otaku { color: #9333ea; }
 .bnav-otaku.active { color: #06b6d4; }
 
-.otaku-pulse { display:inline-block; animation: otakuPulse 1.4s ease-in-out infinite; }
+.otaku-pulse { display:inline-block; }
 @keyframes otakuPulse {
   0%,100% { text-shadow: 0 0 8px #9333ea; transform: scale(1); }
   50%      { text-shadow: 0 0 24px #06b6d4, 0 0 40px #9333ea; transform: scale(1.18); }
