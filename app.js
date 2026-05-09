@@ -1,6 +1,5 @@
 // ===== NAVIGATION =====
 function bnavGo(tab) {
-  const hero = document.getElementById('heroSection');
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
 
