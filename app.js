@@ -9,10 +9,6 @@ function bnavGo(tab) {
   const btnMap  = { home:'bnavHome', search:'bnavSearch', library:'bnavLibrary', profile:'bnavProfile', otaku:'bnavOtaku' };
   document.getElementById(pageMap[tab])?.classList.add('active');
   document.getElementById(btnMap[tab])?.classList.add('active');
-  if (hero) {
-  hero.style.display = (tab === 'home' || tab === 'otaku') ? '' : 'none';
-hero.style.visibility = (tab === 'home' || tab === 'otaku') ? '' : 'hidden';
-}
   if (tab === 'library') loadLibraryPage();
   if (tab === 'home' && _otakuOn) { _otakuOn = false; document.getElementById('htmlRoot').classList.remove('otaku-mode'); loadHomePage(); loadHeroSwiper(); }
   window.scrollTo(0, 0);
