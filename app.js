@@ -748,7 +748,6 @@ const srvs = isAnime ? [
             <div class="ws-play-btn">▶</div>
             <span class="ws-play-lbl">اضغط للمشاهدة</span>
           </div>
-          ${isAnime ? `<button class="ws-jp-btn" onclick="document.getElementById('wsFrame').src='${animeCC}'">🇯🇵 النسخة اليابانية الأصلية</button>` : ''}
           <iframe id="wsFrame" class="ws-frame" src="" allowfullscreen allow="autoplay"
             onload="if(this.src)cwTrackTime(${id},'${type}','${cwPoster}','${cwTitle}')">
           </iframe>
