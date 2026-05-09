@@ -30,6 +30,7 @@ function bnavGo(tab) {
   }
   if (tab === 'home') { loadHeroSwiper(); loadHomePage(); }
   if (tab === 'library') loadLibraryPage();
+  if (tab === 'home' && _otakuOn) { _otakuOn = false; document.getElementById('htmlRoot').classList.remove('otaku-mode'); loadHomePage(); loadHeroSwiper(); }
   window.scrollTo(0, 0);
 }
 
