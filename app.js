@@ -6,15 +6,29 @@ function bnavGo(tab) {
 
   if (tab === 'browse') { toggleRoxMenu(); return; }
 
+  if (tab === 'home' && _otakuOn) {
+    _otakuOn = false;
+    document.getElementById('htmlRoot').classList.remove('otaku-mode');
+    document.getElementById('bnavOtaku').classList.remove('active');
+    document.getElementById('homePage').classList.add('active');
+    document.getElementById('bnavHome').classList.add('active');
+    if (hero) { hero.style.display = ''; hero.style.visibility = ''; }
+    loadHeroSwiper();
+    loadHomePage();
+    window.scrollTo(0, 0);
+    return;
+  }
+
   const pageMap = { home:'homePage', search:'searchPage', library:'libraryPage', profile:'profilePage' };
   const btnMap  = { home:'bnavHome', search:'bnavSearch', library:'bnavLibrary', profile:'bnavProfile' };
 
   document.getElementById(pageMap[tab])?.classList.add('active');
   document.getElementById(btnMap[tab])?.classList.add('active');
   if (hero) {
-  hero.style.display = tab === 'home' ? '' : 'none';
-  hero.style.visibility = tab === 'home' ? '' : 'hidden';
-}
+    hero.style.display = tab === 'home' ? '' : 'none';
+    hero.style.visibility = tab === 'home' ? '' : 'hidden';
+  }
+  if (tab === 'home') { loadHeroSwiper(); loadHomePage(); }
   if (tab === 'library') loadLibraryPage();
   window.scrollTo(0, 0);
 }
