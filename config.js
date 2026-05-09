@@ -21,7 +21,7 @@ HERO: Object.freeze({
     LIMIT         : 5,
     AUTOPLAY_MS   : 6500,
     TRANSITION_MS : 400,
-    POSTER_SIZE   : 'POSTER_LG',
+    POSTER_SIZE   : 'POSTER_MD',
     BACKDROP_SIZE : 'BACKDROP',
   }),
   // ─────────────────────────────────────────
