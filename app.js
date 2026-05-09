@@ -317,17 +317,18 @@ async function openDetail(id, type = 'movie') {
     const arRevs    = allRevs.filter(r => /[\u0600-\u06FF]/.test(r.content));
     const reviews   = (arRevs.length ? arRevs : allRevs).slice(0, 3);
     const tvSeasons = type === 'tv' ? (detail.seasons||[]).filter(s=>s.season_number>0) : [];
-const reviewsHTML = reviews.length ? `
+const reviewsHTML = `
       <div class="detail-section">
         <h3 class="detail-section-title">💬 التعليقات</h3>
         <div class="reviews-list">
-          ${reviews.map(r=>`
+          ${reviews.length ? reviews.map(r=>`
             <div class="review-card">
               <div class="review-author">✍️ ${r.author}</div>
-              <p class="review-content">${r.content.slice(0,250)}${r.content.length>250?'…':''}</p>
-            </div>`).join('')}
+              <p class="review-content">${r.content.slice(0,300)}${r.content.length>300?'…':''}</p>
+            </div>`).join('') :
+            `<div class="review-empty">🎬 لا توجد تعليقات متاحة لهذا المحتوى حتى الآن</div>`}
         </div>
-      </div>` : '';
+      </div>`;
 
     const seasonsHTML = tvSeasons.length ? `
       <div class="seasons-glass">
@@ -359,9 +360,9 @@ const reviewsHTML = reviews.length ? `
           <div class="detail-info">
             <h1 class="detail-title">${title}</h1>
             <div class="detail-stats-bar">
-              <span class="stat-cap">👁 ${detail.popularity?Math.round(detail.popularity).toLocaleString():'—'}</span>
-              <span class="stat-cap stat-gold">⭐ ${rating}</span>
-              ${detail.vote_count?`<span class="stat-cap">🗳 ${detail.vote_count.toLocaleString()}</span>`:''}
+              <div class="stat-cap stat-views">👁 <span>${detail.popularity?Math.round(detail.popularity*1000).toLocaleString():'—'}</span></div>
+              <div class="stat-cap stat-gold">⭐ <span>${rating}</span></div>
+              <div class="stat-cap stat-votes">🗳 <span>${detail.vote_count?detail.vote_count.toLocaleString():'—'}</span></div>
             </div>
             <div class="detail-meta">
               ${year    ?`<span class="detail-badge">📅 ${year}</span>`:''}
