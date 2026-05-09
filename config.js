@@ -85,6 +85,9 @@ HERO: Object.freeze({
   MOV20: 'https://vidsrc.online/embed/movie/',
   MOV21: 'https://111movies.net/movie/',
   MOV22: 'https://multiembed.mov/directstream.php?video_id=',
+  MOV23: 'https://vidsrc.me/embed/movie/',
+  MOV24: 'https://autoembed.cc/movie/tmdb/',
+  MOV25: 'https://embed.su/embed/movie/',
   // ── مسلسلات ──
   TV   : 'https://vidsrc-embed.ru/embed/tv/',
   TV2  : 'https://vidsrc-embed.su/embed/tv/',
@@ -108,6 +111,9 @@ HERO: Object.freeze({
   TV20 : 'https://vidsrc.online/embed/tv/',
   TV21 : 'https://111movies.net/tv/',
   TV22 : 'https://multiembed.mov/directstream.php?video_id=',
+  TV23 : 'https://vidsrc.me/embed/tv/',
+  TV24 : 'https://autoembed.cc/tv/tmdb/',
+  TV25 : 'https://embed.su/embed/tv/',
   // ── أنمي ──
   ANIME  : 'https://vidsrc-embed.ru/embed/tv/',
   ANIME2 : 'https://vidsrc-embed.su/embed/tv/',
@@ -129,6 +135,9 @@ HERO: Object.freeze({
   ANIME18: 'https://vidsrc.online/embed/tv/',
   ANIME19: 'https://111movies.net/tv/',
   ANIME20: 'https://multiembed.mov/directstream.php?video_id=',
+  ANIME21: 'https://vidsrc.me/embed/tv/',
+  ANIME22: 'https://autoembed.cc/tv/tmdb/',
+  ANIME23: 'https://embed.su/embed/tv/',
 }),
   // ─────────────────────────────────────────
   //  🎬  إعدادات عرض المحتوى
