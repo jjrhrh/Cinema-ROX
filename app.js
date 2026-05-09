@@ -479,7 +479,7 @@ function wsGoBack() {
   } else { goBack(); }
   window.scrollTo(0, 0);
 }
-async function openWatchPage(id, type, season = 1, episode = 1) {
+async function openWatchPage(id, type, season = 1, episode = 1, resumeSec = 0, resumeSrv = '') {
   const page = document.getElementById('watchPage');
   if (!page) return;
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -497,7 +497,10 @@ async function openWatchPage(id, type, season = 1, episode = 1) {
     const genres = (det.genres || []).map(g => g.name).join(' · ');
     const overview = det.overview || 'لا يوجد وصف.';
     const S = CONFIG.SERVERS;
-
+    // احفظ فوراً في Continue Watching
+    const cwPoster = det.poster_path ? CONFIG.IMAGES.POSTER_MD + det.poster_path : CONFIG.IMAGES.PLACEHOLDER;
+    const cwTitle  = type === 'movie' ? (det.title || det.original_title) : (det.name || det.original_name);
+    cwSave(id, type, cwPoster, cwTitle, resumeSec || 0, resumeSrv || '');
 // تحقق إذا الأنمي (genre_id 16 = Animation + JP)
 const isAnime = (det.genres||[]).some(g => g.id === 16)
              && (det.origin_country||[]).includes('JP');
@@ -598,7 +601,8 @@ const srvs = isAnime ? [
             <div class="ws-play-btn">▶</div>
             <span class="ws-play-lbl">اضغط للمشاهدة</span>
           </div>
-          <iframe id="wsFrame" class="ws-frame" src="" allowfullscreen allow="autoplay"></iframe>
+          <iframe id="wsFrame" class="ws-frame" src="" allowfullscreen allow="autoplay"
+            onload="if(this.src)cwTrackTime(${id},'${type}','${cwPoster}','${cwTitle}')"></iframe>
           <div id="wsSwitchOverlay" class="ws-switch-overlay" style="display:none">
             <div class="ws-switch-spinner"></div>
             <span class="ws-switch-txt">يتم الاتصال بسيرفرات Cinema-ROX الخاصة...</span>
@@ -633,6 +637,15 @@ const srvs = isAnime ? [
   }
 }
 // ===== CONTINUE WATCHING =====
+let _cwTimer = null;
+function cwTrackTime(id, type, poster, title) {
+  clearInterval(_cwTimer);
+  let sec = 0;
+  _cwTimer = setInterval(() => {
+    sec += 10;
+    cwSave(id, type, poster, title, sec, '');
+  }, 10000);
+}
 const CW_KEY = 'rox_continue';
 const CW_TTL = 604800000; // 7 أيام
 
