@@ -192,7 +192,12 @@ HERO: Object.freeze({
     DESCRIPTION : 'موقع أفلام ومسلسلات بمستوى عالمي',
     AUTHOR      : 'Cinema-ROX Team',
   }),
-
+  
+NEWS: Object.freeze({
+    PROXY  : 'https://api.rss2json.com/v1/api.json?rss_url=',
+    CINEMA : 'https://feed.ign.com/ign/all',
+    ANIME  : 'https://www.animenewsnetwork.com/all/rss.xml',
+  }),
 });
 
 // ─────────────────────────────────────────
