@@ -252,7 +252,6 @@ html, body {
 /* ===== ANIME CARD — Purple Neon ===== */
 .anime-card {
   border: 1px solid rgba(147,51,234,0.55) !important;
-  box-shadow: 0 4px 16px rgba(147,51,234,0.25) !important;
 }
 .anime-card:hover {
   border-color: rgba(167,71,254,0.95) !important;
