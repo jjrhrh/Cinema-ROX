@@ -459,7 +459,7 @@ const reviewsHTML = `
         <div class="seasons-header">
           <h3 class="detail-section-title" style="margin:0">📺 المواسم والحلقات</h3>
           <select class="season-select" onchange="loadSeasonEps(${id},+this.value)">
-            ${tvSeasons.map(s=>`<option value="${s.season_number}">الموسم ${s.season_number}</option>`).join('')}
+            ${tvSeasons.map(s=>`<option value="${s.season_number}">الموسم ${s.season_number} · ${s.episode_count} ح</option>`).join('')}
           </select>
         </div>
         <div class="swiper eps-swiper" id="epsSwiper_${id}">
@@ -467,6 +467,12 @@ const reviewsHTML = `
             <div class="loading" style="padding:16px">⏳</div>
           </div>
         </div>
+        ${(network||totalEps||status) ? `
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
+          ${status?`<span class="detail-badge">${status}</span>`:''}
+          ${network?`<span class="detail-badge">📡 ${network}</span>`:''}
+          ${totalEps?`<span class="detail-badge">🎬 ${totalEps} حلقة</span>`:''}
+        </div>` : ''}
       </div>` : '';
     const trailerBtn = trailer
       ? `<button class="detail-btn detail-btn-trailer" onclick="playTrailer('${trailer.key}')">▶ المقطع الدعائي</button>`
