@@ -682,10 +682,6 @@ html, body {
 .hero-swiper-slide.swiper-slide-active {
   box-shadow: 0 0 0 1px rgba(229,9,20,0.8), 0 0 40px rgba(229,9,20,0.5), 0 0 80px rgba(229,9,20,0.2) !important;
 }
-@keyframes neonPulse {
-  0%,100% { box-shadow: 0 0 20px rgba(229,9,20,0.2); }
-  50%      { box-shadow: 0 0 40px rgba(229,9,20,0.5); }
-} 
 .hero-info-container {
   text-align: center !important;
   padding: 20px 16px !important;
