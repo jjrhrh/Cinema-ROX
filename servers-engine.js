@@ -1,6 +1,6 @@
 const QUICK_SERVERS = {
   anime: [
-    { label: '1', url: (id, s, e) => `https://vidsrc-embed.ru/embed/tv/${id}/${s}/${e}` },
+    { label: '1', url: (id, s, e, title) => `https://vidsrc-embed.ru/embed/tv/${id}/${s}/${e}?title=${encodeURIComponent(title||'')}` },
     { label: '2', url: (id, s, e) => `https://vidsrc.dev/embed/tv/${id}/${s}/${e}` },
     { label: '3', url: (id, s, e) => `https://vidsrc.to/embed/tv/${id}/${s}/${e}` },
     { label: '4', url: (id, s, e) => `https://vidsrc.cc/v2/embed/tv/${id}/${s}/${e}` },
