@@ -306,7 +306,17 @@ async function loadOtakuHero() {
 async function loadHomePage() {
   const page = document.getElementById('homePage');
   if (!page) return;
-
+if (jsonData?.latest_episodes?.length) {
+    const row = document.getElementById('sec_latest_eps_row');
+    if (row) row.innerHTML = jsonData.latest_episodes.map(ep => `
+      <div class="movie-card" onclick="openDetail(${ep.tmdb_id},'${ep.type}')">
+        <img src="${ep.poster}" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'" class="movie-thumb">
+        <div class="movie-card-info">
+          <div class="movie-title">${ep.title}</div>
+          <div class="ep-badge">ح ${ep.episode}</div>
+        </div>
+      </div>`).join('');
+  }
   const SECTIONS = [
     { id: 'sec_popular',  title: 'الأفلام الرائجة',   endpoint: '/movie/popular',   type: 'movie' },
     { id: 'sec_toprated', title: 'الأعلى تقييماً',    endpoint: '/movie/top_rated', type: 'movie' },
