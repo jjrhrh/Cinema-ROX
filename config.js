@@ -46,6 +46,9 @@ HERO: Object.freeze({
     BACKDROP    : 'https://image.tmdb.org/t/p/w1280',
     ORIGINAL    : 'https://image.tmdb.org/t/p/original',
     PLACEHOLDER : '/assets/images/no-poster.png',
+    STILL_SM    : 'https://image.tmdb.org/t/p/w185',
+    STILL_MD    : 'https://image.tmdb.org/t/p/w300',
+    PROFILE     : 'https://image.tmdb.org/t/p/w185',
   }),
 
   // ─────────────────────────────────────────
@@ -58,8 +61,11 @@ HERO: Object.freeze({
     INCLUDE_ADULT     : false,   // إخفاء المحتوى الكبار
   }),
   VIDEO: Object.freeze({
-    YOUTUBE_EMBED   : 'https://www.youtube.com/embed/',
-    TMDB_VIDEO_PATH : '/videos',
+    YOUTUBE_EMBED    : 'https://www.youtube.com/embed/',
+    TMDB_VIDEO_PATH  : '/videos',
+    YOUTUBE_PARAMS   : '?autoplay=0&rel=0&modestbranding=1&cc_load_policy=0',
+    YOUTUBE_NOCOOKIE : 'https://www.youtube-nocookie.com/embed/',
+    TRAILER_TYPE     : 'Trailer',
   }),
   SERVERS: Object.freeze({
   // ── أفلام ──
