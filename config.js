@@ -201,8 +201,8 @@ HERO: Object.freeze({
   
 NEWS: Object.freeze({
     PROXY  : 'https://api.rss2json.com/v1/api.json?rss_url=',
-    CINEMA : 'https://www.elcinema.com/rss/news/',
-    ANIME  : 'https://animeiat.co/feed/',
+    CINEMA : 'https://www.aljazeera.net/rss/culture-arts',
+    ANIME  : 'https://myanimelist.net/rss/news.xml',
   }),
 });
 
