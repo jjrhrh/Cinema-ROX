@@ -1,3 +1,10 @@
+async function loadDataJSON() {
+  try {
+    const r = await fetch(`${CONFIG.DATA.JSON_URL}?t=${Date.now()}`);
+    if (!r.ok) return null;
+    return await r.json();
+  } catch { return null; }
+}
 // ===== NAVIGATION =====
 function bnavGo(tab) {
   const hero = document.getElementById('heroSection');
