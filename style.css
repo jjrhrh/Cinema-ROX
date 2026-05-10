@@ -854,10 +854,6 @@ html, body {
 }
 .hero-swiper-slide img {
   width: 100%; height: 100%; object-fit: cover;
-  border-radius: 22px !important;
-}
-.hero-swiper-slide img {
-  width: 100%; height: 100%; object-fit: cover;
   border-radius: 26px !important;
 }
 .swiper-slide-active.hero-swiper-slide {
