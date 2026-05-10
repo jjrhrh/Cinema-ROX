@@ -3,7 +3,7 @@ function bnavGo(tab) {
   const hero = document.getElementById('heroSection');
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
-
+  document.getElementById('newsSection').style.display = 'none';
   if (tab === 'browse') { toggleRoxMenu(); return; }
 
   if (tab === 'home' && _otakuOn) {
