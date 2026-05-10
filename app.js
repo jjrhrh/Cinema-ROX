@@ -645,7 +645,7 @@ async function openWatchPage(id, type, season = 1, episode = 1, resumeSec = 0, r
 const isAnime = (det.genres||[]).some(g => g.id === 16)
              && (det.origin_country||[]).includes('JP');
 
-const animeParams = '&ds_lang=jp&audio=ja&sub_pref=Arabic';
+const animeParams = '&lang=ja&audio=ja&dubbed=false&dub=false';
 const animeCC = `https://vidsrc.to/embed/tv/${id}/${season}/${episode}`;
 const srvs = isAnime ? [
   { icon:'🎌', name:'PRIME',   desc:'#01 رئيسي', url:`${S.ANIME}${id}/${season}/${episode}${animeParams}`,  active:true },
@@ -670,7 +670,11 @@ const srvs = isAnime ? [
   { icon:'🏅', name:'VULCAN',  desc:'#20 VIP',    url:`${S.ANIME20}${id}&tmdb=1&s=${season}&e=${episode}`  },
   { icon:'🎖', name:'SIGMA',   desc:'#21',    url:`${S.ANIME21}${id}/${season}/${episode}`  },
   { icon:'🌠', name:'NEXUS-X', desc:'#22 4K', url:`${S.ANIME22}${id}-${season}-${episode}`  },
-  { icon:'💠', name:'EMBED',   desc:'#23',    url:`${S.ANIME23}${id}/${season}/${episode}`  },
+  { icon:'💠', name:'EMBED',   desc:'#23',    url:`${S.ANIME23}${id}/${season}/${episode}${animeParams}`  },
+  { icon:'🎐', name:'SAKURA',  desc:'#24', url:`${S.ANIME24}${id}/${season}/${episode}` },
+  { icon:'🌊', name:'TSUNAMI', desc:'#25', url:`${S.ANIME25}${id}&s=${season}&e=${episode}` },
+  { icon:'🔥', name:'INFERNO', desc:'#26', url:`${S.ANIME26}${id}/${season}/${episode}` },
+  { icon:'⚔️', name:'KATANA',  desc:'#27', url:`${S.ANIME27}${id}/${season}/${episode}` },
 ] : type === 'tv' ? [
   { icon:'📺', name:'PRIME',   desc:'#01 رئيسي', url:`${S.TV}${id}/${season}/${episode}`,                 active:true },
   { icon:'⚡', name:'NEXUS',   desc:'#02',        url:`${S.TV2}${id}/${season}/${episode}`                 },
