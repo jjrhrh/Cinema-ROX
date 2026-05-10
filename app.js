@@ -393,7 +393,7 @@ async function openDetail(id, type = 'movie') {
     const credits = await cRes.json();
     const revData = await rRes.json();
 
-    const trailer = (videos.results || []).find(v => v.type === 'Trailer' && v.site === 'YouTube')
+    const trailer = (videos.results || []).find(v => v.type === CONFIG.VIDEO.TRAILER_TYPE && v.site === 'YouTube')
                  || (videos.results || [])[0];
 
     const backdrop = detail.backdrop_path
@@ -422,7 +422,7 @@ async function openDetail(id, type = 'movie') {
         <div class="cast-row">
           ${cast.map(a => `
             <div class="cast-card">
-              <img data-src="${a.profile_path ? CONFIG.IMAGES.POSTER_SM+a.profile_path : CONFIG.IMAGES.PLACEHOLDER}"
+              <img data-src="${a.profile_path ? CONFIG.IMAGES.PROFILE+a.profile_path : CONFIG.IMAGES.PLACEHOLDER}"
                    src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
                    alt="${a.name}" class="lazy-img cast-img"
                    onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
@@ -544,14 +544,14 @@ async function loadSeasonEps(tvId, seasonNum) {
   wrap.innerHTML = '<div class="loading" style="padding:16px">⏳</div>';
   try {
     const data = await fetch(buildTMDBUrl(`/tv/${tvId}/season/${seasonNum}`)).then(r=>r.json());
-    const poster = data.poster_path ? `${CONFIG.IMAGES.BACKDROP}${data.poster_path}` : '';
+    const poster = data.poster_path ? `${CONFIG.IMAGES.POSTER_MD}${data.poster_path}` : '';
     if (poster) {
       const dp = document.getElementById('detailPage');
       if (dp) { dp.style.backgroundImage = `linear-gradient(to bottom, rgba(0,0,0,0.7), #080000), url('${poster}')`; dp.style.backgroundSize = 'cover'; }
     }
     wrap.innerHTML = (data.episodes||[]).map(e=>`
       <div class="swiper-slide ep-card" onclick="openWatchPage(${tvId},'tv',${seasonNum},${e.episode_number})">
-        <img data-src="${e.still_path?CONFIG.IMAGES.POSTER_MD+e.still_path:CONFIG.IMAGES.PLACEHOLDER}"
+        <img data-src="${e.still_path?CONFIG.IMAGES.STILL_MD+e.still_path:CONFIG.IMAGES.PLACEHOLDER}"
              src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
              class="lazy-img ep-thumb" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
         <div class="ep-num">ح ${e.episode_number}</div>
@@ -572,7 +572,7 @@ function playTrailer(key) {
   const overlay = document.getElementById('trailerOverlay');
   const frame   = document.getElementById('trailerFrame');
   if (!overlay || !frame) return;
-  frame.src = `${CONFIG.VIDEO.YOUTUBE_EMBED}${key}?autoplay=1`;
+  frame.src = `${CONFIG.VIDEO.YOUTUBE_NOCOOKIE}${key}?autoplay=1&rel=0&modestbranding=1`;
   overlay.classList.remove('hidden');
   document.getElementById('closeTrailer')?.addEventListener('click', () => {
     overlay.classList.add('hidden');
