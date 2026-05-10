@@ -135,7 +135,7 @@ HERO: Object.freeze({
   TV32: 'https://superembed.stream/embed/tv/',
   // ── أنمي ──
   ANIME  : 'https://vidsrc-embed.ru/embed/tv/',
-  ANIME2 : 'https://vidsrc-embed.su/embed/tv/',
+  ANIME2 : 'https://vidsrc.dev/embed/tv/',
   ANIME3 : 'https://vidsrc.icu/embed/tv/',
   ANIME4 : 'https://vidsrc.cc/v2/embed/tv/',
   ANIME5 : 'https://vidsrc.dev/embed/tv/',
