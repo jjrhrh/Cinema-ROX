@@ -788,6 +788,11 @@ const srvs = isAnime ? [
           <h3 class="ws-stitle">🟢 مصادر البث</h3>
           <span class="ws-srv-sub">🔒 السيرفرات الخاصة</span>
         </div>
+        <div class="ws-quick-btns">
+          ${srvs.slice(0,10).map((s,i)=>`
+            <button class="ws-quick-btn" onclick="document.getElementById('wsFrame').src='${s.url}';document.querySelectorAll('.ws-quick-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active')">${i+1}</button>
+          `).join('')}
+        </div>
         <div class="ws-grid">${srvHTML}</div>
         <p class="ws-note">إذا لم يعمل البيزمبر جرب آخر</p>
       </div>
