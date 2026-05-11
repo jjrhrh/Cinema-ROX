@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>مشاهدة — アニメ·KO</title>
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="anime.css">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
 <!-- HLS.js لتشغيل روابط M3U8 -->
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
@@ -12,7 +12,7 @@
 <body class="player-page">
 
 <nav>
-  <a href="index.html" class="back-btn">← رجوع</a>
+  <a href="anime.html" class="back-btn">← رجوع</a>
   <div class="logo">アニメ·<em>KO</em></div>
 </nav>
 
@@ -74,7 +74,7 @@
 
 </div>
 
-<script src="js/main.js"></script>
-<script src="js/player.js"></script>
+<script src="anime.js"></script>
+<script src="player.js"></script>
 </body>
 </html>
