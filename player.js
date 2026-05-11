@@ -1,404 +1,192 @@
 /* ═══════════════════════════════════════════
-   السيرفرات — كل واحد له طريقة تضمين مختلفة
+   السيرفرات
 ═══════════════════════════════════════════ */
-
-/*
-  كيف تشتغل السيرفرات؟
-  ────────────────────
-  1. مواقع زي GogoAnime و9anime لديها مشغّل خاص
-     يمكن تضمينه مباشرة عبر iframe.
-  2. بعض المواقع تتيح رابط embed مباشر.
-  3. السيرفرات الـ CDN تعطي روابط mp4/m3u8 مباشرة.
-  
-  الفكرة الأساسية:
-  ─────────────────
-  كل سيرفر له دالة buildUrl(slug, ep)
-  تبني رابط الـ iframe أو الفيديو المباشر.
-  عند الضغط على السيرفر → تستدعي الدالة → تحمّل الرابط.
-*/
-
 const SERVERS = [
-  // ─── سيرفرات iframe (يفتح مشغّل داخل الصفحة) ───
-  {
-    id:    'gogo-sub',
-    label: 'GogoAnime SUB',
-    icon:  '🟢',
-    type:  'iframe',
-    lang:  'مترجم',
-    // يبني رابط مشغّل gogoanime المضمّن
-    buildUrl: (slug, ep) =>
-      `https://gogoanime3.co/${slug}-episode-${ep}`
-  },
-  {
-    id:    'gogo-dub',
-    label: 'GogoAnime DUB',
-    icon:  '🟣',
-    type:  'iframe',
-    lang:  'مدبلج',
-    buildUrl: (slug, ep) =>
-      `https://gogoanime3.co/${slug}-dub-episode-${ep}`
-  },
-  {
-    id:    'anix',
-    label: 'Anix',
-    icon:  '🔵',
-    type:  'iframe',
-    lang:  'مترجم',
-    buildUrl: (slug, ep) =>
-      `https://anix.to/watch/${slug}?ep=${ep}`
-  },
-  {
-    id:    'aniwave',
-    label: 'AniWave',
-    icon:  '🌊',
-    type:  'iframe',
-    lang:  'مترجم',
-    buildUrl: (slug, ep) =>
-      `https://aniwave.to/watch/${slug}/ep-${ep}`
-  },
-  {
-    id:    'anime4up',
-    label: 'Anime4up AR',
-    icon:  '🎬',
-    type:  'iframe',
-    lang:  '🇸🇦 عربي',
-    buildUrl: (slug, ep) =>
-      `https://anime4up.cam/episode/${slug}-${ep}/`
-  },
-  {
-    id:    'risto',
-    label: 'Ristoanime AR',
-    icon:  '🟥',
-    type:  'iframe',
-    lang:  '🇸🇦 عربي',
-    buildUrl: (slug, ep) =>
-      `https://ristoanime.co/episode/${slug}-episode-${ep}/`
-  },
-  {
-    id:    'witanime',
-    label: 'WitAnime AR',
-    icon:  '🧡',
-    type:  'iframe',
-    lang:  '🇸🇦 عربي',
-    buildUrl: (slug, ep) =>
-      `https://witanime.cyou/episode/${slug}-${ep}/`
-  },
-  {
-    id:    'anime-sama',
-    label: 'Anime-Sama FR',
-    icon:  '🇫🇷',
-    type:  'iframe',
-    lang:  'فرنسي',
-    buildUrl: (slug, ep) =>
-      `https://anime-sama.fr/catalogue/${slug}/ep${ep}/vostfr.html`
-  },
-{
-    id:    'aniwatch',
-    label: 'AniWatch',
-    icon:  '🟦',
-    type:  'iframe',
-    lang:  'مترجم',
-    buildUrl: (slug, ep) =>
-      `https://aniwatch.to/watch/${slug}?ep=${ep}`
-  },
-  {
-    id:    'shahiid',
-    label: 'Shahiid AR',
-    icon:  '👑',
-    type:  'iframe',
-    lang:  '🇸🇦 مدبلج',
-    buildUrl: (slug, ep) =>
-      `https://shahiid-anime.net/episode/${slug}-episode-${ep}/`
-  },
-  {
-    id:    'anime3rb',
-    label: 'Anime3rb AR',
-    icon:  '🌙',
-    type:  'iframe',
-    lang:  '🇸🇦 عربي',
-    buildUrl: (slug, ep) =>
-      `https://anime3rb.com/episodes/${slug}-${ep}`
-  },
-  {
-    id:    'animeowl',
-    label: 'AnimeOwl',
-    icon:  '🦉',
-    type:  'iframe',
-    lang:  'مترجم',
-    buildUrl: (slug, ep) =>
-      `https://animeowl.me/anime/${slug}/episode-${ep}/`
-  },
-  {
-    id:    'anislayer',
-    label: 'AnimeSlayer AR',
-    icon:  '⚔️',
-    type:  'iframe',
-    lang:  '🇸🇦 عربي',
-    buildUrl: (slug, ep) =>
-      `https://www.animeslayer.com/episode/${slug}-episode-${ep}/`
-  },
-  // ─── سيرفرات مباشرة (Consumet API) ───
-  /*
-    Consumet هو API مفتوح يجلب روابط
-    الفيديو المباشرة من GogoAnime وغيره.
-    
-    تثبيته على سيرفرك:
-    git clone https://github.com/consumet/api.consumet.org
-    npm install && npm start
-    
-    أو استخدم النسخة العامة (قد تكون بطيئة):
-    https://api.consumet.org
-  */
-  {
-    id:    'consumet-sub',
-    label: 'Direct SUB',
-    icon:  '⚡',
-    type:  'consumet',
-    lang:  'مترجم مباشر',
-    // baseUrl: تغيّره لسيرفرك الخاص
-    buildUrl: (slug, ep) =>
-      `https://api.consumet.org/anime/gogoanime/watch/${slug}-episode-${ep}`
-  },
-  {
-    id:    'consumet-dub',
-    label: 'Direct DUB',
-    icon:  '⚡',
-    type:  'consumet',
-    lang:  'مدبلج مباشر',
-    buildUrl: (slug, ep) =>
-      `https://api.consumet.org/anime/gogoanime/watch/${slug}-dub-episode-${ep}`
-  },
+  { id:'gogo-sub',   label:'GogoAnime SUB',   icon:'🟢', type:'consumet', lang:'مترجم',        dub:false },
+  { id:'gogo-dub',   label:'GogoAnime DUB',   icon:'🟣', type:'consumet', lang:'مدبلج',        dub:true  },
+  { id:'anime4up',   label:'Anime4up AR',     icon:'🎬', type:'iframe',   lang:'🇸🇦 عربي',
+    buildUrl:(slug,ep)=>`https://anime4up.cam/episode/${slug}-${ep}/` },
+  { id:'witanime',   label:'WitAnime AR',     icon:'🧡', type:'iframe',   lang:'🇸🇦 عربي',
+    buildUrl:(slug,ep)=>`https://witanime.cyou/episode/${slug}-${ep}/` },
+  { id:'anime3rb',   label:'Anime3rb AR',     icon:'🌙', type:'iframe',   lang:'🇸🇦 عربي',
+    buildUrl:(slug,ep)=>`https://anime3rb.com/episodes/${slug}-${ep}` },
+  { id:'shahiid',    label:'Shahiid AR',      icon:'👑', type:'iframe',   lang:'🇸🇦 مدبلج',
+    buildUrl:(slug,ep)=>`https://shahiid-anime.net/episode/${slug}-episode-${ep}/` },
+  { id:'anislayer',  label:'AnimeSlayer AR',  icon:'⚔️', type:'iframe',   lang:'🇸🇦 عربي',
+    buildUrl:(slug,ep)=>`https://www.animeslayer.com/episode/${slug}-episode-${ep}/` },
+  { id:'risto',      label:'Ristoanime AR',   icon:'🟥', type:'iframe',   lang:'🇸🇦 عربي',
+    buildUrl:(slug,ep)=>`https://ristoanime.co/episode/${slug}-episode-${ep}/` },
+  { id:'aniwatch',   label:'AniWatch',        icon:'🟦', type:'iframe',   lang:'مترجم',
+    buildUrl:(slug,ep)=>`https://aniwatch.to/watch/${slug}?ep=${ep}` },
+  { id:'animeowl',   label:'AnimeOwl',        icon:'🦉', type:'iframe',   lang:'مترجم',
+    buildUrl:(slug,ep)=>`https://animeowl.me/anime/${slug}/episode-${ep}/` },
+  { id:'aniwave',    label:'AniWave',         icon:'🌊', type:'iframe',   lang:'مترجم',
+    buildUrl:(slug,ep)=>`https://aniwave.to/watch/${slug}/ep-${ep}` },
+  { id:'anix',       label:'Anix',            icon:'🔵', type:'iframe',   lang:'مترجم',
+    buildUrl:(slug,ep)=>`https://anix.to/watch/${slug}?ep=${ep}` },
+  { id:'anime-sama', label:'Anime-Sama FR',   icon:'🇫🇷', type:'iframe',  lang:'فرنسي',
+    buildUrl:(slug,ep)=>`https://anime-sama.fr/catalogue/${slug}/ep${ep}/vostfr.html` },
 ];
 
 /* ═══════════════════════════════════════════
    STATE
 ═══════════════════════════════════════════ */
-let currentAnime  = null;
-let currentSlug   = '';
-let currentEp     = 1;
-let currentServer = SERVERS[0];
+let currentAnime   = null;
+let currentSlug    = '';
+let currentEp      = 1;
+let currentServer  = SERVERS[0];
 let currentQuality = 'auto';
+let allSlugs       = [];
+let gogoId         = null; // Consumet episode ID
 
 /* ═══════════════════════════════════════════
-   INIT PLAYER PAGE
+   INIT
 ═══════════════════════════════════════════ */
 async function initPlayer() {
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get('id');
-  if (!id) {
-    document.getElementById('animeCardBig').innerHTML =
-      '<div style="color:var(--muted);padding:20px;">لم يتم تحديد أنمي</div>';
-    return;
-  }
-
-  // Fetch anime data from AniList
+  const id = new URLSearchParams(window.location.search).get('id');
+  if (!id) return;
   try {
     const data = await aniQuery(`
       query($id:Int) {
         Media(id:$id, type:ANIME) {
-          id
-          title { romaji english }
+          id idMal
+          title { romaji english native }
+          synonyms
           coverImage { large }
-          averageScore
-          episodes
-          status
-          genres
+          averageScore episodes status genres
           description(asHtml:false)
           startDate { year }
           studios(isMain:true) { nodes { name } }
-          streamingEpisodes { title url site }
-          externalLinks { url site type }
         }
       }`, { id: parseInt(id) });
 
     currentAnime = data.Media;
-
-    // Build slug for server URLs
-    currentSlug = buildSlug(
-      currentAnime.title.english || currentAnime.title.romaji
-    );
+    allSlugs     = buildAllSlugs(currentAnime);
+    currentSlug  = allSlugs[0];
 
     renderAnimeInfo();
     renderEpisodes();
     renderServers();
 
-  } catch (e) {
-    console.error(e);
+    // ابحث في Consumet مسبقاً
+    await prefetchGogoId();
+
+  } catch(e) {
     document.getElementById('animeCardBig').innerHTML =
-      '<div style="color:var(--muted);padding:20px;">خطأ في تحميل البيانات</div>';
+      '<div style="padding:20px;color:var(--muted)">خطأ في تحميل البيانات</div>';
   }
 }
 
-/* بناء الـ slug من العنوان */
-function buildSlug(title) {
-  return title
-    .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, '')
-    .trim()
-    .replace(/\s+/g, '-');
+/* ═══════════════════════════════════════════
+   بناء كل الـ slugs المحتملة
+═══════════════════════════════════════════ */
+function makeSlug(t) {
+  return (t||'').toLowerCase()
+    .replace(/[^a-z0-9\s-]/g,'').trim()
+    .replace(/\s+/g,'-');
+}
+
+function buildAllSlugs(a) {
+  const titles = [
+    a.title.english,
+    a.title.romaji,
+    ...(a.synonyms||[]).filter(s=>/^[a-zA-Z]/.test(s))
+  ].filter(Boolean);
+
+  const result = [];
+  titles.forEach(t => {
+    const s = makeSlug(t);
+    if (!s) return;
+    result.push(s);
+    result.push(s.replace(/^(the|a|an)-/,''));
+    result.push(s + '-tv');
+    result.push(s + '-season-1');
+    result.push(s.replace(/-season-\d+$/,''));
+    result.push(s.replace(/-\d+$/,''));
+  });
+  return [...new Set(result)].filter(Boolean);
 }
 
 /* ═══════════════════════════════════════════
-   RENDER ANIME INFO
+   Consumet — بحث مسبق
 ═══════════════════════════════════════════ */
-function renderAnimeInfo() {
-  const a = currentAnime;
-  const title  = a.title.english || a.title.romaji;
-  const img    = a.coverImage?.large || '';
-  const score  = a.averageScore ? (a.averageScore / 10).toFixed(1) : '—';
-  const studio = a.studios?.nodes?.[0]?.name || '';
-  const desc   = (a.description || '').replace(/<[^>]+>/g, '').slice(0, 200) + '...';
+const CONSUMET = 'https://api.consumet.org/anime/gogoanime';
 
-  document.getElementById('animeCardBig').innerHTML = `
-    <div class="acb-top">
-      ${img
-        ? `<img class="acb-poster" src="${img}" alt="${title}"/>`
-        : `<div class="acb-poster">${genreEmoji(a.genres)}</div>`}
-      <div>
-        <div class="acb-title">${title}</div>
-        <div class="acb-meta">
-          ${studio}<br>
-          ${a.startDate?.year || ''} · ★ ${score}<br>
-          ${a.episodes || '?'} حلقة · ${translateStatus(a.status)}
-        </div>
-      </div>
-    </div>
-    <div class="acb-desc">${desc}</div>`;
+async function prefetchGogoId() {
+  const queries = [
+    currentAnime.title.english,
+    currentAnime.title.romaji,
+  ].filter(Boolean);
 
-  // Page title
-  document.title = `${title} — アニメ·KO`;
-}
-
-function translateStatus(s) {
-  return { FINISHED:'مكتمل', RELEASING:'مستمر', NOT_YET_RELEASED:'قريباً' }[s] || s;
-}
-
-/* ═══════════════════════════════════════════
-   RENDER EPISODES
-═══════════════════════════════════════════ */
-function renderEpisodes() {
-  const total = currentAnime.episodes || 12;
-  const grid  = document.getElementById('epsGrid');
-
-  // AniList streaming episodes (Crunchyroll etc.)
-  const crEps = (currentAnime.streamingEpisodes || []).slice(0, 5);
-
-  let html = '';
-
-  // Show numbers
-  const count = Math.min(total, 120);
-  for (let i = 1; i <= count; i++) {
-    html += `<div class="ep-num ${i === 1 ? 'active' : ''}"
-               onclick="selectEp(${i}, this)">${i}</div>`;
+  for (const q of queries) {
+    try {
+      const res  = await fetch(`${CONSUMET}/${encodeURIComponent(q)}`);
+      const data = await res.json();
+      const results = data.results || [];
+      if (results.length) {
+        gogoId = results[0].id;
+        console.log('✅ Consumet ID:', gogoId);
+        return;
+      }
+    } catch {}
   }
-  if (total > 120) {
-    html += `<div class="ep-num" style="border-style:dashed;opacity:.5"
-               onclick="alert('تصفّح من موقع المصدر لمشاهدة بقية الحلقات')">
-               +${total - 120}
-             </div>`;
-  }
-
-  grid.innerHTML = html;
-}
-
-function selectEp(n, el) {
-  currentEp = n;
-  document.querySelectorAll('.ep-num').forEach(e => e.classList.remove('active'));
-  el.classList.add('active');
-  // Reload current server with new episode
-  loadServer(currentServer);
 }
 
 /* ═══════════════════════════════════════════
-   RENDER SERVER BUTTONS
+   تحميل السيرفر
 ═══════════════════════════════════════════ */
-function renderServers() {
-  const container = document.getElementById('serverBtns');
-  container.innerHTML = SERVERS.map((srv, i) => `
-    <button class="srv-btn ${i === 0 ? 'active' : ''}"
-            onclick="selectServer('${srv.id}', this)">
-      <span class="srv-dot"></span>
-      ${srv.icon} ${srv.label}
-      <small style="opacity:.6;font-size:.65rem">${srv.lang}</small>
-    </button>`).join('');
-}
-
-/* ═══════════════════════════════════════════
-   SELECT SERVER + LOAD
-═══════════════════════════════════════════ */
-function selectServer(serverId, btn) {
-  // Update active button
-  document.querySelectorAll('.srv-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-
-  // Find server config
-  currentServer = SERVERS.find(s => s.id === serverId);
-  loadServer(currentServer);
-}
-
 async function loadServer(srv) {
   const wrap = document.getElementById('videoWrap');
-
-  // Show loading
-  wrap.innerHTML = `
-    <div class="video-placeholder">
-      <div class="loading"><div class="spinner"></div> جاري تحميل ${srv.label}...</div>
-    </div>`;
+  wrap.innerHTML = `<div class="video-placeholder">
+    <div class="loading"><div class="spinner"></div> جاري البحث عن الحلقة ${currentEp}...</div>
+  </div>`;
 
   try {
-    if (srv.type === 'iframe') {
-      await loadIframe(srv);
-    } else if (srv.type === 'consumet') {
-      await loadConsumet(srv);
+    if (srv.type === 'consumet') {
+      await loadConsumetSmart(srv);
+    } else {
+      await loadIframeSmart(srv, 0);
     }
-  } catch (e) {
-    wrap.innerHTML = `
-      <div class="video-placeholder">
-        <p>⚠️ فشل التحميل — جرّب سيرفراً آخر</p>
-        <p style="font-size:.7rem;margin-top:4px;opacity:.5">${e.message}</p>
-      </div>`;
+  } catch(e) {
+    wrap.innerHTML = `<div class="video-placeholder">
+      <p>⚠️ فشل التحميل</p>
+      <p style="font-size:.7rem;opacity:.5">${e.message}</p>
+    </div>`;
   }
 }
 
-/* ─── iframe loader ─── */
-async function loadIframe(srv) {
+/* ─── Consumet الذكي ─── */
+async function loadConsumetSmart(srv) {
   const wrap = document.getElementById('videoWrap');
-  const url  = srv.buildUrl(currentSlug, currentEp);
 
-  wrap.innerHTML = `
-    <iframe
-      src="${url}"
-      allowfullscreen
-      allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
-      sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-presentation"
-      referrerpolicy="no-referrer"
-      loading="lazy">
-    </iframe>`;
-}
+  // حاول بـ ID المحفوظ أولاً
+  let episodeId = null;
 
-/* ─── Consumet API loader (رابط مباشر) ─── */
-async function loadConsumet(srv) {
-  const wrap = document.getElementById('videoWrap');
-  const apiUrl = srv.buildUrl(currentSlug, currentEp);
+  if (gogoId) {
+    const epSlug = srv.dub ? `${gogoId}-dub` : gogoId;
+    episodeId = `${epSlug}-episode-${currentEp}`;
+  } else {
+    // ابحث من جديد
+    await prefetchGogoId();
+    if (gogoId) {
+      const epSlug = srv.dub ? `${gogoId}-dub` : gogoId;
+      episodeId = `${epSlug}-episode-${currentEp}`;
+    }
+  }
 
-  const res  = await fetch(apiUrl);
-  const data = await res.json();
+  if (!episodeId) throw new Error('لم يتم العثور على الأنمي في Consumet');
 
-  /* بنية Consumet:
-     data.sources = [
-       { url: "https://...", quality: "1080p", isM3U8: true },
-       { url: "https://...", quality: "720p",  isM3U8: true },
-       ...
-     ]
-  */
+  const res    = await fetch(`${CONSUMET}/watch/${encodeURIComponent(episodeId)}`);
+  const data   = await res.json();
   const sources = data.sources || [];
   if (!sources.length) throw new Error('لا توجد مصادر');
 
-  // اختر الجودة
-  let chosen = sources.find(s => s.quality === currentQuality)
-            || sources.find(s => s.quality === '1080p')
-            || sources.find(s => s.quality === 'default')
+  let chosen = sources.find(s=>s.quality===currentQuality)
+            || sources.find(s=>s.quality==='1080p')
+            || sources.find(s=>s.quality==='default')
             || sources[0];
+
+  wrap.innerHTML = `<div class="src-info">✅ ${srv.label} · الحلقة ${currentEp} · ${chosen.quality||'auto'}</div>`;
 
   if (chosen.isM3U8) {
     playHLS(chosen.url, wrap);
@@ -407,76 +195,152 @@ async function loadConsumet(srv) {
   }
 }
 
-/* ─── HLS Player ─── */
-function playHLS(url, wrap) {
-  const videoEl = document.createElement('video');
-  videoEl.controls = true;
-  videoEl.autoplay = true;
-  videoEl.style.cssText = 'width:100%;height:100%;background:#000;';
-  wrap.innerHTML = '';
-  wrap.appendChild(videoEl);
+/* ─── iframe الذكي مع retry ─── */
+async function loadIframeSmart(srv, slugIdx) {
+  const wrap  = document.getElementById('videoWrap');
+  const slug  = allSlugs[slugIdx] || allSlugs[0];
+  const url   = srv.buildUrl(slug, currentEp);
+  const hasNext = slugIdx + 1 < allSlugs.length;
 
-  if (typeof Hls !== 'undefined' && Hls.isSupported()) {
-    const hls = new Hls({
-      enableWorker: true,
-      lowLatencyMode: true,
-    });
-    hls.loadSource(url);
-    hls.attachMedia(videoEl);
-    hls.on(Hls.Events.ERROR, (_, d) => {
-      if (d.fatal) {
-        wrap.innerHTML = '<div class="video-placeholder"><p>⚠️ فشل تحميل الفيديو</p></div>';
-      }
-    });
-  } else if (videoEl.canPlayType('application/vnd.apple.mpegurl')) {
-    // Safari
-    videoEl.src = url;
-  }
-}
-
-/* ─── MP4 Player ─── */
-function playMP4(url, wrap) {
   wrap.innerHTML = `
-    <video controls autoplay style="width:100%;height:100%;background:#000;">
-      <source src="${url}" type="video/mp4"/>
-      متصفحك لا يدعم تشغيل الفيديو.
-    </video>`;
+    <iframe src="${url}" allowfullscreen
+      allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+      sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-presentation"
+      referrerpolicy="no-referrer" loading="lazy">
+    </iframe>
+    <div class="slug-retry">
+      <span>🔗 ${slug} · ح${currentEp}</span>
+      ${hasNext
+        ? `<button onclick="loadIframeSmart(SERVERS.find(s=>s.id==='${srv.id}'),${slugIdx+1})">🔄 اسم آخر (${slugIdx+1}/${allSlugs.length})</button>`
+        : '<span style="opacity:.4">آخر اسم متاح</span>'}
+    </div>`;
 }
 
 /* ═══════════════════════════════════════════
-   QUALITY SELECTOR
+   SERVER BUTTONS
+═══════════════════════════════════════════ */
+function selectServer(id, btn) {
+  document.querySelectorAll('.srv-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  currentServer = SERVERS.find(s=>s.id===id);
+  loadServer(currentServer);
+}
+
+function renderServers() {
+  document.getElementById('serverBtns').innerHTML =
+    SERVERS.map((s,i)=>`
+      <button class="srv-btn ${i===0?'active':''}" onclick="selectServer('${s.id}',this)">
+        <span class="srv-dot"></span>
+        ${s.icon} ${s.label}
+        <small style="opacity:.6;font-size:.65rem">${s.lang}</small>
+      </button>`).join('');
+}
+
+/* ═══════════════════════════════════════════
+   EPISODES
+═══════════════════════════════════════════ */
+function renderEpisodes() {
+  const total = currentAnime.episodes || 12;
+  const count = Math.min(total, 120);
+  let html = '';
+  for (let i=1; i<=count; i++) {
+    html += `<div class="ep-num ${i===1?'active':''}" onclick="selectEp(${i},this)">${i}</div>`;
+  }
+  if (total > 120) {
+    html += `<div class="ep-num" style="opacity:.5;border-style:dashed"
+               onclick="alert('${total-120}+ حلقة — تصفّح من موقع المصدر')">
+               +${total-120}</div>`;
+  }
+  document.getElementById('epsGrid').innerHTML = html;
+}
+
+function selectEp(n, el) {
+  currentEp = n;
+  document.querySelectorAll('.ep-num').forEach(e=>e.classList.remove('active'));
+  el.classList.add('active');
+  loadServer(currentServer);
+}
+
+/* ═══════════════════════════════════════════
+   ANIME INFO
+═══════════════════════════════════════════ */
+function renderAnimeInfo() {
+  const a     = currentAnime;
+  const title = a.title.english || a.title.romaji;
+  const score = a.averageScore ? (a.averageScore/10).toFixed(1) : '—';
+  const studio= a.studios?.nodes?.[0]?.name || '';
+  const desc  = (a.description||'').replace(/<[^>]+>/g,'').slice(0,200)+'...';
+
+  document.getElementById('animeCardBig').innerHTML = `
+    <div class="acb-top">
+      <img class="acb-poster" src="${a.coverImage?.large||''}" alt="${title}"
+           onerror="this.style.display='none'"/>
+      <div>
+        <div class="acb-title">${title}</div>
+        <div class="acb-meta">
+          ${studio}<br>
+          ${a.startDate?.year||''} · ★ ${score}<br>
+          ${a.episodes||'?'} حلقة · ${translateStatus(a.status)}
+        </div>
+      </div>
+    </div>
+    <div class="acb-desc">${desc}</div>`;
+  document.title = `${title} — アニメ·KO`;
+}
+
+function translateStatus(s) {
+  return {FINISHED:'مكتمل',RELEASING:'مستمر',NOT_YET_RELEASED:'قريباً'}[s]||s;
+}
+
+/* ═══════════════════════════════════════════
+   HLS / MP4
+═══════════════════════════════════════════ */
+function playHLS(url, wrap) {
+  const v = document.createElement('video');
+  v.controls = v.autoplay = true;
+  v.style.cssText = 'width:100%;height:100%;background:#000';
+  wrap.appendChild(v);
+  if (typeof Hls!=='undefined' && Hls.isSupported()) {
+    const hls = new Hls({ enableWorker:true, lowLatencyMode:true });
+    hls.loadSource(url);
+    hls.attachMedia(v);
+    hls.on(Hls.Events.ERROR,(_,d)=>{
+      if(d.fatal) wrap.innerHTML='<div class="video-placeholder"><p>⚠️ فشل تحميل الفيديو</p></div>';
+    });
+  } else if (v.canPlayType('application/vnd.apple.mpegurl')) {
+    v.src = url;
+  }
+}
+
+function playMP4(url, wrap) {
+  wrap.innerHTML = `<video controls autoplay style="width:100%;height:100%;background:#000">
+    <source src="${url}" type="video/mp4"/>
+  </video>`;
+}
+
+/* ═══════════════════════════════════════════
+   QUALITY
 ═══════════════════════════════════════════ */
 function setQuality(q, btn) {
   currentQuality = q;
-  document.querySelectorAll('.qbtn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.qbtn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  // Reload current server with new quality
   if (currentServer) loadServer(currentServer);
 }
 
 /* ═══════════════════════════════════════════
-   CUSTOM URL (يدوي)
+   CUSTOM URL
 ═══════════════════════════════════════════ */
 function loadCustomUrl() {
   const url  = document.getElementById('customUrl')?.value?.trim();
   const wrap = document.getElementById('videoWrap');
-  if (!url || !wrap) return;
-
-  if (url.includes('.m3u8')) {
-    playHLS(url, wrap);
-  } else if (url.includes('.mp4') || url.includes('.webm')) {
-    playMP4(url, wrap);
-  } else {
-    // Treat as iframe
-    wrap.innerHTML = `
-      <iframe
-        src="${url}"
-        allowfullscreen
-        allow="autoplay; fullscreen"
-        sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-        referrerpolicy="no-referrer">
-      </iframe>`;
-  }
+  if (!url||!wrap) return;
+  if (url.includes('.m3u8')) playHLS(url, wrap);
+  else if (url.includes('.mp4')||url.includes('.webm')) playMP4(url, wrap);
+  else wrap.innerHTML = `<iframe src="${url}" allowfullscreen
+    allow="autoplay; fullscreen"
+    sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+    referrerpolicy="no-referrer"></iframe>`;
 }
 
 /* ═══════════════════════════════════════════
