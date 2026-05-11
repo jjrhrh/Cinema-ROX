@@ -33,9 +33,8 @@ const SERVERS = [
    Consumet APIs — fallbacks مرتبة
 ═══════════════════════════════════════════ */
 const CONSUMET_APIS = [
+  'https://cinema-rox.vercel.app/api/stream',
   'https://api.consumet.org/anime/gogoanime',
-  'https://consumet-api.onrender.com/anime/gogoanime',
-  'https://api-consumet.vercel.app/anime/gogoanime',
 ];
 const PAHE_APIS = [
   'https://api.consumet.org/anime/animepahe',
