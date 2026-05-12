@@ -62,6 +62,7 @@ let paheId         = null;
 /* ═══════════════════════════════════════════
    INIT
 ═══════════════════════════════════════════ */
+// السطور 65-97 — استبدل initPlayer كاملاً
 async function initPlayer() {
   const id = new URLSearchParams(window.location.search).get('id');
   if (!id) return;
@@ -88,12 +89,26 @@ async function initPlayer() {
     renderEpisodes();
     renderServers();
 
-    await prefetchGogoId();
+    // ← لا تشغيل تلقائي — فقط جهّز الـ ID في الخلفية
+    prefetchGogoId();
 
   } catch(e) {
     document.getElementById('animeCardBig').innerHTML =
       '<div style="padding:20px;color:var(--muted)">خطأ في تحميل البيانات</div>';
   }
+}
+
+// ← دالة جديدة تُستدعى عند ضغط زر التشغيل
+async function onBigPlayClick() {
+  const placeholder = document.getElementById('videoPlaceholder');
+  if (placeholder) {
+    placeholder.innerHTML = `
+      <div class="loading">
+        <div class="spinner"></div>
+        <p style="margin-top:12px;font-size:.85rem;color:#aaa">جاري البحث عن الحلقة...</p>
+      </div>`;
+  }
+  await loadServer(currentServer);
 }
 
 /* ═══════════════════════════════════════════
