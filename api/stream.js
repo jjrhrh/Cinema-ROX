@@ -2,8 +2,7 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET');
 
-  const { title, ep, scrape } = req.query;
-
+  const { title, ep, scrape, mode } = req.query;
   /* ══ وضع الـ Scrape: جلب رابط M3U8 من صفحة iframe ══ */
   if (scrape) {
     return await scrapeVideoUrl(scrape, res);
