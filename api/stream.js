@@ -130,7 +130,134 @@ async function scrapeVideoUrl(pageUrl, res) {
     return res.status(500).json({ error: e.message });
   }
 }
+/* ══ جلب سيرفرات من مصادر متعددة ══ */
+async function fetchAllServers(title, epNum) {
+  const servers = [];
+  const HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/124.0',
+    'Referer':    'https://allmanga.to/',
+  };
 
+  // ── المصدر 1: AllAnime ──
+  try {
+    const body1 = JSON.stringify({
+      query: `query($search:SearchInput,$limit:Int,$page:Int,$translationType:VaildTranslationTypeEnumType){
+        shows(search:$search,limit:$limit,page:$page,translationType:$translationType){
+          edges{ _id name englishName }
+        }
+      }`,
+      variables: { search:{ allowAdult:false, query:title }, limit:3, page:1, translationType:'sub' },
+    });
+    const sr  = await fetch('https://api.allanime.day/api', {
+      method:'POST', headers:{...HEADERS,'Content-Type':'application/json'},
+      body:body1, signal:AbortSignal.timeout(8000),
+    });
+    const sd  = await sr.json();
+    const showId = (sd?.data?.shows?.edges||[])[0]?._id;
+    if (showId) {
+      const body2 = JSON.stringify({
+        query:`query($showId:String!,$translationType:VaildTranslationTypeEnumType!,$episodeString:String!){
+          episode(showId:$showId,translationType:$translationType,episodeString:$episodeString){
+            sourceUrls{ sourceUrl sourceName priority }
+          }
+        }`,
+        variables:{ showId, translationType:'sub', episodeString:epNum },
+      });
+      const er = await fetch('https://api.allanime.day/api', {
+        method:'POST', headers:{...HEADERS,'Content-Type':'application/json'},
+        body:body2, signal:AbortSignal.timeout(8000),
+      });
+      const ed = await er.json();
+      (ed?.data?.episode?.sourceUrls||[]).forEach(s => {
+        const url = decodeAaUrl(s.sourceUrl);
+        if (url?.startsWith('http')) {
+          servers.push({
+            name:    s.sourceName || 'AllAnime',
+            url,
+            type:    url.includes('.m3u8') ? 'hls' : 'iframe',
+            quality: s.priority >= 10 ? '1080p' : s.priority >= 5 ? '720p' : 'auto',
+            source:  'allanime',
+          });
+        }
+      });
+      console.log(`[servers] AllAnime: ${servers.length} سيرفر`);
+    }
+  } catch(e) { console.log('[servers] AllAnime فشل:', e.message); }
+
+  // ── المصدر 2: Aniwatch API ──
+  try {
+    const slug = title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/-+$/,'');
+    const epId = `${slug}-episode-${epNum}`;
+    for (const srv of ['vidstreaming','megacloud','streamsb']) {
+      try {
+        const r = await fetch(
+          `https://aniwatch-api-one-tau.vercel.app/anime/episode-srcs?id=${encodeURIComponent(epId)}&server=${srv}&category=sub`,
+          { signal:AbortSignal.timeout(7000) }
+        );
+        const d = await r.json();
+        (d.sources||[]).forEach(s => {
+          servers.push({
+            name:    srv,
+            url:     s.url,
+            type:    s.isM3U8 ? 'hls' : 'mp4',
+            quality: s.quality || 'auto',
+            source:  'aniwatch',
+          });
+        });
+        console.log(`[servers] Aniwatch/${srv}: ${d.sources?.length||0} سيرفر`);
+      } catch {}
+    }
+  } catch(e) { console.log('[servers] Aniwatch فشل:', e.message); }
+
+  // ── المصدر 3: ani.zip API ──
+  try {
+    const r = await fetch(
+      `https://api.ani.zip/mappings?anilist_id=${encodeURIComponent(title)}`,
+      { signal:AbortSignal.timeout(6000) }
+    );
+    const d = await r.json();
+    const ep = d?.episodes?.[epNum];
+    if (ep?.url) {
+      servers.push({
+        name:    'ani.zip',
+        url:     ep.url,
+        type:    ep.url.includes('.m3u8') ? 'hls' : 'iframe',
+        quality: 'auto',
+        source:  'anizip',
+      });
+      console.log('[servers] ani.zip: ✅');
+    }
+  } catch(e) { console.log('[servers] ani.zip فشل:', e.message); }
+
+  // ── المصدر 4: AniList Streaming Links ──
+  try {
+    const r = await fetch('https://graphql.anilist.co', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        query:`query($search:String){Media(search:$search,type:ANIME){streamingEpisodes{title url site}}}`,
+        variables:{ search:title },
+      }),
+      signal:AbortSignal.timeout(6000),
+    });
+    const d = await r.json();
+    (d?.data?.Media?.streamingEpisodes||[])
+      .filter(e => e.title?.includes(epNum))
+      .forEach(e => {
+        servers.push({
+          name:    e.site || 'AniList',
+          url:     e.url,
+          type:    'iframe',
+          quality: 'auto',
+          source:  'anilist',
+        });
+      });
+    console.log(`[servers] AniList streaming: ${servers.length}`);
+  } catch(e) { console.log('[servers] AniList فشل:', e.message); }
+
+  console.log(`[servers] ✅ إجمالي: ${servers.length} سيرفر`);
+  return servers;
+}
 function rot13(str) {
   return str.replace(/[a-zA-Z]/g, c => {
     const b = c <= 'Z' ? 65 : 97;
