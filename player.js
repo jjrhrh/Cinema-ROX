@@ -78,8 +78,6 @@ async function initPlayer() {
     renderEpisodes();
     renderServers();
 
-    // ← لا تشغيل تلقائي — فقط جهّز الـ ID في الخلفية
-    prefetchGogoId();
 
   } catch(e) {
     document.getElementById('animeCardBig').innerHTML =
