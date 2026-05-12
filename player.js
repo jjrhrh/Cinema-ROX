@@ -197,6 +197,44 @@ async function loadServer(srv) {
   try {
     if (srv.type === 'allanime') {
   await loadAllAnimeSmart(srv);
+       async function fetchAndRenderServers() {
+  const title = currentAnime.title.english || currentAnime.title.romaji;
+  const url   = `${AA_STREAM}?title=${encodeURIComponent(title)}&ep=${currentEp}&mode=servers`;
+
+  try {
+    const r    = await fetch(url);
+    const d    = await r.json();
+    const list = d.servers || [];
+
+    if (!list.length) return;
+
+    // أضف السيرفرات المجلوبة ديناميكياً
+    const container = document.getElementById('serverBtns');
+    list.forEach((srv, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'srv-btn';
+      btn.innerHTML = `<span class="srv-dot"></span>🌐 ${srv.name} <small style="opacity:.6;font-size:.65rem">${srv.quality}</small>`;
+      btn.onclick = () => {
+        document.querySelectorAll('.srv-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const wrap = document.getElementById('videoWrap');
+        if (srv.type === 'hls') {
+          playHLS(M3U8_PROXIES[0] + encodeURIComponent(srv.url), srv.url, wrap);
+        } else if (srv.type === 'mp4') {
+          playMP4(srv.url, wrap);
+        } else {
+          wrap.innerHTML = `<iframe src="${srv.url}" allowfullscreen
+            allow="autoplay; fullscreen"
+            sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+            referrerpolicy="no-referrer"></iframe>`;
+        }
+      };
+      container.appendChild(btn);
+    });
+  } catch(e) {
+    console.log('[player] fetchServers فشل:', e.message);
+  }
+       }
 } else {
       await loadIframeSmart(srv, 0);
     }
