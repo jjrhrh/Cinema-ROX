@@ -127,7 +127,17 @@ function buildAllSlugs(a) {
   });
   return [...new Set(result)].filter(Boolean);
 }
-
+async function loadAllAnimeSmart(srv) {
+  const wrap  = document.getElementById('videoWrap');
+  const title = currentAnime.title.english || currentAnime.title.romaji;
+  const url   = `${AA_STREAM}?title=${encodeURIComponent(title)}&ep=${currentEp}`;
+  console.log('[player] AllAnime fetch:', url);
+  const r       = await fetch(url);
+  const d       = await r.json();
+  const sources = d.sources || [];
+  if (!sources.length) throw new Error('لا توجد مصادر في AllAnime');
+  injectStream(sources, `AllAnime · ${srv.dub ? 'DUB' : 'SUB'}`, wrap);
+}
 /* ═══════════════════════════════════════════
    Consumet — بحث مسبق (SUB أولاً + AnimePahe كـ fallback)
 ═══════════════════════════════════════════ */
