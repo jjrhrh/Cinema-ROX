@@ -309,6 +309,8 @@ async function openOtakuAll(secId, title, type) {
   if (!page) return;
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('heroSection').style.display = 'none';
+  document.getElementById('newsSection').style.display = 'none';
+  document.getElementById('studioBar').style.display = 'none';
   page.classList.add('active');
   page.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
   window.scrollTo(0, 0);
