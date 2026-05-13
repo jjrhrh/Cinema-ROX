@@ -238,14 +238,14 @@ function buildAnimeCard(movie, rank = 0) {
   const rating = movie.vote_average ? movie.vote_average.toFixed(1) : '';
   return `
     <div class="anime-card" onclick="openDetail(${movie.id},'tv')">
-      ${rank > 0 ? `<span class="rank-number">${rank}</span>` : ''}
       <div class="anime-poster-wrap">
         <img class="anime-poster" src="${poster}" loading="lazy"
              onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
         <div class="anime-overlay"><span class="play-icon">▶</span></div>
-        <div class="anime-title-bar">${title.length > 22 ? title.slice(0,22)+'...' : title}</div>
-        <div class="anime-meta-bar"><span>ANIME · ${year}</span>${rating ? `<span>⭐ ${rating}</span>` : ''}</div>
+        ${rank > 0 ? `<span class="rank-number">${rank}</span>` : ''}
       </div>
+      <div class="anime-title-bar">${title.length > 22 ? title.slice(0,22)+'...' : title}</div>
+      <div class="anime-meta-bar"><span>ANIME · ${year}</span>${rating ? `<span>⭐ ${rating}</span>` : ''}</div>
     </div>`;
 }
 function buildSection(title, movies, type = 'movie') {
