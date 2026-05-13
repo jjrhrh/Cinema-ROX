@@ -367,11 +367,13 @@ async function openStudio(name, id) {
 function studioGoBack() {
   const hero = document.getElementById('heroSection');
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('homePage').classList.add('active');
   document.getElementById('bnavOtaku').classList.add('active');
   if (hero) { hero.style.display = ''; hero.style.visibility = ''; }
   document.getElementById('studioBar').style.display = 'block';
   document.getElementById('newsSection').style.display = 'block';
+  document.getElementById('newsSectionTitle').textContent = '📰 أخبار الأنمي';
   window.scrollTo(0, 0);
 }
 async function loadOtakuHero() {
