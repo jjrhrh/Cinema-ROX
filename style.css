@@ -305,15 +305,31 @@ html, body {
 }
 .anime-meta-bar {
   font-size: 0.65rem;
-  color: rgba(255,255,255,0.5);
-  padding: 0 4px 6px;
+  padding: 4px 4px 6px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 6px;
+}
+.anime-meta-bar span:first-child {
+  background: rgba(147,51,234,0.12);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(147,51,234,0.35);
+  color: #c084fc;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: 700;
+  text-shadow: 0 0 8px rgba(147,51,234,0.6);
 }
 .anime-meta-bar span:last-child {
+  background: rgba(245,197,24,0.08);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(245,197,24,0.3);
   color: #f5c518;
+  padding: 2px 8px;
+  border-radius: 12px;
   font-weight: 700;
+  text-shadow: 0 0 8px rgba(245,197,24,0.5);
 }
 .anime-card .movie-poster-wrap {
   aspect-ratio: 16 / 9;
