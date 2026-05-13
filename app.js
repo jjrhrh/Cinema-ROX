@@ -1040,14 +1040,14 @@ function loadProfilePage() {
 
         <div class="prof-settings">
           <div class="prof-hud">
-            <div class="prof-hud-title">🌐 اللغة</div>
+            <div class="prof-hud-title"><svg class="hud-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> اللغة</div>
             <div class="prof-hud-row">
               <button class="prof-pill ${lang==='ar'?'active':''}" onclick="setLang('ar',this)">العربية</button>
               <button class="prof-pill ${lang==='en'?'active':''}" onclick="setLang('en',this)">English</button>
             </div>
           </div>
           <div class="prof-hud">
-            <div class="prof-hud-title">💬 حجم الترجمة</div>
+            <div class="prof-hud-title"><svg class="hud-icon" viewBox="0 0 24 24"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg> حجم الترجمة</div>
             <div class="prof-hud-row">
               <button class="prof-pill ${subSize==='sm'?'active':''}" onclick="setSubSize('sm',this)">صغير</button>
               <button class="prof-pill ${subSize==='md'?'active':''}" onclick="setSubSize('md',this)">متوسط</button>
@@ -1055,7 +1055,7 @@ function loadProfilePage() {
             </div>
           </div>
           <div class="prof-hud">
-            <div class="prof-hud-title">🎨 لون الترجمة</div>
+            <div class="prof-hud-title"><svg class="hud-icon" viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg> لون الترجمة</div>
             <div class="prof-hud-row">
               <button class="prof-pill ${subClr==='#ffffff'?'active':''}" style="color:#fff"   onclick="setSubColor('#ffffff',this)">أبيض</button>
               <button class="prof-pill ${subClr==='#ffff00'?'active':''}" style="color:#ff0"   onclick="setSubColor('#ffff00',this)">أصفر</button>
@@ -1063,7 +1063,7 @@ function loadProfilePage() {
             </div>
           </div>
           <div class="prof-hud">
-            <div class="prof-hud-title">📚 مكتبتي</div>
+            <div class="prof-hud-title"><svg class="hud-icon" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> مكتبتي</div>
             <div class="prof-hud-row">
               <button class="prof-pill" onclick="bnavGo('library')">عرض المكتبة</button>
               <button class="prof-pill" style="color:#ff6b6b;border-color:rgba(229,9,20,0.4)" onclick="clearLibraryConfirm()">🗑 مسح الكل</button>
