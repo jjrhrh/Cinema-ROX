@@ -263,10 +263,9 @@ html, body {
   position: relative;
   background: transparent;
   border: none;
-  display: flex;
-  align-items: flex-end;
   transition: transform 0.25s;
 }
+.anime-card:hover { transform: translateY(-3px); }
 .anime-poster-wrap {
   position: relative;
   aspect-ratio: 16 / 9;
