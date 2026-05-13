@@ -257,7 +257,7 @@ html, body {
 }
 /* ===== ANIME CARD — Purple Neon ===== */
 .anime-card {
-  flex: 0 0 calc(50vw - 12px);
+  width: 100%;
   min-width: 0;
   cursor: pointer;
   position: relative;
