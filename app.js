@@ -83,8 +83,6 @@ function roxSignIn() {
 }
 function roxSignOut() {
   ROX_AUTH.signOut();
-  saveLib('rox_watchlist', []);
-  saveLib('rox_watchlater', []);
   showToast('👋 تم تسجيل الخروج');
   setTimeout(() => loadProfilePage(), 500);
 }
