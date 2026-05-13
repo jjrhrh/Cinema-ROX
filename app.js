@@ -289,7 +289,7 @@ async function loadOtakuPage() {
     </div>`).join('');
   for (const s of SECTIONS) {
     try {
-      const movies = await fetchMovies(s.endpoint, { type: s.type, params: s.params || {} });
+      const movies = await fetchMovies(s.endpoint, { type: s.type, limit: s.limit || 6, params: s.params || {} });
       const row = document.getElementById(`${s.id}_row`);
       const container = document.getElementById(s.id);
       if (!row || !container) return;
