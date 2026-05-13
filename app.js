@@ -303,6 +303,29 @@ function otakuSlide(rowId, dir) {
   if (!row) return;
   row.scrollBy({ left: dir * 340, behavior: 'smooth' });
 }
+async function openOtakuAll(secId, title, type) {
+  const page = document.getElementById('detailPage');
+  if (!page) return;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('heroSection').style.display = 'none';
+  page.classList.add('active');
+  page.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
+  window.scrollTo(0, 0);
+  const endpoint = type === 'movie' ? '/discover/movie' : '/discover/tv';
+  const movies = await fetchMovies(endpoint, {
+    type,
+    limit: 10,
+    params: { with_genres:'16', with_origin_country:'JP', sort_by:'popularity.desc' }
+  });
+  page.innerHTML = `
+    <div style="padding:16px">
+      <button class="detail-btn" onclick="wsGoBack()" style="margin-bottom:16px">← رجوع</button>
+      <h2 style="color:#fff;margin-bottom:16px;font-size:1rem">${title}</h2>
+      <div class="otaku-all-grid">
+        ${movies.map((m, idx) => buildAnimeCard(m, idx + 1, type)).join('')}
+      </div>
+    </div>`;
+}
 async function loadOtakuHero() {
   const url = buildTMDBUrl('/discover/tv', { with_genres:'16', with_origin_country:'JP', sort_by:'popularity.desc' });
   const data = await fetch(url).then(r => r.json());
