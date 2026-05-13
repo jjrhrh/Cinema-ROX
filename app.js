@@ -374,35 +374,6 @@ function studioGoBack() {
   document.getElementById('newsSection').style.display = 'block';
   window.scrollTo(0, 0);
 }
-  const page = document.getElementById('detailPage');
-  if (!page) return;
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('heroSection').style.display = 'none';
-  document.getElementById('newsSection').style.display = 'none';
-  document.getElementById('studioBar').style.display = 'none';
-  page.classList.add('active');
-  page.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
-  window.scrollTo(0, 0);
-  const [movRes, tvRes] = await Promise.all([
-    fetchMovies('/discover/movie', { type:'movie', limit:10, params:{ with_companies: id, sort_by:'popularity.desc' }}),
-    fetchMovies('/discover/tv',    { type:'tv',    limit:10, params:{ with_companies: id, sort_by:'popularity.desc' }}),
-  ]);
-  page.innerHTML = `
-    <div style="padding:16px">
-      <button class="detail-btn" onclick="goBack()" style="margin-bottom:16px">← رجوع</button>
-      <h2 style="color:#fff;margin-bottom:16px;font-size:1.1rem">🎌 ${name}</h2>
-      ${movRes.length ? `
-        <h3 style="color:rgba(255,255,255,0.6);font-size:0.75rem;margin-bottom:10px">🎬 أفلام</h3>
-        <div class="otaku-all-grid" style="margin-bottom:20px">
-          ${movRes.map((m,i) => buildAnimeCard(m, i+1, 'movie')).join('')}
-        </div>` : ''}
-      ${tvRes.length ? `
-        <h3 style="color:rgba(255,255,255,0.6);font-size:0.75rem;margin-bottom:10px">📺 مسلسلات</h3>
-        <div class="otaku-all-grid">
-          ${tvRes.map((m,i) => buildAnimeCard(m, i+1, 'tv')).join('')}
-        </div>` : ''}
-    </div>`;
-}
 async function loadOtakuHero() {
   const url = buildTMDBUrl('/discover/tv', { with_genres:'16', with_origin_country:'JP', sort_by:'popularity.desc' });
   const data = await fetch(url).then(r => r.json());
