@@ -251,12 +251,13 @@ html, body {
 }
 /* ===== ANIME CARD — Purple Neon ===== */
 .anime-card {
-  flex: 0 0 200px;
+  flex: 0 0 260px;
   min-width: 0;
   cursor: pointer;
   border-radius: 10px;
   overflow: visible;
   position: relative;
+  background: transparent;
   transition: transform 0.25s;
 }
 .anime-card:hover { transform: translateY(-4px); }
