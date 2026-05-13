@@ -331,6 +331,7 @@ html, body {
 .movie-poster-wrap {
   position: relative;
   aspect-ratio: 2/3; overflow: hidden;
+  border-radius: 16px;
 }
 .movie-poster {
   width: 100%; height: 100%;
