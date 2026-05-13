@@ -271,11 +271,8 @@ html, body {
   aspect-ratio: 16 / 9;
   border-radius: 12px;
   overflow: hidden;
-  margin-left: -40px;
-  z-index: 2;
-  flex: 1;
-  min-width: 0;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.7);
+  width: 100%;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.6);
 }
 .anime-poster-wrap:hover {
   box-shadow: 0 8px 20px rgba(0,0,0,0.8);
