@@ -208,7 +208,7 @@ document.body.style.backgroundImage = '';
     ratingEl.innerHTML = rating ? `<span class="hero-cap hero-cap-rating">⭐ ${rating}</span>` : '';
   }
 }
-    function buildMovieCard(movie, type = 'movie', extraClass = '') {
+    function buildMovieCard(movie, type = 'movie', extraClass = '', rank = 0) {
   const title  = type === 'movie'
     ? (movie.title || movie.original_title)
     : (movie.name  || movie.original_name);
