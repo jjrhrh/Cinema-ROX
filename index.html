@@ -128,6 +128,20 @@
 <!-- SCRIPTS -->
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="config.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script>
+  firebase.initializeApp({
+    apiKey: "AIzaSyDD3v9wb5TJ-3KQfsEr__D5QnmbWow-4g0",
+    authDomain: "cinema-rox.firebaseapp.com",
+    projectId: "cinema-rox",
+    storageBucket: "cinema-rox.firebasestorage.app",
+    messagingSenderId: "515687717633",
+    appId: "1:515687717633:web:f3058082dedeee13f5d900"
+  });
+  window.ROX_AUTH     = firebase.auth();
+  window.ROX_PROVIDER = new firebase.auth.GoogleAuthProvider();
+</script>
 <script src="app.js"></script>
 </body>
 </html>
