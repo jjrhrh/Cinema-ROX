@@ -1189,7 +1189,7 @@ html, body {
 } 
 .rank-number {
   position: absolute;
-  bottom: 35px;
+  bottom: 6px;
   left: 8px;
   font-size: 3.8rem;
   font-weight: 900;
