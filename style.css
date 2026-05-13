@@ -1173,15 +1173,16 @@ html, body {
 } 
 .rank-number {
   position: absolute;
-  bottom: 10px;
-  left: -10px;
-  font-size: 7rem;
+  bottom: 8px;
+  left: -6px;
+  font-size: 8rem;
   font-weight: 900;
   z-index: 1;
-  color: rgba(255,255,255,0.1);
+  color: transparent;
+  -webkit-text-stroke: 2px rgba(255,255,255,0.25);
   pointer-events: none;
   font-family: 'Cairo', sans-serif;
-  letter-spacing: -4px;
+  letter-spacing: -6px;
   line-height: 1;
 }
 .anime-card .movie-poster-wrap {
