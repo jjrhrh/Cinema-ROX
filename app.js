@@ -993,6 +993,7 @@ function addToWatchlist(id, type) {
   showToast('❤️ تمت الإضافة إلى قائمتك');
 }
 function addToWatchLater(id, type) {
+  if (!window.ROX_USER) { showToast('🔐 سجّل دخولك أولاً'); bnavGo('profile'); return; }
   const list = getLib('rox_watchlater');
   if (list.find(i => i.id === id)) { showToast('⏰ موجود في سأشاهده مسبقاً'); return; }
   list.unshift({ id, type, addedAt: Date.now() });
