@@ -223,7 +223,6 @@ document.body.style.backgroundImage = '';
         <img class="movie-poster" src="${poster}" alt="${title}" loading="lazy"
              onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
         ${year   ? `<span class="movie-year-badge">${year}</span>` : ''}
-        ${rating ? `<span class="movie-rating">⭐ ${rating}</span>` : ''}
         <div class="movie-overlay"><span class="play-icon">▶</span></div>
       </div>
       <div class="movie-title-bar">${title.length > 18 ? title.slice(0,18)+'...' : title}</div>
