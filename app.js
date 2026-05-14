@@ -129,6 +129,106 @@ async function fetchMovies(endpoint = '/movie/popular', options = {}) {
     return [];
   }
 }
+async function fetchAnimeJikan(endpoint, limit = 20) {
+  try {
+    const res  = await fetch(`${CONFIG.API.JIKAN_BASE}${endpoint}`);
+    const data = await res.json();
+    return (data.data || []).slice(0, limit);
+  } catch(e) { console.warn('Jikan:', e.message); return []; }
+}
+
+function buildAnimeCardJikan(anime, rank = 0) {
+  const title  = anime.title_arabic || anime.title || anime.title_english || '';
+  const poster = anime.images?.jpg?.large_image_url || CONFIG.IMAGES.PLACEHOLDER;
+  const year   = anime.aired?.prop?.from?.year || '';
+  const rating = anime.score ? anime.score.toFixed(1) : '';
+  const malId  = anime.mal_id;
+  return `
+    <div class="anime-card" onclick="openAnimeJikan(${malId},'${encodeURIComponent(title)}')">
+      <div class="anime-poster-wrap">
+        <img class="anime-poster" src="${poster}" loading="lazy"
+             onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+        <div class="anime-overlay"><span class="play-icon">▶</span></div>
+        ${rank > 0 ? `<span class="rank-number">${rank}</span>` : ''}
+      </div>
+      <div class="anime-title-bar">${title.length>22?title.slice(0,22)+'…':title}</div>
+      <div class="anime-meta-bar">
+        <span class="anime-badge-type">أنمي</span>
+        <span class="anime-badge-year">${toArabicNums(year)}</span>
+        ${rating?`<span class="anime-badge-rating">⭐ ${rating}</span>`:''}
+      </div>
+    </div>`;
+}
+
+async function openAnimeJikan(malId, encodedTitle) {
+  const title = decodeURIComponent(encodedTitle);
+  const page  = document.getElementById('detailPage');
+  if (!page) return;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('heroSection').style.display = 'none';
+  document.getElementById('newsSection').style.display = 'none';
+  document.getElementById('studioBar').style.display   = 'none';
+  page.classList.add('active');
+  page.innerHTML = '<div class="loading">⏳ جاري تحميل التفاصيل...</div>';
+  window.scrollTo(0,0);
+  try {
+    const [detRes, tmdbRes] = await Promise.all([
+      fetch(`${CONFIG.API.JIKAN_BASE}/anime/${malId}/full`).then(r=>r.json()),
+      fetch(buildTMDBUrl('/search/tv', { query: title, page:1 })).then(r=>r.json()),
+    ]);
+    const a       = detRes.data;
+    const tmdbHit = (tmdbRes.results||[])[0];
+    const tmdbId  = tmdbHit?.id || null;
+    const poster  = a.images?.jpg?.large_image_url || CONFIG.IMAGES.PLACEHOLDER;
+    const backdrop= a.images?.jpg?.large_image_url || '';
+    const trailer = (a.trailer?.url||'').replace('watch?v=','embed/');
+    const genres  = (a.genres||[]).map(g=>`<span class="detail-genre">${g.name}</span>`).join('');
+    const studios = (a.studios||[]).map(s=>s.name).join(', ');
+    const score   = a.score||'N/A';
+    const eps     = a.episodes||'?';
+    const status  = a.status||'';
+    const synopsis= a.synopsis||'لا يوجد وصف.';
+    const watchBtn = tmdbId
+      ? `<button class="detail-btn detail-btn-now" onclick="openWatchPage(${tmdbId},'tv')">▶ شاهد الآن</button>`
+      : '';
+    const trailerBtn = trailer
+      ? `<button class="detail-btn detail-btn-trailer" onclick="playTrailer('${a.trailer?.youtube_id}')">▶ المقطع الدعائي</button>`
+      : '';
+    page.innerHTML = `
+      <div class="detail-backdrop" style="background-image:url('${backdrop}')">
+        <div class="detail-backdrop-gradient"></div>
+        <button class="detail-back-btn" onclick="goBack()">← رجوع</button>
+      </div>
+      <div class="detail-body">
+        <div class="detail-top">
+          <img class="detail-poster" src="${poster}" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+          <div class="detail-info">
+            <h1 class="detail-title">${a.title}</h1>
+            <div class="detail-stats-bar">
+              <div class="stat-cap stat-gold">⭐ <span>${score}</span></div>
+              <div class="stat-cap stat-views">👁 <span>${(a.members||0).toLocaleString()}</span></div>
+            </div>
+            <div class="detail-meta">
+              ${eps?`<span class="detail-badge">🎬 ${eps} حلقة</span>`:''}
+              ${status?`<span class="detail-badge">${status}</span>`:''}
+              ${studios?`<span class="detail-badge">🎌 ${studios}</span>`:''}
+            </div>
+            <div class="detail-genres">${genres}</div>
+            <div class="detail-actions">
+              ${watchBtn}${trailerBtn}
+              <button class="detail-btn detail-btn-watch" onclick="addToWatchlist(${tmdbId||malId},'tv')">❤️ قائمتي</button>
+            </div>
+          </div>
+        </div>
+        <div class="detail-section">
+          <h3 class="detail-section-title">📖 القصة</h3>
+          <p class="detail-overview">${synopsis}</p>
+        </div>
+      </div>`;
+  } catch(e) {
+    page.innerHTML = `<div class="loading">❌ خطأ<br><button class="detail-btn" onclick="goBack()">← رجوع</button></div>`;
+  }
+}
 // ===== HERO SWIPER =====
 let heroSwiper = null;
 
