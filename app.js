@@ -531,16 +531,16 @@ async function loadOtakuPage() {
   if (!page) return;
   loadOtakuHero();
   const SECTIONS = [
-    { id: 'sec_otaku1', title: 'الأكثر شعبية', jikan: '/top/anime?filter=bypopularity&limit=10' },
-    { id: 'sec_otaku2', title: 'الأعلى تقييماً', jikan: '/top/anime?filter=favorite&limit=10'   },
-    { id: 'sec_otaku3', title: 'موسم هذا العام', jikan: '/seasons/now?limit=10'                  },
+    { id: 'sec_otaku1', title: '🔥 الأكثر شعبية',   params: { with_genres:'16', with_origin_country:'JP', sort_by:'popularity.desc' } },
+    { id: 'sec_otaku2', title: '⭐ الأعلى تقييماً', params: { with_genres:'16', with_origin_country:'JP', sort_by:'vote_average.desc', 'vote_count.gte':'200' } },
+    { id: 'sec_otaku3', title: '🆕 موسم هذا العام', params: { with_genres:'16', with_origin_country:'JP', sort_by:'first_air_date.desc', 'first_air_date.gte': new Date().getFullYear()+'-01-01' } },
   ];
   page.innerHTML = SECTIONS.map(s => `
     <div class="home-section otaku-section" id="${s.id}">
       <div class="section-header">
         <span class="section-bar"></span>
         <h2 class="section-title otaku-sec-title">${s.title}</h2>
-        <button class="browse-all-btn" onclick="openOtakuAll('${s.id}','${s.title}','${s.type}')">عرض الكل ›</button>
+        <button class="browse-all-btn" onclick="openOtakuAll('${s.id}','${s.title}','tv')">عرض الكل ›</button>
       </div>
       <div class="otaku-slider-wrap">
         <button class="otaku-arrow otaku-arrow-left" onclick="otakuSlide('${s.id}_row',-1)">‹</button>
@@ -550,10 +550,10 @@ async function loadOtakuPage() {
     </div>`).join('');
   for (const s of SECTIONS) {
     try {
-      const animes = await fetchAnimeJikan(s.jikan, 10);
-      const row    = document.getElementById(`${s.id}_row`);
+      const animes = await fetchMovies('/discover/tv', { type:'tv', limit:10, params: s.params });
+      const row = document.getElementById(`${s.id}_row`);
       if (!row) return;
-      row.innerHTML = animes.map((a, idx) => buildAnimeCardJikan(a, idx+1)).join('');
+      row.innerHTML = animes.map((m, idx) => buildAnimeCard(m, idx+1, 'tv')).join('');
     } catch { document.getElementById(s.id)?.remove(); }
   }
 }
