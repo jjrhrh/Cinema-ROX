@@ -1394,3 +1394,22 @@ html, body {
   flex-direction: row-reverse;
   gap: 6px;
 } 
+/* ===== LIBRARY REDESIGN ===== */
+.lib-header { padding: 20px 16px 8px; }
+.lib-title { font-size: 1.1rem; font-weight: 900; color: #fff; }
+.lib-section { padding: 16px 16px 8px; }
+.lib-sec-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; flex-direction: row-reverse; }
+.lib-laser { width: 3px; border-radius: 99px; height: 20px; flex-shrink: 0; }
+.lib-laser-magenta { background: #e040fb; box-shadow: 0 0 10px #e040fb, 0 0 24px rgba(224,64,251,0.5); }
+.lib-laser-cyan    { background: #00e5ff; box-shadow: 0 0 10px #00e5ff, 0 0 24px rgba(0,229,255,0.5); }
+.lib-laser-orange  { background: #ff6d00; box-shadow: 0 0 10px #ff6d00, 0 0 24px rgba(255,109,0,0.4); }
+.lib-sec-title { font-size: 0.9rem; font-weight: 900; color: rgba(255,255,255,0.85); letter-spacing: 0.5px; }
+.lib-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.lib-card { position: relative; border-radius: 10px; overflow: hidden; aspect-ratio: 2/3; cursor: pointer; background: #1a0a0a; }
+.lib-card-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.lib-card-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.2rem; opacity: 0; transition: all 0.2s; }
+.lib-card:active .lib-card-overlay { background: rgba(0,0,0,0.5); opacity: 1; }
+.lib-card-rating { position: absolute; bottom: 4px; left: 4px; font-size: 0.65rem; font-weight: 700; background: rgba(0,0,0,0.75); color: #f5c518; padding: 2px 5px; border-radius: 5px; }
+.lib-card-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: rgba(255,255,255,0.15); }
+.lib-card-progress { height: 100%; background: var(--accent); border-radius: 3px; }
+.lib-radar-empty { text-align: center; padding: 24px 16px; color: rgba(255,255,255,0.2); font-size: 0.78rem; line-height: 1.7; font-style: italic; }
