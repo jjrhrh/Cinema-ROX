@@ -227,6 +227,59 @@ async function openAnimeJikan(malId, encodedTitle) {
     page.innerHTML = `<div class="loading">❌ خطأ<br><button class="detail-btn" onclick="goBack()">← رجوع</button></div>`;
   }
 }
+async function openWatchPageAnime(tmdbId, malId) {
+  const page = document.getElementById('watchPage');
+  if (!page) return;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('heroSection').style.display = 'none';
+  page.classList.add('active');
+  page.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
+  window.scrollTo(0,0);
+  const S = CONFIG.SERVERS;
+  const malSrvs = [
+    { icon:'🟣', name:'MAL-1',  url:`${S.MAL1}${malId}`  },
+    { icon:'🔵', name:'MAL-2',  url:`${S.MAL2}${malId}`  },
+    { icon:'🟢', name:'MAL-3',  url:`${S.MAL3}${malId}`  },
+    { icon:'🟡', name:'MAL-4',  url:`${S.MAL4}${malId}`  },
+    { icon:'🔴', name:'MAL-5',  url:`${S.MAL5}${malId}`  },
+  ];
+  const tmdbSrvs = tmdbId ? [
+    { icon:'⚡', name:'NOVA',   url:`${S.TV}${tmdbId}/1/1`  },
+    { icon:'🌟', name:'TITAN',  url:`${S.TV2}${tmdbId}/1/1` },
+    { icon:'💎', name:'ZENITH', url:`${S.TV3}${tmdbId}/1/1` },
+    { icon:'🔥', name:'ORBIT',  url:`${S.TV5}${tmdbId}/1/1` },
+    { icon:'🏆', name:'NEXUS',  url:`${S.TV8}${tmdbId}/1/1` },
+  ] : [];
+  const allSrvs = [...malSrvs, ...tmdbSrvs];
+  const firstUrl = allSrvs[0]?.url || '';
+  const srvHTML = allSrvs.map((s,i)=>`
+    <div class="ws-card ${i===0?'active':''}" data-url="${s.url}" data-name="${s.name}" onclick="wsSelectServer(this)">
+      ${i===0?'<span class="ws-check">✔</span>':''}
+      <div class="ws-icon">${s.icon}</div>
+      <div class="ws-name">${s.name}</div>
+      <span class="ws-free">مجاني</span>
+    </div>`).join('');
+  page.innerHTML = `
+    <div class="ws-player-wrap">
+      <div class="ws-player-bg">
+        <div class="ws-overlay" id="wsOverlay" onclick="wsStartStream()">
+          <div class="ws-play-btn">▶</div>
+          <span class="ws-play-lbl">اضغط للمشاهدة</span>
+        </div>
+        <iframe id="wsFrame" class="ws-frame" src="" allowfullscreen
+          allow="autoplay; fullscreen; encrypted-media; picture-in-picture"></iframe>
+      </div>
+      <button class="ws-back" onclick="wsGoBack()">→ رجوع</button>
+    </div>
+    <div class="ws-section">
+      <div class="ws-srv-head">
+        <h3 class="ws-stitle">🟢 مصادر البث</h3>
+        <span class="ws-srv-sub" style="color:rgba(147,51,234,0.8)">MAL + TMDB</span>
+      </div>
+      <div class="ws-grid">${srvHTML}</div>
+      <p class="ws-note">سيرفرات MAL تعمل بـ MAL ID — سيرفرات TMDB تعمل بـ TMDB ID</p>
+    </div>`;
+}
 // ===== HERO SWIPER =====
 let heroSwiper = null;
 
