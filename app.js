@@ -159,7 +159,7 @@ function buildAnimeCardJikan(anime, rank = 0) {
       </div>
     </div>`;
 }
-async function openAllEpsJikan(malId, tmdbId, encodedTitle) {
+async function openAllEpsJikan(malId, tmdbId, encodedTitle, animePoster = '') {
   const page = document.getElementById('detailPage');
   if (!page) return;
   page.innerHTML = '<div class="loading">⏳ جاري تحميل الحلقات...</div>';
@@ -172,24 +172,6 @@ async function openAllEpsJikan(malId, tmdbId, encodedTitle) {
       hasNext = d.pagination?.has_next_page || false;
       page1++;
     }
-    // جلب صور كل الحلقات من كل مواسم TMDB
-    let tmdbStills = {};
-    if (tmdbId && tmdbId > 0) {
-      try {
-        const tvData = await fetch(buildTMDBUrl(`/tv/${tmdbId}`)).then(r=>r.json());
-        const seasons = (tvData.seasons||[]).filter(s=>s.season_number>0);
-        let globalEp = 1;
-        for (const s of seasons) {
-          try {
-            const sd = await fetch(buildTMDBUrl(`/tv/${tmdbId}/season/${s.season_number}`)).then(r=>r.json());
-            (sd.episodes||[]).forEach(e => {
-              if (e.still_path) tmdbStills[globalEp] = CONFIG.IMAGES.STILL_MD + e.still_path;
-              globalEp++;
-            });
-          } catch {}
-        }
-      } catch {}
-    }
     const title = decodeURIComponent(encodedTitle);
     page.innerHTML = `
       <div class="all-eps-page">
@@ -200,7 +182,7 @@ async function openAllEpsJikan(malId, tmdbId, encodedTitle) {
         <div class="all-eps-grid">
           ${allEps.map((e,i)=>{
             const epNum = e.episode_id||i+1;
-            const img = e.images?.jpg?.image_url || tmdbStills[epNum] || CONFIG.IMAGES.PLACEHOLDER;
+            const img = e.images?.jpg?.image_url || animePoster || CONFIG.IMAGES.PLACEHOLDER;
             return `
             <div class="all-ep-card" onclick="openWatchPageAnime(-1,${malId},1,${epNum})">
               <div class="all-ep-thumb-wrap">
@@ -285,7 +267,7 @@ async function openAnimeJikan(malId, encodedTitle) {
             <span style="color:rgba(255,255,255,0.4);font-size:0.75rem">${a.episodes||'?'} حلقة</span>
           </div>
           <div class="eps-header-bar">
-            <button class="eps-view-all-btn" onclick="openAllEpsJikan(${malId},${tmdbId||0},'${encodeURIComponent(a.title)}')">عرض الكل ›</button>
+            <button class="eps-view-all-btn" onclick="openAllEpsJikan(${malId},${tmdbId||0},'${encodeURIComponent(a.title)}','${poster}')">عرض الكل ›</button>
           </div>
           <div class="swiper eps-swiper" id="epsSwiper_${malId}">
             <div class="swiper-wrapper">
