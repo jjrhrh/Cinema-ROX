@@ -417,10 +417,10 @@ async function loadOtakuPage() {
     </div>`).join('');
   for (const s of SECTIONS) {
     try {
-      const movies = await fetchMovies(s.endpoint, { type: s.type, limit: 10, params: s.params || {} });
-      const row = document.getElementById(`${s.id}_row`);
+      const animes = await fetchAnimeJikan(s.jikan, 10);
+      const row    = document.getElementById(`${s.id}_row`);
       if (!row) return;
-      row.innerHTML = movies.map((m, idx) => buildAnimeCard(m, idx + 1, s.type)).join('');
+      row.innerHTML = animes.map((a, idx) => buildAnimeCardJikan(a, idx+1)).join('');
     } catch { document.getElementById(s.id)?.remove(); }
   }
 }
