@@ -1465,8 +1465,6 @@ async function traktLoadLibrary() {
     const colItems = [...(colMovies||[]).map(toMovie), ...(colShows||[]).map(toShow)].filter(i=>i.id);
 
     // مسح القديم وحقن الجديد نظيف
-    saveLib('rox_watchlater', []);
-    saveLib('rox_watchlist',  []);
     saveLib('trakt_watchlist',   wlItems);
     saveLib('trakt_collection',  colItems);
 
