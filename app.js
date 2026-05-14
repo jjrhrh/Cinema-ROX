@@ -1097,51 +1097,52 @@ async function loadLibraryPage() {
     return;
   }
   page.innerHTML = '<div class="loading">⏳ جاري تحميل المكتبة...</div>';
-
   const watchlist  = getLib('rox_watchlist');
   const watchlater = getLib('rox_watchlater');
+  const cwItems    = cwGetAll();
+  const EMPTY = `<p class="lib-radar-empty">الرادار فارغ حالياً.. أضف تحفتك القادمة من الواجهة الرئيسية</p>`;
 
   const fetchCards = async (items) => {
-    const cards = await Promise.all(items.slice(0, 12).map(async item => {
+    if (!items.length) return EMPTY;
+    const cards = await Promise.all(items.slice(0,12).map(async item => {
       try {
-        const ep  = item.type === 'tv' ? `/tv/${item.id}` : `/movie/${item.id}`;
-        const res = await fetch(buildTMDBUrl(ep));
-        const d   = await res.json();
-        const title  = item.type === 'movie' ? (d.title || d.original_title) : (d.name || d.original_name);
-        const poster = d.poster_path ? `${CONFIG.IMAGES.POSTER_MD}${d.poster_path}` : CONFIG.IMAGES.PLACEHOLDER;
+        const ep = item.type==='tv' ? `/tv/${item.id}` : `/movie/${item.id}`;
+        const d  = await fetch(buildTMDBUrl(ep)).then(r=>r.json());
+        const title  = item.type==='movie' ? (d.title||d.original_title) : (d.name||d.original_name);
+        const poster = d.poster_path ? `${CONFIG.IMAGES.POSTER_SM}${d.poster_path}` : CONFIG.IMAGES.PLACEHOLDER;
         const rating = d.vote_average ? d.vote_average.toFixed(1) : '';
-        return `
-          <div class="movie-card" onclick="openDetail(${item.id},'${item.type}')">
-            <div class="movie-poster-wrap">
-              <img class="movie-poster" src="${poster}" alt="${title}" loading="lazy"
-                   onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
-              ${rating ? `<span class="movie-rating">⭐ ${rating}</span>` : ''}
-              <div class="movie-overlay"><span class="play-icon">▶</span></div>
-            </div>
-          </div>`;
+        return `<div class="lib-card" onclick="openDetail(${item.id},'${item.type}')">
+          <img class="lib-card-img" src="${poster}" loading="lazy" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+          <div class="lib-card-overlay"><span>▶</span></div>
+          ${rating?`<span class="lib-card-rating">${rating}</span>`:''}
+        </div>`;
       } catch { return ''; }
     }));
-    return cards.join('');
+    return `<div class="lib-grid">${cards.join('')}</div>`;
   };
 
-  const wlHTML  = watchlist.length  ? await fetchCards(watchlist)  : '<p class="lib-empty">لا يوجد أفلام في قائمتك بعد 🎬</p>';
-  const wlrHTML = watchlater.length ? await fetchCards(watchlater) : '<p class="lib-empty">لم تضف شيئاً لسأشاهده بعد ⏰</p>';
+  const cwHTML = cwItems.length ? `<div class="lib-grid">${cwItems.slice(0,12).map(i=>`
+    <div class="lib-card" onclick="cwResume(${i.id},'${i.type}',${i.seconds},'${i.server}','${i.serverUrl||''}')">
+      <img class="lib-card-img" src="${i.poster}" loading="lazy" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+      <div class="lib-card-overlay"><span>▶</span></div>
+      <div class="lib-card-bar"><div class="lib-card-progress" style="width:${Math.min(i.seconds/7200*100,100).toFixed(1)}%"></div></div>
+    </div>`).join('')}</div>` : EMPTY;
+
+  const [wlHTML, wlrHTML] = await Promise.all([fetchCards(watchlist), fetchCards(watchlater)]);
 
   page.innerHTML = `
-    <div class="lib-header"><h2 class="lib-title">📚 مكتبتي</h2></div>
+    <div class="lib-header"><h2 class="lib-title">مكتبتي</h2></div>
     <div class="lib-section">
-      <div class="section-header">
-        <span class="section-bar"></span>
-        <h3 class="section-title">❤️ قائمتي</h3>
-      </div>
-      <div class="movies-row">${wlHTML}</div>
+      <div class="lib-sec-head"><span class="lib-laser lib-laser-magenta"></span><h3 class="lib-sec-title">أرشيفي الخاص</h3></div>
+      ${wlHTML}
     </div>
     <div class="lib-section">
-      <div class="section-header">
-        <span class="section-bar"></span>
-        <h3 class="section-title">⏰ سأشاهده لاحقاً</h3>
-      </div>
-      <div class="movies-row">${wlrHTML}</div>
+      <div class="lib-sec-head"><span class="lib-laser lib-laser-cyan"></span><h3 class="lib-sec-title">قائمة الانتظار</h3></div>
+      ${wlrHTML}
+    </div>
+    <div class="lib-section">
+      <div class="lib-sec-head"><span class="lib-laser lib-laser-orange"></span><h3 class="lib-sec-title">أكمل المشاهدة</h3></div>
+      ${cwHTML}
     </div>`;
 }
 
