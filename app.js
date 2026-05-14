@@ -1137,11 +1137,11 @@ async function loadLibraryPage() {
       ${wlHTML}
     </div>
     <div class="lib-section">
-      <div class="lib-sec-head"><span class="lib-laser lib-laser-cyan"></span><h3 class="lib-sec-title">قائمة الانتظار</h3></div>
+      <div class="lib-sec-head"><span class="lib-laser lib-laser-cyan"></span><span class="lib-icon3d lib-icon3d-cyan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span><h3 class="lib-sec-title">قائمة الانتظار</h3></div>
       ${wlrHTML}
     </div>
     <div class="lib-section">
-      <div class="lib-sec-head"><span class="lib-laser lib-laser-orange"></span><h3 class="lib-sec-title">أكمل المشاهدة</h3></div>
+      <div class="lib-sec-head"><span class="lib-laser lib-laser-orange"></span><span class="lib-icon3d lib-icon3d-orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg></span><h3 class="lib-sec-title">أكمل المشاهدة</h3></div>
       ${cwHTML}
     </div>`;
 }
