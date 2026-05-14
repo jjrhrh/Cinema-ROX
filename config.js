@@ -165,6 +165,11 @@ HERO: Object.freeze({
   ANIME28: 'https://player.autoembed.cc/embed/tv/',
   ANIME29: 'https://hnembed.com/embed/tv/',
   ANIME30: 'https://superembed.stream/embed/tv/',
+    MAL1 : 'https://anix.to/embed/mal/',
+    MAL2 : 'https://aniwave.to/embed/mal/',
+    MAL3 : 'https://embed.aniwatch.to/anime/',
+    MAL4 : 'https://animepahe.ru/embed/',
+    MAL5 : 'https://gogoanime3.net/embed-episode/',
 }),
   // ─────────────────────────────────────────
   //  🎬  إعدادات عرض المحتوى
