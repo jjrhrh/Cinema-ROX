@@ -501,12 +501,17 @@ async function openOtakuAll(secId, title, type) {
   page.classList.add('active');
   page.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
   window.scrollTo(0, 0);
+
+  const SECTION_PARAMS = {
+    sec_otaku1: { with_genres:'16', with_origin_country:'JP', sort_by:'popularity.desc' },
+    sec_otaku2: { with_genres:'16', with_origin_country:'JP', sort_by:'vote_average.desc', 'vote_count.gte':'200' },
+    sec_otaku3: { with_genres:'16', with_origin_country:'JP', sort_by:'first_air_date.desc', 'first_air_date.gte': new Date().getFullYear()+'-01-01' },
+  };
+
+  const params = SECTION_PARAMS[secId] || { with_genres:'16', with_origin_country:'JP', sort_by:'popularity.desc' };
   const endpoint = type === 'movie' ? '/discover/movie' : '/discover/tv';
-  const movies = await fetchMovies(endpoint, {
-    type,
-    limit: 10,
-    params: { with_genres:'16', with_origin_country:'JP', sort_by:'popularity.desc' }
-  });
+  const movies = await fetchMovies(endpoint, { type, limit: 30, params });
+
   page.innerHTML = `
     <div style="padding:16px">
       <button class="detail-btn" onclick="studioGoBack()" style="margin-bottom:16px">← رجوع</button>
