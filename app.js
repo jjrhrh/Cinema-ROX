@@ -268,7 +268,7 @@ async function openAnimeJikan(malId, encodedTitle) {
           <div class="swiper eps-swiper" id="epsSwiper_${malId}">
             <div class="swiper-wrapper">
               ${episodes.map((e,i)=>`
-                <div class="swiper-slide ep-card" onclick="openWatchPageAnime(${tmdbId||0},${malId},1,${e.episode_id||i+1})">
+                <div class="swiper-slide ep-card" onclick="openWatchPageAnime(0,${malId},1,${e.episode_id||i+1})">
                   <div class="ep-thumb-wrap">
                     <img data-src="${e.images?.jpg?.image_url||poster}"
                          src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
