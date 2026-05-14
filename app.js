@@ -632,48 +632,29 @@ function studioGoBack() {
   window.scrollTo(0, 0);
 }
 async function loadOtakuHero() {
-  const animes  = await fetchAnimeJikan('/top/anime?filter=bypopularity', CONFIG.HERO.LIMIT);
+  const movies = await fetchMovies('/discover/tv', {
+    type: 'tv', limit: CONFIG.HERO.LIMIT, requirePoster: true,
+    params: { with_genres:'16', with_origin_country:'JP', sort_by:'popularity.desc' }
+  });
   const wrapper = document.getElementById('heroSwiperWrapper');
-  if (!wrapper || !animes.length) return;
-  wrapper.innerHTML = animes.map(a => {
-    const poster = a.images?.jpg?.large_image_url || CONFIG.IMAGES.PLACEHOLDER;
-    const title  = a.title_arabic || a.title || '';
-    return `<div class="swiper-slide hero-swiper-slide" onclick="openAnimeJikan(${a.mal_id},'${encodeURIComponent(title)}')">
-      <img src="${poster}" alt="${title}" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+  if (!wrapper || !movies.length) return;
+  wrapper.innerHTML = movies.map(m => {
+    const poster = `${CONFIG.IMAGES.POSTER_XL}${m.poster_path}`;
+    return `<div class="swiper-slide hero-swiper-slide" onclick="openDetail(${m.id},'tv')">
+      <img src="${poster}" alt="${m.name||''}" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
     </div>`;
   }).join('');
   if (heroSwiper) { heroSwiper.destroy(true,true); heroSwiper=null; }
-  heroSwiper = new Swiper('#heroSwiper',{
+  heroSwiper = new Swiper('#heroSwiper', {
     effect:'coverflow', grabCursor:true, centeredSlides:true,
     slidesPerView:1.5, spaceBetween:20, loop:true,
     autoplay:{delay:5000,disableOnInteraction:false}, speed:400,
     coverflowEffect:{rotate:50,stretch:-100,depth:400,modifier:1,slideShadows:false},
     on:{
-      init:    function(){ updateHeroInfoJikan(animes,0); },
-      slideChange: function(){ updateHeroInfoJikan(animes,this.realIndex); }
+      init: function(){ updateHeroInfo(movies, 0); },
+      slideChange: function(){ updateHeroInfo(movies, this.realIndex); }
     }
   });
-}
-
-function updateHeroInfoJikan(animes, index) {
-  const a = animes[index % animes.length];
-  if (!a) return;
-  const backdrop = document.getElementById('heroBackdrop');
-  if (backdrop) {
-    backdrop.style.filter = 'blur(60px) brightness(0.4) saturate(3)';
-    backdrop.style.backgroundImage = `url('${a.images?.jpg?.large_image_url||''}')`;
-    backdrop.classList.remove('loaded');
-    setTimeout(()=>backdrop.classList.add('loaded'),80);
-  }
-  const titleEl  = document.getElementById('heroInfoTitle');
-  const genresEl = document.getElementById('heroInfoGenres');
-  const yearEl   = document.getElementById('heroInfoYear');
-  if (yearEl)   yearEl.textContent  = a.aired?.prop?.from?.year||'';
-  if (titleEl) {
-    titleEl.style.opacity='0'; titleEl.style.transform='translateY(12px)';
-    setTimeout(()=>{ titleEl.textContent=a.title||''; titleEl.style.transition='opacity 0.6s,transform 0.6s'; titleEl.style.opacity='1'; titleEl.style.transform='translateY(0)'; },200);
-  }
-  if (genresEl) genresEl.innerHTML = (a.genres||[]).slice(0,3).map(g=>`<span class="hero-cap">${g.name}</span>`).join('');
 }
 async function loadHomePage() {
   const page = document.getElementById('homePage');
