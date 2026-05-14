@@ -593,8 +593,6 @@ function updateHeroInfoJikan(animes, index) {
   }
   if (genresEl) genresEl.innerHTML = (a.genres||[]).slice(0,3).map(g=>`<span class="hero-cap">${g.name}</span>`).join('');
 }
-  });
-}
 async function loadHomePage() {
   const page = document.getElementById('homePage');
   if (!page) return;
