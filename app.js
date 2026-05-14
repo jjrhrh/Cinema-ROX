@@ -1386,14 +1386,8 @@ function openAI()         {}
 
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', async () => {
-
   bnavGo('home');
-  try {
-    await Promise.all([loadHeroSwiper(), loadHomePage()]);
-    cwRender();
-  } catch(e) {
-    console.error('خطأ في التحميل:', e);
-  }
+  cwRender();
 });
 async function loadNewsSection(containerId, feedUrl, color) {
   const sec = document.getElementById('newsSection');
