@@ -1133,7 +1133,7 @@ async function loadLibraryPage() {
   page.innerHTML = `
     <div class="lib-header"><h2 class="lib-title">مكتبتي</h2></div>
     <div class="lib-section">
-      <div class="lib-sec-head"><span class="lib-laser lib-laser-magenta"></span><h3 class="lib-sec-title">أرشيفي الخاص</h3></div>
+      <div class="lib-sec-head"><span class="lib-laser lib-laser-magenta"></span><span class="lib-icon3d lib-icon3d-magenta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span><h3 class="lib-sec-title">أرشيفي الخاص</h3></div>
       ${wlHTML}
     </div>
     <div class="lib-section">
