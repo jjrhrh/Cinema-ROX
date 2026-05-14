@@ -965,7 +965,7 @@ async function openAllEps(tvId, seasonNum) {
           ${(data.episodes||[]).map(e=>`
             <div class="all-ep-card" onclick="openWatchPage(${tvId},'tv',${seasonNum},${e.episode_number})">
               <div class="all-ep-thumb-wrap">
-                <img src="${e.still_path?CONFIG.IMAGES.STILL_MD+e.still_path:CONFIG.IMAGES.PLACEHOLDER}"
+                <img src="${e.images?.jpg?.image_url||tmdbStills[e.episode_id||i+1]||CONFIG.IMAGES.PLACEHOLDER}"
                      onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'" class="all-ep-thumb">
                 <div class="ep-num-badge">ح ${e.episode_number}</div>
                 <div class="all-ep-play">▶</div>
