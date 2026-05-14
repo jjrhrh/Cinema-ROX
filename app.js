@@ -870,6 +870,36 @@ const reviewsHTML = `
       </div>`;
   }
 }
+async function openAllEps(tvId, seasonNum) {
+  const page = document.getElementById('detailPage');
+  if (!page) return;
+  page.innerHTML = '<div class="loading">⏳ جاري تحميل الحلقات...</div>';
+  try {
+    const data = await fetch(buildTMDBUrl(`/tv/${tvId}/season/${seasonNum}`)).then(r=>r.json());
+    page.innerHTML = `
+      <div class="all-eps-page">
+        <div class="all-eps-header">
+          <button class="detail-back-btn" onclick="openDetail(${tvId},'tv')">← رجوع</button>
+          <h2 class="all-eps-title">📺 الموسم ${seasonNum} — ${data.episodes?.length||0} حلقة</h2>
+        </div>
+        <div class="all-eps-grid">
+          ${(data.episodes||[]).map(e=>`
+            <div class="all-ep-card" onclick="openWatchPage(${tvId},'tv',${seasonNum},${e.episode_number})">
+              <div class="all-ep-thumb-wrap">
+                <img src="${e.still_path?CONFIG.IMAGES.STILL_MD+e.still_path:CONFIG.IMAGES.PLACEHOLDER}"
+                     onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'" class="all-ep-thumb">
+                <div class="ep-num-badge">ح ${e.episode_number}</div>
+                <div class="all-ep-play">▶</div>
+              </div>
+              <div class="all-ep-info">
+                <div class="all-ep-title">${(e.name||'').slice(0,32)}</div>
+                <div class="all-ep-overview">${(e.overview||'').slice(0,90)}</div>
+              </div>
+            </div>`).join('')}
+        </div>
+      </div>`;
+  } catch { page.innerHTML = '<div class="loading">⚠️ خطأ في تحميل الحلقات</div>'; }
+}
 async function loadSeasonEps(tvId, seasonNum) {
   const wrap = document.getElementById(`epsWrap_${tvId}`);
   if (!wrap) return;
