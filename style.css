@@ -963,6 +963,40 @@ html, body {
   display: flex;
   justify-content: space-between;
 } 
+.movie-badge-type {
+  background: rgba(229,9,20,0.15);
+  border: 1px solid rgba(229,9,20,0.4);
+  color: #ff4455;
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-size: 0.6rem;
+  font-weight: 800;
+}
+.movie-badge-year {
+  color: rgba(255,255,255,0.55);
+  font-size: 0.62rem;
+  font-weight: 700;
+}
+.movie-badge-rating {
+  color: #f5c518;
+  font-weight: 900;
+  font-size: 0.68rem;
+  margin-right: auto;
+}
+.rank-number {
+  position: absolute;
+  right: -16px;
+  bottom: -10px;
+  font-size: 5.5rem;
+  font-weight: 900;
+  color: transparent;
+  -webkit-text-stroke: 2px rgba(255,255,255,0.13);
+  line-height: 1;
+  z-index: 0;
+  pointer-events: none;
+  user-select: none;
+  font-family: 'Cairo', sans-serif;
+} 
 .hero-swiper-slide {
   border-radius: 30px !important;
   overflow: hidden !important;
