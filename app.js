@@ -629,9 +629,14 @@ async function loadHomePage() {
       <div class="section-header">
         <span class="section-bar"></span>
         <h2 class="section-title">${s.title}</h2>
+        <button class="browse-all-btn" onclick="bnavGo('browse','${s.type}','${s.endpoint}','${s.title}')">عرض الكل ›</button>
       </div>
-      <div class="movies-row" id="${s.id}_row">
-        ${Array(6).fill('<div class="movie-card skeleton-card"></div>').join('')}
+      <div class="otaku-slider-wrap">
+        <button class="otaku-arrow otaku-arrow-left" onclick="otakuSlide('${s.id}_row',-1)">‹</button>
+        <div class="movies-row" id="${s.id}_row">
+          ${Array(4).fill('<div class="movie-card skeleton-card"></div>').join('')}
+        </div>
+        <button class="otaku-arrow otaku-arrow-right" onclick="otakuSlide('${s.id}_row',1)">›</button>
       </div>
     </div>`).join('');
 
