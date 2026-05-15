@@ -953,7 +953,6 @@ function wsStartStream() {
     document.getElementById('wsFrame').src = url;
   }
   }
-}
 function wsGoBack() {
   const dp = document.getElementById('detailPage');
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
