@@ -66,6 +66,7 @@ HERO: Object.freeze({
     TMDB_VIDEO_PATH  : '/videos',
     YOUTUBE_PARAMS   : '?autoplay=0&rel=0&modestbranding=1&cc_load_policy=0',
     YOUTUBE_NOCOOKIE : 'https://www.youtube-nocookie.com/embed/',
+    PROXY: 'https://rox-proxy.vercel.app/fetch?url=',
     TRAILER_TYPE     : 'Trailer',
   }),
   SERVERS: Object.freeze({
