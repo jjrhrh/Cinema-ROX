@@ -638,7 +638,7 @@ async function loadHomePage() {
   // كل قسم يتحمل بشكل مستقل
   SECTIONS.forEach(async s => {
     try {
-      const movies = await fetchMovies(s.endpoint, { type: s.type, params: s.params || {} });
+      const movies = await fetchMovies(s.endpoint, { type: s.type, params: s.params || {}, requireBackdrop: true });
       const row = document.getElementById(`${s.id}_row`);
       const container = document.getElementById(s.id);
       if (!row || !container) return;
