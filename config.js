@@ -102,6 +102,9 @@ HERO: Object.freeze({
   MOV29: 'https://player.autoembed.cc/embed/movie/',
   MOV30: 'https://hnembed.com/embed/movie/',
   MOV31: 'https://superembed.stream/embed/movie/',
+  MOV32: 'https://vidsrc.xyz/embed/movie/',
+  MOV33: 'https://2embed.org/embed/movie/',
+  MOV34: 'https://player.vidsrc.nl/embed/movie/',
   // ── مسلسلات ──
   TV   : 'https://vidsrc-embed.ru/embed/tv/',
   TV2  : 'https://vidsrc-embed.su/embed/tv/',
@@ -166,6 +169,9 @@ HERO: Object.freeze({
   ANIME28: 'https://player.autoembed.cc/embed/tv/',
   ANIME29: 'https://hnembed.com/embed/tv/',
   ANIME30: 'https://superembed.stream/embed/tv/',
+  ANIME31: 'https://vidsrc.xyz/embed/tv/',
+  ANIME32: 'https://2embed.org/embed/tv/',
+  ANIME33: 'https://player.vidsrc.nl/embed/tv/',
 }),
   // ─────────────────────────────────────────
   //  🎬  إعدادات عرض المحتوى
