@@ -443,7 +443,7 @@ function buildSection(title, movies, type = 'movie') {
         <span class="section-bar"></span>
         <h2 class="section-title">${title}</h2>
       </div>
-      <div class="movies-row">
+      <div class="anime-grid">
         ${movies.map(m => buildMovieCard(m, type)).join('')}
       </div>
     </div>`;
