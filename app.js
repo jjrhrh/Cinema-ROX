@@ -819,6 +819,7 @@ const reviewsHTML = `
               <button class="detail-btn detail-btn-now" onclick="openWatchPage(${id},'${type}')">▶ شاهد الآن</button>
               ${trailerBtn}
               <button class="detail-btn detail-btn-watch" onclick="addToWatchlist(${id},'${type}')">❤️ قائمتي</button>
+              ${type === 'tv' ? `<button class="detail-btn detail-btn-alert ${getLib('rox_alerts').find(i=>i.id===id)?'active':''}" id="alertBtn_${id}" onclick="toggleAlertSubscription(${id},'${title}','${type}')"><span class="btn-bell-ico"></span> ${getLib('rox_alerts').find(i=>i.id===id)?'مشترك التنبيهات':'تنبيه بالحلقات'}</button>` : ''}
               <button class="detail-btn detail-btn-later" onclick="addToWatchLater(${id},'${type}')">⏰ سأشاهده</button>
             </div>
           </div>
