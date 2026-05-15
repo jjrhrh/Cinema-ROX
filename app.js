@@ -920,18 +920,30 @@ function wsSelectServer(card) {
     if (sw) {
       sw.style.display = 'flex';
       setTimeout(() => {
-        document.getElementById('wsFrame').src = card.dataset.url;
+        loadPlyr(card.dataset.url);
         setTimeout(() => { sw.style.display = 'none'; }, 1800);
       }, 400);
     } else {
-      document.getElementById('wsFrame').src = card.dataset.url;
+      loadPlyr(card.dataset.url);
     }
   }
 }
 function wsStartStream() {
   const active = document.querySelector('.ws-card.active');
   if (!active) return;
-  document.getElementById('wsFrame').src = active.dataset.url;
+  loadPlyr(active.dataset.url);
+  document.getElementById('wsOverlay').style.display = 'none';
+}
+function loadPlyr(url) {
+  const v = document.getElementById('wsPlayer');
+  if (!v) return;
+  if (window._plyrInstance) { window._plyrInstance.destroy(); }
+  v.src = url;
+  window._plyrInstance = new Plyr(v, {
+    controls: ['play','progress','current-time','mute','volume','fullscreen'],
+    autoplay: true
+  });
+  window._plyrInstance.play().catch(()=>{});
   document.getElementById('wsOverlay').style.display = 'none';
 }
 function wsGoBack() {
