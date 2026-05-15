@@ -991,7 +991,6 @@ const isAnime = (det.genres||[]).some(g => g.id === 16)
 
 const animeParams = '&lang=ja&audio=ja&dubbed=false&dub=false';
 const animeCC = `https://vidsrc.to/embed/tv/${id}/${season}/${episode}`;
-const ep = type !== 'movie';
 const srvs = [
   { icon:'🎯', name:'ROX',     desc:'مشغلي 🔥',  url: ep?`${S.ANIME}${id}/${season}/${episode}${animeParams}`:`${S.MOV}${id}`, rox:true, active:true },
   { icon:'🎌', name:'PRIME',   desc:'#01', url: ep?`${S.ANIME}${id}/${season}/${episode}${animeParams}`:`${S.MOV}${id}` },
