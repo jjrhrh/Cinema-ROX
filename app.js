@@ -1103,6 +1103,7 @@ const srvs = isAnime ? [
           referrerpolicy="no-referrer-when-downgrade"
           onload="if(this.src)cwTrackTime(${id},'${type}','${cwPoster}','${cwTitle}')">
           </iframe>
+          <video id="roxPlayer" class="ws-player" controls playsinline style="display:none"></video>
           <script>
             if('${resumeSrv}') {
               document.querySelector('.ws-card.active')?.classList.remove('active');
