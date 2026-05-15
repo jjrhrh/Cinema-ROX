@@ -276,8 +276,7 @@ async function openWatchPageAnime(tmdbId, malId, season=1, episode=1) {
           <div class="ws-play-btn">▶</div>
           <span class="ws-play-lbl">اضغط للمشاهدة</span>
         </div>
-        <iframe id="wsFrame" class="ws-frame" src="" allowfullscreen
-          allow="autoplay; fullscreen; encrypted-media; picture-in-picture"></iframe>
+        <video id="wsPlayer" class="ws-player" controls playsinline></video>
       </div>
       <button class="ws-back" onclick="wsGoBack()">→ رجوع</button>
     </div>
@@ -1076,12 +1075,7 @@ const srvs = isAnime ? [
             <div class="ws-play-btn">▶</div>
             <span class="ws-play-lbl">اضغط للمشاهدة</span>
           </div>
-          <iframe id="wsFrame" class="ws-frame" src="" 
-          allowfullscreen
-          allow="autoplay; fullscreen; encrypted-media; picture-in-picture; web-share; clipboard-write; gyroscope; accelerometer"
-          referrerpolicy="no-referrer-when-downgrade"
-          onload="if(this.src)cwTrackTime(${id},'${type}','${cwPoster}','${cwTitle}')">
-          </iframe>
+          <video id="wsPlayer" class="ws-player" controls playsinline></video>
           <script>
             if('${resumeSrv}') {
               document.querySelector('.ws-card.active')?.classList.remove('active');
