@@ -1361,6 +1361,7 @@ html, body {
   display: flex;
   align-items: center;
   gap: 0;
+  overflow: hidden;
 }
 .otaku-row {
   display: flex;
