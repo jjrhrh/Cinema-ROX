@@ -1018,7 +1018,7 @@ html, body {
 .rank-number {
   position: absolute;
   left: 8px;
-  bottom: 44px;
+  bottom: 8px;
   font-size: 2.6rem;
   font-weight: 900;
   color: transparent;
