@@ -629,7 +629,7 @@ async function loadHomePage() {
         <span class="section-bar"></span>
         <h2 class="section-title">${s.title}</h2>
       </div>
-      <div class="movies-row" id="${s.id}_row">
+      <div class="anime-grid" id="${s.id}_row">
         ${Array(6).fill('<div class="movie-card skeleton-card"></div>').join('')}
       </div>
     </div>`).join('');
