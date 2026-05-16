@@ -745,7 +745,7 @@ async function openDetail(id, type = 'movie') {
       : (detail.episode_run_time?.[0] ? `${detail.episode_run_time[0]} د` : '');
     const genres  = (detail.genres || []).map(g => `<span class="detail-genre">${g.name}</span>`).join('');
     const overview= detail.overview || 'لا يوجد وصف متاح.';
-    const cast    = (credits.cast || []).slice(0, 8);
+    const cast    = (credits.cast || []).slice(0, 12);
 
     const castHTML = cast.length ? `
       <div class="detail-section">
