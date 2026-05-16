@@ -856,6 +856,9 @@ const reviewsHTML = `
       <div class="dp-hero-bg" style="background-image:url('${backdrop || poster}')"></div>
       <div class="dp-hero-fade"></div>
       <button class="dp-back-btn" onclick="goBack()">← رجوع</button>
+    </div>
+
+    <div class="dp-poster-zone">
       <img class="dp-poster-img" src="${poster}"
            onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
     </div>
