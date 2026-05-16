@@ -2532,18 +2532,20 @@ html, body {
 .dp-back-btn:active { background: rgba(255,255,255,0.12); }
 
 /* ── Poster ── */
-.dp-poster-img {
+.dp-poster-zone {
   position: relative;
   z-index: 2;
-  width: 78%;
-  max-width: 320px;
+  padding: 0 8px;
+  margin-top: -55px;
+}
+
+.dp-poster-img {
+  width: 100%;
   aspect-ratio: 2 / 3;
   object-fit: cover;
-  border-radius: 18px;
+  border-radius: 16px;
   display: block;
-  box-shadow:
-    0 32px 80px rgba(0,0,0,0.95),
-    0 0 0 1px rgba(255,255,255,0.07);
+  box-shadow: 0 28px 70px rgba(0,0,0,0.95);
 }
 
 /* ── Buttons ── */
