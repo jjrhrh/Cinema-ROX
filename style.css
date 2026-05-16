@@ -2719,3 +2719,11 @@ html, body {
   gap: 7px;
   justify-content: flex-end;
 }
+/* ── Fade-in للصور ── */
+.fade-img {
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.fade-img.loaded {
+  opacity: 1;
+}
