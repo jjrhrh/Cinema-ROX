@@ -849,32 +849,32 @@ const reviewsHTML = `
       : '';
 
     page.innerHTML = `
-      <div class="detail-backdrop" style="background-image:url('${backdrop}')">
-        <div class="detail-backdrop-gradient"></div>
+      <div class="cine-header" style="background-image:url('${backdrop}')">
+        <div class="cine-header-grad"></div>
         <button class="detail-back-btn" onclick="goBack()">← رجوع</button>
-        <div class="detail-hero-float">
-          <h1 class="detail-title">${title}</h1>
-          <div class="detail-hero-meta">
-            ${year?`<span class="detail-hero-badge">📅 ${year}</span>`:''}
-            ${runtime?`<span class="detail-hero-badge">🕐 ${runtime}</span>`:''}
-            <span class="detail-hero-badge">${type==='tv'?'📺 مسلسل':'🎬 فيلم'}</span>
-            <span class="detail-hero-badge detail-hero-badge-gold">⭐ ${rating}</span>
-          </div>
-          <div class="detail-hero-actions">
-            <button class="detail-btn detail-btn-now" id="mainWatchBtn_${id}" onclick="openWatchPage(${id},'${type}',${(() => { const p=getProgress(id); return p?`${p.season},${p.episode+1}`:`1,1`; })()})">▶ ${(() => { const p=getProgress(id); return p ? `أكمل: ح${p.episode+1}` : 'شاهد الآن'; })()}</button>
-            ${trailerBtn}
-            <button class="detail-btn detail-btn-watch" onclick="addToWatchlist(${id},'${type}')">❤️ قائمتي</button>
-            <button class="detail-btn detail-btn-later" onclick="addToWatchLater(${id},'${type}')">⏰ لاحقاً</button>
-            ${type === 'tv' ? `<button class="detail-btn detail-btn-alert ${getLib('rox_alerts').find(i=>i.id===id)?'active':''}" id="alertBtn_${id}" onclick="toggleAlertSubscription(${id},'${title}','${type}')"><span class="btn-bell-ico"></span> تنبيه</button>` : ''}
-          </div>
+      </div>
+      <div class="cine-poster-wrap">
+        <img class="cine-poster" src="${poster}" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+      </div>
+      <div class="cine-actions">
+        ${trailerBtn ? `<button class="cine-btn cine-btn-trailer" onclick="playTrailer('${trailer?.key}')">🎬 شاهد الإعلان</button>` : ''}
+        <button class="cine-btn cine-btn-watch" id="mainWatchBtn_${id}" onclick="openWatchPage(${id},'${type}',${(() => { const p=getProgress(id); return p?`${p.season},${p.episode+1}`:`1,1`; })()})">▶ ${(() => { const p=getProgress(id); return p ? `أكمل: ح${p.episode+1}` : 'شاهد الآن'; })()}</button>
+        <div class="cine-btn-row">
+          <button class="cine-btn cine-btn-later" onclick="addToWatchLater(${id},'${type}')">⏰ سأشاهده</button>
+          <button class="cine-btn cine-btn-fav" onclick="addToWatchlist(${id},'${type}')">❤️ قائمتي</button>
+          ${type === 'tv' ? `<button class="cine-btn cine-btn-alert ${getLib('rox_alerts').find(i=>i.id===id)?'active':''}" id="alertBtn_${id}" onclick="toggleAlertSubscription(${id},'${title}','${type}')"><span class="btn-bell-ico"></span> تنبيه</button>` : ''}
         </div>
       </div>
-      <div class="detail-body">
-        <div class="detail-top">
-          <div class="detail-info">
-            <div class="detail-genres">${genres}</div>
-          </div>
+      <div class="cine-info">
+        <h1 class="cine-title">${title}</h1>
+        <div class="cine-meta-row">
+          ${year?`<span class="cine-meta-item">📅 ${year}</span>`:''}
+          ${runtime?`<span class="cine-meta-item">🕐 ${runtime}</span>`:''}
+          <span class="cine-meta-item">⭐ ${rating}</span>
         </div>
+        <div class="detail-genres">${genres}</div>
+      </div>
+      <div class="detail-body" style="margin-top:0">
         <div class="detail-tabs-bar">
           ${type==='tv'||seasonsHTML?`<button class="dtab active" onclick="switchTab(this,'tab-eps')">المواسم والحلقات</button>`:''}
           <button class="dtab ${!(type==='tv'||seasonsHTML)?'active':''}" onclick="switchTab(this,'tab-about')">عن العمل</button>
