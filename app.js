@@ -1232,7 +1232,16 @@ async function checkAlertUpdates(id, title) {
     addNotif(title, `الموسم ${ep.season_number} · الحلقة ${ep.episode_number}`, '📺');
   } catch {}
 }
+function switchTab(btn, tabId) {
+  const parent = btn.closest('.detail-body') || document.getElementById('detailPage');
+  parent.querySelectorAll('.dtab').forEach(b => b.classList.remove('active'));
+  parent.querySelectorAll('.dtab-content').forEach(c => { c.classList.remove('active'); c.style.opacity='0'; });
+  btn.classList.add('active');
+  const tab = document.getElementById(tabId);
+  if (tab) { tab.classList.add('active'); setTimeout(()=>tab.style.opacity='1', 10); }
+}
 
+function checkAllAlerts() {
 function checkAllAlerts() {
   const list = getLib('rox_alerts');
   list.forEach(item => checkAlertUpdates(item.id, item.title));
