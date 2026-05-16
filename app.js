@@ -1242,7 +1242,6 @@ function switchTab(btn, tabId) {
 }
 
 function checkAllAlerts() {
-function checkAllAlerts() {
   const list = getLib('rox_alerts');
   list.forEach(item => checkAlertUpdates(item.id, item.title));
 }
