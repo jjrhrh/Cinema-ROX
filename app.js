@@ -953,7 +953,7 @@ const reviewsHTML = `
       }, 3500);
     }
     // تريلر بعد 3 ثواني
-    if (${!!trailer}) {
+    if (trailer) {
       setTimeout(() => {
         const box = document.getElementById(`dpTrailerBox_${id}`);
         const frame = document.getElementById(`dpTrailerFrame_${id}`);
