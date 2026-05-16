@@ -217,10 +217,19 @@ async function openAnimeJikan(malId, encodedTitle) {
             </div>
           </div>
         </div>` : ''}
-        <div class="detail-section">
-          <h3 class="detail-section-title">📖 القصة</h3>
-          <p class="detail-overview">${synopsis}</p>
+        <<div class="detail-tabs-bar">
+          ${episodes.length?`<button class="dtab active" onclick="switchTab(this,'tab-eps-a')">الحلقات</button>`:''}
+          <button class="dtab ${!episodes.length?'active':''}" onclick="switchTab(this,'tab-about-a')">عن العمل</button>
+          <button class="dtab" onclick="switchTab(this,'tab-trailers-a')">العروض الترويجية</button>
         </div>
+        <div id="tab-eps-a" class="dtab-content ${episodes.length?'active':''}">
+        </div>
+        <div id="tab-about-a" class="dtab-content ${!episodes.length?'active':''}">
+          <div class="detail-section">
+            <p class="detail-overview">${synopsis}</p>
+          </div>
+        </div>
+        <div id="tab-trailers-a" class="dtab-content"></div>
         </div>`;
     if(window.Swiper && episodes.length) new Swiper(`#epsSwiper_${malId}`,{slidesPerView:2.3,spaceBetween:10,freeMode:true,grabCursor:true});
   } catch(e) {
