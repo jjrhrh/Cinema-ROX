@@ -732,9 +732,11 @@ async function openDetail(id, type = 'movie') {
       : (detail.poster_path ? `${CONFIG.IMAGES.ORIGINAL}${detail.poster_path}` : '');
 
     const poster  = detail.poster_path
-      ? `${CONFIG.IMAGES.POSTER_LG}${detail.poster_path}`
+      ? `${CONFIG.IMAGES.POSTER_XL}${detail.poster_path}`
       : CONFIG.IMAGES.PLACEHOLDER;
-
+    const tagline   = detail.tagline || '';
+    const voteCount = detail.vote_count
+      ? detail.vote_count.toLocaleString('ar-SA') : '';
     const title   = type === 'movie'
       ? (detail.title || detail.original_title)
       : (detail.name  || detail.original_name);
