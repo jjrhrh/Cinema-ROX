@@ -429,22 +429,115 @@ html, body {
 }
 /* ===== DETAIL PAGE ===== */
 .detail-backdrop {
-  position: relative; width: 100%;
-  height: 72vw; max-height: 480px; min-height: 280px;
-  background-size: cover; background-position: center top;
+  display: none;
+}
+.detail-backdrop-gradient { display: none; }
+
+/* ===== CINEMAOS STYLE ===== */
+.cine-header {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  background-size: cover;
+  background-position: center top;
   overflow: hidden;
 }
-.detail-backdrop-gradient {
+.cine-header-grad {
   position: absolute; inset: 0;
   background: linear-gradient(
     to bottom,
-    rgba(5,0,0,0.0) 0%,
-    rgba(5,0,0,0.05) 30%,
-    rgba(8,0,0,0.55) 60%,
-    rgba(8,0,0,0.88) 80%,
-    #080000 100%
+    rgba(0,0,0,0.1) 0%,
+    rgba(8,0,0,0.95) 100%
   );
-  z-index: 1;
+}
+.cine-poster-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: -80px;
+  position: relative;
+  z-index: 5;
+  padding: 0 16px;
+}
+.cine-poster {
+  width: 48%;
+  max-width: 200px;
+  aspect-ratio: 2/3;
+  object-fit: cover;
+  border-radius: 16px;
+  border: 2px solid rgba(255,255,255,0.12);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.95), 0 0 0 1px rgba(255,255,255,0.06);
+}
+.cine-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 16px 0;
+}
+.cine-btn {
+  width: 100%;
+  padding: 13px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.07);
+  backdrop-filter: blur(16px);
+  color: #fff;
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+.cine-btn-watch {
+  background: #fff;
+  color: #000;
+  border-color: #fff;
+  font-size: 1rem;
+}
+.cine-btn-trailer {
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(255,255,255,0.2);
+}
+.cine-btn-row {
+  display: flex;
+  gap: 8px;
+}
+.cine-btn-row .cine-btn {
+  flex: 1;
+  font-size: 0.78rem;
+  padding: 10px 6px;
+}
+.cine-btn-fav {
+  border-color: rgba(229,9,20,0.4);
+  color: #ff6b6b;
+}
+.cine-btn-alert {
+  border-color: rgba(229,9,20,0.25);
+}
+.cine-btn-alert.active {
+  border-color: rgba(229,9,20,0.7);
+  color: #e50914;
+}
+.cine-info {
+  padding: 16px 16px 0;
+}
+.cine-title {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+.cine-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.cine-meta-item {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.6);
+  font-weight: 600;
 }
 .detail-back-btn {
   position: absolute; top: 14px; right: 14px;
