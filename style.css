@@ -2535,12 +2535,15 @@ html, body {
 .dp-poster-zone {
   position: relative;
   z-index: 2;
-  padding: 0 8px;
+  display: flex;
+  justify-content: center;
+  padding: 0 16px;
   margin-top: -55px;
 }
 
 .dp-poster-img {
-  width: 100%;
+  width: 88%;
+  max-width: 380px;
   aspect-ratio: 2 / 3;
   object-fit: cover;
   border-radius: 16px;
