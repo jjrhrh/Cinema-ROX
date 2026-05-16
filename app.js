@@ -1020,7 +1020,69 @@ const reviewsHTML = `
               onclick="window.open('${g}','_blank')">`).join('')}
           </div>
         </div>` : ''}
+<!-- تقييم الجمهور -->
+        <div class="detail-section">
+          <h3 class="detail-section-title">تقييم الجمهور</h3>
+          <div class="audience-rating-wrap">
+            <div class="audience-score-big">
+              <span class="audience-num">${rating}</span>
+              <span class="audience-outof">/10</span>
+              <div class="audience-stars">${'★'.repeat(Math.round(detail.vote_average/2))}${'☆'.repeat(5-Math.round(detail.vote_average/2))}</div>
+              <span class="audience-count">(${voteCount} تقييم)</span>
+            </div>
+            <div class="vote-bars">
+              ${voteHist.map(v=>`
+              <div class="vote-bar-row">
+                <span class="vote-star-lbl">${v.star} ★</span>
+                <div class="vote-bar-track">
+                  <div class="vote-bar-fill" style="width:${Math.round(v.pct*100/maxPct)}%"></div>
+                </div>
+                <span class="vote-pct-lbl">${Math.round(v.pct*100/maxPct)}%</span>
+              </div>`).join('')}
+            </div>
+          </div>
+        </div>
 
+        <!-- لماذا ستحبه -->
+        ${whyWatch.length ? `<div class="detail-section">
+          <h3 class="detail-section-title">لماذا ستحبه؟</h3>
+          <div class="why-list">
+            ${whyWatch.map(w=>`<div class="why-item"><span class="why-ico">✦</span><span>${w}</span></div>`).join('')}
+          </div>
+        </div>` : ''}
+
+        <!-- آراء النقاد -->
+        ${reviews.length ? `<div class="detail-section">
+          <h3 class="detail-section-title">آراء النقاد</h3>
+          <div class="critics-list">
+            ${reviews.slice(0,3).map(r=>`
+            <div class="critic-card">
+              <div class="critic-source">${r.author_details?.username||r.author}</div>
+              <p class="critic-quote">"${r.content.slice(0,140)}${r.content.length>140?'…':''}"</p>
+              <div class="critic-stars">${'★'.repeat(Math.min(5,Math.round((r.author_details?.rating||7)/2)))}${'☆'.repeat(5-Math.min(5,Math.round((r.author_details?.rating||7)/2)))}</div>
+            </div>`).join('')}
+          </div>
+        </div>` : ''}
+
+        <!-- الجوائز -->
+        ${awards.length ? `<div class="detail-section">
+          <h3 class="detail-section-title">الجوائز والترشيحات</h3>
+          <div class="awards-list">
+            ${awards.map(a=>`
+            <div class="award-item">
+              <span class="award-laurel">🏆</span>
+              <div class="award-info">
+                <span class="award-title">${a.title}</span>
+                <span class="award-org">${a.org} · ${a.year}</span>
+              </div>
+            </div>`).join('')}
+          </div>
+        </div>` : ''}
+
+        ${castHTML}
+        ${similarHTML}
+        ${recommendedHTML}
+      </div>
         ${castHTML}
         ${similarHTML}
         ${recommendedHTML}
