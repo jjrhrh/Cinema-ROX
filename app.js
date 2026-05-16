@@ -715,7 +715,7 @@ async function openDetail(id, type = 'movie') {
 
   try {
     const ep = type === 'tv' ? `/tv/${id}` : `/movie/${id}`;
-    const [dRes, vRes, cRes, rRes, simRes, recRes, imgRes] = await Promise.all([
+    const [dRes, vRes, cRes, rRes, simRes, recRes, imgRes, kwRes, wpRes] = await Promise.all([
       fetch(buildTMDBUrl(ep)),
       fetch(buildTMDBUrl(`${ep}/videos`)),
       fetch(buildTMDBUrl(`${ep}/credits`)),
@@ -723,6 +723,8 @@ async function openDetail(id, type = 'movie') {
       fetch(buildTMDBUrl(`${ep}/similar`)),
       fetch(buildTMDBUrl(`${ep}/recommendations`)),
       fetch(buildTMDBUrl(`${ep}/images`)),
+      fetch(buildTMDBUrl(`${ep}/keywords`)),
+      fetch(buildTMDBUrl(`${ep}/watch/providers`)),
     ]);
     const detail  = await dRes.json();
     const videos  = await vRes.json();
@@ -730,7 +732,11 @@ async function openDetail(id, type = 'movie') {
     const revData = await rRes.json();
     const simData = await simRes.json();
     const recData = await recRes.json();
-    const imgData = await imgRes.json();
+    const kwData  = await kwRes.json();
+    const wpData  = await wpRes.json();
+    const keywords = (kwData.keywords || kwData.results || []).slice(0, 8);
+    const providers = (wpData.results?.SA?.flatrate || wpData.results?.US?.flatrate || []).slice(0, 5);
+    const galleryImgs = (imgData.backdrops || []).slice(0, 8).map(b => `${CONFIG.IMAGES.ORIGINAL}${b.file_path}`);
     const rawBackdrops = (imgData.backdrops || []).slice(0, 6).map(b => `${CONFIG.IMAGES.ORIGINAL}${b.file_path}`);
     const backdrops = rawBackdrops.length ? rawBackdrops : (detail.backdrop_path ? [`${CONFIG.IMAGES.ORIGINAL}${detail.backdrop_path}`] : [`${CONFIG.IMAGES.POSTER_XL}${detail.poster_path}`]);
 
@@ -930,9 +936,82 @@ const reviewsHTML = `
         ${seasonsHTML}
       </div>
       <div id="tab-about" class="dtab-content ${!(type === 'tv' || seasonsHTML) ? 'active' : ''}">
+
+        <!-- القصة -->
         <div class="detail-section">
+          <h3 class="detail-section-title">القصة</h3>
           <p class="detail-overview">${overview}</p>
         </div>
+
+        <!-- شريط التقييمات -->
+        <div class="detail-section">
+          <div class="ratings-dock">
+            <div class="rating-cap">
+              <span class="rating-ico">⭐</span>
+              <span class="rating-val">${rating}/10</span>
+              <span class="rating-lbl">TMDB</span>
+            </div>
+            ${detail.vote_count ? `<div class="rating-cap">
+              <span class="rating-ico">🗳</span>
+              <span class="rating-val">${detail.vote_count.toLocaleString()}</span>
+              <span class="rating-lbl">تقييم</span>
+            </div>` : ''}
+            ${detail.popularity ? `<div class="rating-cap">
+              <span class="rating-ico">🔥</span>
+              <span class="rating-val">${Math.round(detail.popularity)}</span>
+              <span class="rating-lbl">شعبية</span>
+            </div>` : ''}
+          </div>
+        </div>
+
+        <!-- معلومات الإنتاج -->
+        <div class="detail-section">
+          <h3 class="detail-section-title">معلومات الإنتاج</h3>
+          <div class="prod-grid-new">
+            ${detail.credits?.crew?.find(c=>c.job==='Director') ? `<div class="prod-item-new"><span class="prod-lbl-new">المخرج</span><span class="prod-val-new">${detail.credits?.crew?.find(c=>c.job==='Director')?.name||''}</span></div>` : ''}
+            ${(credits.crew||[]).find(c=>c.job==='Director') ? `<div class="prod-item-new"><span class="prod-lbl-new">المخرج</span><span class="prod-val-new">${(credits.crew||[]).find(c=>c.job==='Director')?.name||''}</span></div>` : ''}
+            ${(credits.crew||[]).find(c=>c.job==='Screenplay'||c.job==='Writer') ? `<div class="prod-item-new"><span class="prod-lbl-new">الكاتب</span><span class="prod-val-new">${(credits.crew||[]).find(c=>c.job==='Screenplay'||c.job==='Writer')?.name||''}</span></div>` : ''}
+            ${(credits.crew||[]).find(c=>c.job==='Producer') ? `<div class="prod-item-new"><span class="prod-lbl-new">المنتج</span><span class="prod-val-new">${(credits.crew||[]).find(c=>c.job==='Producer')?.name||''}</span></div>` : ''}
+            ${(credits.crew||[]).find(c=>c.job==='Director of Photography') ? `<div class="prod-item-new"><span class="prod-lbl-new">التصوير</span><span class="prod-val-new">${(credits.crew||[]).find(c=>c.job==='Director of Photography')?.name||''}</span></div>` : ''}
+            ${(credits.crew||[]).find(c=>c.job==='Original Music Composer') ? `<div class="prod-item-new"><span class="prod-lbl-new">الموسيقى</span><span class="prod-val-new">${(credits.crew||[]).find(c=>c.job==='Original Music Composer')?.name||''}</span></div>` : ''}
+            ${detail.production_companies?.[0] ? `<div class="prod-item-new"><span class="prod-lbl-new">الشركة</span><span class="prod-val-new">${detail.production_companies[0].name}</span></div>` : ''}
+            ${detail.release_date||detail.first_air_date ? `<div class="prod-item-new"><span class="prod-lbl-new">تاريخ الإصدار</span><span class="prod-val-new">${detail.release_date||detail.first_air_date}</span></div>` : ''}
+            ${detail.budget ? `<div class="prod-item-new"><span class="prod-lbl-new">الميزانية</span><span class="prod-val-new">$${(detail.budget/1e6).toFixed(1)}M</span></div>` : ''}
+            ${detail.revenue ? `<div class="prod-item-new"><span class="prod-lbl-new">الإيرادات</span><span class="prod-val-new">$${(detail.revenue/1e6).toFixed(1)}M</span></div>` : ''}
+            ${detail.original_language ? `<div class="prod-item-new"><span class="prod-lbl-new">اللغة</span><span class="prod-val-new">${detail.original_language==='en'?'الإنجليزية':detail.original_language}</span></div>` : ''}
+            ${detail.production_countries?.[0] ? `<div class="prod-item-new"><span class="prod-lbl-new">بلد الإنتاج</span><span class="prod-val-new">${detail.production_countries[0].name}</span></div>` : ''}
+          </div>
+        </div>
+
+        <!-- الكلمات المفتاحية -->
+        ${keywords.length ? `<div class="detail-section">
+          <h3 class="detail-section-title">الكلمات المفتاحية</h3>
+          <div class="keywords-row">
+            ${keywords.map(k=>`<span class="keyword-chip">${k.name}</span>`).join('')}
+          </div>
+        </div>` : ''}
+
+        <!-- متوفر على -->
+        ${providers.length ? `<div class="detail-section">
+          <h3 class="detail-section-title">متوفر على</h3>
+          <div class="providers-row">
+            ${providers.map(p=>`<div class="provider-chip">
+              <img src="https://image.tmdb.org/t/p/w92${p.logo_path}" alt="${p.provider_name}" title="${p.provider_name}">
+              <span>${p.provider_name}</span>
+            </div>`).join('')}
+          </div>
+        </div>` : ''}
+
+        <!-- معرض الصور -->
+        ${galleryImgs.length ? `<div class="detail-section">
+          <h3 class="detail-section-title">معرض الصور</h3>
+          <div class="gallery-row">
+            ${galleryImgs.map(g=>`<img class="gallery-img lazy-img" data-src="${g}"
+              src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+              onclick="window.open('${g}','_blank')">`).join('')}
+          </div>
+        </div>` : ''}
+
         ${castHTML}
         ${similarHTML}
         ${recommendedHTML}
