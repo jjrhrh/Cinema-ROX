@@ -709,16 +709,20 @@ async function openDetail(id, type = 'movie') {
 
   try {
     const ep = type === 'tv' ? `/tv/${id}` : `/movie/${id}`;
-    const [dRes, vRes, cRes, rRes] = await Promise.all([
+    const [dRes, vRes, cRes, rRes, simRes, recRes] = await Promise.all([
       fetch(buildTMDBUrl(ep)),
       fetch(buildTMDBUrl(`${ep}/videos`)),
       fetch(buildTMDBUrl(`${ep}/credits`)),
       fetch(buildTMDBUrl(`${ep}/reviews`)),
+      fetch(buildTMDBUrl(`${ep}/similar`)),
+      fetch(buildTMDBUrl(`${ep}/recommendations`)),
     ]);
     const detail  = await dRes.json();
     const videos  = await vRes.json();
     const credits = await cRes.json();
     const revData = await rRes.json();
+    const simData = await simRes.json();
+    const recData = await recRes.json();
 
     const trailer = (videos.results || []).find(v => v.type === CONFIG.VIDEO.TRAILER_TYPE && v.site === 'YouTube')
                  || (videos.results || [])[0];
@@ -746,16 +750,73 @@ async function openDetail(id, type = 'movie') {
     const castHTML = cast.length ? `
       <div class="detail-section">
         <h3 class="detail-section-title">🎭 طاقم التمثيل</h3>
-        <div class="cast-row">
+        <div class="cast-slider">
           ${cast.map(a => `
-            <div class="cast-card">
-              <img data-src="${a.profile_path ? CONFIG.IMAGES.PROFILE+a.profile_path : CONFIG.IMAGES.PLACEHOLDER}"
-                   src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                   alt="${a.name}" class="lazy-img cast-img"
-                   onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
-              <span class="cast-name">${a.name}</span>
-              <span class="cast-char">${a.character||''}</span>
+            <div class="cast-card-wide">
+              <div class="cast-img-wrap">
+                <img data-src="${a.profile_path ? CONFIG.IMAGES.PROFILE+a.profile_path : CONFIG.IMAGES.PLACEHOLDER}"
+                     src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                     alt="${a.name}" class="lazy-img cast-img-wide"
+                     onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+                <div class="cast-neon-border"></div>
+              </div>
+              <span class="cast-name-wide">${a.name}</span>
+              <span class="cast-char-wide">${(a.character||'').slice(0,20)}</span>
             </div>`).join('')}
+        </div>
+      </div>` : '';
+
+    const simItems = (simData.results||[]).filter(i=>i.backdrop_path||i.poster_path).slice(0,10);
+    const recItems = (recData.results||[]).filter(i=>i.backdrop_path||i.poster_path).slice(0,10);
+    const _mediaType = type;
+
+    const similarHTML = simItems.length ? `
+      <div class="detail-section">
+        <h3 class="detail-section-title">🎬 أعمال مشابهة</h3>
+        <div class="landscape-slider">
+          ${simItems.map((m,i) => {
+            const img = m.backdrop_path ? `${CONFIG.IMAGES.BACKDROP}${m.backdrop_path}` : `${CONFIG.IMAGES.POSTER_LG}${m.poster_path}`;
+            const t = m.title||m.name||'';
+            const y = (m.release_date||m.first_air_date||'').slice(0,4);
+            const r = m.vote_average?m.vote_average.toFixed(1):'';
+            return `<div class="ls-card" onclick="openDetail(${m.id},'${_mediaType}')">
+              <div class="ls-img-wrap">
+                <span class="ls-rank">${i+1}</span>
+                <img class="ls-img lazy-img" data-src="${img}" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+                <div class="ls-overlay">▶</div>
+              </div>
+              <div class="ls-pill">
+                <span class="ls-pill-title">${t.slice(0,22)}</span>
+                ${y?`<span class="ls-pill-year">${y}</span>`:''}
+                ${r?`<span class="ls-pill-rating">⭐${r}</span>`:''}
+              </div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>` : '';
+
+    const recommendedHTML = recItems.length ? `
+      <div class="detail-section">
+        <h3 class="detail-section-title">💡 موصى به لك</h3>
+        <div class="landscape-slider">
+          ${recItems.map((m,i) => {
+            const img = m.backdrop_path ? `${CONFIG.IMAGES.BACKDROP}${m.backdrop_path}` : `${CONFIG.IMAGES.POSTER_LG}${m.poster_path}`;
+            const t = m.title||m.name||'';
+            const y = (m.release_date||m.first_air_date||'').slice(0,4);
+            const r = m.vote_average?m.vote_average.toFixed(1):'';
+            return `<div class="ls-card" onclick="openDetail(${m.id},'${_mediaType}')">
+              <div class="ls-img-wrap">
+                <span class="ls-rank">${i+1}</span>
+                <img class="ls-img lazy-img" data-src="${img}" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+                <div class="ls-overlay">▶</div>
+              </div>
+              <div class="ls-pill">
+                <span class="ls-pill-title">${t.slice(0,22)}</span>
+                ${y?`<span class="ls-pill-year">${y}</span>`:''}
+                ${r?`<span class="ls-pill-rating">⭐${r}</span>`:''}
+              </div>
+            </div>`;
+          }).join('')}
         </div>
       </div>` : '';
     const allRevs   = revData.results || [];
@@ -848,13 +909,9 @@ const reviewsHTML = `
           <div class="detail-section">
             <p class="detail-overview">${overview}</p>
           </div>
-          <div class="detail-section detail-prod-grid">
-            ${detail.budget  ?`<div class="detail-prod-item"><span class="prod-label">الميزانية</span><span class="prod-val">$${(detail.budget/1e6).toFixed(1)}M</span></div>`:''}
-            ${detail.revenue ?`<div class="detail-prod-item"><span class="prod-label">الإيرادات</span><span class="prod-val">$${(detail.revenue/1e6).toFixed(1)}M</span></div>`:''}
-            ${detail.vote_count?`<div class="detail-prod-item"><span class="prod-label">التقييمات</span><span class="prod-val">${detail.vote_count.toLocaleString()}</span></div>`:''}
-            ${detail.status    ?`<div class="detail-prod-item"><span class="prod-label">الحالة</span><span class="prod-val">${detail.status}</span></div>`:''}
-          </div>
           ${castHTML}
+          ${similarHTML}
+          ${recommendedHTML}
         </div>
         <div id="tab-trailers" class="dtab-content">
           ${reviewsHTML}
