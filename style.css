@@ -2235,3 +2235,77 @@ html, body {
 .detail-top { display: flex; flex-direction: column; }
 .detail-info { width: 100%; }
 .detail-genres { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; margin-top: 8px; }
+/* ===== IMMERSIVE CINEMATIC HERO BANNER ===== */
+.detail-hero-float {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  z-index: 4;
+  padding: 0 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.detail-hero-float .detail-title {
+  font-size: clamp(1.6rem, 7vw, 2.4rem);
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+  text-shadow:
+    0 2px 24px rgba(0,0,0,0.98),
+    0 0 60px rgba(0,0,0,0.8);
+  margin-bottom: 0;
+}
+.detail-hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 2px;
+}
+.detail-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.88);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-family: 'Cairo', sans-serif;
+}
+.detail-hero-badge-gold {
+  color: #f5c518;
+  border-color: rgba(245,197,24,0.35);
+  background: rgba(0,0,0,0.6);
+  text-shadow: 0 0 8px rgba(245,197,24,0.6);
+}
+.detail-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 2px;
+}
+.detail-hero-actions .detail-btn-now {
+  width: auto !important;
+  padding: 11px 22px !important;
+  font-size: 0.9rem !important;
+}
+.detail-body {
+  padding: 0 16px 100px;
+  margin-top: -30px;
+  position: relative;
+  z-index: 2;
+}
+.detail-top { display: flex; flex-direction: column; }
+.detail-info { width: 100%; }
+.detail-genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+  margin-top: 8px;
+}
