@@ -914,7 +914,10 @@ const reviewsHTML = `
               <div class="review-author">${r.author}</div>
               <p class="review-content">${r.content.slice(0,300)}${r.content.length>300?'…':''}</p>
             </div>`).join('') :
-            `<div class="review-empty">لا توجد تعليقات متاحة لهذا المحتوى حتى الآن</div>`}
+            `<div class="review-empty">
+              <p>لا توجد تعليقات متاحة لهذا المحتوى حتى الآن</p>
+              <button class="review-cta-btn" onclick="showToast('ميزة المراجعات قادمة قريباً!')">كن أول من يترك مراجعة سينمائية وتوجيه نقدي</button>
+            </div>`}
         </div>
       </div>`;
 
@@ -1171,7 +1174,7 @@ const reviewsHTML = `
           <div class="awards-list">
             ${awards.map(a=>`
             <div class="award-item">
-              <span class="award-laurel">🏆</span>
+              <span class="award-laurel"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 4H17V13C17 15.7614 14.7614 18 12 18C9.23858 18 7 15.7614 7 13V4Z" fill="url(#tg)" stroke="rgba(245,197,24,0.5)" stroke-width="0.5"/><path d="M4 4H7V10C7 10 5 10 4 8V4Z" fill="rgba(245,197,24,0.3)" stroke="rgba(245,197,24,0.3)" stroke-width="0.5"/><path d="M17 4H20V8C20 10 18 10 17 10V4Z" fill="rgba(245,197,24,0.3)" stroke="rgba(245,197,24,0.3)" stroke-width="0.5"/><rect x="9" y="18" width="6" height="2" rx="1" fill="url(#tg)"/><rect x="7" y="20" width="10" height="1.5" rx="0.75" fill="url(#tg)"/><defs><linearGradient id="tg" x1="12" y1="4" x2="12" y2="21" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#fde68a"/><stop offset="100%" stop-color="#d97706"/></linearGradient></defs></svg></span>
               <div class="award-info">
                 <span class="award-title">${a.title}</span>
                 <span class="award-org">${a.org} · ${a.year}</span>
