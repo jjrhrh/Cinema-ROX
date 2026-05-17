@@ -1788,14 +1788,13 @@ async function checkAlertUpdates(id, title) {
     if (!ep) return;
     const epKey = `${ep.season_number}_${ep.episode_number}`;
     const seen = localStorage.getItem(key);
-    // إذا كان مسجلاً مسبقاً = لا شيء جديد
     if (seen === epKey) return;
-    // أول مرة نرى هذا المسلسل = سجّل بدون إشعار
     if (!seen) { localStorage.setItem(key, epKey); return; }
-    // حلقة جديدة فعلاً
     localStorage.setItem(key, epKey);
-    const posterUrl = data.poster_path ? `${CONFIG.IMAGES.POSTER_SM}${data.poster_path}` : CONFIG.IMAGES.PLACEHOLDER;
-addNotif(title, `الموسم ${ep.season_number} · الحلقة ${ep.episode_number}`, posterUrl);
+    const epThumb = ep.still_path
+      ? `${CONFIG.IMAGES.BACKDROP}${ep.still_path}`
+      : (data.poster_path ? `${CONFIG.IMAGES.POSTER_SM}${data.poster_path}` : CONFIG.IMAGES.PLACEHOLDER);
+    addNotif(title, `الموسم ${ep.season_number} · الحلقة ${ep.episode_number} — ${ep.name||''}`, epThumb);
   } catch {}
 }
 function saveProgress(id, season, episode) {
