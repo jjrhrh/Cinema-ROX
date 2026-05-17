@@ -2538,7 +2538,7 @@ html, body {
   width: 100%;
   max-width: 100%;
   margin: 0 auto;
-  aspect-ratio: 2 / 3;
+  aspect-ratio: 2 / 3.3;
   object-fit: cover;
   border-radius: 12px;
   display: block;
