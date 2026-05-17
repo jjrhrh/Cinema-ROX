@@ -1693,7 +1693,8 @@ async function checkAlertUpdates(id, title) {
     if (!seen) { localStorage.setItem(key, epKey); return; }
     // حلقة جديدة فعلاً
     localStorage.setItem(key, epKey);
-    addNotif(title, `الموسم ${ep.season_number} · الحلقة ${ep.episode_number}`, '📺');
+    const posterUrl = data.poster_path ? `${CONFIG.IMAGES.POSTER_SM}${data.poster_path}` : CONFIG.IMAGES.PLACEHOLDER;
+addNotif(title, `الموسم ${ep.season_number} · الحلقة ${ep.episode_number}`, posterUrl);
   } catch {}
 }
 function saveProgress(id, season, episode) {
