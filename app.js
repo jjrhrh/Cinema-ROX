@@ -2153,6 +2153,15 @@ function shareContent(id, title, type) {
     setTimeout(() => btn.classList.remove('shared'), 3000);
   }
 }
+function toggleCinemaMode() {
+  const isOn = document.body.classList.toggle('cinema-mode');
+  const btn  = document.getElementById('cinemaModeBtn');
+  if (btn) btn.classList.toggle('active', isOn);
+  if (isOn) {
+    window.scrollTo(0, 0);
+    showToast('🎬 وضع السينما — اضغط للخروج');
+  }
+}
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', async () => {
   bnavGo('home');
