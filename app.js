@@ -941,8 +941,9 @@ const reviewsHTML = `
           ${totalEps?`<span class="detail-badge">🎬 ${totalEps} حلقة</span>`:''}
         </div>` : ''}
       </div>` : '';
-    const trailerBtn = trailer
-      ? `<button class="detail-btn detail-btn-trailer" onclick="playTrailer('${trailer.key}')">▶ المقطع الدعائي</button>`
+    const trailerKey = trailer?.key || '';
+    const trailerBtn = trailerKey
+      ? `<button class="detail-btn detail-btn-trailer" onclick="playTrailer('${trailerKey}')">▶ المقطع الدعائي</button>`
       : '';
 
     page.innerHTML = `
@@ -1646,18 +1647,22 @@ function checkAllAlerts() {
 function addToWatchLater(id, type) {
   if (!window.ROX_USER) { showToast('🔐 سجّل دخولك أولاً'); bnavGo('profile'); return; }
   const list = getLib('rox_watchlater');
-  if (list.find(i => i.id === id)) { showToast('⏰ موجود في سأشاهده مسبقاً'); return; }
-  list.unshift({ id, type, addedAt: Date.now() });
-  saveLib('rox_watchlater', list);
-  localStorage.setItem(`rox_later_${id}`, '1');
-  showToast('⏰ تمت الإضافة إلى سأشاهده لاحقاً');
+  const exists = list.find(i => i.id === id);
   const laterBtn = document.querySelector(`.dp-btn-later[data-id="${id}"]`);
-  if (laterBtn) {
-    laterBtn.style.color = '#f5c518';
-    laterBtn.style.borderColor = 'rgba(245,197,24,0.7)';
-    laterBtn.style.boxShadow = '0 0 14px rgba(245,197,24,0.4)';
-    const svg = laterBtn.querySelector('svg');
-    if (svg) { svg.style.fill = '#f5c518'; svg.style.stroke = 'none'; }
+  const svg = laterBtn?.querySelector('svg');
+  if (exists) {
+    saveLib('rox_watchlater', list.filter(i => i.id !== id));
+    localStorage.removeItem(`rox_later_${id}`);
+    showToast('🗑️ تمت الإزالة من سأشاهده');
+    if (laterBtn) { laterBtn.style.color=''; laterBtn.style.borderColor=''; laterBtn.style.boxShadow=''; }
+    if (svg) { svg.style.fill='none'; svg.style.stroke='currentColor'; }
+  } else {
+    list.unshift({ id, type, addedAt: Date.now() });
+    saveLib('rox_watchlater', list);
+    localStorage.setItem(`rox_later_${id}`, '1');
+    showToast('⏰ تمت الإضافة إلى سأشاهده لاحقاً');
+    if (laterBtn) { laterBtn.style.color='#f5c518'; laterBtn.style.borderColor='rgba(245,197,24,0.7)'; laterBtn.style.boxShadow='0 0 14px rgba(245,197,24,0.4)'; }
+    if (svg) { svg.style.fill='#f5c518'; svg.style.stroke='none'; }
   }
 }
 function showToast(msg) {
