@@ -2130,9 +2130,10 @@ function addNotif(title, ep, thumb) {
   NOTIF_DATA.unshift({
     id: Date.now(),
     title, ep, thumb,
-    time: 'الآن',
+    time: new Date().toLocaleString('ar-SA', { hour:'2-digit', minute:'2-digit' }),
     read: false
   });
+  saveNotifData();
   updateBadge();
 }
 
