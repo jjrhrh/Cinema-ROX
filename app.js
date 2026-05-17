@@ -2104,6 +2104,22 @@ function toggleNotifSidebar() {
   hamburger?.classList.toggle('open', notifOpen);
   if (notifOpen) renderNotifList();
 }
+function shareContent(id, title, type) {
+  const btn = document.getElementById(`shareBtn_${id}`);
+  const url = `${location.origin}${location.pathname}?id=${id}&type=${type}`;
+  const text = `🎬 ${title}\n\nشاهده الآن على Cinema ROX`;
+  if (navigator.share) {
+    navigator.share({ title, text, url }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(`${text}\n${url}`)
+      .then(() => showToast('🔗 تم نسخ الرابط'))
+      .catch(() => showToast('⚠️ تعذّر النسخ'));
+  }
+  if (btn) {
+    btn.classList.add('shared');
+    setTimeout(() => btn.classList.remove('shared'), 3000);
+  }
+}
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', async () => {
   bnavGo('home');
