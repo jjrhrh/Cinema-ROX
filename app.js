@@ -730,23 +730,21 @@ function extractDominantColor(imgUrl, callback) {
 function applyDynamicColor(rgb) {
   if (!rgb) return;
   const btn = document.querySelector('.dp-action-watch');
-  const row2Btns = document.querySelectorAll('.dp-action-later, .dp-action-fav, .dp-action-alert');
+  const row2Btns = document.querySelectorAll('.dp-action-fav');
   const sections = document.querySelectorAll('.detail-section-title');
   if (btn) {
-    btn.style.background = `linear-gradient(135deg, rgb(${rgb}), rgba(${rgb},0.75))`;
-    btn.style.boxShadow = `0 4px 24px rgba(${rgb},0.5)`;
+    btn.style.setProperty('background', `linear-gradient(135deg, rgb(${rgb}), rgba(${rgb},0.7))`, 'important');
+    btn.style.setProperty('box-shadow', `0 4px 28px rgba(${rgb},0.55)`, 'important');
     btn.style.color = '#fff';
   }
   row2Btns.forEach(b => {
-    b.style.borderColor = `rgba(${rgb},0.45)`;
-    b.style.boxShadow = `0 0 10px rgba(${rgb},0.15)`;
+    b.style.borderColor = `rgba(${rgb},0.4)`;
+    b.style.boxShadow = `0 0 12px rgba(${rgb},0.2)`;
   });
-  sections.forEach(s => {
-    s.style.color = `rgb(${rgb})`;
-  });
+  sections.forEach(s => s.style.color = `rgb(${rgb})`);
   document.documentElement.style.setProperty('--dynamic-color', `rgb(${rgb})`);
-  document.documentElement.style.setProperty('--dynamic-glow', `rgba(${rgb},0.4)`);
-        }
+  document.documentElement.style.setProperty('--dynamic-glow', `rgba(${rgb},0.45)`);
+}
 // ===== DETAIL PAGE =====
 async function openDetail(id, type = 'movie') {
   document.getElementById('newsSection').style.display = 'none';
@@ -1155,10 +1153,6 @@ const reviewsHTML = `
           </div>
         </div>` : ''}
 
-        ${castHTML}
-        ${similarHTML}
-        ${recommendedHTML}
-      </div>
         ${castHTML}
         ${similarHTML}
         ${recommendedHTML}
