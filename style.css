@@ -2535,8 +2535,8 @@ html, body {
   justify-content: center;
 }
 .dp-poster-img {
-  width: 85%;
-  max-width: 340px;
+  width: 100%;
+  max-width: 100%;
   margin: 0 auto;
   aspect-ratio: 2 / 3;
   object-fit: cover;
