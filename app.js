@@ -738,6 +738,8 @@ function extractDominantColor(imgUrl, callback) {
 
 function applyDynamicColor(rgb) {
   if (!rgb) return;
+  document.documentElement.style.setProperty('--dynamic-color', `rgb(${rgb})`);
+  document.documentElement.style.setProperty('--dynamic-glow', `rgba(${rgb},0.45)`);
   const btn = document.querySelector('.dp-action-watch');
   const row2Btns = document.querySelectorAll('.dp-action-fav');
   const sections = document.querySelectorAll('.detail-section-title');
