@@ -1612,12 +1612,12 @@ function toggleAlertSubscription(id, title, type) {
   const btn = document.getElementById(`alertBtn_${id}`);
   if (exists) {
     saveLib('rox_alerts', list.filter(i => i.id !== id));
-    if (btn) { btn.classList.remove('active'); btn.innerHTML = `<span class="btn-bell-ico"></span> تنبيه بالحلقات`; }
+    if (btn) { btn.classList.remove('active'); btn.style.color=''; btn.style.borderColor=''; btn.style.boxShadow=''; btn.innerHTML = `<span class="btn-bell-ico"></span> تنبيه`; }
     showToast('تم إلغاء الاشتراك');
   } else {
     list.unshift({ id, title, type, addedAt: Date.now() });
     saveLib('rox_alerts', list);
-    if (btn) { btn.classList.add('active'); btn.innerHTML = `<span class="btn-bell-ico"></span> مشترك التنبيهات`; }
+    if (btn) { btn.classList.add('active'); btn.style.color='#1ce783'; btn.style.borderColor='rgba(28,231,131,0.7)'; btn.style.boxShadow='0 0 14px rgba(28,231,131,0.3)'; btn.innerHTML = `<span class="btn-bell-ico"></span> مفعّل`; }
     showToast('تم الاشتراك بالتنبيهات');
     checkAlertUpdates(id, title);
   }
