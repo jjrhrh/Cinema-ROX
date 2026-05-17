@@ -1695,7 +1695,7 @@ function toggleAlertSubscription(id, title, type) {
   const btn = document.getElementById(`alertBtn_${id}`);
   if (exists) {
     saveLib('rox_alerts', list.filter(i => i.id !== id));
-    if (btn) { btn.classList.remove('active'); btn.style.color=''; btn.style.borderColor='rgba(229,9,20,0.25)'; btn.style.boxShadow=''; btn.style.background=''; btn.innerHTML = `<span class="btn-bell-ico"></span> تنبيه`; }
+    if (btn) { btn.classList.remove('active'); btn.style.color=''; btn.style.borderColor='rgba(229,9,20,0.25)'; btn.style.boxShadow=''; btn.style.background=''; const ico=btn.querySelector('.dp-act-ico,svg'); if(ico){ico.style.stroke='';ico.style.filter='';} btn.querySelector('span')&&(btn.querySelector('span').textContent='تنبيه'); }
     showToast('تم إلغاء الاشتراك');
   } else {
     list.unshift({ id, title, type, addedAt: Date.now() });
