@@ -1169,7 +1169,6 @@ const reviewsHTML = `
             </div>`).join('')}
           </div>
         </div>` : '<div class="detail-section"><p style="color:var(--text3);text-align:center;padding:20px">لا توجد عروض ترويجية</p></div>'}
-        ${reviewsHTML}
       </div>
     </div>
   </div>`;
