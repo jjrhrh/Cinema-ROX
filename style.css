@@ -3687,3 +3687,13 @@ body.cinema-mode .ws-overlay        { border-radius: 0; }
   text-align: center; color: var(--text3);
   font-size: 0.82rem; padding: 20px;
 }
+.lib-laser-green {
+  background: linear-gradient(180deg, #1ce783, rgba(28,231,131,0.2));
+  box-shadow: 0 0 10px #1ce783, 0 0 24px rgba(28,231,131,0.5);
+}
+.lib-icon3d-green {
+  background: linear-gradient(145deg, rgba(28,231,131,0.35), rgba(10,143,74,0.15));
+  border: 1px solid rgba(28,231,131,0.45);
+  box-shadow: 0 0 14px rgba(28,231,131,0.35), inset 0 1px 0 rgba(255,255,255,0.15);
+  color: #1ce783;
+} 
