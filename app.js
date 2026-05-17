@@ -1523,7 +1523,14 @@ function addToWatchlist(id, type) {
   list.unshift({ id, type, addedAt: Date.now() });
   saveLib('rox_watchlist', list);
   showToast('❤️ تمت الإضافة إلى قائمتك');
-}
+  const laterBtn = document.querySelector(`.dp-action-fav[onclick*="addToWatchLater(${id}"]`);
+  if (laterBtn) {
+    laterBtn.style.color = '#f5c518';
+    laterBtn.style.borderColor = 'rgba(245,197,24,0.7)';
+    laterBtn.style.boxShadow = '0 0 14px rgba(245,197,24,0.4)';
+    laterBtn.querySelector('svg').style.fill = '#f5c518';
+    laterBtn.querySelector('svg').style.stroke = '#f5c518';
+  }
 function toggleAlertSubscription(id, title, type) {
   const list = getLib('rox_alerts');
   const exists = list.find(i => i.id === id);
