@@ -2121,7 +2121,7 @@ function updateBadge() {
 
 function markAsRead(id) {
   const notif = NOTIF_DATA.find(n => n.id === id);
-  if (notif) notif.read = true;
+  if (notif) { notif.read = true; saveNotifData(); }
   updateBadge();
   renderNotifList();
 }
