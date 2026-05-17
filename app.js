@@ -2196,6 +2196,46 @@ function toggleCinemaMode() {
     showToast('🎬 وضع السينما — اضغط للخروج');
   }
 }
+async function loadRadarSection() {
+  const alerts = getLib('rox_alerts');
+  if (!alerts.length) return '<div class="radar-empty">📡 لا توجد اشتراكات بعد — فعّل التنبيه من صفحة أي مسلسل</div>';
+  const today = new Date();
+  const cards = await Promise.all(alerts.map(async item => {
+    try {
+      const d = await fetch(buildTMDBUrl(`/tv/${item.id}`)).then(r => r.json());
+      const poster = d.poster_path ? `${CONFIG.IMAGES.POSTER_SM}${d.poster_path}` : CONFIG.IMAGES.PLACEHOLDER;
+      const title  = d.name || d.original_name || item.title || '';
+      const last   = d.last_episode_to_air;
+      const next   = d.next_episode_to_air;
+      const lastTxt = last
+        ? `آخر حلقة: م${last.season_number} · ح${last.episode_number}`
+        : 'لا توجد حلقات بعد';
+      let nextTxt = '', nextClass = 'nodate';
+      if (next?.air_date) {
+        const diff = Math.ceil((new Date(next.air_date) - today) / 86400000);
+        if (diff <= 0)      { nextTxt = '🟢 الحلقة القادمة صدرت اليوم!'; nextClass = 'soon'; }
+        else if (diff === 1){ nextTxt = '⏳ الحلقة القادمة غداً';         nextClass = 'soon'; }
+        else if (diff <= 7) { nextTxt = `⏳ الحلقة القادمة بعد ${diff} أيام`; nextClass = 'days'; }
+        else                { nextTxt = `📅 ${next.air_date}`;             nextClass = 'days'; }
+      } else {
+        nextTxt = '— لا يوجد موعد بعد'; nextClass = 'nodate';
+      }
+      return `
+        <div class="radar-card" onclick="openDetail(${item.id},'tv')">
+          <img class="radar-poster" src="${poster}" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+          <div class="radar-info">
+            <div class="radar-title">${title}</div>
+            <div class="radar-last">${lastTxt}</div>
+            <div class="radar-next ${nextClass}">${nextTxt}</div>
+          </div>
+          <button class="radar-watch-btn" onclick="event.stopPropagation();openWatchPage(${item.id},'tv',${last?.season_number||1},${last?.episode_number||1})">
+            ▶ شاهد
+          </button>
+        </div>`;
+    } catch { return ''; }
+  }));
+  return `<div class="radar-list">${cards.join('')}</div>`;
+}
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', async () => {
   bnavGo('home');
