@@ -1181,6 +1181,17 @@ const reviewsHTML = `
         </div>` : ''}
 
         ${reviewsHTML}
+        
+        <!-- خط الزمن -->
+        ${(detail.release_date || detail.first_air_date) ? `
+        <div class="detail-section">
+          <h3 class="detail-section-title">خط الزمن</h3>
+          <div class="timeline-wrap">
+            ${detail.production_companies?.[0] ? `<div class="timeline-item"><div class="timeline-date">الإنتاج</div><div class="timeline-event">${detail.production_companies[0].name}</div><div class="timeline-note">شركة الإنتاج الرئيسية</div></div>` : ''}
+            ${detail.release_date||detail.first_air_date ? `<div class="timeline-item"><div class="timeline-date">${detail.release_date||detail.first_air_date}</div><div class="timeline-event">العرض العالمي الأول</div><div class="timeline-note">تاريخ الإصدار الرسمي</div></div>` : ''}
+            ${detail.status === 'Released' || detail.status === 'Ended' ? `<div class="timeline-item"><div class="timeline-date">متاح الآن</div><div class="timeline-event">متوفر بالدقة الفائقة</div><div class="timeline-note">متاح على المنصات الرقمية</div></div>` : `<div class="timeline-item"><div class="timeline-date">قريباً</div><div class="timeline-event">${detail.status === 'Returning Series' ? 'موسم جديد قادم' : 'قادم قريباً'}</div><div class="timeline-note">ترقب الإعلان الرسمي</div></div>`}
+          </div>
+        </div>` : ''}
         ${castHTML}
         ${similarHTML}
         ${recommendedHTML}
