@@ -197,6 +197,16 @@ async function openAnimeJikan(malId, encodedTitle) {
             <div class="detail-actions">
               ${watchBtn}${trailerBtn}
               <button class="detail-btn detail-btn-watch" onclick="addToWatchlist(${malId},'anime')">❤️ قائمتي</button>
+              <button class="detail-btn detail-btn-alert dp-btn-share" id="shareBtn_${malId}" onclick="shareContent(${malId},'${a.title}','anime')">
+  <svg style="width:14px;height:14px;vertical-align:middle;margin-left:4px" viewBox="0 0 24 24">
+    <defs><linearGradient id="sga_${malId}" x1="10%" y1="0%" x2="90%" y2="100%"><stop offset="0%" stop-color="#e0aaff"/><stop offset="100%" stop-color="#6b21a8"/></linearGradient></defs>
+    <circle cx="18" cy="5"  r="3" fill="url(#sga_${malId})"/><circle cx="16.8" cy="4"  r="0.9" fill="rgba(255,255,255,0.5)"/>
+    <circle cx="6"  cy="12" r="3" fill="url(#sga_${malId})"/><circle cx="4.8"  cy="11" r="0.9" fill="rgba(255,255,255,0.5)"/>
+    <circle cx="18" cy="19" r="3" fill="url(#sga_${malId})"/><circle cx="16.8" cy="18" r="0.9" fill="rgba(255,255,255,0.5)"/>
+    <line x1="8.6" y1="10.5" x2="15.4" y2="6.5"  stroke="#c084fc" stroke-width="1.6" stroke-linecap="round"/>
+    <line x1="8.6" y1="13.5" x2="15.4" y2="17.5" stroke="#c084fc" stroke-width="1.6" stroke-linecap="round"/>
+  </svg> مشاركة
+</button>
               <button class="detail-btn detail-btn-alert ${getLib('rox_alerts').find(i=>i.id===malId)?'active':''}" style="${getLib('rox_alerts').find(i=>i.id===malId)?'color:#1ce783;border-color:rgba(28,231,131,0.7);box-shadow:0 0 14px rgba(28,231,131,0.3)':''}" id="alertBtn_${malId}" onclick="toggleAlertSubscription(${malId},'${a.title}','anime')"><span class="btn-bell-ico"></span> ${getLib('rox_alerts').find(i=>i.id===malId)?'مشترك التنبيهات':'تنبيه بالحلقات'}</button>
             </div>
           </div>
@@ -1005,6 +1015,29 @@ const reviewsHTML = `
           <svg class="dp-act-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
           <span>قائمتي</span>
         </button>
+        ${type === 'movie' ? `
+        <button class="dp-action-fav dp-btn-share" id="shareBtn_${id}" onclick="shareContent(${id},'${title}','${type}')">
+          <svg class="dp-act-ico dp-share-ico" viewBox="0 0 24 24">
+            <defs><linearGradient id="sg_${id}" x1="10%" y1="0%" x2="90%" y2="100%"><stop offset="0%" stop-color="#e0aaff"/><stop offset="50%" stop-color="#a855f7"/><stop offset="100%" stop-color="#6b21a8"/></linearGradient></defs>
+            <circle cx="18" cy="5"  r="3"   fill="url(#sg_${id})"/><circle cx="16.8" cy="4"  r="1" fill="rgba(255,255,255,0.5)"/>
+            <circle cx="6"  cy="12" r="3"   fill="url(#sg_${id})"/><circle cx="4.8"  cy="11" r="1" fill="rgba(255,255,255,0.5)"/>
+            <circle cx="18" cy="19" r="3"   fill="url(#sg_${id})"/><circle cx="16.8" cy="18" r="1" fill="rgba(255,255,255,0.5)"/>
+            <line x1="8.6" y1="10.5" x2="15.4" y2="6.5"  stroke="#c084fc" stroke-width="1.6" stroke-linecap="round"/>
+            <line x1="8.6" y1="13.5" x2="15.4" y2="17.5" stroke="#c084fc" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+          <span>مشاركة</span>
+        </button>` : `
+        <button class="dp-action-fav dp-btn-share" id="shareBtn_${id}" onclick="shareContent(${id},'${title}','${type}')">
+          <svg class="dp-act-ico dp-share-ico" viewBox="0 0 24 24">
+            <defs><linearGradient id="sg_${id}" x1="10%" y1="0%" x2="90%" y2="100%"><stop offset="0%" stop-color="#e0aaff"/><stop offset="50%" stop-color="#a855f7"/><stop offset="100%" stop-color="#6b21a8"/></linearGradient></defs>
+            <circle cx="18" cy="5"  r="3"   fill="url(#sg_${id})"/><circle cx="16.8" cy="4"  r="1" fill="rgba(255,255,255,0.5)"/>
+            <circle cx="6"  cy="12" r="3"   fill="url(#sg_${id})"/><circle cx="4.8"  cy="11" r="1" fill="rgba(255,255,255,0.5)"/>
+            <circle cx="18" cy="19" r="3"   fill="url(#sg_${id})"/><circle cx="16.8" cy="18" r="1" fill="rgba(255,255,255,0.5)"/>
+            <line x1="8.6" y1="10.5" x2="15.4" y2="6.5"  stroke="#c084fc" stroke-width="1.6" stroke-linecap="round"/>
+            <line x1="8.6" y1="13.5" x2="15.4" y2="17.5" stroke="#c084fc" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+          <span>مشاركة</span>
+        </button>`}
         ${type === 'tv' ? `<button class="dp-action-fav dp-btn-alert ${getLib('rox_alerts').find(i=>i.id===id)?'active':''}" id="alertBtn_${id}" onclick="toggleAlertSubscription(${id},'${title}','${type}')">
           <svg class="dp-act-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
           <span>تنبيه</span>
