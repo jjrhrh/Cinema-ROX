@@ -1190,18 +1190,22 @@ const reviewsHTML = `
       }, 3500);
     }
     // تريلر بعد 3 ثواني
+    window._trailerTimer = null;
+    window._activeTrailerFrame = null;
     if (trailer) {
-      setTimeout(() => {
+      window._trailerTimer = setTimeout(() => {
         const box = document.getElementById(`dpTrailerBox_${id}`);
         const frame = document.getElementById(`dpTrailerFrame_${id}`);
         const slider = document.getElementById(`dpSlider_${id}`);
         if (box && frame) {
-          frame.src = frame.dataset.src;
+          const src = frame.dataset.src.replace('mute=1','mute=0').replace('controls=1','controls=0');
+          frame.src = src;
+          window._activeTrailerFrame = frame;
           box.style.display = 'block';
-          if (slider) { slider.style.opacity = '0'; setTimeout(() => slider.style.display='none', 400); }
+          if (slider) { slider.style.opacity='0'; setTimeout(()=>slider.style.display='none',400); }
         }
       }, 3000);
-          }
+    }
     if (type === 'tv' && tvSeasons.length) loadSeasonEps(id, tvSeasons[0].season_number);
 
   } catch (err) {
