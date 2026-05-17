@@ -2147,7 +2147,10 @@ function renderNotifList() {
   }
   list.innerHTML = NOTIF_DATA.map(n => `
     <div class="notif-item ${!n.read ? 'notif-item--new' : ''}" onclick="markAsRead(${n.id})">
-      <div class="notif-item-thumb">${n.thumb}</div>
+      <div class="notif-item-thumb">
+        <img src="${n.thumb}" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'"
+          style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
+      </div>
       <div class="notif-item-body">
         <div class="notif-item-title">${n.title}</div>
         <div class="notif-item-ep">${n.ep}</div>
