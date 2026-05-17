@@ -1429,6 +1429,7 @@ function wsStartStream() {
   }
   }
 function wsGoBack() {
+  document.body.classList.remove('cinema-mode');
   const dp = document.getElementById('detailPage');
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   if (dp && dp.innerHTML.trim().length > 50) {
