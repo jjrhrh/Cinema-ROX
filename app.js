@@ -514,6 +514,27 @@ document.body.style.backgroundImage = '';
     <div class="movie-meta-bar"><span class="movie-badge-type">${typeLabel}</span><span class="movie-badge-year">${year}</span>${rating ? `<span class="movie-badge-rating"><svg width="9" height="9" viewBox="0 0 24 24" fill="var(--gold)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> ${rating}</span>` : ''}</div>
   </div>`;
 }
+function buildSearchCard(movie, type) {
+  const title = type === 'movie'
+    ? (movie.title || movie.original_title)
+    : (movie.name  || movie.original_name);
+  const poster = movie.poster_path
+    ? `${CONFIG.IMAGES.POSTER_XL}${movie.poster_path}`
+    : CONFIG.IMAGES.PLACEHOLDER;
+  const rating = movie.vote_average ? movie.vote_average.toFixed(1) : '';
+  const overview = (movie.overview || '').slice(0, 100);
+  return `
+    <div class="search-result-card" onclick="openDetail(${movie.id},'${type}')">
+      <div class="src-poster-wrap">
+        <img class="src-poster" src="${poster}" alt="${title}" loading="lazy"
+             onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+        <div class="src-overlay"><span class="play-icon">▶</span></div>
+      </div>
+      <div class="src-title">${title}</div>
+      ${rating ? `<div class="src-rating">⭐ ${rating}</div>` : ''}
+      ${overview ? `<div class="src-overview">${overview}${movie.overview?.length > 100 ? '...' : ''}</div>` : ''}
+    </div>`;
+}
 function buildAnimeCard(movie, rank = 0, type = 'tv') {
   const title = movie.name || movie.original_name || movie.title || '';
   const _imgs2 = [
