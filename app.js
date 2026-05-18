@@ -1,14 +1,51 @@
 (function() {
   const allowed = ['PPLLMMOOKKNN99'];
   const saved = localStorage.getItem('rox_pass');
-  if (!allowed.includes(saved)) {
-    const pass = prompt('🔐 أدخل كلمة المرور للدخول:');
-    if (!allowed.includes(pass)) {
-      document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#000;color:#fff;font-size:1.5rem;font-family:Cairo">⛔ غير مصرح لك بالدخول</div>';
-      return;
+  if (allowed.includes(saved)) return; // سبق وأدخل الباسورد
+
+  // إخفاء كل شيء حتى يدخل الباسورد
+  document.documentElement.style.visibility = 'hidden';
+
+  const overlay = document.createElement('div');
+  overlay.id = 'passOverlay';
+  overlay.style.cssText = `
+    position:fixed;inset:0;background:#000;z-index:99999;
+    display:flex;flex-direction:column;align-items:center;
+    justify-content:center;font-family:Cairo,sans-serif;
+  `;
+  overlay.innerHTML = `
+    <div style="color:#e50914;font-size:1.6rem;font-weight:900;margin-bottom:8px">Cinema <span style="color:#fff">ROX</span></div>
+    <p style="color:#aaa;margin-bottom:16px">🔐 أدخل كلمة المرور للدخول</p>
+    <input id="passInput" type="password" placeholder="كلمة المرور"
+      style="padding:10px 16px;border-radius:8px;border:1px solid #333;
+             background:#111;color:#fff;font-size:1rem;width:240px;
+             text-align:center;outline:none;font-family:Cairo">
+    <button onclick="checkPass()"
+      style="margin-top:12px;padding:10px 32px;background:#e50914;color:#fff;
+             border:none;border-radius:8px;font-size:1rem;cursor:pointer;font-family:Cairo">
+      دخول
+    </button>
+    <p id="passErr" style="color:#e50914;margin-top:8px;display:none">❌ كلمة المرور خاطئة</p>
+  `;
+  document.body.appendChild(overlay);
+  document.documentElement.style.visibility = 'visible';
+
+  // السماح بالضغط على Enter
+  setTimeout(() => {
+    const inp = document.getElementById('passInput');
+    if (inp) inp.addEventListener('keydown', e => { if (e.key === 'Enter') checkPass(); });
+  }, 100);
+
+  window.checkPass = function() {
+    const val = document.getElementById('passInput')?.value || '';
+    if (allowed.includes(val)) {
+      localStorage.setItem('rox_pass', val);
+      document.getElementById('passOverlay')?.remove();
+    } else {
+      document.getElementById('passErr').style.display = 'block';
+      document.getElementById('passInput').value = '';
     }
-    localStorage.setItem('rox_pass', pass);
-  }
+  };
 })();
 // ===== NAVIGATION =====
 function bnavGo(tab) {
