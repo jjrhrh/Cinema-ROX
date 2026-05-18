@@ -2401,7 +2401,7 @@ async function applyAdvFilter() {
     }
 
     if (!results.length) { container.innerHTML = '<p class="lib-empty">لا توجد نتائج 😕</p>'; return; }
-    container.innerHTML = `<div class="movies-row">${results.map(m=>buildMovieCard(m,m.media_type)).join('')}</div>`;
+    container.innerHTML = `<div class="search-results-grid">${results.map(m=>buildSearchCard(m,m.media_type)).join('')}</div>`;
   } catch(e) {
     container.innerHTML = '<p class="lib-empty">حدث خطأ ❌</p>';
   }
