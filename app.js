@@ -2300,15 +2300,8 @@ function toggleCinemaMode() {
 }
 async function loadRadarSection() {
   const alerts = getLib('rox_alerts');
-  if (!alerts.length) return '<div class="radar-empty">لا توجد اشتراكات بعد — فعّل التنبيه من صفحة أي مسلسل</div>';
+  if (!alerts.length) return '<div class="radar-empty">📡 لا توجد اشتراكات بعد — فعّل التنبيه من صفحة أي مسلسل</div>';
   const today = new Date();
-  today.setHours(0,0,0,0);
-
-  const fmtDate = (dateStr) => {
-    if (!dateStr) return null;
-    return new Date(dateStr).toLocaleDateString('ar-SA', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
-  };
-
   const cards = await Promise.all(alerts.map(async item => {
     try {
       const d = await fetch(buildTMDBUrl(`/tv/${item.id}`)).then(r => r.json());
@@ -2316,80 +2309,34 @@ async function loadRadarSection() {
       const title  = d.name || d.original_name || item.title || '';
       const last   = d.last_episode_to_air;
       const next   = d.next_episode_to_air;
-
-      // آخر حلقة
       const lastTxt = last
-        ? `الموسم ${last.season_number} — الحلقة ${last.episode_number}`
+        ? `آخر حلقة: م${last.season_number} · ح${last.episode_number}`
         : 'لا توجد حلقات بعد';
-
-      // حساب متى نزلت آخر حلقة
-      let lastSubTxt = '';
-      if (last?.air_date) {
-        const lastDate = new Date(last.air_date);
-        lastDate.setHours(0,0,0,0);
-        const diffLast = Math.floor((today - lastDate) / 86400000);
-        const timeStr = new Date(last.air_date).toLocaleTimeString('ar-SA', {hour:'2-digit', minute:'2-digit'});
-        const ampm = new Date(last.air_date).getHours() < 12 ? 'صباحاً' : 'مساءً';
-        if (diffLast === 0) lastSubTxt = `نزلت اليوم`;
-        else if (diffLast === 1) lastSubTxt = `نزلت أمس — ${timeStr} ${ampm}`;
-        else if (diffLast === 2) lastSubTxt = `نزلت منذ يومين — ${timeStr} ${ampm}`;
-        else lastSubTxt = fmtDate(last.air_date);
-      }
-
-      // الحلقة القادمة
-      let nextTxt = '', nextSubTxt = '', nextClass = 'nodate', isActive = false;
+      let nextTxt = '', nextClass = 'nodate';
       if (next?.air_date) {
-        const nextDate = new Date(next.air_date);
-        nextDate.setHours(0,0,0,0);
-        const diff = Math.floor((nextDate - today) / 86400000);
-        const nextSeason = next.season_number || '';
-        const nextEp = next.episode_number || '';
-        const nextFmt = fmtDate(next.air_date);
-        if (diff <= 0) {
-          const daysSince = Math.abs(diff);
-          const sinceStr = daysSince === 0 ? 'صدرت اليوم' : daysSince === 1 ? 'نزلت أمس' : `نزلت قبل ${daysSince} أيام`;
-          nextTxt = `الموسم ${nextSeason} — الحلقة ${nextEp} — ${sinceStr}`;
-          nextSubTxt = nextFmt;
-          nextClass = daysSince <= 2 ? 'soon' : 'days'; isActive = true;
-        } else if (diff === 1) {
-          nextTxt = `الموسم ${nextSeason} — الحلقة ${nextEp} — غداً`;
-          nextSubTxt = nextFmt;
-          nextClass = 'soon'; isActive = true;
-        } else if (diff <= 7) {
-          nextTxt = `الموسم ${nextSeason} — الحلقة ${nextEp} — بعد ${diff} أيام`;
-          nextSubTxt = nextFmt;
-          nextClass = 'days'; isActive = true;
-        } else {
-          nextTxt = `الموسم ${nextSeason} — الحلقة ${nextEp}`;
-          nextSubTxt = nextFmt;
-          nextClass = 'days';
-        }
+        const diff = Math.ceil((new Date(next.air_date) - today) / 86400000);
+        if (diff <= 0)      { nextTxt = '🟢 الحلقة القادمة صدرت اليوم!'; nextClass = 'soon'; }
+        else if (diff === 1){ nextTxt = '⏳ الحلقة القادمة غداً';         nextClass = 'soon'; }
+        else if (diff <= 7) { nextTxt = `⏳ الحلقة القادمة بعد ${diff} أيام`; nextClass = 'days'; }
+        else                { nextTxt = `📅 ${next.air_date}`;             nextClass = 'days'; }
       } else {
-        nextTxt = 'لا يوجد موعد محدد بعد';
-        nextClass = 'nodate';
+        nextTxt = '— لا يوجد موعد بعد'; nextClass = 'nodate';
       }
-
-      const cardClass = isActive ? 'radar-card radar-card-active' : 'radar-card';
       return `
-        <div class="${cardClass}" onclick="openDetail(${item.id},'tv')">
-          <button class="radar-watch-btn" onclick="event.stopPropagation();openWatchPage(${item.id},'tv',${last?.season_number||1},${last?.episode_number||1})">
-            <svg viewBox="0 0 24 24" fill="currentColor" width="12" height="12"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            شاهد
-          </button>
+        <div class="radar-card" onclick="openDetail(${item.id},'tv')">
+          <img class="radar-poster" src="${poster}" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
           <div class="radar-info">
             <div class="radar-title">${title}</div>
             <div class="radar-last">${lastTxt}</div>
             <div class="radar-next ${nextClass}">${nextTxt}</div>
-            ${nextSubTxt ? `<div class="radar-next-sub ${nextClass}">${nextSubTxt}</div>` : ''}
           </div>
-          <img class="radar-poster" src="${poster}" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+          <button class="radar-watch-btn" onclick="event.stopPropagation();openWatchPage(${item.id},'tv',${last?.season_number||1},${last?.episode_number||1})">
+            ▶ شاهد
+          </button>
         </div>`;
     } catch { return ''; }
   }));
-
-  // ترتيب: المسلسلات النشطة (قريبة الحلقة) أولاً
-  const sorted = cards.filter(c => c.includes('radar-card-active')).concat(cards.filter(c => !c.includes('radar-card-active')));
-  return `<div class="radar-list">${sorted.join('')}</div>`;
+  return `<div class="radar-list">${cards.join('')}</div>`;
 }
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', async () => {
