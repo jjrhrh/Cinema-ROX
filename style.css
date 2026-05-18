@@ -3673,9 +3673,12 @@ body.cinema-mode .ws-overlay        { border-radius: 0; }
 .radar-info { flex: 1; min-width: 0; }
 .radar-title {
   font-size: 0.92rem; font-weight: 800;
-  color: #fff; white-space: nowrap;
-  overflow: hidden; text-overflow: ellipsis;
-  margin-bottom: 5px;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
+  max-width: 100%;
 }
 .radar-last {
   font-size: 0.76rem; color: rgba(255,255,255,0.55);
