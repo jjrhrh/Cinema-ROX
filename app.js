@@ -2311,7 +2311,80 @@ async function runSearch(q) {
     container.innerHTML = '<p class="lib-empty">حدث خطأ في البحث ❌</p>';
   }
 }
+// ===== ADVANCED FILTER =====
+function toggleAdvFilter() {
+  const row = document.getElementById('searchFiltersRow');
+  const btn = document.getElementById('filterToggleBtn');
+  if (!row) return;
+  const isOpen = row.classList.toggle('open');
+  btn.classList.toggle('active', isOpen);
+}
 
+function onTypeChange() {
+  applyAdvFilter();
+}
+
+function fillYearSelect() {
+  const sel = document.getElementById('filterYear');
+  if (!sel || sel.options.length > 1) return;
+  const current = new Date().getFullYear();
+  for (let y = current; y >= 1950; y--) {
+    const opt = document.createElement('option');
+    opt.value = y; opt.textContent = y;
+    sel.appendChild(opt);
+  }
+}
+
+async function applyAdvFilter() {
+  const type    = document.getElementById('searchTypeSelect')?.value || 'all';
+  const genre   = document.getElementById('filterGenre')?.value || '';
+  const year    = document.getElementById('filterYear')?.value || '';
+  const sort    = document.getElementById('filterSort')?.value || 'popularity.desc';
+  const country = document.getElementById('filterCountry')?.value || '';
+  const q       = document.getElementById('searchInput2')?.value.trim() || '';
+
+  if (q.length >= (CONFIG.SEARCH.MIN_CHARS || 2)) { runSearch(q); return; }
+
+  const container = document.getElementById('searchResults');
+  if (!container) return;
+  document.getElementById('searchDiscovery')?.classList.add('hidden');
+  container.innerHTML = '<div class="loading">🔍 جاري البحث...</div>';
+
+  try {
+    const params = { sort_by: sort, page: 1 };
+    if (genre) params.with_genres = genre;
+    if (country) params.with_origin_country = country;
+    const isAnime = type === 'anime';
+    if (isAnime) { params.with_genres = '16'; params.with_origin_country = 'JP'; }
+
+    let results = [];
+    if (type === 'movie') {
+      if (year) params.primary_release_year = year;
+      const r = await fetch(buildTMDBUrl('/discover/movie', params)).then(r=>r.json());
+      results = (r.results||[]).filter(i=>i.poster_path).slice(0,20).map(m=>({...m,media_type:'movie'}));
+    } else if (type === 'tv' || type === 'anime') {
+      if (year) params.first_air_date_year = year;
+      const r = await fetch(buildTMDBUrl('/discover/tv', params)).then(r=>r.json());
+      results = (r.results||[]).filter(i=>i.poster_path).slice(0,20).map(m=>({...m,media_type:'tv'}));
+    } else {
+      const pM = {...params}; const pT = {...params};
+      if (year) { pM.primary_release_year = year; pT.first_air_date_year = year; }
+      const [mv, tv] = await Promise.all([
+        fetch(buildTMDBUrl('/discover/movie', pM)).then(r=>r.json()),
+        fetch(buildTMDBUrl('/discover/tv',    pT)).then(r=>r.json()),
+      ]);
+      results = [
+        ...(mv.results||[]).filter(i=>i.poster_path).slice(0,10).map(m=>({...m,media_type:'movie'})),
+        ...(tv.results||[]).filter(i=>i.poster_path).slice(0,10).map(m=>({...m,media_type:'tv'})),
+      ];
+    }
+
+    if (!results.length) { container.innerHTML = '<p class="lib-empty">لا توجد نتائج 😕</p>'; return; }
+    container.innerHTML = `<div class="movies-row">${results.map(m=>buildMovieCard(m,m.media_type)).join('')}</div>`;
+  } catch(e) {
+    container.innerHTML = '<p class="lib-empty">حدث خطأ ❌</p>';
+  }
+}
 // ===== STUBS =====
 function openMovieOfDay() {}
 function openStats()      {}
