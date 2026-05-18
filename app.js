@@ -2238,12 +2238,39 @@ async function searchByGenre(genreId, label) {
   if (!container) return;
   container.innerHTML = '<div class="loading">🔍 جاري البحث...</div>';
   try {
-    const res = await fetch(buildTMDBUrl('/discover/movie', { with_genres: genreId, sort_by: 'popularity.desc', page: 1 }));
-    const data = await res.json();
-    const results = (data.results || []).filter(i => i.poster_path).slice(0, CONFIG.SEARCH.MAX_RESULTS);
-    container.innerHTML = results.length
-      ? `<div class="movies-row">${results.map(m => buildMovieCard(m,'movie')).join('')}</div>`
-      : '<p class="lib-empty">لا توجد نتائج 😕</p>';
+    const isAnime = genreId === '16';
+    const params = isAnime
+      ? { with_genres: '16', with_origin_country: 'JP', sort_by: 'popularity.desc', page: 1 }
+      : { with_genres: genreId, sort_by: 'popularity.desc', page: 1 };
+
+    const [movRes, tvRes] = await Promise.all([
+      isAnime
+        ? fetch(buildTMDBUrl('/discover/tv', params)).then(r=>r.json())
+        : fetch(buildTMDBUrl('/discover/movie', params)).then(r=>r.json()),
+      isAnime
+        ? Promise.resolve({ results: [] })
+        : fetch(buildTMDBUrl('/discover/tv', { with_genres: genreId, sort_by: 'popularity.desc', page: 1 })).then(r=>r.json()),
+    ]);
+
+    const movies = (movRes.results || []).filter(i => i.poster_path).slice(0, 10)
+      .map(m => ({ ...m, media_type: isAnime ? 'tv' : 'movie' }));
+    const shows  = (tvRes.results  || []).filter(i => i.poster_path).slice(0, 10)
+      .map(m => ({ ...m, media_type: 'tv' }));
+    const all = isAnime ? movies : [...movies, ...shows];
+
+    if (!all.length) { container.innerHTML = '<p class="lib-empty">لا توجد نتائج 😕</p>'; return; }
+
+    const movSection = !isAnime && movies.length ? `
+      <div class="sq-genre-label">🎬 أفلام</div>
+      <div class="movies-row">${movies.map(m => buildMovieCard(m, 'movie')).join('')}</div>` : '';
+    const tvSection = !isAnime && shows.length ? `
+      <div class="sq-genre-label">📺 مسلسلات</div>
+      <div class="movies-row">${shows.map(m => buildMovieCard(m, 'tv')).join('')}</div>` : '';
+    const animeSection = isAnime ? `
+      <div class="sq-genre-label">🎌 أنمي</div>
+      <div class="movies-row">${movies.map(m => buildMovieCard(m, 'tv')).join('')}</div>` : '';
+
+    container.innerHTML = movSection + tvSection + animeSection;
   } catch { container.innerHTML = '<p class="lib-empty">حدث خطأ ❌</p>'; }
 }
 // ===== SEARCH =====
