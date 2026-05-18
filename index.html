@@ -80,6 +80,43 @@
       placeholder="🔍 ابحث عن فيلم أو مسلسل..."
       oninput="handleSearch(this.value)">
   </div>
+  <!-- SEARCH DISCOVERY ZONE -->
+  <div id="searchDiscovery">
+
+    <!-- 1. Quick Tags Row -->
+    <div class="sq-tags-wrap">
+      <div class="sq-tags-row" id="sqTagsRow">
+        <button class="sq-tag" onclick="handleSearch('أفلام السهرة')">🍿 أفلام السهرة</button>
+        <button class="sq-tag" onclick="handleSearch('تريند')">🔥 تريند اليوم</button>
+        <button class="sq-tag" onclick="handleSearch('أوسكار')">🎬 ترشيحات أوسكار</button>
+        <button class="sq-tag" onclick="handleSearch('رعب')">🧟 رعب وإثارة</button>
+        <button class="sq-tag" onclick="handleSearch('رومانسي')">💘 رومانسي</button>
+        <button class="sq-tag" onclick="handleSearch('خيال علمي')">🚀 خيال علمي</button>
+      </div>
+    </div>
+
+    <!-- 2. Premium Genres Grid -->
+    <div class="sq-genres-section">
+      <div class="sq-section-label">✨ استكشف التصنيفات</div>
+      <div class="sq-genres-grid" id="sqGenresGrid">
+        <div class="sq-genre-card sq-g-action"  onclick="searchByGenre(28,'أكشن')">💥<span>أكشن</span></div>
+        <div class="sq-genre-card sq-g-drama"   onclick="searchByGenre(18,'دراما')">🎭<span>دراما</span></div>
+        <div class="sq-genre-card sq-g-anime"   onclick="handleSearch('anime')">⛩️<span>أنمي</span></div>
+        <div class="sq-genre-card sq-g-mystery" onclick="searchByGenre(9648,'غموض')">🕵️<span>غموض</span></div>
+        <div class="sq-genre-card sq-g-doc"     onclick="searchByGenre(99,'وثائقي')">🌍<span>وثائقي</span></div>
+        <div class="sq-genre-card sq-g-comedy"  onclick="searchByGenre(35,'كوميدي')">😂<span>كوميدي</span></div>
+      </div>
+    </div>
+
+    <!-- 3. Trending Mini Cards -->
+    <div class="sq-trending-section">
+      <div class="sq-section-label">📈 الأكثر بحثاً اليوم</div>
+      <div id="sqTrendingList" class="sq-trending-list"></div>
+    </div>
+
+  </div>
+  <!-- END SEARCH DISCOVERY ZONE -->
+
   <div id="searchResults"></div>
 </div>
 <div id="libraryPage"    class="page"></div>
