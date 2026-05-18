@@ -3670,7 +3670,7 @@ body.cinema-mode .ws-overlay        { border-radius: 0; }
 .radar-card:active { transform: scale(0.97); }
 .radar-card:active { transform: scale(0.98); }
 .radar-poster {
-  width: 52px; height: 74px; border-radius: 10px;
+  width: 58px; height: 80px; border-radius: 10px;
   object-fit: cover; flex-shrink: 0;
   border: 1px solid rgba(255,255,255,0.1);
   box-shadow: 0 4px 16px rgba(0,0,0,0.6);
