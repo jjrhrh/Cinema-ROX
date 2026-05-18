@@ -2534,7 +2534,7 @@ async function loadAnimeRadarSection() {
             ${statusHtml}
             ${countdownHtml}
           </div>
-          <button class="rx-btn rx-btn--anime" onclick="event.stopPropagation();openWatchPage(${item.id},'tv',${last?.season_number||1},${last?.episode_number||1})">
+          <div class="rx-hcard rx-hcard--${statusClass} rx-hcard--anime" onclick="openDetail(${item.id},'${itemType}')">
             <svg class="rx-play-icon" viewBox="0 0 24 24" width="16" height="16"><circle cx="12" cy="12" r="11" fill="rgba(139,92,246,0.25)" stroke="rgba(139,92,246,0.6)" stroke-width="1.5"/><polygon points="10 8 16 12 10 16" fill="#c084fc"/></svg>
             شاهد
           </button>
