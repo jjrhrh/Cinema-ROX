@@ -2446,8 +2446,13 @@ async function loadAnimeRadarSection() {
     try {
       const d = await fetch(buildTMDBUrl(`/tv/${item.id}`)).then(r=>r.json());
       const genres = (d.genres||[]).map(g=>g.id);
-      if (!genres.includes(16)) return null;
-
+      const isAnime = genres.includes(16) && (
+        (d.origin_country||[]).includes('JP') || 
+        (d.original_language === 'ja') ||
+        genres.includes(16)
+      );
+      if (!isAnime) return null;
+      const itemType = item.type === 'movie' ? 'movie' : 'tv';
       const title = d.name || d.original_name || item.title || '';
       const poster = d.poster_path ? `${CONFIG.IMAGES.POSTER_SM}${d.poster_path}` : CONFIG.IMAGES.PLACEHOLDER;
       const last = d.last_episode_to_air;
