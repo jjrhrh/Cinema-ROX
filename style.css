@@ -3878,7 +3878,42 @@ body.cinema-mode .ws-overlay        { border-radius: 0; }
 .rx-play-icon { filter: drop-shadow(0 0 5px rgba(229,9,20,0.7)); transition: transform 0.2s ease; }
 .rx-hcard .rx-btn:hover .rx-play-icon { transform: scale(1.15); }
 .rx-hcard .rx-btn:active { transform: scale(0.94); }
-
+/* رادار الأنمي */
+.rx-hcard--anime.rx-hcard--rx-soon {
+  border-color: rgba(139,92,246,0.45);
+  box-shadow: 0 0 30px rgba(139,92,246,0.12), 0 0 60px rgba(139,92,246,0.05), inset 0 1px 0 rgba(139,92,246,0.1);
+}
+.rx-hcard--anime.rx-hcard--rx-days {
+  border-color: rgba(192,132,252,0.45);
+  box-shadow: 0 0 30px rgba(192,132,252,0.12), inset 0 1px 0 rgba(192,132,252,0.1);
+}
+.rx-btn--anime {
+  color: #c084fc !important;
+  border-color: rgba(139,92,246,0.4) !important;
+  background: linear-gradient(135deg, rgba(139,92,246,0.15), rgba(109,40,217,0.1)) !important;
+  animation: rxPulseAnime 2.5s ease-in-out infinite !important;
+}
+.rx-btn--anime:hover {
+  background: linear-gradient(135deg, rgba(139,92,246,0.35), rgba(109,40,217,0.25)) !important;
+  border-color: rgba(139,92,246,0.8) !important;
+  box-shadow: 0 0 25px rgba(139,92,246,0.4) !important;
+  color: #fff !important;
+  animation: none !important;
+}
+@keyframes rxPulseAnime {
+  0%,100% { box-shadow: 0 0 8px rgba(139,92,246,0.15); }
+  50%     { box-shadow: 0 0 25px rgba(139,92,246,0.45); }
+}
+.lib-laser-purple {
+  background: linear-gradient(180deg, #a855f7, rgba(168,85,247,0.2));
+  box-shadow: 0 0 10px #a855f7, 0 0 24px rgba(168,85,247,0.5);
+}
+.lib-icon3d-purple {
+  background: linear-gradient(145deg, rgba(139,92,246,0.35), rgba(109,40,217,0.15));
+  border: 1px solid rgba(139,92,246,0.45);
+  box-shadow: 0 0 14px rgba(139,92,246,0.35), inset 0 1px 0 rgba(255,255,255,0.15);
+  color: #a855f7;
+}
 .rx-soon   { color: #1ce783; }
 .rx-days   { color: #f59e0b; }
 .rx-nodate { color: rgba(255,255,255,0.25); }
