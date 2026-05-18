@@ -4299,3 +4299,10 @@ body.cinema-mode .ws-overlay        { border-radius: 0; }
   color: #fff;
 }
 .notif-test-btn:disabled { opacity: 0.6; cursor: default; } 
+.sq-genre-label {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: rgba(255,255,255,0.5);
+  padding: 12px 4px 6px;
+  letter-spacing: 0.5px;
+} 
