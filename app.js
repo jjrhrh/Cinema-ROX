@@ -2336,8 +2336,9 @@ async function loadRadarSection() {
         status = 'لا يوجد موعد بعد'; statusClass='rx-nodate'; sortKey=2;
       }
 
+      const cardGlow = sortKey===0 ? 'rx-soon-card' : sortKey===1 ? 'rx-days-card' : '';
       return { sortKey, html: `
-        <div class="rx-card" onclick="openDetail(${item.id},'tv')">
+        <div class="rx-card ${cardGlow}" onclick="openDetail(${item.id},'tv')">
           <img class="rx-poster" src="${poster}" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
           <div class="rx-body">
             <div class="rx-title">${title}</div>
