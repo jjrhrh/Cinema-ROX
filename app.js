@@ -2311,47 +2311,84 @@ async function loadRadarSection() {
       const poster= d.poster_path ? `${CONFIG.IMAGES.POSTER_SM}${d.poster_path}` : CONFIG.IMAGES.PLACEHOLDER;
       const last  = d.last_episode_to_air;
       const next  = d.next_episode_to_air;
+      const rating = d.vote_average ? d.vote_average.toFixed(1) : null;
+      const ratingStars = rating ? Math.round(parseFloat(rating) / 2) : 0;
+      const starsHtml = rating ? `
+        <div class="rx-hcard-rating">
+          <span class="rx-stars">${'★'.repeat(ratingStars)}${'☆'.repeat(5-ratingStars)}</span>
+          <span class="rx-rating-num">${rating}</span>
+        </div>` : '';
 
-      const lastTxt = last ? `م${last.season_number} — ح${last.episode_number}` : '—';
+      const lastTxt = last
+        ? `موسم ${last.season_number} · حلقة ${last.episode_number}`
+        : '—';
 
       let status = '', statusClass = 'rx-nodate', sortKey = 2;
+      let isToday = false, countdownHtml = '';
+
       if (next?.air_date) {
         const diff = Math.floor((new Date(next.air_date).setHours(0,0,0,0) - todayMs) / 86400000);
-        const fmt  = new Date(next.air_date).toLocaleDateString('ar-SA',{weekday:'short',day:'numeric',month:'long'});
         const ns   = next.season_number, ne = next.episode_number;
         const fullDate = new Date(next.air_date).toLocaleDateString('ar-SA',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
         const timeStr  = new Date(next.air_date).toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});
         const ampm     = new Date(next.air_date).getHours() < 12 ? 'صباحاً' : 'مساءً';
+
         if (diff < 0) {
           const ago = Math.abs(diff);
           const agoTxt = ago===1?'أمس':ago===2?'منذ يومين':`قبل ${ago} أيام`;
-          status = `م${ns} ح${ne} — نزلت ${agoTxt} | ${fullDate}`; statusClass=ago<=2?'rx-soon':'rx-days'; sortKey=1;
+          status = `موسم ${ns} حلقة ${ne} — نزلت ${agoTxt}\n${fullDate}`;
+          statusClass = ago<=2 ? 'rx-soon' : 'rx-days'; sortKey = 1;
         } else if (diff===0) {
-          status = `م${ns} ح${ne} — صدرت اليوم | ${timeStr} ${ampm}`; statusClass='rx-soon'; sortKey=0;
+          isToday = true;
+          status = `موسم ${ns} حلقة ${ne} — صدرت اليوم\n${timeStr} ${ampm}`;
+          statusClass = 'rx-soon'; sortKey = 0;
         } else if (diff===1) {
-          status = `م${ns} ح${ne} — غداً | ${fullDate} — ${timeStr} ${ampm}`; statusClass='rx-soon'; sortKey=0;
+          status = `موسم ${ns} حلقة ${ne} — غداً\n${fullDate} — ${timeStr} ${ampm}`;
+          statusClass = 'rx-soon'; sortKey = 0;
+          const target = new Date(next.air_date).getTime();
+          countdownHtml = `<div class="rx-countdown" data-target="${target}">⏳ جاري الحساب...</div>`;
         } else if (diff<=7) {
-          status = `م${ns} ح${ne} — بعد ${diff} أيام | ${fullDate}`; statusClass='rx-days'; sortKey=0;
+          status = `موسم ${ns} حلقة ${ne} — بعد ${diff} أيام\n${fullDate}`;
+          statusClass = 'rx-days'; sortKey = 0;
+          const target = new Date(next.air_date).getTime();
+          countdownHtml = `<div class="rx-countdown" data-target="${target}">⏳ جاري الحساب...</div>`;
         } else {
-          status = `م${ns} ح${ne} | ${fullDate}`; statusClass='rx-days'; sortKey=0;
+          status = `موسم ${ns} حلقة ${ne}\n${fullDate}`;
+          statusClass = 'rx-days'; sortKey = 0;
         }
       } else {
-        status = 'لا يوجد موعد بعد'; statusClass='rx-nodate'; sortKey=2;
+        status = 'لا يوجد موعد بعد';
+        statusClass = 'rx-nodate'; sortKey = 2;
       }
 
-      const backdrop = d.backdrop_path ? `${CONFIG.IMAGES.BACKDROP_SM || 'https://image.tmdb.org/t/p/w300'}${d.backdrop_path}` : poster;
+      const backdrop = d.backdrop_path
+        ? `${CONFIG.IMAGES.BACKDROP_SM || 'https://image.tmdb.org/t/p/w300'}${d.backdrop_path}`
+        : poster;
+
+      const todayBadge = isToday
+        ? `<span class="rx-today-badge">🔴 جديد اليوم</span>`
+        : '';
+
+      const statusLines = status.split('\n');
+      const statusHtml = statusLines.map((l,i) =>
+        `<div class="rx-hcard-status ${i===0 ? statusClass : 'rx-hcard-status-sub'}">${l}</div>`
+      ).join('');
+
       return { sortKey, html: `
         <div class="rx-hcard rx-hcard--${statusClass}" onclick="openDetail(${item.id},'tv')">
           <div class="rx-hcard-img" style="background-image:url('${backdrop}')">
             <div class="rx-hcard-grad"></div>
+            ${todayBadge}
             <span class="rx-hcard-badge rx-hcard-badge--${statusClass}">
               ${sortKey===0 ? '🟢' : sortKey===1 ? '🟡' : '⚫'}
             </span>
           </div>
           <div class="rx-hcard-body">
             <div class="rx-hcard-title">${title}</div>
+            ${starsHtml}
             <div class="rx-hcard-last">${lastTxt}</div>
-            <div class="rx-hcard-status ${statusClass}">${status}</div>
+            ${statusHtml}
+            ${countdownHtml}
           </div>
           <button class="rx-btn" onclick="event.stopPropagation();openWatchPage(${item.id},'tv',${last?.season_number||1},${last?.episode_number||1})">
             <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><polygon points="5 3 19 12 5 21 5 3"/></svg>
@@ -2363,6 +2400,24 @@ async function loadRadarSection() {
 
   const valid  = cards.filter(Boolean);
   const sorted = [...valid].sort((a,b)=>a.sortKey-b.sortKey);
+
+  setTimeout(() => {
+    document.querySelectorAll('.rx-countdown[data-target]').forEach(el => {
+      const target = parseInt(el.dataset.target);
+      function tick() {
+        const diff = target - Date.now();
+        if (diff <= 0) { el.textContent = '🟢 الآن!'; return; }
+        const d = Math.floor(diff/86400000);
+        const h = Math.floor((diff%86400000)/3600000);
+        const m = Math.floor((diff%3600000)/60000);
+        const s = Math.floor((diff%60000)/1000);
+        el.textContent = `⏱ ${d > 0 ? d+'ي ' : ''}${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+        setTimeout(tick, 1000);
+      }
+      tick();
+    });
+  }, 300);
+
   return `<div class="rx-hscroll"><div class="rx-hrow">${sorted.map(c=>c.html).join('')}</div></div>`;
 }
 // ===== INIT =====
