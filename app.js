@@ -2300,75 +2300,61 @@ function toggleCinemaMode() {
 }
 async function loadRadarSection() {
   const alerts = getLib('rox_alerts');
-  if (!alerts.length) return '<div class="radar-empty">📡 لا توجد اشتراكات بعد — فعّل التنبيه من صفحة أي مسلسل</div>';
-  const today = new Date();
+  if (!alerts.length) return `<div class="rx-empty">لا توجد اشتراكات — فعّل التنبيه من صفحة أي مسلسل</div>`;
+
+  const todayMs = new Date().setHours(0,0,0,0);
+
   const cards = await Promise.all(alerts.map(async item => {
     try {
-      const d = await fetch(buildTMDBUrl(`/tv/${item.id}`)).then(r => r.json());
-      const poster = d.poster_path ? `${CONFIG.IMAGES.POSTER_SM}${d.poster_path}` : CONFIG.IMAGES.PLACEHOLDER;
-      const title  = d.name || d.original_name || item.title || '';
-      const last   = d.last_episode_to_air;
-      const next   = d.next_episode_to_air;
-      const lastTxt = last
-        ? `الموسم ${last.season_number} — الحلقة ${last.episode_number}`
-        : 'لا توجد حلقات بعد';
-      let nextTxt = '', nextClass = 'nodate';
+      const d     = await fetch(buildTMDBUrl(`/tv/${item.id}`)).then(r=>r.json());
+      const title = d.name || d.original_name || item.title || '';
+      const poster= d.poster_path ? `${CONFIG.IMAGES.POSTER_SM}${d.poster_path}` : CONFIG.IMAGES.PLACEHOLDER;
+      const last  = d.last_episode_to_air;
+      const next  = d.next_episode_to_air;
+
+      const lastTxt = last ? `م${last.season_number} — ح${last.episode_number}` : '—';
+
+      let status = '', statusClass = 'rx-nodate', sortKey = 2;
       if (next?.air_date) {
-        const nextDate = new Date(next.air_date);
-        nextDate.setHours(0,0,0,0);
-        const todayClean = new Date(); todayClean.setHours(0,0,0,0);
-        const diff = Math.floor((nextDate - todayClean) / 86400000);
-        const fmtDate = new Date(next.air_date).toLocaleDateString('ar-SA',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-        const ns = next.season_number, ne = next.episode_number;
-        const icoLive   = `<svg width="11" height="11" viewBox="0 0 24 24" fill="#1ce783"><circle cx="12" cy="12" r="10"/></svg>`;
-        const icoTimer  = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="M5 3h14M5 21h14M12 3v3M12 21v-3M6.3 6.3l2.1 2.1M15.6 15.6l2.1 2.1M3 12h3M18 12h3M6.3 17.7l2.1-2.1M15.6 8.4l2.1-2.1"/></svg>`;
-        const icoCheck  = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#1ce783" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+        const diff = Math.floor((new Date(next.air_date).setHours(0,0,0,0) - todayMs) / 86400000);
+        const fmt  = new Date(next.air_date).toLocaleDateString('ar-SA',{weekday:'short',day:'numeric',month:'long'});
+        const ns   = next.season_number, ne = next.episode_number;
         if (diff < 0) {
-          const days = Math.abs(diff);
-          const since = days === 1 ? 'نزلت أمس' : days === 2 ? 'نزلت منذ يومين' : `نزلت قبل ${days} أيام`;
-          nextTxt = `${icoCheck} الموسم ${ns} — الحلقة ${ne} — ${since} | ${fmtDate}`;
-          nextClass = days <= 2 ? 'soon' : 'days';
-        } else if (diff === 0) {
-          nextTxt = `${icoLive} الموسم ${ns} — الحلقة ${ne} — صدرت اليوم | ${fmtDate}`;
-          nextClass = 'soon';
-        } else if (diff === 1) {
-          nextTxt = `${icoTimer} الموسم ${ns} — الحلقة ${ne} — غداً | ${fmtDate}`;
-          nextClass = 'soon';
-        } else if (diff <= 7) {
-          nextTxt = `${icoTimer} الموسم ${ns} — الحلقة ${ne} — بعد ${diff} أيام | ${fmtDate}`;
-          nextClass = 'days';
+          const ago = Math.abs(diff);
+          const agoTxt = ago===1?'أمس':ago===2?'منذ يومين':`قبل ${ago} أيام`;
+          status = `م${ns} ح${ne} — نزلت ${agoTxt}`; statusClass = ago<=2?'rx-soon':'rx-days'; sortKey=1;
+        } else if (diff===0) {
+          status = `م${ns} ح${ne} — صدرت اليوم`; statusClass='rx-soon'; sortKey=0;
+        } else if (diff===1) {
+          status = `م${ns} ح${ne} — غداً | ${fmt}`; statusClass='rx-soon'; sortKey=0;
+        } else if (diff<=7) {
+          status = `م${ns} ح${ne} — بعد ${diff} أيام | ${fmt}`; statusClass='rx-days'; sortKey=0;
         } else {
-          nextTxt = `${icoTimer} الموسم ${ns} — الحلقة ${ne} | ${fmtDate}`;
-          nextClass = 'days';
+          status = `م${ns} ح${ne} | ${fmt}`; statusClass='rx-days'; sortKey=0;
         }
       } else {
-        nextTxt = 'لا يوجد موعد محدد بعد'; nextClass = 'nodate';
+        status = 'لا يوجد موعد بعد'; statusClass='rx-nodate'; sortKey=2;
       }
-      const futureNext = next?.air_date && Math.floor((new Date(next.air_date) - new Date().setHours(0,0,0,0)) / 86400000) > 0;
-      const recentNext = next?.air_date && Math.floor((new Date(next.air_date) - new Date().setHours(0,0,0,0)) / 86400000) <= 0;
-      const sortKey = futureNext ? 0 : recentNext ? 1 : 2;
-      return `
-        <div class="radar-card" data-sort="${sortKey}" onclick="openDetail(${item.id},'tv')">
-          <img class="radar-poster" src="${poster}" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
-          <div class="radar-info">
-            <div class="radar-title">${title}</div>
-            <div class="radar-last">${lastTxt}</div>
-            <div class="radar-next ${nextClass}">${nextTxt}</div>
+
+      return { sortKey, html: `
+        <div class="rx-card" onclick="openDetail(${item.id},'tv')">
+          <img class="rx-poster" src="${poster}" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+          <div class="rx-body">
+            <div class="rx-title">${title}</div>
+            <div class="rx-last">${lastTxt}</div>
+            <div class="rx-status ${statusClass}">${status}</div>
           </div>
-          <button class="radar-watch-btn" onclick="event.stopPropagation();openWatchPage(${item.id},'tv',${last?.season_number||1},${last?.episode_number||1})">
-            <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          <button class="rx-btn" onclick="event.stopPropagation();openWatchPage(${item.id},'tv',${last?.season_number||1},${last?.episode_number||1})">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><polygon points="5 3 19 12 5 21 5 3"/></svg>
             شاهد
           </button>
-        </div>`;
-    } catch { return ''; }
+        </div>`};
+    } catch { return null; }
   }));
-  const withKeys = cards.map((c,i) => ({ html: c, key: (c.match(/data-sort="(\d)"/) || [,9])[1] }));
-  const sorted = cards
-    .map((c,i) => c)
-    .filter(c => c.includes('data-sort="0"'))
-    .concat(cards.filter(c => c.includes('data-sort="1"')))
-    .concat(cards.filter(c => c.includes('data-sort="2"')));
-  return `<div class="radar-list">${(sorted.length ? sorted : cards).join('')}</div>`;
+
+  const valid  = cards.filter(Boolean);
+  const sorted = [...valid].sort((a,b)=>a.sortKey-b.sortKey);
+  return `<div class="rx-list">${sorted.map(c=>c.html).join('')}</div>`;
 }
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', async () => {
