@@ -493,9 +493,9 @@ document.body.style.backgroundImage = '';
   const title  = type === 'movie'
     ? (movie.title || movie.original_title)
     : (movie.name  || movie.original_name);
-  const img = movie.backdrop_path
-    ? `${CONFIG.IMAGES.BACKDROP}${movie.backdrop_path}`
-    : (movie.poster_path ? `${CONFIG.IMAGES.POSTER_XL}${movie.poster_path}` : CONFIG.IMAGES.PLACEHOLDER);
+  const img = movie.poster_path
+    ? `${CONFIG.IMAGES.POSTER_XL}${movie.poster_path}`
+    : (movie.backdrop_path ? `${CONFIG.IMAGES.BACKDROP}${movie.backdrop_path}` : CONFIG.IMAGES.PLACEHOLDER);
   const rating = movie.vote_average ? movie.vote_average.toFixed(1) : '';
   const year   = (movie.release_date || movie.first_air_date || '').slice(0,4);
   const typeLabel = type === 'tv' ? 'SERIES' : 'MOVIE';
