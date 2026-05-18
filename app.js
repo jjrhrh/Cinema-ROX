@@ -493,25 +493,27 @@ document.body.style.backgroundImage = '';
   const title  = type === 'movie'
     ? (movie.title || movie.original_title)
     : (movie.name  || movie.original_name);
-  const _imgs = [
-    movie.backdrop_path ? `${CONFIG.IMAGES.BACKDROP}${movie.backdrop_path}` : null,
-    movie.poster_path   ? `${CONFIG.IMAGES.POSTER_XL}${movie.poster_path}`  : null,
-  ].filter(Boolean);
-  const poster = movie.poster_path ? `${CONFIG.IMAGES.POSTER_XL}${movie.poster_path}` : (movie.backdrop_path ? `${CONFIG.IMAGES.BACKDROP}${movie.backdrop_path}` : CONFIG.IMAGES.PLACEHOLDER);
+  const img = movie.backdrop_path
+    ? `${CONFIG.IMAGES.BACKDROP}${movie.backdrop_path}`
+    : (movie.poster_path ? `${CONFIG.IMAGES.POSTER_XL}${movie.poster_path}` : CONFIG.IMAGES.PLACEHOLDER);
   const rating = movie.vote_average ? movie.vote_average.toFixed(1) : '';
   const year   = (movie.release_date || movie.first_air_date || '').slice(0,4);
   const typeLabel = type === 'tv' ? 'SERIES' : 'MOVIE';
   return `
-  <div class=\"movie-card ${extraClass}\" data-id=\"${movie.id}\" data-type=\"${type}\" onclick=\"openDetail(this.dataset.id,this.dataset.type)\">\n
+  <div class="movie-card ${extraClass}" data-id="${movie.id}" data-type="${type}" onclick="openDetail(this.dataset.id,this.dataset.type)">
     <div class="movie-poster-wrap">
       ${rank > 0 ? `<span class="rank-number">${rank}</span>` : ''}
-      <img class="movie-poster fade-img" src="${poster}" alt="${title}" loading="lazy"
+      <img class="movie-poster fade-img" src="${img}" alt="${title}" loading="lazy"
            onload="this.classList.add('loaded')"
            onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}';this.classList.add('loaded')">
       <div class="movie-overlay"><span class="play-icon">▶</span></div>
     </div>
-    <div class="movie-title-bar">${title.length > 28 ? title.slice(0,28)+'...' : title}</div>
-    <div class="movie-meta-bar"><span class="movie-badge-type">${typeLabel}</span><span class="movie-badge-year">${year}</span>${rating ? `<span class="movie-badge-rating"><svg width="9" height="9" viewBox="0 0 24 24" fill="var(--gold)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> ${rating}</span>` : ''}</div>
+    <div class="movie-title-bar">${title.length > 32 ? title.slice(0,32)+'...' : title}</div>
+    <div class="movie-meta-bar">
+      <span class="movie-badge-type">${typeLabel}</span>
+      <span class="movie-badge-year">${year}</span>
+      ${rating ? `<span class="movie-badge-rating"><svg width="11" height="11" viewBox="0 0 24 24" fill="#f5c518"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> ${rating}</span>` : ''}
+    </div>
   </div>`;
 }
 function buildSearchCard(movie, type) {
