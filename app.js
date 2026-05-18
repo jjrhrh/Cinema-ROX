@@ -2310,17 +2310,36 @@ async function loadRadarSection() {
       const last   = d.last_episode_to_air;
       const next   = d.next_episode_to_air;
       const lastTxt = last
-        ? `آخر حلقة: م${last.season_number} · ح${last.episode_number}`
+        ? `الموسم ${last.season_number} — الحلقة ${last.episode_number}`
         : 'لا توجد حلقات بعد';
       let nextTxt = '', nextClass = 'nodate';
       if (next?.air_date) {
-        const diff = Math.ceil((new Date(next.air_date) - today) / 86400000);
-        if (diff <= 0)      { nextTxt = '🟢 الحلقة القادمة صدرت اليوم!'; nextClass = 'soon'; }
-        else if (diff === 1){ nextTxt = '⏳ الحلقة القادمة غداً';         nextClass = 'soon'; }
-        else if (diff <= 7) { nextTxt = `⏳ الحلقة القادمة بعد ${diff} أيام`; nextClass = 'days'; }
-        else                { nextTxt = `📅 ${next.air_date}`;             nextClass = 'days'; }
+        const nextDate = new Date(next.air_date);
+        nextDate.setHours(0,0,0,0);
+        const todayClean = new Date(); todayClean.setHours(0,0,0,0);
+        const diff = Math.floor((nextDate - todayClean) / 86400000);
+        const fmtDate = new Date(next.air_date).toLocaleDateString('ar-SA',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+        const ns = next.season_number, ne = next.episode_number;
+        if (diff < 0) {
+          const days = Math.abs(diff);
+          const since = days === 1 ? 'أمس' : days === 2 ? 'منذ يومين' : `قبل ${days} أيام`;
+          nextTxt = `الموسم ${ns} — الحلقة ${ne} — نزلت ${since} | ${fmtDate}`;
+          nextClass = days <= 2 ? 'soon' : 'days';
+        } else if (diff === 0) {
+          nextTxt = `الموسم ${ns} — الحلقة ${ne} — صدرت اليوم | ${fmtDate}`;
+          nextClass = 'soon';
+        } else if (diff === 1) {
+          nextTxt = `الموسم ${ns} — الحلقة ${ne} — غداً | ${fmtDate}`;
+          nextClass = 'soon';
+        } else if (diff <= 7) {
+          nextTxt = `الموسم ${ns} — الحلقة ${ne} — بعد ${diff} أيام | ${fmtDate}`;
+          nextClass = 'days';
+        } else {
+          nextTxt = `الموسم ${ns} — الحلقة ${ne} | ${fmtDate}`;
+          nextClass = 'days';
+        }
       } else {
-        nextTxt = '— لا يوجد موعد بعد'; nextClass = 'nodate';
+        nextTxt = 'لا يوجد موعد محدد بعد'; nextClass = 'nodate';
       }
       return `
         <div class="radar-card" onclick="openDetail(${item.id},'tv')">
