@@ -3638,7 +3638,7 @@ body.cinema-mode .ws-overlay        { border-radius: 0; }
 }
 
 .rx-hcard {
-  width: 200px;
+  width: 220px;
   flex-shrink: 0;
   border-radius: 16px;
   background: rgba(255,255,255,0.04);
@@ -3647,6 +3647,8 @@ body.cinema-mode .ws-overlay        { border-radius: 0; }
   cursor: pointer;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 .rx-hcard:active { transform: scale(0.96); }
 .rx-hcard--rx-soon {
@@ -3663,56 +3665,121 @@ body.cinema-mode .ws-overlay        { border-radius: 0; }
 
 .rx-hcard-img {
   width: 100%;
-  height: 110px;
+  height: 120px;
   background-size: cover;
   background-position: center;
   position: relative;
+  flex-shrink: 0;
 }
 .rx-hcard-grad {
   position: absolute; inset: 0;
-  background: linear-gradient(to bottom, transparent 30%, rgba(8,0,0,0.95) 100%);
+  background: linear-gradient(to bottom, transparent 25%, rgba(8,0,0,0.97) 100%);
 }
 .rx-hcard-badge {
   position: absolute;
   top: 8px; left: 8px;
-  font-size: 0.7rem;
-  background: rgba(0,0,0,0.6);
+  font-size: 0.65rem;
+  background: rgba(0,0,0,0.65);
   backdrop-filter: blur(8px);
   padding: 3px 8px;
   border-radius: 999px;
   border: 1px solid rgba(255,255,255,0.1);
+  z-index: 2;
+}
+
+/* badge جديد اليوم */
+.rx-today-badge {
+  position: absolute;
+  top: 8px; right: 8px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  background: rgba(229,9,20,0.85);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,80,80,0.5);
+  z-index: 2;
+  animation: rxTodayPulse 1.8s ease-in-out infinite;
+}
+@keyframes rxTodayPulse {
+  0%,100% { box-shadow: 0 0 6px rgba(229,9,20,0.4); }
+  50%     { box-shadow: 0 0 18px rgba(229,9,20,0.8); }
 }
 
 .rx-hcard-body {
-  padding: 10px 12px 12px;
+  padding: 10px 12px 4px;
   text-align: right;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 .rx-hcard-title {
-  font-size: 0.85rem;
+  font-size: 0.87rem;
   font-weight: 800;
   color: #fff;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-bottom: 4px;
 }
+
+/* النجوم */
+.rx-hcard-rating {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+}
+.rx-stars {
+  font-size: 0.7rem;
+  color: #f5c518;
+  letter-spacing: 1px;
+}
+.rx-rating-num {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.5);
+}
+
 .rx-hcard-last {
   font-size: 0.7rem;
   color: rgba(255,255,255,0.4);
   font-weight: 600;
-  margin-bottom: 5px;
 }
 .rx-hcard-status {
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-bottom: 10px;
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.5;
 }
+.rx-hcard-status-sub {
+  font-size: 0.67rem;
+  color: rgba(255,255,255,0.4);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* العداد التنازلي */
+.rx-countdown {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #f5c518;
+  background: rgba(245,197,24,0.08);
+  border: 1px solid rgba(245,197,24,0.2);
+  border-radius: 8px;
+  padding: 4px 8px;
+  text-align: center;
+  margin-top: 2px;
+  font-variant-numeric: tabular-nums;
+  direction: ltr;
+}
+
 .rx-hcard .rx-btn {
   width: calc(100% - 24px);
-  margin: 0 12px 12px;
+  margin: 8px 12px 12px;
   justify-content: center;
   display: flex;
   align-items: center;
@@ -3726,6 +3793,7 @@ body.cinema-mode .ws-overlay        { border-radius: 0; }
   font-weight: 800;
   font-family: 'Cairo', sans-serif;
   cursor: pointer;
+  flex-shrink: 0;
   animation: rxPulse 2.5s ease-in-out infinite;
   transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
 }
