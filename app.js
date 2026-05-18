@@ -2325,8 +2325,8 @@ async function runSearch(q) {
       container.innerHTML = '<p class="lib-empty">لا توجد نتائج 😕</p>';
       return;
     }
-    container.innerHTML = `<div class="movies-row">
-      ${results.map(m => buildMovieCard(m, m.media_type)).join('')}
+    container.innerHTML = `<div class="search-results-grid">
+      ${results.map(m => buildSearchCard(m, m.media_type)).join('')}
     </div>`;
   } catch {
     container.innerHTML = '<p class="lib-empty">حدث خطأ في البحث ❌</p>';
