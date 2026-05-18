@@ -4432,3 +4432,12 @@ body.cinema-mode .ws-overlay        { border-radius: 0; }
 .filter-select:focus {
   border-color: #444;
 }
+.search-filters-row {
+  display: none;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 10px;
+}
+.search-filters-row.open {
+  display: grid;
+} 
