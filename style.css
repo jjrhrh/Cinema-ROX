@@ -342,7 +342,7 @@ html, body {
 
 /* ===== MOVIE CARD ===== */
 .movie-card {
-  flex: 0 0 calc(38% - 8px);
+  flex: 0 0 calc(31% - 8px);
   position: relative;
   min-width: 0;
   cursor: pointer;
@@ -4448,7 +4448,7 @@ body.cinema-mode .ws-overlay        { border-radius: 0; }
 }
 /* ===== ANIME CARD NEW STYLE ===== */
 .anime-card {
-  flex: 0 0 calc(38% - 8px);
+  flex: 0 0 calc(31% - 8px);
   min-width: 0;
   cursor: pointer;
   border-radius: 14px;
