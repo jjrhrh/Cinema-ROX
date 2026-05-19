@@ -1014,9 +1014,11 @@ async function openDetail(id, type = 'movie') {
       pct: Math.max(1, Math.round((10-s+1)*8 + (detail.vote_average||5)*2 - s*3))
     }));
     const maxPct = Math.max(...voteHist.map(v=>v.pct));
-    const runtime = detail.runtime
-      ? `${detail.runtime} د`
-      : (detail.episode_run_time?.[0] ? `${detail.episode_run_time[0]} د` : '');
+    const runtime = type === 'movie'
+  ? (detail.runtime ? `${detail.runtime} د` : '')
+  : (detail.number_of_seasons
+      ? `${detail.number_of_seasons} موسم · ${detail.number_of_episodes || ''} حلقة`
+      : (detail.episode_run_time?.[0] ? `${detail.episode_run_time[0]} د/حلقة` : ''));
     const genres  = (detail.genres || []).map(g => `<span class="detail-genre">${g.name}</span>`).join('');
     const overview= detail.overview || 'لا يوجد وصف متاح.';
     const cast    = (credits.cast || []).slice(0, 12);
