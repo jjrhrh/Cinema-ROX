@@ -47,6 +47,28 @@
     }
   };
 })();
+// ===== SIDEBAR =====
+function toggleSidebar() {
+  const menu = document.getElementById('sidebarMenu');
+  const overlay = document.getElementById('sidebarOverlay');
+  menu.classList.toggle('open');
+  overlay.classList.toggle('open');
+}
+
+function openSidebarNews(type) {
+  const panel = document.getElementById('newsPanel');
+  const title = document.getElementById('newsPanelTitle');
+  const feed  = document.getElementById('newsPanelFeed');
+  title.textContent = type === 'anime' ? '🎌 أخبار الأنمي' : '🎬 أخبار الأفلام والمسلسلات';
+  feed.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
+  panel.classList.add('open');
+  const url = type === 'anime' ? CONFIG.NEWS.ANIME : CONFIG.NEWS.CINEMA;
+  loadNewsSection('newsPanelFeed', url, type === 'anime' ? 'purple' : 'red');
+}
+
+function closeSidebarNews() {
+  document.getElementById('newsPanel').classList.remove('open');
+}
 // ===== NAVIGATION =====
 function bnavGo(tab) {
   const hero = document.getElementById('heroSection');
