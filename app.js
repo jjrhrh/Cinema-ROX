@@ -539,24 +539,26 @@ function buildSearchCard(movie, type) {
 }
 function buildAnimeCard(movie, rank = 0, type = 'tv') {
   const title = movie.name || movie.original_name || movie.title || '';
-  const _imgs2 = [
-    movie.backdrop_path ? `${CONFIG.IMAGES.BACKDROP}${movie.backdrop_path}` : null,
-    movie.poster_path   ? `${CONFIG.IMAGES.POSTER_XL}${movie.poster_path}`  : null,
-  ].filter(Boolean);
-  const poster = movie.poster_path ? `${CONFIG.IMAGES.POSTER_XL}${movie.poster_path}` : (movie.backdrop_path ? `${CONFIG.IMAGES.BACKDROP}${movie.backdrop_path}` : CONFIG.IMAGES.PLACEHOLDER);
+  const img = movie.poster_path
+    ? `${CONFIG.IMAGES.POSTER_XL}${movie.poster_path}`
+    : (movie.backdrop_path ? `${CONFIG.IMAGES.BACKDROP}${movie.backdrop_path}` : CONFIG.IMAGES.PLACEHOLDER);
   const year = (movie.first_air_date || movie.release_date || '').slice(0,4);
   const rating = movie.vote_average ? movie.vote_average.toFixed(1) : '';
   return `
     <div class="anime-card" onclick="openDetail(${movie.id},'${type}')">
       <div class="anime-poster-wrap">
-        <img class="anime-poster fade-img" src="${poster}" loading="lazy"
+        <img class="anime-poster fade-img" src="${img}" loading="lazy"
              onload="this.classList.add('loaded')"
              onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}';this.classList.add('loaded')">
         <div class="anime-overlay"><span class="play-icon">▶</span></div>
         ${rank > 0 ? `<span class="rank-number">${rank}</span>` : ''}
       </div>
-      <div class="anime-title-bar">${title.length > 22 ? title.slice(0,22)+'...' : title}</div>
-      <div class="anime-meta-bar"><span class="anime-badge-type">أنمي</span><span class="anime-badge-year">${toArabicNums(year)}</span>${rating ? `<span class="anime-badge-rating"><svg width="9" height="9" viewBox="0 0 24 24" fill="var(--gold)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> ${rating}</span>` : ''}</div>
+      <div class="anime-title-bar">${title.length > 32 ? title.slice(0,32)+'...' : title}</div>
+      <div class="anime-meta-bar">
+        <span class="anime-badge-type">أنمي</span>
+        <span class="anime-badge-year">${toArabicNums(year)}</span>
+        ${rating ? `<span class="anime-badge-rating"><svg width="11" height="11" viewBox="0 0 24 24" fill="#f5c518"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> ${rating}</span>` : ''}
+      </div>
     </div>`;
 }
 function toArabicNums(str) {
