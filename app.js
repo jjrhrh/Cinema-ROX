@@ -771,9 +771,9 @@ async function loadHomePage() {
   if (!page) return;
 
   const SECTIONS = [
-    { id: 'sec_popular',  title: 'الأفلام الرائجة',   endpoint: '/movie/popular',   type: 'movie', params: { page: Math.floor(Math.random()*5)+1 } },
-{ id: 'sec_toprated', title: 'الأعلى تقييماً',    endpoint: '/movie/top_rated', type: 'movie', params: { page: Math.floor(Math.random()*5)+1 } },
-{ id: 'sec_tvseries', title: 'أحدث المسلسلات',    endpoint: '/tv/popular',      type: 'tv',    params: { page: Math.floor(Math.random()*5)+1 } },
+{ id: 'sec_popular',  title: 'الأفلام الرائجة',   endpoint: '/movie/popular',   type: 'movie' },
+{ id: 'sec_toprated', title: 'الأعلى تقييماً',    endpoint: '/movie/top_rated', type: 'movie' },
+{ id: 'sec_tvseries', title: 'أحدث المسلسلات',    endpoint: '/tv/popular',      type: 'tv'    },
   ];
 
   // عرض الـ Skeleton فوراً بدون انتظار
