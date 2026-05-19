@@ -336,7 +336,8 @@ html, body {
   padding: 8px 12px 12px;
 }
 .otaku-mode .movies-row .anime-card {
-  width: calc(50% - 5px);
+  flex: 0 0 calc(31% - 8px);
+}
 }
 .movies-row::-webkit-scrollbar { display: none; }
 
