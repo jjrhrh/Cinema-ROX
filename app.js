@@ -2961,6 +2961,16 @@ async function applyAdvFilter() {
 })();
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', async () => {
+  // Scroll to top
+  const _topBtn = document.createElement('button');
+  _topBtn.className = 'rox-top-btn';
+  _topBtn.setAttribute('aria-label', 'رجوع للأعلى');
+  _topBtn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="18 15 12 9 6 15"/></svg>`;
+  _topBtn.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.body.appendChild(_topBtn);
+  window.addEventListener('scroll', () => {
+    _topBtn.classList.toggle('show', window.scrollY > 320);
+  }, { passive: true });
   bnavGo('home');
   setTimeout(checkAllAlerts, 4000);
   if ('serviceWorker' in navigator) {
