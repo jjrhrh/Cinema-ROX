@@ -2935,7 +2935,30 @@ async function applyAdvFilter() {
     container.innerHTML = '<p class="lib-empty">حدث خطأ ❌</p>';
     console.error(e);
   }
-        }                                                                    }
+      }
+// ===== AUTO IMAGE PATCHER =====
+(function () {
+  const fix = img => {
+    if (!img.getAttribute('loading')) img.setAttribute('loading', 'lazy');
+    if (!img.dataset.errPatched) {
+      img.dataset.errPatched = '1';
+      img.addEventListener('error', function () {
+        if (this.src !== CONFIG.IMAGES.PLACEHOLDER) this.src = CONFIG.IMAGES.PLACEHOLDER;
+      });
+    }
+  };
+  const patchAll = root => root.querySelectorAll('img').forEach(fix);
+  const obs = new MutationObserver(ms => ms.forEach(m =>
+    m.addedNodes.forEach(n => {
+      if (n.nodeType !== 1) return;
+      n.tagName === 'IMG' ? fix(n) : patchAll(n);
+    })
+  ));
+  document.addEventListener('DOMContentLoaded', () => {
+    patchAll(document.body);
+    obs.observe(document.body, { childList: true, subtree: true });
+  });
+})();
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', async () => {
   bnavGo('home');
