@@ -572,6 +572,39 @@ function buildAnimeCard(movie, rank = 0, type = 'tv') {
 function toArabicNums(str) {
   return String(str).replace(/[0-9]/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
 }
+function applyCardGlow() {
+  document.querySelectorAll('.movie-card[data-poster], .anime-card[data-poster]').forEach(card => {
+    if (card.dataset.glowApplied) return;
+    card.dataset.glowApplied = '1';
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      try {
+        const c = document.createElement('canvas');
+        c.width = 20; c.height = 20;
+        const ctx = c.getContext('2d');
+        ctx.drawImage(img, 0, 0, 20, 20);
+        const d = ctx.getImageData(0,0,20,20).data;
+        let r=0,g=0,b=0,n=0;
+        for (let i=0;i<d.length;i+=16){
+          const br=(d[i]+d[i+1]+d[i+2])/3;
+          if(br>30&&br<220){r+=d[i];g+=d[i+1];b+=d[i+2];n++;}
+        }
+        if(!n) return;
+        r=Math.round(r/n); g=Math.round(g/n); b=Math.round(b/n);
+        const max=Math.max(r,g,b), min=Math.min(r,g,b);
+        if(max===0||(max-min)/max<0.2) return;
+        const boost=1.3;
+        r=Math.min(255,Math.round(r+(max-r)*boost));
+        g=Math.min(255,Math.round(g+(max-g)*boost));
+        b=Math.min(255,Math.round(b+(max-b)*boost));
+        card.style.setProperty('--card-glow', `${r},${g},${b}`);
+        card.classList.add('has-glow');
+      } catch(e){}
+    };
+    img.src = card.dataset.poster;
+  });
+}
 function buildSection(title, movies, type = 'movie') {
   if (!movies.length) return '';
   return `
