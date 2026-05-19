@@ -433,12 +433,24 @@ let movies = await fetchMovies('/trending/movie/week', { limit: CONFIG.HERO.LIMI
     }
   });
 }
-
-function updateHeroInfo(movies, index) {
+async function getFanartBackdrop(tmdbId, mediaType) {
+  try {
+    const type = mediaType === 'tv' ? 'tv' : 'movies';
+    const res = await fetch(`${CONFIG.APIS.FANART_BASE}/${type}/${tmdbId}?api_key=${CONFIG.KEYS.FANART}`);
+    const data = await res.json();
+    const imgs = data.moviebackground || data.showbackground || [];
+    if (imgs.length > 0) return imgs[0].url;
+  } catch(e) {}
+  return null;
+}
+async function updateHeroInfo(movies, index) {
   const m = movies[index % movies.length];
   if (!m) return;
 
-  const imgUrl = m.backdrop_path
+  const fanartBd = await getFanartBackdrop(m.id, m.media_type || 'movie');
+  const imgUrl = fanartBd
+    ? fanartBd
+    : m.backdrop_path
     ? `${CONFIG.IMAGES[CONFIG.HERO.BACKDROP_SIZE]}${m.backdrop_path}`
     : `${CONFIG.IMAGES.POSTER_LG}${m.poster_path}`;
 
@@ -958,9 +970,19 @@ async function openDetail(id, type = 'movie') {
     const keywords = (kwData.keywords || kwData.results || []).slice(0, 8);
     const providers = (wpData.results?.SA?.flatrate || wpData.results?.US?.flatrate || []).slice(0, 5);
     const galleryImgs = (imgData.backdrops || []).slice(0, 8).map(b => `${CONFIG.IMAGES.ORIGINAL}${b.file_path}`);
-    const rawBackdrops = (imgData.backdrops || []).slice(0, 6).map(b => `${CONFIG.IMAGES.ORIGINAL}${b.file_path}`);
+    const fanartBds = await (async () => {
+      try {
+        const type = detail.media_type === 'tv' || detail.first_air_date ? 'tv' : 'movies';
+        const res = await fetch(`${CONFIG.APIS.FANART_BASE}/${type}/${detail.id}?api_key=${CONFIG.KEYS.FANART}`);
+        const data = await res.json();
+        const imgs = data.moviebackground || data.showbackground || [];
+        return imgs.slice(0, 6).map(i => i.url);
+      } catch(e) { return []; }
+    })();
+    const rawBackdrops = fanartBds.length
+      ? fanartBds
+      : (imgData.backdrops || []).slice(0, 6).map(b => `${CONFIG.IMAGES.ORIGINAL}${b.file_path}`);
     const backdrops = rawBackdrops.length ? rawBackdrops : (detail.backdrop_path ? [`${CONFIG.IMAGES.ORIGINAL}${detail.backdrop_path}`] : [`${CONFIG.IMAGES.POSTER_XL}${detail.poster_path}`]);
-
     const trailer = (videos.results || []).find(v => v.type === CONFIG.VIDEO.TRAILER_TYPE && v.site === 'YouTube')
                  || (videos.results || [])[0];
 
