@@ -4525,3 +4525,23 @@ body.cinema-mode .ws-overlay        { border-radius: 0; }
   gap: 3px;
   white-space: nowrap;
 }
+/* ===== ANIME CARD GLOW ===== */
+.anime-card {
+  transition: transform 0.25s ease, box-shadow 0.3s ease !important;
+}
+.anime-card:hover {
+  box-shadow: 0 0 0 1.5px rgba(147,51,234,0.5),
+              0 0 18px rgba(147,51,234,0.25),
+              0 8px 30px rgba(0,0,0,0.7) !important;
+  transform: translateY(-3px) !important;
+}
+.anime-poster-wrap::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 35%;
+  background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
+  pointer-events: none;
+  border-radius: 0 0 12px 12px;
+  z-index: 1;
+}
