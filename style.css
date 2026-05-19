@@ -3804,7 +3804,7 @@ body.cinema-mode .ws-overlay        { border-radius: 0; }
 }
 
 .rx-hcard {
-  width: 230px;
+  width: 242px;
   flex-shrink: 0;
   border-radius: 20px;
   background: linear-gradient(160deg, rgba(255,255,255,0.06) 0%, rgba(0,0,0,0.4) 100%);
@@ -3833,7 +3833,7 @@ body.cinema-mode .ws-overlay        { border-radius: 0; }
 }
 .rx-hcard-img {
   width: 100%;
-  height: 120px;
+  height: 130px;
   background-size: cover;
   background-position: center;
   position: relative;
@@ -3906,20 +3906,23 @@ body.cinema-mode .ws-overlay        { border-radius: 0; }
 }
 
 .rx-hcard-body {
-  padding: 10px 12px 4px;
+  padding: 12px 14px 6px;
   text-align: right;
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 5px;
+  font-family: 'Amiri', 'Cairo', serif;
+  min-height: 210px;
 }
 .rx-hcard-title {
-  font-size: 0.87rem;
-  font-weight: 800;
+  font-size: 1rem;
+  font-weight: 700;
   color: #fff;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-family: 'Amiri', 'Cairo', serif;
 }
 
 /* النجوم */
@@ -3945,9 +3948,10 @@ body.cinema-mode .ws-overlay        { border-radius: 0; }
 }
 
 .rx-hcard-last {
-  font-size: 0.7rem;
-  color: rgba(255,255,255,0.4);
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.45);
   font-weight: 600;
+  font-family: 'Amiri', 'Cairo', serif;
 }
 .rx-hcard-status {
   font-size: 0.72rem;
