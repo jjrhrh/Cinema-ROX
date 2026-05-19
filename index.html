@@ -41,6 +41,27 @@
     <span class="notif-badge" id="notifBadge" style="display:none">0</span>
   </button>
 </div>
+  <!-- SIDEBAR MENU -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<div class="sidebar-menu" id="sidebarMenu">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">Cinema <span>ROX</span></div>
+    <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
+  </div>
+
+  <div class="sidebar-section-title">📰 الأخبار</div>
+  <button class="sidebar-item" onclick="openSidebarNews('cinema')">🎬 أخبار الأفلام والمسلسلات</button>
+  <button class="sidebar-item" onclick="openSidebarNews('anime')">🎌 أخبار الأنمي</button>
+</div>
+
+<!-- NEWS PANEL -->
+<div class="news-panel" id="newsPanel">
+  <div class="news-panel-header">
+    <button class="news-panel-back" onclick="closeSidebarNews()">← رجوع</button>
+    <div class="news-panel-title" id="newsPanelTitle">الأخبار</div>
+  </div>
+  <div id="newsPanelFeed" class="news-panel-feed"></div>
+</div>
   <div class="swiper hero-swiper" id="heroSwiper" dir="ltr">
     <div class="swiper-wrapper" id="heroSwiperWrapper">
       <!-- slides injected by JS -->
