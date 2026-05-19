@@ -25,7 +25,15 @@
 }
 
 /* ===== BASE ===== */
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+*, *::before, *::after {
+  margin: 0; padding: 0; box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+::selection { background: transparent; }
+::-moz-selection { background: transparent; }
 html, body {
   background: #0a0000;
   color: var(--text);
