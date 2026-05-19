@@ -2135,6 +2135,28 @@ const svgRadar = `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/
   const animeRadarHTML = await loadAnimeRadarSection();
   page.innerHTML = `
     <div class="lib-header"><h2 class="lib-title">مكتبتي</h2></div>
+    <div class="lib-stats">
+      <div class="lib-stat-card">
+        <div class="lib-stat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#e50914" stroke-width="1.8"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
+        <div class="lib-stat-num">${watchlist.length}</div>
+        <div class="lib-stat-label">أرشيفي</div>
+      </div>
+      <div class="lib-stat-card">
+        <div class="lib-stat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <div class="lib-stat-num">${watchlater.length}</div>
+        <div class="lib-stat-label">انتظار</div>
+      </div>
+      <div class="lib-stat-card">
+        <div class="lib-stat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg></div>
+        <div class="lib-stat-num">${cwItems.length}</div>
+        <div class="lib-stat-label">جاري</div>
+      </div>
+      <div class="lib-stat-card">
+        <div class="lib-stat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#1ce783" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
+        <div class="lib-stat-num">${getLib('rox_alerts').length}</div>
+        <div class="lib-stat-label">تنبيهات</div>
+      </div>
+    </div>
     ${buildSection('lib-laser-magenta','lib-icon3d-magenta', svgArchive, 'أرشيفي الخاص',   wlHTML,  'rox_watchlist',  watchlist)}
     ${buildSection('lib-laser-cyan',   'lib-icon3d-cyan',    svgClock,   'قائمة الانتظار', wlrHTML, 'rox_watchlater', watchlater)}
     ${buildSection('lib-laser-orange', 'lib-icon3d-orange',  svgPlay,    'أكمل المشاهدة',  cwHTML,  '',               cwItems)}
