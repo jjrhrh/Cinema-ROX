@@ -2550,9 +2550,9 @@ async function loadRadarSection() {
 
         if (diff < 0) {
           const ago = Math.abs(diff);
-          const agoTxt = ago===1?'أمس':ago===2?'منذ يومين':`قبل ${ago} أيام`;
+          const agoTxt = ago===1?'أمس':ago===2?'منذ يومين':`منذ ${ago} أيام`;
           status = `الموسم ${ns} الحلقة ${ne} — نزلت ${agoTxt}\n${fullDate}`;
-          statusClass = ago<=2 ? 'rx-soon' : 'rx-days'; sortKey = 1;
+          statusClass = ago<=3 ? 'rx-soon' : ago<=7 ? 'rx-days' : 'rx-nodate'; sortKey = 1;
         } else if (diff===0) {
           isToday = true;
           status = `الموسم ${ns} الحلقة ${ne} — صدرت اليوم\n${timeStr} ${ampm}`;
