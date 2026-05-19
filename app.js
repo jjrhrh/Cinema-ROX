@@ -3064,4 +3064,3 @@ window.addEventListener('popstate', function () {
     goBack();
   }
 });
-})();
