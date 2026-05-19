@@ -882,7 +882,7 @@ function extractDominantColor(imgUrl, callback) {
 }
 
 function applyDynamicColor(rgb) {
-  if (!rgb) return;
+  if (!rgb) rgb = '229,9,20';
   document.documentElement.style.setProperty('--dynamic-color', `rgb(${rgb})`);
   document.documentElement.style.setProperty('--dynamic-glow', `rgba(${rgb},0.45)`);
   const btn = document.querySelector('.dp-action-watch');
