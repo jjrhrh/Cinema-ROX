@@ -2535,7 +2535,7 @@ async function loadRadarSection() {
         </div>` : '';
 
       const lastTxt = last
-        ? `موسم ${last.season_number} · حلقة ${last.episode_number}`
+        ? `الموسم ${last.season_number} · الحلقة ${last.episode_number}`
         : '—';
 
       let status = '', statusClass = 'rx-nodate', sortKey = 2;
