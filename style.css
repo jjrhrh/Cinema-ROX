@@ -4617,9 +4617,3 @@ body.cinema-mode .ws-overlay        { border-radius: 0; }
   border: 1px solid rgba(229,9,20,0.85);
   box-shadow: 0 0 0 1.5px rgba(229,9,20,0.7), 0 0 22px rgba(229,9,20,0.4), 0 8px 30px rgba(0,0,0,0.7);
 }
-.rank-number--red {
-  color: transparent;
-  -webkit-text-stroke: 2.5px #e50914;
-  text-shadow: 0 0 18px rgba(229,9,20,0.6), 0 0 35px rgba(229,9,20,0.3);
-  filter: drop-shadow(0 0 8px rgba(229,9,20,0.8)) drop-shadow(0 2px 8px rgba(0,0,0,0.95));
-} 
