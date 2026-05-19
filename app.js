@@ -2959,6 +2959,27 @@ async function applyAdvFilter() {
     obs.observe(document.body, { childList: true, subtree: true });
   });
 })();
+  // ===== OFFLINE DETECTION =====
+window.addEventListener('offline', () => {
+  showToast('📡 انقطع الاتصال بالإنترنت');
+  if (document.getElementById('roxOfflineBanner')) return;
+  const b = document.createElement('div');
+  b.id = 'roxOfflineBanner';
+  b.style.cssText = `
+    position:fixed; top:0; left:0; right:0; z-index:99999;
+    background:rgba(180,0,0,0.96); backdrop-filter:blur(12px);
+    color:#fff; text-align:center; padding:11px 16px;
+    font-family:'Cairo',sans-serif; font-size:0.83rem;
+    font-weight:700; letter-spacing:0.02em;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  `;
+  b.textContent = '📡 لا يوجد اتصال بالإنترنت — تحقق من شبكتك';
+  document.body.prepend(b);
+});
+window.addEventListener('online', () => {
+  document.getElementById('roxOfflineBanner')?.remove();
+  showToast('✅ عاد الاتصال بالإنترنت');
+});
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', async () => {
   // Scroll to top
