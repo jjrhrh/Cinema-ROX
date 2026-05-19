@@ -4479,19 +4479,14 @@ body.cinema-mode .ws-overlay        { border-radius: 0; }
 .anime-card:hover .anime-overlay { opacity: 1; }
 
 .anime-title-bar {
-  position: absolute;
-  bottom: 44px;
-  right: 0; left: 0;
-  padding: 28px 8px 6px;
-  background: linear-gradient(to top, rgba(0,0,0,0.92) 60%, transparent);
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 700;
   color: #fff;
+  padding: 6px 6px 2px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: right;
-  border-radius: 0 0 12px 12px;
 }
 .anime-meta-bar {
   position: absolute;
