@@ -2551,24 +2551,24 @@ async function loadRadarSection() {
         if (diff < 0) {
           const ago = Math.abs(diff);
           const agoTxt = ago===1?'أمس':ago===2?'منذ يومين':`قبل ${ago} أيام`;
-          status = `موسم ${ns} حلقة ${ne} — نزلت ${agoTxt}\n${fullDate}`;
+          status = `الموسم ${ns} الحلقة ${ne} — نزلت ${agoTxt}\n${fullDate}`;
           statusClass = ago<=2 ? 'rx-soon' : 'rx-days'; sortKey = 1;
         } else if (diff===0) {
           isToday = true;
-          status = `موسم ${ns} حلقة ${ne} — صدرت اليوم\n${timeStr} ${ampm}`;
+          status = `الموسم ${ns} الحلقة ${ne} — صدرت اليوم\n${timeStr} ${ampm}`;
           statusClass = 'rx-soon'; sortKey = 0;
         } else if (diff===1) {
-          status = `موسم ${ns} حلقة ${ne} — غداً\n${fullDate} — ${timeStr} ${ampm}`;
+          status = `الموسم ${ns} الحلقة ${ne} — غداً\n${fullDate} — ${timeStr} ${ampm}`;
           statusClass = 'rx-soon'; sortKey = 0;
           const target = new Date(next.air_date).getTime();
           countdownHtml = `<div class="rx-countdown" data-target="${target}">⏳ جاري الحساب...</div>`;
         } else if (diff<=7) {
-          status = `موسم ${ns} حلقة ${ne} — بعد ${diff} أيام\n${fullDate}`;
+          status = `الموسم ${ns} الحلقة ${ne} — بعد ${diff} أيام\n${fullDate} — ${timeStr} ${ampm}`;
           statusClass = 'rx-days'; sortKey = 0;
           const target = new Date(next.air_date).getTime();
           countdownHtml = `<div class="rx-countdown" data-target="${target}">⏳ جاري الحساب...</div>`;
         } else {
-          status = `موسم ${ns} حلقة ${ne}\n${fullDate}`;
+          status = `الموسم ${ns} الحلقة ${ne}\n${fullDate} — ${timeStr} ${ampm}`;
           statusClass = 'rx-days'; sortKey = 0;
         }
       } else if (last?.air_date) {
@@ -2577,16 +2577,16 @@ async function loadRadarSection() {
         const fullDate = new Date(last.air_date).toLocaleDateString('ar-SA',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
         if (diffLast===0) {
           isToday = true;
-          status = `موسم ${ns} حلقة ${ne} — صدرت اليوم\n${fullDate}`;
+          status = `الموسم ${ns} الحلقة ${ne} — صدرت اليوم\n${fullDate}`;
           statusClass = 'rx-soon'; sortKey = 0;
         } else if (diffLast===1) {
-          status = `موسم ${ns} حلقة ${ne} — نزلت أمس\n${fullDate}`;
+          status = `الموسم ${ns} الحلقة ${ne} — نزلت أمس\n${fullDate}`;
           statusClass = 'rx-soon'; sortKey = 1;
         } else if (diffLast<=7) {
-          status = `موسم ${ns} حلقة ${ne} — قبل ${diffLast} أيام\n${fullDate}`;
+          status = `الموسم ${ns} الحلقة ${ne} — قبل ${diffLast} أيام\n${fullDate}`;
           statusClass = 'rx-days'; sortKey = 1;
         } else {
-          status = `موسم ${ns} حلقة ${ne} — آخر حلقة\n${fullDate}`;
+          status = `الموسم ${ns} الحلقة ${ne} — آخر حلقة متاحة\n${fullDate}`;
           statusClass = 'rx-nodate'; sortKey = 2;
         }
       } else {
