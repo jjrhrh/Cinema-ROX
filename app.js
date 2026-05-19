@@ -499,8 +499,15 @@ document.body.style.backgroundImage = '';
   const rating = movie.vote_average ? movie.vote_average.toFixed(1) : '';
   const year   = (movie.release_date || movie.first_air_date || '').slice(0,4);
   const typeLabel = type === 'tv' ? 'SERIES' : 'MOVIE';
+  const isNew = (() => {
+    const d = movie.release_date || movie.first_air_date;
+    if (!d) return false;
+    return (Date.now() - new Date(d).getTime()) < 60*24*60*60*1000;
+  })();
   return `
-  <div class="movie-card ${extraClass}" data-id="${movie.id}" data-type="${type}" onclick="openDetail(this.dataset.id,this.dataset.type)">
+  <div class="movie-card ${extraClass}${isNew?' movie-card--new':''}" data-id="${movie.id}" data-type="${type}"
+    onclick="openDetail(this.dataset.id,this.dataset.type)"
+    data-poster="${img}">
     <div class="movie-poster-wrap">
       ${rank > 0 ? `<span class="rank-number">${rank}</span>` : ''}
       <img class="movie-poster fade-img" src="${img}" alt="${title}" loading="lazy"
