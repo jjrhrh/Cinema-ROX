@@ -827,6 +827,8 @@ function extractDominantColor(imgUrl, callback) {
     if (count===0) { callback(null); return; }
     r=Math.round(r/count); g=Math.round(g/count); b=Math.round(b/count);
     const max=Math.max(r,g,b), min=Math.min(r,g,b);
+    const saturation = max === 0 ? 0 : (max - min) / max;
+    if (saturation < 0.25) { callback(null); return; }
     const boost = 1.4;
     r=Math.min(255,Math.round(r+(max-r)*boost));
     g=Math.min(255,Math.round(g+(max-g)*boost));
