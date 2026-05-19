@@ -347,7 +347,7 @@ html, body {
   min-width: 0;
   cursor: pointer;
   border-radius: 14px;
-  overflow: hidden;
+  overflow: visible;
   background: #111;
   transition: transform 0.25s ease, box-shadow 0.3s ease;
   scroll-snap-align: start;
@@ -4582,4 +4582,37 @@ body.cinema-mode .ws-overlay        { border-radius: 0; }
   pointer-events: none;
   border-radius: 0 0 12px 12px;
   z-index: 1;
+}
+/* ===== NEW BADGE ===== */
+.mc-new-badge {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  z-index: 4;
+  background: linear-gradient(135deg, #e50914, #b00000);
+  color: #fff;
+  font-size: 0.48rem;
+  font-weight: 900;
+  padding: 2px 6px;
+  border-radius: 999px;
+  letter-spacing: 0.3px;
+  box-shadow: 0 0 8px rgba(229,9,20,0.6);
+  animation: newBadgePulse 2s ease-in-out infinite;
+  pointer-events: none;
+  white-space: nowrap;
+}
+@keyframes newBadgePulse {
+  0%,100% { box-shadow: 0 0 6px rgba(229,9,20,0.5); }
+  50%     { box-shadow: 0 0 14px rgba(229,9,20,0.9), 0 0 25px rgba(229,9,20,0.4); }
+}
+.movie-card--new {
+  box-shadow:
+    0 0 0 1.5px rgba(229,9,20,0.45),
+    0 4px 20px rgba(0,0,0,0.5);
+}
+.movie-card--new:hover {
+  box-shadow:
+    0 0 0 1.5px rgba(229,9,20,0.7),
+    0 0 20px rgba(229,9,20,0.35),
+    0 8px 30px rgba(0,0,0,0.7);
 }
