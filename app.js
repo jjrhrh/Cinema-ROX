@@ -2868,6 +2868,7 @@ async function loadAnimeRadarSection() {
   }, 300);
 
   return `<div class="rx-hscroll"><div class="rx-hrow">${sorted.map(c=>c.html).join('')}</div></div>`;
+}
 // ===== ADVANCED FILTER =====
 function toggleAdvFilter() {
   const row = document.getElementById('searchFiltersRow');
@@ -2957,7 +2958,7 @@ async function applyAdvFilter() {
     container.innerHTML = '<p class="lib-empty">حدث خطأ ❌</p>';
     console.error(e);
   }
-      }
+}
 // ===== AUTO IMAGE PATCHER =====
 (function () {
   const fix = img => {
