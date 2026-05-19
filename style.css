@@ -1818,18 +1818,19 @@ html, body {
 } 
 .rank-number {
   position: absolute;
-  bottom: 8px;
-  left: 10px;
-  font-size: 2.8rem;
+  left: 6px;
+  bottom: 6px;
+  font-size: 3.2rem;
   font-weight: 900;
   color: transparent;
-  -webkit-text-stroke: 1.5px rgba(255,255,255,0.6);
-  font-family: 'Cairo', sans-serif;
-  letter-spacing: -2px;
+  -webkit-text-stroke: 2.5px #e50914;
+  text-shadow: 0 0 18px rgba(229,9,20,0.6), 0 0 35px rgba(229,9,20,0.3);
   line-height: 1;
-  z-index: 3;
+  z-index: 4;
   pointer-events: none;
-  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.9));
+  user-select: none;
+  font-family: 'Cairo', sans-serif;
+  filter: drop-shadow(0 0 8px rgba(229,9,20,0.8)) drop-shadow(0 2px 8px rgba(0,0,0,0.95));
 }
 .studio-bar {
   padding: 12px 16px;
