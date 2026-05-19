@@ -2551,7 +2551,11 @@ async function loadRadarSection() {
         if (diff < 0) {
           const ago = Math.abs(diff);
           const agoTxt = ago===1?'أمس':ago===2?'منذ يومين':`منذ ${ago} أيام`;
-          status = `الموسم ${ns} الحلقة ${ne} — نزلت ${agoTxt}\n${fullDate}`;
+          const srcEp = last || next;
+          const srcNs = srcEp?.season_number ?? ns;
+          const srcNe = srcEp?.episode_number ?? ne;
+          const srcDate = srcEp?.air_date ? new Date(srcEp.air_date).toLocaleDateString('ar-SA',{weekday:'long',day:'numeric',month:'long',year:'numeric'}) : fullDate;
+          status = `الموسم ${srcNs} الحلقة ${srcNe} — نزلت ${agoTxt}\n${srcDate}`;
           statusClass = ago<=3 ? 'rx-soon' : ago<=7 ? 'rx-days' : 'rx-nodate'; sortKey = 1;
         } else if (diff===0) {
           isToday = true;
