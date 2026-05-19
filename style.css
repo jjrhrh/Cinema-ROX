@@ -338,7 +338,6 @@ html, body {
 .otaku-mode .movies-row .anime-card {
   flex: 0 0 calc(31% - 8px);
 }
-}
 .movies-row::-webkit-scrollbar { display: none; }
 
 /* ===== MOVIE CARD ===== */
