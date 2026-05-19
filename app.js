@@ -509,6 +509,7 @@ document.body.style.backgroundImage = '';
     onclick="openDetail(this.dataset.id,this.dataset.type)"
     data-poster="${img}">
     <div class="movie-poster-wrap">
+      ${isNew ? `<span class="mc-new-badge">✦ جديد</span>` : ''}
       ${rank > 0 ? `<span class="rank-number">${rank}</span>` : ''}
       <img class="movie-poster fade-img" src="${img}" alt="${title}" loading="lazy"
            onload="this.classList.add('loaded')"
