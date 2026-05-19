@@ -2952,3 +2952,17 @@ async function loadNewsSection(containerId, feedUrl, color) {
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js').catch(() => {});
 }
+// ===== HARDWARE BACK BUTTON =====
+history.replaceState({ rox: true }, '');
+history.pushState({ rox: true }, '');
+
+window.addEventListener('popstate', function () {
+  history.pushState({ rox: true }, '');
+  const wp = document.getElementById('watchPage');
+  const dp = document.getElementById('detailPage');
+  if (wp?.classList.contains('active')) {
+    wsGoBack();
+  } else if (dp?.classList.contains('active')) {
+    goBack();
+  }
+});
