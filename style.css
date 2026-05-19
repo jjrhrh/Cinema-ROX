@@ -1810,11 +1810,6 @@ html, body {
   pointer-events: none;
   filter: drop-shadow(0 2px 6px rgba(0,0,0,0.9));
 }
-.anime-card .movie-poster-wrap {
-  z-index: 2;
-  margin-left: 30px;
-  position: relative;
-} 
 .studio-bar {
   padding: 12px 16px;
   background: rgba(0,0,0,0.4);
