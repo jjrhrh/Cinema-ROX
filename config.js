@@ -259,7 +259,8 @@ function buildImageURL(path, size = 'LG') {
 function buildTMDBUrl(endpoint, params = {}) {
   const url = new URL(`${CONFIG.API.TMDB_BASE}${endpoint}`);
   url.searchParams.set('api_key', CONFIG.KEYS.TMDB);
-  url.searchParams.set('language', CONFIG.LOCALE.DEFAULT_LANG);
+  url.searchParams.set('language', 'en-US');
+url.searchParams.set('include_image_language', 'ar,en,null');
   url.searchParams.set('region',   CONFIG.LOCALE.REGION);
   for (const [key, val] of Object.entries(params)) {
     url.searchParams.set(key, val);
