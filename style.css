@@ -4459,7 +4459,7 @@ body.cinema-mode .ws-overlay        { border-radius: 0; }
   position: relative;
   aspect-ratio: 2/3.2;
   overflow: hidden;
-  border-radius: 12px;
+  border-radius: 14px;
   width: 100%;
 }
 .anime-poster {
