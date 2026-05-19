@@ -342,7 +342,8 @@ html, body {
 
 /* ===== MOVIE CARD ===== */
 .movie-card {
-  flex: 0 0 calc(40% - 8px);
+  flex: 0 0 calc(38% - 8px);
+  position: relative;
   min-width: 0;
   cursor: pointer;
   border-radius: 14px;
