@@ -928,16 +928,6 @@ async function openDetail(id, type = 'movie') {
       safeJson(buildTMDBUrl(`${ep}/keywords`)),
       safeJson(buildTMDBUrl(`${ep}/watch/providers`)),
     ]);
-    const detail   = await dRes.json();
-    const arDetail = await arRes.json();
-    const videos  = await vRes.json();
-    const credits = await cRes.json();
-    const revData = await rRes.json();
-    const simData = await simRes.json();
-    const recData = await recRes.json();
-    const imgData = await imgRes.json();
-    const kwData  = await kwRes.json();
-    const wpData  = await wpRes.json();
     let keywords = (kwData.keywords || kwData.results || []).slice(0, 8);
 if (keywords.length) {
   try {
