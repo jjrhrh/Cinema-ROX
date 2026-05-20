@@ -1180,10 +1180,7 @@ const reviewsHTML = `
         ${(() => { const p = getProgress(id); return p ? `أكمل المشاهدة — ح${p.episode + 1}` : 'شاهد الآن'; })()}
       </button>
       <div class="dp-action-row2">
-        <button class="dp-action-fav" onclick="openCompare(${id},'${title}','${type}','${poster}','${rating}','${year}','${runtime}','${genres}')">
-          <svg class="dp-act-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-          <span>قارن</span>
-        </button>
+        <button class="dp-action-fav dp-btn-fav"
         <button class="dp-action-fav dp-btn-fav" data-id="${id}" onclick="addToWatchlist(${id},'${type}')">
           <svg class="dp-act-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           <span>المفضلة</span>
@@ -1215,6 +1212,13 @@ const reviewsHTML = `
           </svg>
           <span>مشاركة</span>
         </button>`}
+        <span>مشاركة</span>
+        </button>`}
+        <button class="dp-action-fav" onclick="openCompare(${id},'${title}','${type}','${poster}','${rating}','${year}','${runtime}','${genres}')">
+          <svg class="dp-act-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          <span>قارن</span>
+        </button>
+        ${type === 'tv' ?
         ${type === 'tv' ? `<button class="dp-action-fav dp-btn-alert ${getLib('rox_alerts').find(i=>String(i.id)===String(id))?'active':''}" id="alertBtn_${id}" data-title="${(title||'').replace(/'/g,'&#39;')}" onclick="toggleAlertSubscription(${id},this.dataset.title,'tv')">
           <svg class="dp-act-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
           <span>${getLib('rox_alerts').find(i=>String(i.id)===String(id))?'مفعّل':'تنبيه'}</span>
