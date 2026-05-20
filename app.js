@@ -38,6 +38,10 @@
       display:flex;align-items:center;justify-content:center;
       font-family:Cairo,sans-serif;
       overflow:hidden;
+      visibility:visible !important;
+    }
+    .rox-login-card, .rox-login-card * {
+      visibility:visible !important;
     }
     .rox-particles {
       position:absolute;inset:0;pointer-events:none;overflow:hidden;
