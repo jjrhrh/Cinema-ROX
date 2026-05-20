@@ -955,7 +955,7 @@ if (keywords.length) {
     const fanartBds = await (async () => {
       try {
         const type = detail.media_type === 'tv' || detail.first_air_date ? 'tv' : 'movies';
-        const res = await fetch(`${CONFIG.APIS.FANART_BASE}/${type}/${detail.id}?api_key=${CONFIG.KEYS.FANART}`);
+        const res = await fetch(`${CONFIG.API.FANART_BASE}/${type}/${detail.id}?api_key=${CONFIG.KEYS.FANART}`);
         const data = await res.json();
         const imgs = data.moviebackground || data.showbackground || [];
         return imgs.slice(0, 6).map(i => i.url);
