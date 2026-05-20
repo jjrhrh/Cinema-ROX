@@ -1702,7 +1702,27 @@ async function openWatchPage(id, type, season = 1, episode = 1, resumeSec = 0, r
     const year  = (det.release_date || det.first_air_date || '').slice(0, 4);
     const rating = det.vote_average ? det.vote_average.toFixed(1) : '';
     const genres = (det.genres || []).map(g => g.name).join(' · ');
-    const overview = det.overview || 'لا يوجد وصف.';
+    const arData = await fetch(buildTMDBUrl(`/${type}/${id}`, { language: 'ar' })).then(r => r.json());
+let overview = arData.overview || '';
+if (!overview && detail.overview) {
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 300,
+        messages: [{ role: 'user', content: `ترجم هذا النص للعربية بشكل طبيعي بدون أي كلام إضافي:\n${detail.overview}` }]
+      })
+    });
+    const d = await res.json();
+    overview = d.content?.[0]?.text || detail.overview;
+  } catch {
+    overview = detail.overview;
+  }
+}
+const title = arData.title || arData.name || detail.title || detail.name || '';
+const genres = (arData.genres || detail.genres || []).map(g => `<span class="genre-tag">${g.name}</span>`).join('');
     const S = CONFIG.SERVERS;
     // احفظ فوراً في Continue Watching
     const cwPoster = det.poster_path ? CONFIG.IMAGES.POSTER_MD + det.poster_path : CONFIG.IMAGES.PLACEHOLDER;
