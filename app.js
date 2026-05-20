@@ -2082,8 +2082,8 @@ function loadProfilePage() {
           </div>
         </div>
         <button class="prof-signout" onclick="roxSignOut()">تسجيل الخروج</button>
-      </div>
-    <div id="watchHistoryPanel" style="display:none;padding:0 4px 8px">
+      <button class="prof-signout" onclick="roxSignOut()">تسجيل الخروج</button>
+        <div id="watchHistoryPanel" style="display:none;padding:0 4px 8px">
             ${(()=>{
               const items = cwGetAll();
               if (!items.length) return '<p style="color:var(--text3);font-size:0.8rem;text-align:center;padding:12px">لا توجد مشاهدات بعد</p>';
@@ -2101,7 +2101,7 @@ function loadProfilePage() {
                 </div>`).join('')}</div>`;
             })()}
           </div>
-  }
+      </div>\`;
 }
 function clearLibraryConfirm() {
   if (confirm('⚠️ هل تريد مسح المكتبة كاملاً؟')) {
