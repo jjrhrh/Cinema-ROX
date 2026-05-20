@@ -995,8 +995,6 @@ async function openDetail(id, type = 'movie') {
   : (detail.number_of_seasons
       ? `${detail.number_of_seasons} موسم · ${detail.number_of_episodes || ''} حلقة`
       : (detail.episode_run_time?.[0] ? `${detail.episode_run_time[0]} د/حلقة` : ''));
-    const genres  = (detail.genres || []).map(g => `<span class="detail-genre">${g.name}</span>`).join('');
-    const overview= detail.overview || 'لا يوجد وصف متاح.';
     const cast    = (credits.cast || []).slice(0, 12);
 
     const castHTML = cast.length ? `
