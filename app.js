@@ -971,17 +971,10 @@ async function openDetail(id, type = 'movie') {
     const genres   = (arDetail.genres || detail.genres || []).map(g => `<span class="genre-tag">${g.name}</span>`).join('');
     if (!arDetail.overview && detail.overview) {
       try {
-        const tRes = await fetch('https://api.anthropic.com/v1/messages', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            model: 'claude-sonnet-4-20250514',
-            max_tokens: 300,
-            messages: [{ role: 'user', content: `ترجم هذا النص للعربية بشكل طبيعي بدون أي كلام إضافي:\n${detail.overview}` }]
-          })
-        });
+        const q   = encodeURIComponent(detail.overview);
+        const tRes = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ar&dt=t&q=${q}`);
         const tData = await tRes.json();
-        overview = tData.content?.[0]?.text || detail.overview;
+        overview = tData[0].map(s => s[0]).join('') || detail.overview;
       } catch { overview = detail.overview; }
     }
     const year    = (detail.release_date || detail.first_air_date || '').slice(0, 4);
