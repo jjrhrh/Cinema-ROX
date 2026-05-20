@@ -2082,7 +2082,7 @@ function loadProfilePage() {
           </div>
         </div>
         <button class="prof-signout" onclick="roxSignOut()">تسجيل الخروج</button>
-      </div>`;
+      </div>
     <div id="watchHistoryPanel" style="display:none;padding:0 4px 8px">
             ${(()=>{
               const items = cwGetAll();
