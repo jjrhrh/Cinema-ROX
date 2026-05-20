@@ -1098,8 +1098,9 @@ async function openDetail(id, type = 'movie') {
 
   try {
     const ep = type === 'tv' ? `/tv/${id}` : `/movie/${id}`;
-    const [dRes, vRes, cRes, rRes, simRes, recRes, imgRes, kwRes, wpRes] = await Promise.all([
+    const [dRes, arRes, vRes, cRes, rRes, simRes, recRes, imgRes, kwRes, wpRes] = await Promise.all([
       fetch(buildTMDBUrl(ep)),
+      fetch(buildTMDBUrl(ep, { language: 'ar' })),
       fetch(buildTMDBUrl(`${ep}/videos`)),
       fetch(buildTMDBUrl(`${ep}/credits`)),
       fetch(buildTMDBUrl(`${ep}/reviews`)),
@@ -1109,7 +1110,8 @@ async function openDetail(id, type = 'movie') {
       fetch(buildTMDBUrl(`${ep}/keywords`)),
       fetch(buildTMDBUrl(`${ep}/watch/providers`)),
     ]);
-    const detail  = await dRes.json();
+    const detail   = await dRes.json();
+    const arDetail = await arRes.json();
     const videos  = await vRes.json();
     const credits = await cRes.json();
     const revData = await rRes.json();
@@ -1148,8 +1150,10 @@ async function openDetail(id, type = 'movie') {
     const voteCount = detail.vote_count
       ? detail.vote_count.toLocaleString('ar-SA') : '';
     const title   = type === 'movie'
-      ? (detail.title || detail.original_title)
-      : (detail.name  || detail.original_name);
+      ? (arDetail.title || detail.title || detail.original_title)
+      : (arDetail.name  || detail.name  || detail.original_name);
+    const overview = arDetail.overview || detail.overview || '';
+    const genres   = (arDetail.genres || detail.genres || []).map(g => `<span class="genre-tag">${g.name}</span>`).join('');
     const year    = (detail.release_date || detail.first_air_date || '').slice(0, 4);
     
     const rating  = detail.vote_average ? detail.vote_average.toFixed(1) : 'N/A';
