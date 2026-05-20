@@ -1676,10 +1676,10 @@ async function openWatchPage(id, type, season = 1, episode = 1, resumeSec = 0, r
     const ep = type === 'tv' ? `/tv/${id}` : `/movie/${id}`;
     const [det] = await Promise.all([fetch(buildTMDBUrl(ep)).then(r => r.json())]);
     const backdrop = det.backdrop_path ? CONFIG.IMAGES.BACKDROP + det.backdrop_path : '';
-    const title = type === 'movie' ? (det.title || det.original_title) : (det.name || det.original_name);
+    let title = type === 'movie' ? (det.title || det.original_title) : (det.name || det.original_name);
     const year  = (det.release_date || det.first_air_date || '').slice(0, 4);
     const rating = det.vote_average ? det.vote_average.toFixed(1) : '';
-    const genres = (det.genres || []).map(g => g.name).join(' · ');
+    let genres = (det.genres || []).map(g => g.name).join(' · ');
     const arData = await fetch(buildTMDBUrl(`/${type}/${id}`, { language: 'ar' })).then(r => r.json());
 let overview = arData.overview || '';
 if (!overview && det.overview) {
