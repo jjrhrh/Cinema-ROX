@@ -3188,7 +3188,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   window.addEventListener('scroll', () => {
     _topBtn.classList.toggle('show', window.scrollY > 320);
   }, { passive: true });
-  bnavGo('home');
+  showPage('homePage');
+initHomePage();
   setTimeout(checkAllAlerts, 4000);
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js', { scope: '/' })
