@@ -916,7 +916,7 @@ function applyDynamicColor(rgb) {
   const row2Btns = document.querySelectorAll('.dp-action-fav');
   const sections = document.querySelectorAll('.detail-section-title');
   if (btn) {
-    btn.style.setProperty('background', '#e50914');${rgb},0.7))`, 'important');
+    btn.style.setProperty('background', '#e50914', 'important');
     btn.style.setProperty('box-shadow', `0 4px 28px rgba(${rgb},0.55)`, 'important');
     btn.style.color = '#fff';
   }
