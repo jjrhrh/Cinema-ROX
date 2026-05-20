@@ -935,7 +935,16 @@ async function openDetail(id, type = 'movie') {
     const imgData = await imgRes.json();
     const kwData  = await kwRes.json();
     const wpData  = await wpRes.json();
-    const keywords = (kwData.keywords || kwData.results || []).slice(0, 8);
+    let keywords = (kwData.keywords || kwData.results || []).slice(0, 8);
+if (keywords.length) {
+  try {
+    const q = encodeURIComponent(keywords.map(k=>k.name).join('\n'));
+    const r = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ar&dt=t&q=${q}`);
+    const d = await r.json();
+    const parts = d[0].map(s=>s[0]).join('').split('\n');
+    keywords = keywords.map((k,i)=>({...k, name:(parts[i]||k.name)}));
+  } catch {}
+}
     const providers = (wpData.results?.SA?.flatrate || wpData.results?.US?.flatrate || []).slice(0, 5);
     const galleryImgs = (imgData.backdrops || []).slice(0, 8).map(b => ({
       full: `${CONFIG.IMAGES.ORIGINAL}${b.file_path}`,
@@ -983,7 +992,15 @@ async function openDetail(id, type = 'movie') {
       } catch { overview = detail.overview; }
     }
     const year    = (detail.release_date || detail.first_air_date || '').slice(0, 4);
-    
+
+    if (!arDetail.title && !arDetail.name && title) {
+  try {
+    const q = encodeURIComponent(title);
+    const r = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ar&dt=t&q=${q}`);
+    const d = await r.json();
+    title = d[0].map(s=>s[0]).join('') || title;
+  } catch {}
+    }
     const rating  = detail.vote_average ? detail.vote_average.toFixed(1) : 'N/A';
     const director = (credits.crew||[]).find(c=>c.job==='Director');
     const awards = (detail.production_companies||[]).length ? [
