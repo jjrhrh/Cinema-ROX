@@ -2990,10 +2990,12 @@ function openImgLightbox(full, md, sm) {
 async function roxDlImg(url, label) {
   try {
     showToast(`⏳ جاري تحميل ${label}...`);
-    const res  = await fetch(url);
+    const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
+    const res = await fetch(proxyUrl);
+    if (!res.ok) throw new Error();
     const blob = await res.blob();
-    const a    = document.createElement('a');
-    a.href     = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
     a.download = `cinema-rox-${label}-${Date.now()}.jpg`;
     a.click();
     URL.revokeObjectURL(a.href);
