@@ -913,17 +913,20 @@ async function openDetail(id, type = 'movie') {
 
   try {
     const ep = type === 'tv' ? `/tv/${id}` : `/movie/${id}`;
-    const [dRes, arRes, vRes, cRes, rRes, simRes, recRes, imgRes, kwRes, wpRes] = await Promise.all([
-      fetch(buildTMDBUrl(ep)),
-      fetch(buildTMDBUrl(ep, { language: 'ar' })),
-      fetch(buildTMDBUrl(`${ep}/videos`)),
-      fetch(buildTMDBUrl(`${ep}/credits`)),
-      fetch(buildTMDBUrl(`${ep}/reviews`)),
-      fetch(buildTMDBUrl(`${ep}/similar`)),
-      fetch(buildTMDBUrl(`${ep}/recommendations`)),
-      fetch(buildTMDBUrl(`${ep}/images`)),
-      fetch(buildTMDBUrl(`${ep}/keywords`)),
-      fetch(buildTMDBUrl(`${ep}/watch/providers`)),
+    const safeJson = async (url) => {
+      try { const r = await fetch(url); return r.ok ? r.json() : {}; } catch { return {}; }
+    };
+    const [detail, arDetail, videos, credits, revData, simData, recData, imgData, kwData, wpData] = await Promise.all([
+      safeJson(buildTMDBUrl(ep)),
+      safeJson(buildTMDBUrl(ep, { language: 'ar' })),
+      safeJson(buildTMDBUrl(`${ep}/videos`)),
+      safeJson(buildTMDBUrl(`${ep}/credits`)),
+      safeJson(buildTMDBUrl(`${ep}/reviews`)),
+      safeJson(buildTMDBUrl(`${ep}/similar`)),
+      safeJson(buildTMDBUrl(`${ep}/recommendations`)),
+      safeJson(buildTMDBUrl(`${ep}/images`)),
+      safeJson(buildTMDBUrl(`${ep}/keywords`)),
+      safeJson(buildTMDBUrl(`${ep}/watch/providers`)),
     ]);
     const detail   = await dRes.json();
     const arDetail = await arRes.json();
