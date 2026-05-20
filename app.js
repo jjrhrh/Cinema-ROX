@@ -1705,11 +1705,15 @@ const isAnime = (det.genres||[]).some(g => g.id === 16)
 
 const animeParams = '&lang=ja&audio=ja&dubbed=false&dub=false';
 const animeCC = `https://vidsrc.to/embed/tv/${id}/${season}/${episode}`;
-const srvs = [
-  { icon:'🎯', name:'ROX',     desc:'مشغلي 🔥',  url: ep?`${S.ANIME}${id}/${season}/${episode}${animeParams}`:`${S.MOV}${id}`, rox:true, active:true },
-  { icon:'🎌', name:'PRIME',   desc:'#01', url: ep?`${S.ANIME}${id}/${season}/${episode}${animeParams}`:`${S.MOV}${id}` },
-  { icon:'⚡', name:'NEXUS',   desc:'#02', url: ep?`${S.ANIME2}${id}/${season}/${episode}`:`${S.MOV2}${id}` },
-  { icon:'💎', name:'TITAN',   desc:'#03', url: ep?`${S.ANIME3}${id}/${season}/${episode}`:`${S.MOV3}${id}` },
+const vipSrvs = [
+  { icon:'🎯', name:'ROX',     desc:'مشغلي 🔥', url: ep?`${S.ANIME}${id}/${season}/${episode}${animeParams}`:`${S.MOV}${id}`, rox:true, active:true },
+  { icon:'🎌', name:'PRIME',   desc:'#01',       url: ep?`${S.ANIME}${id}/${season}/${episode}${animeParams}`:`${S.MOV}${id}` },
+  { icon:'⚡', name:'NEXUS',   desc:'#02',       url: ep?`${S.ANIME2}${id}/${season}/${episode}`:`${S.MOV2}${id}` },
+  { icon:'💎', name:'TITAN',   desc:'#03',       url: ep?`${S.ANIME3}${id}/${season}/${episode}`:`${S.MOV3}${id}` },
+  { icon:'🌠', name:'NEXUS-X', desc:'4K #22',    url: ep?`${S.ANIME22}${id}-${season}-${episode}`:`${S.MOV24}${id}` },
+  { icon:'🏅', name:'VULCAN',  desc:'VIP #21',   url: ep?`${S.ANIME21}${id}/${season}/${episode}`:`${S.MOV22}${id}&tmdb=1` },
+];
+const proSrvs = [
   { icon:'🌅', name:'AURORA',  desc:'#04', url: ep?`${S.ANIME6}${id}/${season}/${episode}`:`${S.MOV4}${id}` },
   { icon:'🌌', name:'COSMOS',  desc:'#05', url: ep?`${S.ANIME4}${id}/${season}/${episode}`:`${S.MOV5}${id}` },
   { icon:'👑', name:'ZENITH',  desc:'#06', url: ep?`${S.ANIME5}${id}/${season}/${episode}`:`${S.MOV6}${id}` },
@@ -1718,6 +1722,8 @@ const srvs = [
   { icon:'🌙', name:'ECLIPSE', desc:'#09', url: ep?`${S.ANIME9}${id}/${season}/${episode}`:`${S.MOV9}${id}` },
   { icon:'✨', name:'NOVA',    desc:'#10', url: ep?`${S.ANIME10}${id}/${season}/${episode}`:`${S.MOV10}${id}` },
   { icon:'🌟', name:'VEGA',    desc:'#11', url: ep?`${S.ANIME16}${id}/${season}/${episode}`:`${S.MOV11}${id}` },
+];
+const freeSrvs = [
   { icon:'🔵', name:'CRYSTAL', desc:'#12', url: ep?`${S.ANIME11}${id}&s=${season}&e=${episode}`:`${S.MOV12}${id}` },
   { icon:'🟣', name:'CIPHER',  desc:'#13', url: ep?`${S.ANIME12}${id}/${season}/${episode}`:`${S.MOV13}${id}` },
   { icon:'🎯', name:'ORION',   desc:'#14', url: ep?`${S.ANIME13}${id}/${season}/${episode}`:`${S.MOV14}${id}` },
@@ -1727,97 +1733,108 @@ const srvs = [
   { icon:'🔴', name:'QUASAR',  desc:'#18', url: ep?`${S.ANIME18}${id}/${season}/${episode}`:`${S.MOV19}${id}` },
   { icon:'🟡', name:'PULSAR',  desc:'#19', url: ep?`${S.ANIME19}${id}/${season}/${episode}`:`${S.MOV20}${id}` },
   { icon:'🟢', name:'LYRA',    desc:'#20', url: ep?`${S.ANIME20}${id}&tmdb=1&s=${season}&e=${episode}`:`${S.MOV21}${id}` },
-  { icon:'🏅', name:'VULCAN',  desc:'#21 VIP', url: ep?`${S.ANIME21}${id}/${season}/${episode}`:`${S.MOV22}${id}&tmdb=1` },
-  { icon:'🌠', name:'NEXUS-X', desc:'#22 4K',  url: ep?`${S.ANIME22}${id}-${season}-${episode}`:`${S.MOV24}${id}` },
   { icon:'💠', name:'EMBED',   desc:'#23', url: ep?`${S.ANIME23}${id}/${season}/${episode}`:`${S.MOV25}${id}` },
   { icon:'🌐', name:'ATLAS',   desc:'#24', url: ep?`${S.ANIME30}${id}/${season}/${episode}`:`${S.MOV32}${id}` },
   { icon:'🎭', name:'FUSION',  desc:'#25', url: ep?`${S.ANIME31}${id}/${season}/${episode}`:`${S.MOV33}${id}` },
   { icon:'🚀', name:'ROCKET',  desc:'#26', url: ep?`${S.ANIME32}${id}/${season}/${episode}`:`${S.MOV34}${id}` },
 ];
-    const srvHTML = srvs.map(s => `
-      <div class="ws-card ${s.active?'active':''}" data-url="${s.url}" data-name="${s.name}" ${s.rox?'data-rox="true"':''} onclick="wsSelectServer(this)">
-        ${s.active?'<span class="ws-check">✔</span>':''}
-        <div class="ws-icon">${s.icon}</div>
-        <div class="ws-name">${s.name}</div>
-        <div class="ws-desc">${s.desc}</div>
-        <span class="ws-free">مجاني</span>
-      </div>`).join('');
-    const prodHTML = [
-      det.budget  ? `<div class="ws-prod-item"><span class="ws-prod-val">$${det.budget.toLocaleString()}</span><span class="ws-prod-label">💰 الميزانية</span></div>` : '',
-      det.revenue ? `<div class="ws-prod-item"><span class="ws-prod-val">$${det.revenue.toLocaleString()}</span><span class="ws-prod-label">✅ الإيرادات</span></div>` : '',
-    ].join('');
-    page.innerHTML = `
-      <div class="ws-player-wrap">
-        <div class="ws-player-bg" style="background-image:url('${backdrop}')">
-          <div class="ws-ambient" style="background-image:url('${backdrop}')"></div>
-          <div class="ws-overlay" id="wsOverlay" onclick="wsStartStream()">
-            <div class="ws-play-btn">▶</div>
-            <span class="ws-play-lbl">اضغط للمشاهدة</span>
-          </div>
-          <iframe id="wsFrame" class="ws-frame" src="" 
-          allowfullscreen
-          allow="autoplay; fullscreen; encrypted-media; picture-in-picture; web-share; clipboard-write; gyroscope; accelerometer"
-          referrerpolicy="no-referrer-when-downgrade"
-          onload="if(this.src)cwTrackTime(${id},'${type}','${cwPoster}','${cwTitle}')">
-          </iframe>
-          <video id="roxPlayer" class="ws-player" controls playsinline style="display:none"></video>
-          <script>
-            if('${resumeSrv}') {
-              document.querySelector('.ws-card.active')?.classList.remove('active');
-              const match = [...document.querySelectorAll('.ws-card')].find(c=>c.dataset.url==='${resumeSrv}');
-              if(match) { match.classList.add('active'); }
-            }
-          </script>
-          <div id="wsSwitchOverlay" class="ws-switch-overlay" style="display:none">
-            <div class="ws-switch-spinner"></div>
-            <span class="ws-switch-txt">يتم الاتصال بسيرفرات Cinema-ROX الخاصة...</span>
-          </div>
-        </div>
-        <button class="ws-back" onclick="wsGoBack()">→ رجوع</button>
+
+const allSrvs = [...vipSrvs, ...proSrvs, ...freeSrvs];
+
+function srvHTML(list) {
+  return list.map(s => `
+    <div class="ws-card ${s.active?'ws-active':''}" data-url="${s.url}" data-name="${s.name}" ${s.rox?'data-rox="true"':''} onclick="wsSelectServer(this)">
+      ${s.active?'<span class="ws-check">✔</span>':''}
+      <div class="ws-icon">${s.icon}</div>
+      <div class="ws-name">${s.name}</div>
+      <div class="ws-desc">${s.desc}</div>
+      <span class="ws-free">مجاني</span>
+    </div>`).join('');
+}
+
+const epInfo = type === 'tv' ? `
+  <div class="ws-ep-bar">
+    <span class="ws-ep-title">${title}</span>
+    <span class="ws-ep-info">الموسم ${season} · الحلقة ${episode}</span>
+  </div>` : '';
+
+const prodHTML = [
+  det.budget  ? `<div class="ws-prod-item"><span class="ws-prod-val">$${det.budget.toLocaleString()}</span><span class="ws-prod-label">💰 الميزانية</span></div>` : '',
+  det.revenue ? `<div class="ws-prod-item"><span class="ws-prod-val">$${det.revenue.toLocaleString()}</span><span class="ws-prod-label">✅ الإيرادات</span></div>` : '',
+].join('');
+
+page.innerHTML = `
+  <div class="ws-player-wrap">
+    <div class="ws-player-bg" style="background-image:url('${backdrop}')">
+      <div class="ws-ambient" style="background-image:url('${backdrop}')"></div>
+      <div class="ws-overlay" id="wsOverlay" onclick="wsStartStream()">
+        <div class="ws-play-btn">▶</div>
+        <span class="ws-play-lbl">اضغط للمشاهدة</span>
       </div>
-      <button class="ws-cinema-btn" id="cinemaModeBtn" onclick="toggleCinemaMode()">
-        <svg class="ws-cine-ico" width="18" height="18" viewBox="0 0 24 24">
-          <defs>
-            <linearGradient id="cg1" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%"   stop-color="#fde68a"/>
-              <stop offset="50%"  stop-color="#f59e0b"/>
-              <stop offset="100%" stop-color="#92400e"/>
-            </linearGradient>
-          </defs>
-          <rect x="2" y="6" width="20" height="14" rx="2.5" fill="url(#cg1)"/>
-          <rect x="2" y="3.5" width="20" height="4" rx="1.5" fill="#f59e0b" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
-          <line x1="6.5"  y1="3.5" x2="5"  y2="7.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
-          <line x1="11.5" y1="3.5" x2="10" y2="7.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
-          <line x1="16.5" y1="3.5" x2="15" y2="7.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
-          <polygon points="9.5,11 16,14.5 9.5,18" fill="rgba(255,255,255,0.75)"/>
-          <ellipse cx="5.5" cy="4.8" rx="2.2" ry="0.9" fill="rgba(255,255,255,0.4)"/>
-        </svg>
-        وضع السينما
-      </button>
-      <div style="display:none">
+      <iframe id="wsFrame" class="ws-frame" src=""
+        allowfullscreen
+        allow="autoplay; fullscreen; encrypted-media; picture-in-picture; web-share; clipboard-write; gyroscope; accelerometer"
+        referrerpolicy="no-referrer-when-downgrade"
+        onload="if(this.src)cwTrackTime(${id},'${type}','${cwPoster}','${cwTitle}')">
+      </iframe>
+      <video id="roxPlayer" class="ws-player" controls playsinline style="display:none"></video>
+      <div id="wsSwitchOverlay" class="ws-switch-overlay" style="display:none">
+        <div class="ws-switch-spinner"></div>
+        <span class="ws-switch-txt">يتم الاتصال بسيرفرات Cinema-ROX...</span>
       </div>
-      <div class="ws-info-card">
-        <h2 class="ws-title">${title}</h2>
-        <div class="ws-badges">
-          <span class="ws-bdg">${type==='tv'?'📺 مسلسل':'🎬 فيلم'}</span>
-          <span class="ws-bdg">📅 ${year}</span>
-          <span class="ws-bdg ws-bdg-gold">⭐ ${rating}</span>
-        </div>
-        <p class="ws-genres">${genres}</p>
+    </div>
+    <button class="ws-back" onclick="wsGoBack()">→ رجوع</button>
+  </div>
+  ${epInfo}
+  <button class="ws-cinema-btn" id="cinemaModeBtn" onclick="toggleCinemaMode()">
+    <svg class="ws-cine-ico" width="18" height="18" viewBox="0 0 24 24">
+      <defs><linearGradient id="cg1" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#fde68a"/>
+        <stop offset="50%" stop-color="#f59e0b"/>
+        <stop offset="100%" stop-color="#92400e"/>
+      </linearGradient></defs>
+      <rect x="2" y="6" width="20" height="14" rx="2.5" fill="url(#cg1)"/>
+      <rect x="2" y="3.5" width="20" height="4" rx="1.5" fill="#f59e0b" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
+      <line x1="6.5" y1="3.5" x2="5" y2="7.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="11.5" y1="3.5" x2="10" y2="7.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="16.5" y1="3.5" x2="15" y2="7.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+      <polygon points="9.5,11 16,14.5 9.5,18" fill="rgba(255,255,255,0.75)"/>
+      <ellipse cx="5.5" cy="4.8" rx="2.2" ry="0.9" fill="rgba(255,255,255,0.4)"/>
+    </svg>
+    وضع السينما
+  </button>
+  <div class="ws-info-card">
+    <img class="ws-poster" src="${cwPoster}" alt="${title}">
+    <div class="ws-info-text">
+      <h2 class="ws-title">${title}</h2>
+      <div class="ws-badges">
+        <span class="ws-bdg">${type==='tv'?'📺 مسلسل':'🎬 فيلم'}</span>
+        <span class="ws-bdg">📅 ${year}</span>
+        <span class="ws-bdg ws-bdg-gold">⭐ ${rating}</span>
       </div>
-      <div class="ws-section">
-        <h3 class="ws-stitle">📖 القصة</h3>
-        <p class="ws-overview">${overview}</p>
-      </div>
-      <div class="ws-section">
-        <div class="ws-srv-head">
-          <h3 class="ws-stitle">🟢 مصادر البث</h3>
-          <span class="ws-srv-sub">🔒 السيرفرات الخاصة</span>
-        </div>
-        <div class="ws-grid">${srvHTML}</div>
-        <p class="ws-note">إذا لم يعمل البيزمبر جرب آخر</p>
-      </div>
-      ${prodHTML?`<div class="ws-section"><h3 class="ws-stitle">📊 بيانات الإنتاج</h3><div class="ws-prod-grid">${prodHTML}</div></div>`:''}`;
+      <p class="ws-genres">${genres}</p>
+    </div>
+  </div>
+  <div class="ws-section">
+    <h3 class="ws-stitle">📖 القصة</h3>
+    <p class="ws-overview">${overview}</p>
+  </div>
+  <div class="ws-section">
+    <div class="ws-srv-head">
+      <h3 class="ws-stitle">🟢 مصادر البث</h3>
+      <span class="ws-srv-sub">🔒 السيرفرات الخاصة</span>
+    </div>
+    <div class="ws-tabs">
+      <button class="ws-tab active" onclick="wsShowTab(this,'vip')">🏆 VIP</button>
+      <button class="ws-tab" onclick="wsShowTab(this,'pro')">⚡ PRO</button>
+      <button class="ws-tab" onclick="wsShowTab(this,'free')">🌐 FREE</button>
+    </div>
+    <div id="wsTabVip" class="ws-tab-pane ws-grid">${srvHTML(vipSrvs)}</div>
+    <div id="wsTabPro" class="ws-tab-pane ws-grid" style="display:none">${srvHTML(proSrvs)}</div>
+    <div id="wsTabFree" class="ws-tab-pane ws-grid" style="display:none">${srvHTML(freeSrvs)}</div>
+    <p class="ws-note">إذا لم يعمل السيرفر جرب آخر</p>
+  </div>
+  ${prodHTML?`<div class="ws-section"><h3 class="ws-stitle">📊 بيانات الإنتاج</h3><div class="ws-prod-grid">${prodHTML}</div></div>`:''}`;
   } catch(e) {
     page.innerHTML = `<div class="loading">❌ خطأ<br><button onclick="wsGoBack()" class="detail-btn">← رجوع</button></div>`;
   }
