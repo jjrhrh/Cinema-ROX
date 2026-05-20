@@ -1210,8 +1210,6 @@ const reviewsHTML = `
             <line x1="8.6" y1="10.5" x2="15.4" y2="6.5"  stroke="#c084fc" stroke-width="1.6" stroke-linecap="round"/>
             <line x1="8.6" y1="13.5" x2="15.4" y2="17.5" stroke="#c084fc" stroke-width="1.6" stroke-linecap="round"/>
           </svg>
-          <span>مشاركة</span>
-        </button>`}
         <span>مشاركة</span>
         </button>`}
         <button class="dp-action-fav" onclick="openCompare(${id},'${title}','${type}','${poster}','${rating}','${year}','${runtime}','${genres}')">
