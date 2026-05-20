@@ -1684,19 +1684,12 @@ async function openWatchPage(id, type, season = 1, episode = 1, resumeSec = 0, r
 let overview = arData.overview || '';
 if (!overview && det.overview) {
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 300,
-        messages: [{ role: 'user', content: `ترجم هذا النص للعربية بشكل طبيعي بدون أي كلام إضافي:\n${detail.overview}` }]
-      })
-    });
+    const q = encodeURIComponent(det.overview);
+    const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ar&dt=t&q=${q}`);
     const d = await res.json();
-    overview = d.content?.[0]?.text || detail.overview;
+    overview = d[0].map(s => s[0]).join('') || det.overview;
   } catch {
-    overview = detail.overview;
+    overview = det.overview;
   }
 }
 title = arData.title || arData.name || title;
