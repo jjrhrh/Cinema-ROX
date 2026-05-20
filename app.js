@@ -969,9 +969,9 @@ async function openDetail(id, type = 'movie') {
     const tagline   = detail.tagline || '';
     const voteCount = detail.vote_count
       ? detail.vote_count.toLocaleString('ar-SA') : '';
-    const title   = type === 'movie'
+    let title = type === 'movie'
       ? (arDetail.title || detail.title || detail.original_title)
-      : (arDetail.name  || detail.name  || detail.original_name);
+      : (arDetail.name  || detail.name  || detail.original_name);;
     let overview = arDetail.overview || detail.overview || '';
     const genres   = (arDetail.genres || detail.genres || []).map(g => `<span class="genre-tag">${g.name}</span>`).join('');
     if (!arDetail.overview && detail.overview) {
@@ -1163,6 +1163,10 @@ const reviewsHTML = `
         ${(() => { const p = getProgress(id); return p ? `أكمل المشاهدة — ح${p.episode + 1}` : 'شاهد الآن'; })()}
       </button>
       <div class="dp-action-row2">
+        <button class="dp-action-fav" onclick="openCompare(${id},'${title}','${type}','${poster}','${rating}','${year}','${runtime}','${genres}')">
+          <svg class="dp-act-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          <span>قارن</span>
+        </button>
         <button class="dp-action-fav dp-btn-fav" data-id="${id}" onclick="addToWatchlist(${id},'${type}')">
           <svg class="dp-act-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           <span>المفضلة</span>
@@ -1238,6 +1242,7 @@ const reviewsHTML = `
           <div class="neon-story-header">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="neon-story-ico"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
             <span>القصة</span>
+            <button class="rox-read-btn" onclick="openReadingMode('${overview.replace(/'/g,"\\'").replace(/\n/g,' ')}','${title.replace(/'/g,"\\'")}')">وضع القراءة</button>
           </div>
           <p class="neon-story-text">${overview}</p>
         </div>
@@ -2054,12 +2059,31 @@ function loadProfilePage() {
             <div class="prof-hud-title"><svg class="hud-icon" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> مكتبتي</div>
             <div class="prof-hud-row">
               <button class="prof-pill" onclick="bnavGo('library')">عرض المكتبة</button>
+              <button class="prof-pill" onclick="toggleWatchHistory(this)">📅 تاريخ المشاهدات</button>
               <button class="prof-pill" style="color:#ff6b6b;border-color:rgba(229,9,20,0.4)" onclick="clearLibraryConfirm()">🗑 مسح الكل</button>
             </div>
           </div>
         </div>
         <button class="prof-signout" onclick="roxSignOut()">تسجيل الخروج</button>
       </div>`;
+    <div id="watchHistoryPanel" style="display:none;padding:0 4px 8px">
+            ${(()=>{
+              const items = cwGetAll();
+              if (!items.length) return '<p style="color:var(--text3);font-size:0.8rem;text-align:center;padding:12px">لا توجد مشاهدات بعد</p>';
+              return `<div class="wh-list">${items.map(i=>`
+                <div class="wh-item" onclick="openDetail(${i.id},'${i.type}')">
+                  <img class="wh-poster" src="${i.poster||CONFIG.IMAGES.PLACEHOLDER}" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+                  <div class="wh-info">
+                    <div class="wh-title">${i.title||''}</div>
+                    <div class="wh-meta">${i.type==='movie'?'🎬 فيلم':'📺 مسلسل'}</div>
+                    <div class="wh-time">${new Date(i.savedAt).toLocaleDateString('ar-SA')}</div>
+                    <div class="wh-progress-wrap">
+                      <div class="wh-progress-bar" style="width:${Math.min(100,Math.round(i.seconds/7200*100))}%"></div>
+                    </div>
+                  </div>
+                </div>`).join('')}</div>`;
+            })()}
+          </div>
   }
 }
 function clearLibraryConfirm() {
@@ -2958,6 +2982,100 @@ async function roxDlImg(url, label) {
     URL.revokeObjectURL(a.href);
     showToast(`✅ تم تحميل ${label}`);
   } catch { showToast('❌ فشل التحميل'); }
+}
+function toggleWatchHistory(btn) {
+  const panel = document.getElementById('watchHistoryPanel');
+  if (!panel) return;
+  const isOpen = panel.style.display !== 'none';
+  panel.style.display = isOpen ? 'none' : 'block';
+  btn.textContent = isOpen ? '📅 تاريخ المشاهدات' : '✕ إغلاق التاريخ';
+}
+function openReadingMode(text, movieTitle) {
+  document.getElementById('roxReadOverlay')?.remove();
+  const el = document.createElement('div');
+  el.id = 'roxReadOverlay';
+  el.innerHTML = `
+    <div class="rox-read-overlay" onclick="if(event.target===this)this.remove()">
+      <div class="rox-read-box">
+        <button class="rox-read-close" onclick="document.getElementById('roxReadOverlay').remove()">✕</button>
+        <div class="rox-read-title">📖 ${movieTitle}</div>
+        <p class="rox-read-text">${text}</p>
+      </div>
+    </div>`;
+  document.body.appendChild(el);
+}
+// ===== COMPARE FEATURE =====
+let _cmpA = null;
+
+async function openCompare(id, title, type, poster, rating, year, runtime, genres) {
+  _cmpA = { id, title, type, poster, rating, year, runtime, genres };
+  document.getElementById('roxCmpOverlay')?.remove();
+  const el = document.createElement('div');
+  el.id = 'roxCmpOverlay';
+  el.innerHTML = `
+    <div class="rox-cmp-overlay">
+      <div class="rox-cmp-header">
+        <span class="rox-cmp-title">⚖️ قارن مع...</span>
+        <button class="rox-cmp-close" onclick="document.getElementById('roxCmpOverlay').remove()">✕</button>
+      </div>
+      <input class="rox-cmp-search" placeholder="ابحث عن فيلم أو مسلسل..." 
+        oninput="cmpSearch(this.value)" id="cmpSearchInput">
+      <div class="rox-cmp-results" id="cmpResults">
+        <p style="color:var(--text3);font-size:0.8rem;text-align:center;padding:20px">اكتب للبحث...</p>
+      </div>
+    </div>`;
+  document.body.appendChild(el);
+}
+
+async function cmpSearch(q) {
+  if (q.length < 2) return;
+  const res = await fetch(buildTMDBUrl('/search/multi', { query: q, page: 1 })).then(r => r.json());
+  const items = (res.results || []).filter(r => r.media_type !== 'person').slice(0, 6);
+  document.getElementById('cmpResults').innerHTML = items.map(m => `
+    <div class="rox-cmp-pick" onclick="cmpShowResult(${m.id},'${m.media_type||'movie'}')">
+      <img src="${m.poster_path ? CONFIG.IMAGES.POSTER_SM+m.poster_path : CONFIG.IMAGES.PLACEHOLDER}" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+      <div>
+        <div class="rox-cmp-pick-name">${m.title||m.name||''}</div>
+        <div class="rox-cmp-pick-year">${(m.release_date||m.first_air_date||'').slice(0,4)}</div>
+      </div>
+    </div>`).join('');
+}
+
+async function cmpShowResult(id, type) {
+  const ep   = type === 'tv' ? `/tv/${id}` : `/movie/${id}`;
+  const data  = await fetch(buildTMDBUrl(ep)).then(r => r.json());
+  const b = {
+    title   : data.title || data.name || '',
+    poster  : data.poster_path ? CONFIG.IMAGES.POSTER_SM + data.poster_path : CONFIG.IMAGES.PLACEHOLDER,
+    rating  : data.vote_average ? data.vote_average.toFixed(1) : 'N/A',
+    year    : (data.release_date || data.first_air_date || '').slice(0,4),
+    runtime : type === 'movie' ? (data.runtime ? data.runtime+'د' : '—') : (data.number_of_seasons ? data.number_of_seasons+' موسم' : '—'),
+    genres  : (data.genres||[]).map(g=>g.name).slice(0,2).join('، ')
+  };
+  const a = _cmpA;
+  const winRating = parseFloat(a.rating) >= parseFloat(b.rating);
+  document.getElementById('cmpResults').innerHTML = `
+    <div class="rox-cmp-poster-row">
+      <div class="rox-cmp-poster-col">
+        <img src="${a.poster}" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+        <span>${a.title}</span>
+      </div>
+      <div class="rox-cmp-poster-col">
+        <img src="${b.poster}" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+        <span>${b.title}</span>
+      </div>
+    </div>
+    <table class="rox-cmp-table">
+      <tr><th>${a.title}</th><th>المعيار</th><th>${b.title}</th></tr>
+      <tr>
+        <td class="${winRating?'cmp-winner':''}">${a.rating}</td>
+        <td>⭐ التقييم</td>
+        <td class="${!winRating?'cmp-winner':''}">${b.rating}</td>
+      </tr>
+      <tr><td>${a.year}</td><td>📅 السنة</td><td>${b.year}</td></tr>
+      <tr><td>${a.runtime}</td><td>⏱ المدة</td><td>${b.runtime}</td></tr>
+      <tr><td>${a.genres}</td><td>🎭 النوع</td><td>${b.genres}</td></tr>
+    </table>`;
 }
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', async () => {
