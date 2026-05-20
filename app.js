@@ -2100,8 +2100,9 @@ function loadProfilePage() {
                   </div>
                 </div>`).join('')}</div>`;
             })()}
-          </div>
+       </div>
       </div>`;
+  }
 }
 function clearLibraryConfirm() {
   if (confirm('⚠️ هل تريد مسح المكتبة كاملاً؟')) {
