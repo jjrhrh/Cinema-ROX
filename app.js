@@ -967,8 +967,23 @@ async function openDetail(id, type = 'movie') {
     const title   = type === 'movie'
       ? (arDetail.title || detail.title || detail.original_title)
       : (arDetail.name  || detail.name  || detail.original_name);
-    const overview = arDetail.overview || detail.overview || '';
+    let overview = arDetail.overview || detail.overview || '';
     const genres   = (arDetail.genres || detail.genres || []).map(g => `<span class="genre-tag">${g.name}</span>`).join('');
+    if (!arDetail.overview && detail.overview) {
+      try {
+        const tRes = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model: 'claude-sonnet-4-20250514',
+            max_tokens: 300,
+            messages: [{ role: 'user', content: `ترجم هذا النص للعربية بشكل طبيعي بدون أي كلام إضافي:\n${detail.overview}` }]
+          })
+        });
+        const tData = await tRes.json();
+        overview = tData.content?.[0]?.text || detail.overview;
+      } catch { overview = detail.overview; }
+    }
     const year    = (detail.release_date || detail.first_air_date || '').slice(0, 4);
     
     const rating  = detail.vote_average ? detail.vote_average.toFixed(1) : 'N/A';
