@@ -1180,7 +1180,6 @@ const reviewsHTML = `
         ${(() => { const p = getProgress(id); return p ? `أكمل المشاهدة — ح${p.episode + 1}` : 'شاهد الآن'; })()}
       </button>
       <div class="dp-action-row2">
-        <button class="dp-action-fav dp-btn-fav"
         <button class="dp-action-fav dp-btn-fav" data-id="${id}" onclick="addToWatchlist(${id},'${type}')">
           <svg class="dp-act-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           <span>المفضلة</span>
@@ -1212,10 +1211,6 @@ const reviewsHTML = `
           </svg>
         <span>مشاركة</span>
         </button>`}
-        <button class="dp-action-fav" onclick="openCompare(${id},'${title}','${type}','${poster}','${rating}','${year}','${runtime}','${genres}')">
-          <svg class="dp-act-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-          <span>قارن</span>
-        </button>
         ${type === 'tv' ? `<button class="dp-action-fav dp-btn-alert ${getLib('rox_alerts').find(i=>String(i.id)===String(id))?'active':''}" id="alertBtn_${id}" data-title="${(title||'').replace(/'/g,'&#39;')}" onclick="toggleAlertSubscription(${id},this.dataset.title,'tv')">
           <svg class="dp-act-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
           <span>${getLib('rox_alerts').find(i=>String(i.id)===String(id))?'مفعّل':'تنبيه'}</span>
@@ -3024,79 +3019,6 @@ function openReadingMode(text, movieTitle) {
       </div>
     </div>`;
   document.body.appendChild(el);
-}
-// ===== COMPARE FEATURE =====
-let _cmpA = null;
-
-async function openCompare(id, title, type, poster, rating, year, runtime, genres) {
-  _cmpA = { id, title, type, poster, rating, year, runtime, genres };
-  document.getElementById('roxCmpOverlay')?.remove();
-  const el = document.createElement('div');
-  el.id = 'roxCmpOverlay';
-  el.innerHTML = `
-    <div class="rox-cmp-overlay">
-      <div class="rox-cmp-header">
-        <span class="rox-cmp-title">⚖️ قارن مع...</span>
-        <button class="rox-cmp-close" onclick="document.getElementById('roxCmpOverlay').remove()">✕</button>
-      </div>
-      <input class="rox-cmp-search" placeholder="ابحث عن فيلم أو مسلسل..." 
-        oninput="cmpSearch(this.value)" id="cmpSearchInput">
-      <div class="rox-cmp-results" id="cmpResults">
-        <p style="color:var(--text3);font-size:0.8rem;text-align:center;padding:20px">اكتب للبحث...</p>
-      </div>
-    </div>`;
-  document.body.appendChild(el);
-}
-
-async function cmpSearch(q) {
-  if (q.length < 2) return;
-  const res = await fetch(buildTMDBUrl('/search/multi', { query: q, page: 1 })).then(r => r.json());
-  const items = (res.results || []).filter(r => r.media_type !== 'person').slice(0, 6);
-  document.getElementById('cmpResults').innerHTML = items.map(m => `
-    <div class="rox-cmp-pick" onclick="cmpShowResult(${m.id},'${m.media_type||'movie'}')">
-      <img src="${m.poster_path ? CONFIG.IMAGES.POSTER_SM+m.poster_path : CONFIG.IMAGES.PLACEHOLDER}" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
-      <div>
-        <div class="rox-cmp-pick-name">${m.title||m.name||''}</div>
-        <div class="rox-cmp-pick-year">${(m.release_date||m.first_air_date||'').slice(0,4)}</div>
-      </div>
-    </div>`).join('');
-}
-
-async function cmpShowResult(id, type) {
-  const ep   = type === 'tv' ? `/tv/${id}` : `/movie/${id}`;
-  const data  = await fetch(buildTMDBUrl(ep)).then(r => r.json());
-  const b = {
-    title   : data.title || data.name || '',
-    poster  : data.poster_path ? CONFIG.IMAGES.POSTER_SM + data.poster_path : CONFIG.IMAGES.PLACEHOLDER,
-    rating  : data.vote_average ? data.vote_average.toFixed(1) : 'N/A',
-    year    : (data.release_date || data.first_air_date || '').slice(0,4),
-    runtime : type === 'movie' ? (data.runtime ? data.runtime+'د' : '—') : (data.number_of_seasons ? data.number_of_seasons+' موسم' : '—'),
-    genres  : (data.genres||[]).map(g=>g.name).slice(0,2).join('، ')
-  };
-  const a = _cmpA;
-  const winRating = parseFloat(a.rating) >= parseFloat(b.rating);
-  document.getElementById('cmpResults').innerHTML = `
-    <div class="rox-cmp-poster-row">
-      <div class="rox-cmp-poster-col">
-        <img src="${a.poster}" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
-        <span>${a.title}</span>
-      </div>
-      <div class="rox-cmp-poster-col">
-        <img src="${b.poster}" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
-        <span>${b.title}</span>
-      </div>
-    </div>
-    <table class="rox-cmp-table">
-      <tr><th>${a.title}</th><th>المعيار</th><th>${b.title}</th></tr>
-      <tr>
-        <td class="${winRating?'cmp-winner':''}">${a.rating}</td>
-        <td>⭐ التقييم</td>
-        <td class="${!winRating?'cmp-winner':''}">${b.rating}</td>
-      </tr>
-      <tr><td>${a.year}</td><td>📅 السنة</td><td>${b.year}</td></tr>
-      <tr><td>${a.runtime}</td><td>⏱ المدة</td><td>${b.runtime}</td></tr>
-      <tr><td>${a.genres}</td><td>🎭 النوع</td><td>${b.genres}</td></tr>
-    </table>`;
 }
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', async () => {
