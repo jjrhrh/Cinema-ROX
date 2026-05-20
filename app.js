@@ -937,7 +937,12 @@ async function openDetail(id, type = 'movie') {
     const wpData  = await wpRes.json();
     const keywords = (kwData.keywords || kwData.results || []).slice(0, 8);
     const providers = (wpData.results?.SA?.flatrate || wpData.results?.US?.flatrate || []).slice(0, 5);
-    const galleryImgs = (imgData.backdrops || []).slice(0, 8).map(b => `${CONFIG.IMAGES.ORIGINAL}${b.file_path}`);
+    const galleryImgs = (imgData.backdrops || []).slice(0, 8).map(b => ({
+      full: `${CONFIG.IMAGES.ORIGINAL}${b.file_path}`,
+      md:   `https://image.tmdb.org/t/p/w1280${b.file_path}`,
+      sm:   `https://image.tmdb.org/t/p/w500${b.file_path}`,
+      path: b.file_path
+    }));
     const fanartBds = await (async () => {
       try {
         const type = detail.media_type === 'tv' || detail.first_air_date ? 'tv' : 'movies';
@@ -1317,9 +1322,10 @@ ${type === 'tv' && (() => { const s = calcSeasonEnd(detail); if (!s) return ''; 
         ${galleryImgs.length ? `<div class="detail-section">
           <h3 class="detail-section-title">معرض الصور</h3>
           <div class="gallery-row">
-            ${galleryImgs.map(g=>`<img class="gallery-img lazy-img" data-src="${g}"
+            ${galleryImgs.map(g=>`<img class="gallery-img lazy-img"
+              data-src="${g.md}"
               src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-              onclick="window.open('${g}','_blank')">`).join('')}
+              onclick="openImgLightbox('${g.full}','${g.md}','${g.sm}')">`).join('')}
           </div>
         </div>` : ''}
 <!-- تقييم الجمهور -->
@@ -2911,6 +2917,48 @@ window.addEventListener('online', () => {
   document.getElementById('roxOfflineBanner')?.remove();
   showToast('✅ عاد الاتصال بالإنترنت');
 });
+// ===== IMAGE LIGHTBOX =====
+function openImgLightbox(full, md, sm) {
+  document.getElementById('roxImgLightbox')?.remove();
+  const lb = document.createElement('div');
+  lb.id = 'roxImgLightbox';
+  lb.innerHTML = `
+    <div class="rox-lb-bg" onclick="if(event.target===this)this.parentElement.remove()">
+      <div class="rox-lb-box">
+        <button class="rox-lb-close" onclick="document.getElementById('roxImgLightbox').remove()">✕</button>
+        <img class="rox-lb-img" src="${md}" alt="">
+        <div class="rox-lb-btns">
+          <button class="rox-lb-dl" onclick="roxDlImg('${sm}','صغير')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            صغير — 500px
+          </button>
+          <button class="rox-lb-dl" onclick="roxDlImg('${md}','متوسط')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            متوسط — 1280px
+          </button>
+          <button class="rox-lb-dl rox-lb-dl-full" onclick="roxDlImg('${full}','أصلي')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            أصلي — Full HD
+          </button>
+        </div>
+      </div>
+    </div>`;
+  document.body.appendChild(lb);
+}
+
+async function roxDlImg(url, label) {
+  try {
+    showToast(`⏳ جاري تحميل ${label}...`);
+    const res  = await fetch(url);
+    const blob = await res.blob();
+    const a    = document.createElement('a');
+    a.href     = URL.createObjectURL(blob);
+    a.download = `cinema-rox-${label}-${Date.now()}.jpg`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    showToast(`✅ تم تحميل ${label}`);
+  } catch { showToast('❌ فشل التحميل'); }
+}
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', async () => {
   // Scroll to top
