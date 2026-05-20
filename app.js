@@ -409,7 +409,7 @@ let movies = await fetchMovies('/trending/movie/week', { limit: CONFIG.HERO.LIMI
 async function getFanartBackdrop(tmdbId, mediaType) {
   try {
     const type = mediaType === 'tv' ? 'tv' : 'movies';
-    const res = await fetch(`${CONFIG.APIS.FANART_BASE}/${type}/${tmdbId}?api_key=${CONFIG.KEYS.FANART}`);
+    const res = await fetch(`${CONFIG.API.FANART_BASE}/${type}/${tmdbId}?api_key=${CONFIG.KEYS.FANART}`);
     const data = await res.json();
     const imgs = data.moviebackground || data.showbackground || [];
     if (imgs.length > 0) return imgs[0].url;
