@@ -1840,7 +1840,7 @@ async function openWatchPage(id, type, season = 1, episode = 1, resumeSec = 0, r
     const genres = (det.genres || []).map(g => g.name).join(' · ');
     const arData = await fetch(buildTMDBUrl(`/${type}/${id}`, { language: 'ar' })).then(r => r.json());
 let overview = arData.overview || '';
-if (!overview && detail.overview) {
+if (!overview && det.overview) {
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -1857,8 +1857,8 @@ if (!overview && detail.overview) {
     overview = detail.overview;
   }
 }
-const title = arData.title || arData.name || detail.title || detail.name || '';
-const genres = (arData.genres || detail.genres || []).map(g => `<span class="genre-tag">${g.name}</span>`).join('');
+title = arData.title || arData.name || title;
+genres = (arData.genres || det.genres || []).map(g => `<span class="genre-tag">${g.name}</span>`).join('');
     const S = CONFIG.SERVERS;
     // احفظ فوراً في Continue Watching
     const cwPoster = det.poster_path ? CONFIG.IMAGES.POSTER_MD + det.poster_path : CONFIG.IMAGES.PLACEHOLDER;
