@@ -1839,6 +1839,12 @@ page.innerHTML = `
     page.innerHTML = `<div class="loading">❌ خطأ<br><button onclick="wsGoBack()" class="detail-btn">← رجوع</button></div>`;
   }
 }
+function wsShowTab(btn, tab) {
+  document.querySelectorAll('.ws-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.ws-tab-pane').forEach(p => p.style.display = 'none');
+  document.getElementById('wsTab' + tab.charAt(0).toUpperCase() + tab.slice(1)).style.display = 'grid';
+}
 // ===== CONTINUE WATCHING =====
 let _cwTimer = null;
 function cwTrackTime(id, type, poster, title) {
