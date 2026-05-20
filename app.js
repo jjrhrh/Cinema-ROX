@@ -3106,7 +3106,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   window.addEventListener('scroll', () => {
     _topBtn.classList.toggle('show', window.scrollY > 320);
   }, { passive: true });
-  showPage('homePage');
+  bnavGo('home');
 initHomePage();
   setTimeout(checkAllAlerts, 4000);
   if ('serviceWorker' in navigator) {
