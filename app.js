@@ -209,7 +209,7 @@ async function openAnimeJikan(malId, encodedTitle) {
     const synopsis= a.synopsis||'لا يوجد وصف.';
     const episodes = epsRes.data || [];
     const _ap = getProgress(malId);
-    const watchBtn = `<button class="detail-btn detail-btn-now" onclick="openWatchPageAnime(${tmdbId||0},${malId},1,${_ap?_ap.episode+1:1})">▶ ${_ap?`أكمل المشاهدة: الحلقة ${_ap.episode+1}`:'شاهد الآن — الحلقة 1'}</button>`;
+    const watchBtn = `<button class="detail-btn detail-btn-now" onclick="openWatchPage(${tmdbId||0},'tv',1,${_ap?_ap.episode+1:1})">▶ ${_ap?`أكمل المشاهدة: الحلقة ${_ap.episode+1}`:'شاهد الآن — الحلقة 1'}</button>`;
     const trailerBtn = trailer
       ? `<button class="detail-btn detail-btn-trailer" onclick="playTrailer('${a.trailer?.youtube_id}')">▶ المقطع الدعائي</button>`
       : '';
@@ -257,12 +257,12 @@ async function openAnimeJikan(malId, encodedTitle) {
             <span style="color:rgba(255,255,255,0.4);font-size:0.75rem">${a.episodes||'?'} حلقة</span>
           </div>
           <div class="eps-header-bar">
-            <button class="eps-view-all-btn" onclick="openAllEpsJikan(${malId},${tmdbId||0},'${encodeURIComponent(a.title)}','${poster}')">عرض الكل ›</button>
+            <button class="eps-view-all-btn" onclick="openAllEps(${tmdbId||0},1)">عرض الكل ›</button>
           </div>
           <div class="swiper eps-swiper" id="epsSwiper_${malId}">
             <div class="swiper-wrapper">
               ${episodes.map((e,i)=>`
-                <div class="swiper-slide ep-card ${(() => { const p=getProgress(malId); return p && p.episode+1===(e.episode_id||i+1) ? 'ep-next-glow' : ''; })()}" onclick="saveProgress(${malId},1,${e.episode_id||i+1});openWatchPageAnime(-1,${malId},1,${e.episode_id||i+1})">
+                <div class="swiper-slide ep-card ${(() => { const p=getProgress(malId); return p && p.episode+1===(e.episode_id||i+1) ? 'ep-next-glow' : ''; })()}" onclick="saveProgress(${tmdbId||0},1,${e.episode_id||i+1});openWatchPage(${tmdbId||0},'tv',1,${e.episode_id||i+1})">
                   <div class="ep-thumb-wrap">
                     <img data-src="${e.images?.jpg?.image_url||poster}"
                          src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
