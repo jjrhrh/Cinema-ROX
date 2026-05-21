@@ -1702,7 +1702,7 @@ const roxCard = vipSrvs.find(s => s.stream);
 if (roxCard) roxCard.url = roxStreamUrl || srvUrl(S.SRV1, type, id, season, episode);
 function srvHTML(list) {
   return list.map(s => `
-    <div class="ws-card ${s.active?'ws-active':''}" data-url="${s.url}" data-name="${s.name}" ${s.rox?'data-rox="true"':''} onclick="wsSelectServer(this)">
+    <div class="ws-card ${s.active?'ws-active':''}" data-url="${s.url||''}" data-name="${s.name}" ${s.rox?'data-rox="true"':''} onclick="wsSelectServer(this)">
       ${s.active?'<span class="ws-check">✔</span>':''}
       <div class="ws-icon">${s.icon}</div>
       <div class="ws-name">${s.name}</div>
