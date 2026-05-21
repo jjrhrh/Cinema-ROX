@@ -1699,7 +1699,6 @@ if (!overview && det.overview) {
 }
 title = arData.title || arData.name || title;
 genres = (arData.genres || det.genres || []).map(g => `<span class="genre-tag">${g.name}</span>`).join('');
-    const S = CONFIG.SERVERS;
     // احفظ فوراً في Continue Watching
     const cwPoster = det.poster_path ? CONFIG.IMAGES.POSTER_MD + det.poster_path : CONFIG.IMAGES.PLACEHOLDER;
     const cwTitle  = type === 'movie' ? (det.title || det.original_title) : (det.name || det.original_name);
