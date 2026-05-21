@@ -104,8 +104,8 @@ HERO: Object.freeze({
     SRV32: { mov: 'https://player.vidsrc.nl/embed/movie/',            tv: 'https://player.vidsrc.nl/embed/tv/'             },
     SRV33: { mov: 'https://embed.smashystream.com/playere.php?tmdb=', tv: 'https://embed.smashystream.com/playere.php?tmdb=' },
     SRV34: { mov: 'https://vidrock.ru/movie/',                        tv: 'https://vidrock.ru/tv/'                         },
-    SRV35: { mov: 'https://vidnest.fun/movie/',                       tv: 'https://vidnest.fun/tv/'                        },
-    SRV36: { mov: 'https://superflixapi.best/filme/',                 tv: 'https://superflixapi.best/serie/'               },
+    SRV35: { mov: 'https://player.videasy.net/movie/',                tv: 'https://player.videasy.net/tv/'                 },
+    SRV36: { mov: 'https://vidsrc.xyz/embed/movie/',                  tv: 'https://vidsrc.xyz/embed/tv/'                   },
   }),
   
   // ─────────────────────────────────────────
