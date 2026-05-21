@@ -1644,7 +1644,7 @@ const isAnime = (det.genres||[]).some(g => g.id === 16)
 const animeParams = '&lang=ja&audio=ja&dubbed=false&dub=false';
 const animeCC = `https://vidsrc.to/embed/tv/${id}/${season}/${episode}`;
 const S = CONFIG.SERVERS;
-const ep = type !== 'movie';
+const isTv = type !== 'movie';
 const vipSrvs = [
   { icon:'🎯', name:'ROX',     desc:'مشغلي 🔥', url: srvUrl(S.SRV1, type, id, season, episode), rox:true, active:true },
   { icon:'🌌', name:'COSMOS',  desc:'#05',       url: srvUrl(S.SRV5, type, id, season, episode)  },
