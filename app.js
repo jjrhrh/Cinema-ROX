@@ -1,3 +1,4 @@
+const S = CONFIG.SERVERS;
 // ===== SIDEBAR =====
 function toggleSidebar() {
   const menu = document.getElementById('sidebarMenu');
