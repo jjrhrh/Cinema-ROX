@@ -1730,7 +1730,7 @@ const S = CONFIG.SERVERS;
 const isTv = type !== 'movie';
 const vipSrvs = [
   { icon:'🎯', name:'ROX',     desc:'مشغلي 🔥', url: null, rox:true, active:true, stream:true },
-  { icon:'🌌', name:'COSMOS',  desc:'#05',       url: srvUrl(S.SRV5, type, id, season, episode)  },
+  { icon:'🌌', name:'COSMOS',  desc:'#01',       url: srvUrl(S.SRV5, type, id, season, episode)  },
   { icon:'⭐', name:'STELLAR', desc:'#07',       url: srvUrl(S.SRV3, type, id, season, episode)  },
   { icon:'🌙', name:'ECLIPSE', desc:'#09',       url: srvUrl(S.SRV9, type, id, season, episode)  },
   { icon:'✨', name:'NOVA',    desc:'#10',       url: srvUrl(S.SRV10, type, id, season, episode) },
@@ -1755,8 +1755,8 @@ const proSrvs = [
 const freeSrvs = [
   { icon:'🔵', name:'CRYSTAL', desc:'#12', url: srvUrl(S.SRV12, type, id, season, episode) },
   { icon:'🟣', name:'CIPHER',  desc:'#13', url: srvUrl(S.SRV13, type, id, season, episode) },
-  { icon:'💫', name:'NEBULA',  desc:'#15', url: srvUrl(S.SRV15, type, id, season, episode) },
-  { icon:'🔴', name:'QUASAR',  desc:'#18', url: srvUrl(S.SRV19, type, id, season, episode) },
+  { icon:'💫', name:'NEBULA',  desc:'#14', url: srvUrl(S.SRV15, type, id, season, episode) },
+  { icon:'🔴', name:'QUASAR',  desc:'#15', url: srvUrl(S.SRV19, type, id, season, episode) },
   { icon:'🟢', name:'LYRA',    desc:'#20', url: srvUrl(S.SRV21, type, id, season, episode) },
   { icon:'💠', name:'EMBED',   desc:'#23', url: srvUrl(S.SRV24, type, id, season, episode) },
   { icon:'🌐', name:'ATLAS',   desc:'#24', url: srvUrl(S.SRV29, type, id, season, episode) },
@@ -1768,10 +1768,9 @@ const freeSrvs = [
   { icon:'🎖', name:'SIGMA',   desc:'#30', url: srvUrl(S.SRV23, type, id, season, episode) },
   { icon:'🏰', name:'CASTLE',  desc:'#31', url: srvUrl(S.SRV28, type, id, season, episode) },
   { icon:'💥', name:'NOVA-X',   desc:'#32', url: srvUrl(S.SRV33, type, id, season, episode) },
-  { icon:'🌟', name:'SUPERFLIX', desc:'#35', url: srvUrl(S.SRV36, type, id, season, episode) },
   { icon:'🪨', name:'SMASH',    desc:'#33', url: srvUrl(S.SRV34, type, id, season, episode) },
   { icon:'🌿', name:'NEST',     desc:'#34', url: srvUrl(S.SRV35, type, id, season, episode) },
-  { icon:'🌟', name:'SUPERFLIX',desc:'#35', url: srvUrl(S.SRV36, type, id, season, episode) },
+  { icon:'🌟', name:'SUPERFLIX', desc:'#35', url: superflixUrl },
   { icon:'🎬', name:'VIDNEST2', desc:'#36', url: srvUrl(S.SRV7,  type, id, season, episode) },
 ];
 const allSrvs = [...vipSrvs, ...proSrvs, ...freeSrvs];
