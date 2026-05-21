@@ -1575,7 +1575,6 @@ function wsStartStream() {
     document.getElementById('wsFrame').src = active.dataset.url;
   }
 }
-}
   async function loadRox(url) {
   // أخفِ الـ iframe وأظهر مشغل ROX
   const frame  = document.getElementById('wsFrame');
