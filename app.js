@@ -831,6 +831,10 @@ function calcSeasonEnd(detail) {
 }
 // ===== DETAIL PAGE =====
 async function openDetail(id, type = 'movie') {
+  if (window._lastDetailId && String(window._lastDetailId) !== String(id)) {
+  window._detailHistory.push({ id: window._lastDetailId, type: window._lastDetailType });
+  if (window._detailHistory.length > 10) window._detailHistory.shift();
+  }
   window._lastDetailId = id;
   window._lastDetailType = type;
   document.getElementById('newsSection').style.display = 'none';
