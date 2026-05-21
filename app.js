@@ -1580,7 +1580,13 @@ function wsStartStream() {
   const frame  = document.getElementById('wsFrame');
   const player = document.getElementById('roxPlayer');
   const wrap   = document.getElementById('roxPlayerWrap');
-  if (!url) { frame.src = ''; return; }
+  if (!url) { frame.style.display='block'; if(wrap) wrap.style.display='none'; return; }
+  if (!url.includes('.m3u8') && !url.includes('.mp4')) {
+  frame.style.display = 'block';
+  if (wrap) wrap.style.display = 'none';
+  frame.src = url;
+  return;
+    }
   frame.style.display = 'none';
   if (wrap)  wrap.style.display  = 'flex';
   if (player) {
