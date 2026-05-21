@@ -1740,6 +1740,7 @@ const vipSrvs = [
   { icon:'🟡', name:'PULSAR',  desc:'#19',       url: srvUrl(S.SRV20, type, id, season, episode) },
   { icon:'🪨', name:'VIDROCK', desc:'جديد',      url: srvUrl(S.SRV34, type, id, season, episode) },
   { icon:'🌿', name:'VIDNEST', desc:'جديد',      url: srvUrl(S.SRV35, type, id, season, episode) },
+  { icon:'🎭', name:'SUPERFLIX', desc:'جديد', url: srvUrl(S.SRV36, type, id, season, episode) },
 ];
 const proSrvs = [
   { icon:'🎌', name:'PRIME',   desc:'#01', url: srvUrl(S.SRV1,  type, id, season, episode) },
