@@ -1751,7 +1751,7 @@ const proSrvs = [
   { icon:'🌅', name:'AURORA',  desc:'#04', url: srvUrl(S.SRV4,  type, id, season, episode) },
   { icon:'👑', name:'ZENITH',  desc:'#06', url: srvUrl(S.SRV6,  type, id, season, episode) },
   { icon:'🔮', name:'PHANTOM', desc:'#08', url: srvUrl(S.SRV8,  type, id, season, episode) },
-  { icon:'🌟', name:'VEGA',    desc:'#11', url: srvUrl(S.SRV11, type, id, season, episode) },
+  { icon:'🌟', name:'VEGA',    desc:'#11', url: srvUrl(S.SRV11, type, id, season, episode) + '?autoplayNextEpisode=true&episodeSelector=true&overlay=true&color=e50914' },
 ];
 const freeSrvs = [
   { icon:'🔵', name:'CRYSTAL', desc:'#12', url: srvUrl(S.SRV12, type, id, season, episode) },
