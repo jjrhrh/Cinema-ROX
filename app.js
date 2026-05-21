@@ -1615,6 +1615,12 @@ function wsStartStream() {
 }
 function wsGoBack() {
   document.body.classList.remove('cinema-mode');
+  const wsFrame = document.getElementById('wsFrame');
+if (wsFrame) { wsFrame.src = ''; }
+const roxPlayer = document.getElementById('roxPlayer');
+if (roxPlayer) { roxPlayer.pause(); roxPlayer.src = ''; }
+if (window._roxHls) { window._roxHls.destroy(); window._roxHls = null; }
+if (window._cwTimer) { clearInterval(window._cwTimer); window._cwTimer = null; }
   const dp = document.getElementById('detailPage');
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   if (dp && dp.innerHTML.trim().length > 50) {
