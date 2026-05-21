@@ -1664,6 +1664,11 @@ function wsGoBack() {
   } else { goBack(); }
   window.scrollTo(0, 0);
 }
+function srvUrl(srv, type, id, season, episode) {
+  const base = (type === 'movie') ? srv.mov : srv.tv;
+  if (!season) return `${base}${id}`;
+  return `${base}${id}/${season}/${episode}`;
+}
 async function openWatchPage(id, type, season = 1, episode = 1, resumeSec = 0, resumeSrv = '') {
   const page = document.getElementById('watchPage');
   if (!page) return;
@@ -1705,40 +1710,49 @@ const isAnime = (det.genres||[]).some(g => g.id === 16)
 
 const animeParams = '&lang=ja&audio=ja&dubbed=false&dub=false';
 const animeCC = `https://vidsrc.to/embed/tv/${id}/${season}/${episode}`;
+const S = CONFIG.SERVERS;
+const ep = type !== 'movie';
 const vipSrvs = [
-  { icon:'🎯', name:'ROX',     desc:'مشغلي 🔥', url: ep?`${S.ANIME}${id}/${season}/${episode}${animeParams}`:`${S.MOV}${id}`, rox:true, active:true },
-  { icon:'🎌', name:'PRIME',   desc:'#01',       url: ep?`${S.ANIME}${id}/${season}/${episode}${animeParams}`:`${S.MOV}${id}` },
-  { icon:'⚡', name:'NEXUS',   desc:'#02',       url: ep?`${S.ANIME2}${id}/${season}/${episode}`:`${S.MOV2}${id}` },
-  { icon:'💎', name:'TITAN',   desc:'#03',       url: ep?`${S.ANIME3}${id}/${season}/${episode}`:`${S.MOV3}${id}` },
-  { icon:'🌠', name:'NEXUS-X', desc:'4K #22',    url: ep?`${S.ANIME22}${id}-${season}-${episode}`:`${S.MOV24}${id}` },
-  { icon:'🏅', name:'VULCAN',  desc:'VIP #21',   url: ep?`${S.ANIME21}${id}/${season}/${episode}`:`${S.MOV22}${id}&tmdb=1` },
+  { icon:'🎯', name:'ROX',     desc:'مشغلي 🔥', url: srvUrl(S.SRV1, type, id, season, episode), rox:true, active:true },
+  { icon:'🌌', name:'COSMOS',  desc:'#05',       url: srvUrl(S.SRV5, type, id, season, episode)  },
+  { icon:'⭐', name:'STELLAR', desc:'#07',       url: srvUrl(S.SRV3, type, id, season, episode)  },
+  { icon:'🌙', name:'ECLIPSE', desc:'#09',       url: srvUrl(S.SRV9, type, id, season, episode)  },
+  { icon:'✨', name:'NOVA',    desc:'#10',       url: srvUrl(S.SRV10, type, id, season, episode) },
+  { icon:'🎯', name:'ORION',   desc:'#14',       url: srvUrl(S.SRV14, type, id, season, episode) },
+  { icon:'🖤', name:'ONYX',    desc:'#16',       url: srvUrl(S.SRV16, type, id, season, episode) },
+  { icon:'🏆', name:'APEX',    desc:'#17',       url: srvUrl(S.SRV17, type, id, season, episode) },
+  { icon:'🟡', name:'PULSAR',  desc:'#19',       url: srvUrl(S.SRV20, type, id, season, episode) },
+  { icon:'🪨', name:'VIDROCK', desc:'جديد',      url: srvUrl(S.SRV34, type, id, season, episode) },
+  { icon:'🌿', name:'VIDNEST', desc:'جديد',      url: srvUrl(S.SRV35, type, id, season, episode) },
 ];
 const proSrvs = [
-  { icon:'🌅', name:'AURORA',  desc:'#04', url: ep?`${S.ANIME6}${id}/${season}/${episode}`:`${S.MOV4}${id}` },
-  { icon:'🌌', name:'COSMOS',  desc:'#05', url: ep?`${S.ANIME4}${id}/${season}/${episode}`:`${S.MOV5}${id}` },
-  { icon:'👑', name:'ZENITH',  desc:'#06', url: ep?`${S.ANIME5}${id}/${season}/${episode}`:`${S.MOV6}${id}` },
-  { icon:'⭐', name:'STELLAR', desc:'#07', url: ep?`${S.ANIME7}${id}/${season}/${episode}`:`${S.MOV7}${id}` },
-  { icon:'🔮', name:'PHANTOM', desc:'#08', url: ep?`${S.ANIME8}${id}/${season}/${episode}`:`${S.MOV8}${id}&tmdb=1` },
-  { icon:'🌙', name:'ECLIPSE', desc:'#09', url: ep?`${S.ANIME9}${id}/${season}/${episode}`:`${S.MOV9}${id}` },
-  { icon:'✨', name:'NOVA',    desc:'#10', url: ep?`${S.ANIME10}${id}/${season}/${episode}`:`${S.MOV10}${id}` },
-  { icon:'🌟', name:'VEGA',    desc:'#11', url: ep?`${S.ANIME16}${id}/${season}/${episode}`:`${S.MOV11}${id}` },
+  { icon:'🎌', name:'PRIME',   desc:'#01', url: srvUrl(S.SRV1,  type, id, season, episode) },
+  { icon:'⚡', name:'NEXUS',   desc:'#02', url: srvUrl(S.SRV2,  type, id, season, episode) },
+  { icon:'💎', name:'TITAN',   desc:'#03', url: srvUrl(S.SRV3,  type, id, season, episode) },
+  { icon:'🌠', name:'NEXUS-X', desc:'4K',  url: srvUrl(S.SRV8,  type, id, season, episode) },
+  { icon:'🏅', name:'VULCAN',  desc:'#21', url: srvUrl(S.SRV22, type, id, season, episode) },
+  { icon:'🌅', name:'AURORA',  desc:'#04', url: srvUrl(S.SRV4,  type, id, season, episode) },
+  { icon:'👑', name:'ZENITH',  desc:'#06', url: srvUrl(S.SRV6,  type, id, season, episode) },
+  { icon:'🔮', name:'PHANTOM', desc:'#08', url: srvUrl(S.SRV8,  type, id, season, episode) },
+  { icon:'🌟', name:'VEGA',    desc:'#11', url: srvUrl(S.SRV11, type, id, season, episode) },
 ];
 const freeSrvs = [
-  { icon:'🔵', name:'CRYSTAL', desc:'#12', url: ep?`${S.ANIME11}${id}&s=${season}&e=${episode}`:`${S.MOV12}${id}` },
-  { icon:'🟣', name:'CIPHER',  desc:'#13', url: ep?`${S.ANIME12}${id}/${season}/${episode}`:`${S.MOV13}${id}` },
-  { icon:'🎯', name:'ORION',   desc:'#14', url: ep?`${S.ANIME13}${id}/${season}/${episode}`:`${S.MOV14}${id}` },
-  { icon:'💫', name:'NEBULA',  desc:'#15', url: ep?`${S.ANIME14}${id}/${season}/${episode}`:`${S.MOV15}${id}` },
-  { icon:'🖤', name:'ONYX',    desc:'#16', url: ep?`${S.ANIME15}${id}/${season}/${episode}`:`${S.MOV16}${id}` },
-  { icon:'🏆', name:'APEX',    desc:'#17', url: ep?`${S.ANIME17}${id}/${season}/${episode}`:`${S.MOV17}${id}` },
-  { icon:'🔴', name:'QUASAR',  desc:'#18', url: ep?`${S.ANIME18}${id}/${season}/${episode}`:`${S.MOV19}${id}` },
-  { icon:'🟡', name:'PULSAR',  desc:'#19', url: ep?`${S.ANIME19}${id}/${season}/${episode}`:`${S.MOV20}${id}` },
-  { icon:'🟢', name:'LYRA',    desc:'#20', url: ep?`${S.ANIME20}${id}&tmdb=1&s=${season}&e=${episode}`:`${S.MOV21}${id}` },
-  { icon:'💠', name:'EMBED',   desc:'#23', url: ep?`${S.ANIME23}${id}/${season}/${episode}`:`${S.MOV25}${id}` },
-  { icon:'🌐', name:'ATLAS',   desc:'#24', url: ep?`${S.ANIME30}${id}/${season}/${episode}`:`${S.MOV32}${id}` },
-  { icon:'🎭', name:'FUSION',  desc:'#25', url: ep?`${S.ANIME31}${id}/${season}/${episode}`:`${S.MOV33}${id}` },
-  { icon:'🚀', name:'ROCKET',  desc:'#26', url: ep?`${S.ANIME32}${id}/${season}/${episode}`:`${S.MOV34}${id}` },
+  { icon:'🔵', name:'CRYSTAL', desc:'#12', url: srvUrl(S.SRV12, type, id, season, episode) },
+  { icon:'🟣', name:'CIPHER',  desc:'#13', url: srvUrl(S.SRV13, type, id, season, episode) },
+  { icon:'💫', name:'NEBULA',  desc:'#15', url: srvUrl(S.SRV15, type, id, season, episode) },
+  { icon:'🔴', name:'QUASAR',  desc:'#18', url: srvUrl(S.SRV19, type, id, season, episode) },
+  { icon:'🟢', name:'LYRA',    desc:'#20', url: srvUrl(S.SRV21, type, id, season, episode) },
+  { icon:'💠', name:'EMBED',   desc:'#23', url: srvUrl(S.SRV24, type, id, season, episode) },
+  { icon:'🌐', name:'ATLAS',   desc:'#24', url: srvUrl(S.SRV29, type, id, season, episode) },
+  { icon:'🎭', name:'FUSION',  desc:'#25', url: srvUrl(S.SRV30, type, id, season, episode) },
+  { icon:'🚀', name:'ROCKET',  desc:'#26', url: srvUrl(S.SRV32, type, id, season, episode) },
+  { icon:'🎐', name:'SAKURA',  desc:'#27', url: srvUrl(S.SRV26, type, id, season, episode) },
+  { icon:'🔥', name:'INFERNO', desc:'#28', url: srvUrl(S.SRV25, type, id, season, episode) },
+  { icon:'⚔️', name:'KATANA',  desc:'#29', url: srvUrl(S.SRV27, type, id, season, episode) },
+  { icon:'🎖', name:'SIGMA',   desc:'#30', url: srvUrl(S.SRV23, type, id, season, episode) },
+  { icon:'🏰', name:'CASTLE',  desc:'#31', url: srvUrl(S.SRV28, type, id, season, episode) },
+  { icon:'💥', name:'NOVA-X',  desc:'#32', url: srvUrl(S.SRV33, type, id, season, episode) },
 ];
-
 const allSrvs = [...vipSrvs, ...proSrvs, ...freeSrvs];
 
 function srvHTML(list) {
