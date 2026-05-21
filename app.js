@@ -1740,7 +1740,6 @@ const vipSrvs = [
   { icon:'🟡', name:'PULSAR',  desc:'#19',       url: srvUrl(S.SRV20, type, id, season, episode) },
   { icon:'🪨', name:'VIDROCK', desc:'جديد',      url: srvUrl(S.SRV34, type, id, season, episode) },
   { icon:'🌿', name:'VIDNEST', desc:'جديد',      url: srvUrl(S.SRV35, type, id, season, episode) },
-  { icon:'🎭', name:'SUPERFLIX', desc:'جديد', url: srvUrl(S.SRV36, type, id, season, episode) },
 ];
 const proSrvs = [
   { icon:'🎌', name:'PRIME',   desc:'#01', url: srvUrl(S.SRV1,  type, id, season, episode) },
@@ -1751,7 +1750,7 @@ const proSrvs = [
   { icon:'🌅', name:'AURORA',  desc:'#04', url: srvUrl(S.SRV4,  type, id, season, episode) },
   { icon:'👑', name:'ZENITH',  desc:'#06', url: srvUrl(S.SRV6,  type, id, season, episode) },
   { icon:'🔮', name:'PHANTOM', desc:'#08', url: srvUrl(S.SRV8,  type, id, season, episode) },
-  { icon:'🌟', name:'VEGA',    desc:'#11', url: srvUrl(S.SRV11, type, id, season, episode) + '?autoplayNextEpisode=true&episodeSelector=true&overlay=true&color=e50914' },
+  { icon:'🌟', name:'VEGA',    desc:'#11', url: srvUrl(S.SRV11, type, id, season, episode) },
 ];
 const freeSrvs = [
   { icon:'🔵', name:'CRYSTAL', desc:'#12', url: srvUrl(S.SRV12, type, id, season, episode) },
