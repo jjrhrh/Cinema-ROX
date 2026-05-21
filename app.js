@@ -1794,7 +1794,40 @@ page.innerHTML = `
         referrerpolicy="no-referrer-when-downgrade"
         onload="if(this.src)cwTrackTime(${id},'${type}','${cwPoster}','${cwTitle}')">
       </iframe>
-      <video id="roxPlayer" class="ws-player" controls playsinline style="display:none"></video>
+      <div id="roxPlayerWrap" class="rox-player-wrap" style="display:none">
+        <video id="roxPlayer" class="rox-player-video" playsinline></video>
+        <div class="rox-player-controls" id="roxControls">
+          <div class="rox-ctrl-top">
+            <span class="rox-ctrl-title" id="roxCtrlTitle">ROX Player</span>
+          </div>
+          <div class="rox-progress-wrap">
+            <span class="rox-time" id="roxTimeCur">0:00</span>
+            <input type="range" class="rox-progress" id="roxProgress" value="0" min="0" max="100" step="0.1">
+            <span class="rox-time" id="roxTimeDur">0:00</span>
+          </div>
+          <div class="rox-ctrl-row">
+            <button class="rox-btn" id="roxPlayBtn" onclick="roxTogglePlay()">
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+            </button>
+            <button class="rox-btn" onclick="roxSkip(-10)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.49"/><text x="8" y="15" font-size="7" fill="currentColor" stroke="none">10</text></svg>
+            </button>
+            <button class="rox-btn" onclick="roxSkip(10)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.49-3.49"/><text x="8" y="15" font-size="7" fill="currentColor" stroke="none">10</text></svg>
+            </button>
+            <div class="rox-vol-wrap">
+              <button class="rox-btn" onclick="roxToggleMute()">
+                <svg id="roxVolIco" viewBox="0 0 24 24" fill="currentColor"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+              </button>
+              <input type="range" class="rox-vol" id="roxVol" value="100" min="0" max="100">
+            </div>
+            <span class="rox-spacer"></span>
+            <button class="rox-btn" onclick="roxFullscreen()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
       <div id="wsSwitchOverlay" class="ws-switch-overlay" style="display:none">
         <div class="ws-switch-spinner"></div>
         <span class="ws-switch-txt">يتم الاتصال بسيرفرات Cinema-ROX...</span>
