@@ -103,9 +103,10 @@ HERO: Object.freeze({
   SRV31: { mov: 'https://2embed.org/embed/movie/',                   tv: 'https://2embed.org/embed/tv/'                   },
   SRV32: { mov: 'https://player.vidsrc.nl/embed/movie/',             tv: 'https://player.vidsrc.nl/embed/tv/'             },
   SRV33: { mov: 'https://embed.smashystream.com/playere.php?tmdb=',  tv: 'https://embed.smashystream.com/playere.php?tmdb=' },
-  SRV34: { mov: 'https://vidrock.ru/movie/',                         tv: 'https://vidrock.ru/tv/'                         },
-  SRV35: { mov: 'https://vidnest.fun/movie/',                        tv: 'https://vidnest.fun/tv/{id}/{season}/{episode}'  },                        tv: 'https://vidnest.fun/tv/'                        },
+  SRV34: { mov: 'https://vidrock.ru/movie/',                         tv: 'https://vidrock.ru/tv/'                         },SRV35: { mov: 'https://vidnest.fun/movie/',          tv: 'https://vidnest.fun/tv/{id}/{season}/{episode}'  },                        tv: 'https://vidnest.fun/tv/'                        },
+  SRV36: { mov: 'https://superflixapi.best/filme/',                  tv: 'https://superflixapi.best/serie/' },
 }),
+  
   // ─────────────────────────────────────────
   //  🎬  إعدادات عرض المحتوى
   // ─────────────────────────────────────────
