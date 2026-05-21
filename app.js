@@ -1724,22 +1724,22 @@ genres = (arData.genres || det.genres || []).map(g => `<span class="genre-tag">$
 const isAnime = (det.genres||[]).some(g => g.id === 16)
              && (det.origin_country||[]).includes('JP');
 
-const animeParams = '&lang=ja&audio=ja&dubbed=false&dub=false';
-const animeCC = `https://vidsrc.to/embed/tv/${id}/${season}/${episode}`;
-const S = CONFIG.SERVERS;
-const isTv = type !== 'movie';
+const superflixUrl = type === 'movie'
+  ? `https://superflixapi.best/filme/${det.imdb_id || id}`
+  : `https://superflixapi.best/serie/${id}/${season}/${episode}`;
+
 const vipSrvs = [
   { icon:'🎯', name:'ROX',     desc:'مشغلي 🔥', url: null, rox:true, active:true, stream:true },
-  { icon:'🌌', name:'COSMOS',  desc:'#01',       url: srvUrl(S.SRV5, type, id, season, episode)  },
-  { icon:'⭐', name:'STELLAR', desc:'#07',       url: srvUrl(S.SRV3, type, id, season, episode)  },
-  { icon:'🌙', name:'ECLIPSE', desc:'#09',       url: srvUrl(S.SRV9, type, id, season, episode)  },
+  { icon:'🌌', name:'COSMOS',  desc:'#05',       url: srvUrl(S.SRV5,  type, id, season, episode) },
+  { icon:'⭐', name:'STELLAR', desc:'#07',       url: srvUrl(S.SRV3,  type, id, season, episode) },
+  { icon:'🌙', name:'ECLIPSE', desc:'#09',       url: srvUrl(S.SRV9,  type, id, season, episode) },
   { icon:'✨', name:'NOVA',    desc:'#10',       url: srvUrl(S.SRV10, type, id, season, episode) },
   { icon:'🎯', name:'ORION',   desc:'#14',       url: srvUrl(S.SRV14, type, id, season, episode) },
   { icon:'🖤', name:'ONYX',    desc:'#16',       url: srvUrl(S.SRV16, type, id, season, episode) },
   { icon:'🏆', name:'APEX',    desc:'#17',       url: srvUrl(S.SRV17, type, id, season, episode) },
   { icon:'🟡', name:'PULSAR',  desc:'#19',       url: srvUrl(S.SRV20, type, id, season, episode) },
   { icon:'🪨', name:'VIDROCK', desc:'جديد',      url: srvUrl(S.SRV34, type, id, season, episode) },
-  { icon:'🌿', name:'VIDNEST', desc:'جديد',      url: srvUrl(S.SRV35, type, id, season, episode) },
+  { icon:'🌿', name:'EASY',    desc:'جديد',      url: srvUrl(S.SRV35, type, id, season, episode) },
 ];
 const proSrvs = [
   { icon:'🎌', name:'PRIME',   desc:'#01', url: srvUrl(S.SRV1,  type, id, season, episode) },
@@ -1753,25 +1753,26 @@ const proSrvs = [
   { icon:'🌟', name:'VEGA',    desc:'#11', url: srvUrl(S.SRV11, type, id, season, episode) + '?autoplayNextEpisode=true&episodeSelector=true&overlay=true&color=e50914' },
 ];
 const freeSrvs = [
-  { icon:'🔵', name:'CRYSTAL', desc:'#12', url: srvUrl(S.SRV12, type, id, season, episode) },
-  { icon:'🟣', name:'CIPHER',  desc:'#13', url: srvUrl(S.SRV13, type, id, season, episode) },
-  { icon:'💫', name:'NEBULA',  desc:'#14', url: srvUrl(S.SRV15, type, id, season, episode) },
-  { icon:'🔴', name:'QUASAR',  desc:'#15', url: srvUrl(S.SRV19, type, id, season, episode) },
-  { icon:'🟢', name:'LYRA',    desc:'#20', url: srvUrl(S.SRV21, type, id, season, episode) },
-  { icon:'💠', name:'EMBED',   desc:'#23', url: srvUrl(S.SRV24, type, id, season, episode) },
-  { icon:'🌐', name:'ATLAS',   desc:'#24', url: srvUrl(S.SRV29, type, id, season, episode) },
-  { icon:'🎭', name:'FUSION',  desc:'#25', url: srvUrl(S.SRV30, type, id, season, episode) },
-  { icon:'🚀', name:'ROCKET',  desc:'#26', url: srvUrl(S.SRV32, type, id, season, episode) },
-  { icon:'🎐', name:'SAKURA',  desc:'#27', url: srvUrl(S.SRV26, type, id, season, episode) },
-  { icon:'🔥', name:'INFERNO', desc:'#28', url: srvUrl(S.SRV25, type, id, season, episode) },
-  { icon:'⚔️', name:'KATANA',  desc:'#29', url: srvUrl(S.SRV27, type, id, season, episode) },
-  { icon:'🎖', name:'SIGMA',   desc:'#30', url: srvUrl(S.SRV23, type, id, season, episode) },
-  { icon:'🏰', name:'CASTLE',  desc:'#31', url: srvUrl(S.SRV28, type, id, season, episode) },
+  { icon:'🔵', name:'CRYSTAL',  desc:'#12', url: srvUrl(S.SRV12, type, id, season, episode) },
+  { icon:'🟣', name:'CIPHER',   desc:'#13', url: srvUrl(S.SRV13, type, id, season, episode) },
+  { icon:'💫', name:'NEBULA',   desc:'#15', url: srvUrl(S.SRV15, type, id, season, episode) },
+  { icon:'🔴', name:'QUASAR',   desc:'#18', url: srvUrl(S.SRV19, type, id, season, episode) },
+  { icon:'🟢', name:'LYRA',     desc:'#20', url: srvUrl(S.SRV21, type, id, season, episode) },
+  { icon:'💠', name:'EMBED',    desc:'#23', url: srvUrl(S.SRV24, type, id, season, episode) },
+  { icon:'🌐', name:'ATLAS',    desc:'#24', url: srvUrl(S.SRV29, type, id, season, episode) },
+  { icon:'🎭', name:'FUSION',   desc:'#25', url: srvUrl(S.SRV30, type, id, season, episode) },
+  { icon:'🚀', name:'ROCKET',   desc:'#26', url: srvUrl(S.SRV32, type, id, season, episode) },
+  { icon:'🎐', name:'SAKURA',   desc:'#27', url: srvUrl(S.SRV26, type, id, season, episode) },
+  { icon:'🔥', name:'INFERNO',  desc:'#28', url: srvUrl(S.SRV25, type, id, season, episode) },
+  { icon:'⚔️', name:'KATANA',   desc:'#29', url: srvUrl(S.SRV27, type, id, season, episode) },
+  { icon:'🎖', name:'SIGMA',    desc:'#30', url: srvUrl(S.SRV23, type, id, season, episode) },
+  { icon:'🏰', name:'CASTLE',   desc:'#31', url: srvUrl(S.SRV28, type, id, season, episode) },
   { icon:'💥', name:'NOVA-X',   desc:'#32', url: srvUrl(S.SRV33, type, id, season, episode) },
   { icon:'🪨', name:'SMASH',    desc:'#33', url: srvUrl(S.SRV34, type, id, season, episode) },
-  { icon:'🌿', name:'NEST',     desc:'#34', url: srvUrl(S.SRV35, type, id, season, episode) },
-  { icon:'🌟', name:'SUPERFLIX', desc:'#35', url: superflixUrl },
-  { icon:'🎬', name:'VIDNEST2', desc:'#36', url: srvUrl(S.SRV7,  type, id, season, episode) },
+  { icon:'🌿', name:'EASY',     desc:'#34', url: srvUrl(S.SRV35, type, id, season, episode) },
+  { icon:'🌟', name:'VIDSRC-X', desc:'#35', url: srvUrl(S.SRV36, type, id, season, episode) },
+  { icon:'⭐', name:'SUPERFLIX', desc:'#36', url: superflixUrl },
+  { icon:'🎬', name:'SMASHY',   desc:'#37', url: srvUrl(S.SRV7,  type, id, season, episode) },
 ];
 const allSrvs = [...vipSrvs, ...proSrvs, ...freeSrvs];
 // جلب ROX من stream.js
