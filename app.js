@@ -1598,6 +1598,64 @@ function wsGoBack() {
   } else { goBack(); }
   window.scrollTo(0, 0);
 }
+// ===== ROX PLAYER CONTROLS =====
+function roxTogglePlay() {
+  const v = document.getElementById('roxPlayer');
+  const btn = document.getElementById('roxPlayBtn');
+  if (!v) return;
+  if (v.paused) {
+    v.play();
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+  } else {
+    v.pause();
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>';
+  }
+}
+function roxSkip(sec) {
+  const v = document.getElementById('roxPlayer');
+  if (v) v.currentTime = Math.max(0, v.currentTime + sec);
+}
+function roxToggleMute() {
+  const v = document.getElementById('roxPlayer');
+  if (v) { v.muted = !v.muted; document.getElementById('roxVol').value = v.muted ? 0 : 100; }
+}
+function roxFullscreen() {
+  const wrap = document.getElementById('roxPlayerWrap');
+  if (!wrap) return;
+  if (document.fullscreenElement) document.exitFullscreen();
+  else wrap.requestFullscreen?.() || wrap.webkitRequestFullscreen?.();
+}
+// ربط الأحداث بالمشغل
+document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('click', () => {
+    const v = document.getElementById('roxPlayer');
+    const prog = document.getElementById('roxProgress');
+    const cur  = document.getElementById('roxTimeCur');
+    const dur  = document.getElementById('roxTimeDur');
+    const vol  = document.getElementById('roxVol');
+    if (!v) return;
+    v.addEventListener('timeupdate', () => {
+      if (!v.duration) return;
+      prog.value = (v.currentTime / v.duration) * 100;
+      cur.textContent = roxFmtTime(v.currentTime);
+    });
+    v.addEventListener('loadedmetadata', () => {
+      dur.textContent = roxFmtTime(v.duration);
+    });
+    prog?.addEventListener('input', () => {
+      if (v.duration) v.currentTime = (prog.value / 100) * v.duration;
+    });
+    vol?.addEventListener('input', () => {
+      v.volume = vol.value / 100;
+      v.muted  = vol.value == 0;
+    });
+  }, { once: true });
+});
+function roxFmtTime(s) {
+  const m = Math.floor(s / 60);
+  const ss = Math.floor(s % 60).toString().padStart(2, '0');
+  return `${m}:${ss}`;
+}
 function srvUrl(srv, type, id, season, episode) {
   const base = (type === 'movie') ? srv.mov : srv.tv;
   if (!season) return `${base}${id}`;
