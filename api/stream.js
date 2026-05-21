@@ -15,7 +15,7 @@ export default async function handler(req, res) {
     fetchAllAnime(title, epNum),
     fetchAniwatch(title, epNum),
     fetchArabicScrape(title, epNum),
-    fetchVidSrcAndPeachify(title, epNum),
+    fetchVidSrcTMDB(title, epNum),
   ]);
 
   const servers = [
@@ -44,7 +44,6 @@ async function fetchAllAnime(title, epNum) {
     'Content-Type': 'application/json',
   };
 
-  // بحث
   const sr = await fetch('https://api.allanime.day/api', {
     method: 'POST', headers: H,
     body: JSON.stringify({
@@ -61,7 +60,6 @@ async function fetchAllAnime(title, epNum) {
   const showId = (sd?.data?.shows?.edges||[])[0]?._id;
   if (!showId) return servers;
 
-  // جلب سورسات SUB
   for (const lang of ['sub','dub']) {
     try {
       const er = await fetch('https://api.allanime.day/api', {
@@ -126,7 +124,7 @@ async function fetchAniwatch(title, epNum) {
             lang:    'sub',
           });
         });
-        if (d.sources?.length) break; // نجح — انتقل للسيرفر التالي
+        if (d.sources?.length) break;
       } catch {}
     }
     if (servers.length >= 3) break;
@@ -152,7 +150,6 @@ async function fetchArabicScrape(title, epNum) {
     { name:'AnimeSlayer', url:`https://www.animeslayer.com/episode/${slug}-episode-${epNum}/` },
   ];
 
-  // جلب بالتوازي لكل المواقع
   const results = await Promise.allSettled(
     ARABIC_SITES.map(site => scrapeForVideo(site.url, site.name))
   );
@@ -174,129 +171,102 @@ async function fetchArabicScrape(title, epNum) {
 }
 
 /* ════════════════════════════════
-   4. VidSrc + Peachify
+   4. VidSrc عبر TMDB ID
 ════════════════════════════════ */
-async function fetchVidSrcAndPeachify(title, epNum) {
+async function fetchVidSrcTMDB(title, epNum) {
   const servers = [];
-  const slug    = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-$/, '');
-  const ep      = String(epNum || 1);
+  const ep = String(epNum || 1);
+  const TMDB_KEY = '943bac496146cd6404017535d3c0e8ec';
 
-  /* ── VidSrc ── */
-  const VIDSRC_BASES = [
-    'https://vidsrc.to',
-    'https://vidsrc.me',
-    'https://vidsrc.net',
+  // خطوة 1: ابحث عن TMDB ID
+  let tmdbId = null;
+  let mediaType = 'movie';
+  try {
+    const mRes = await fetch(
+      `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_KEY}&query=${encodeURIComponent(title)}&page=1`,
+      { signal: AbortSignal.timeout(6000) }
+    ).then(r => r.json());
+    if (mRes.results?.[0]) {
+      tmdbId = mRes.results[0].id;
+      mediaType = 'movie';
+    } else {
+      const tRes = await fetch(
+        `https://api.themoviedb.org/3/search/tv?api_key=${TMDB_KEY}&query=${encodeURIComponent(title)}&page=1`,
+        { signal: AbortSignal.timeout(6000) }
+      ).then(r => r.json());
+      if (tRes.results?.[0]) {
+        tmdbId = tRes.results[0].id;
+        mediaType = 'tv';
+      }
+    }
+  } catch(e) { console.log('[TMDB search] فشل:', e.message); }
+
+  if (!tmdbId) {
+    console.log('[VidSrc] ما وجدنا TMDB ID');
+    return servers;
+  }
+
+  console.log(`[VidSrc] TMDB ID: ${tmdbId} | type: ${mediaType}`);
+
+  // خطوة 2: APIs مفتوحة تعطي m3u8 مباشرة
+  const OPEN_APIS = mediaType === 'movie' ? [
+    `https://vidsrc.rip/api/movie?tmdb=${tmdbId}`,
+    `https://vidbinge.dev/api/source/movie/${tmdbId}`,
+    `https://embed.su/api/movie/${tmdbId}`,
+  ] : [
+    `https://vidsrc.rip/api/tv?tmdb=${tmdbId}&season=1&episode=${ep}`,
+    `https://vidbinge.dev/api/source/tv/${tmdbId}/1/${ep}`,
+    `https://embed.su/api/tv/${tmdbId}/1/${ep}`,
   ];
 
-  // نبني مسارات مرشحة: صفحة الفيلم + صفحة الحلقة
-  const vidsrcCandidates = VIDSRC_BASES.flatMap(base => [
-    { name: 'VidSrc Movie',   url: `${base}/embed/movie/${slug}` },
-    { name: 'VidSrc Episode', url: `${base}/embed/tv/${slug}/1/${ep}` },
-  ]);
-
-  const vsResults = await Promise.allSettled(
-    vidsrcCandidates.map(c => scrapeM3u8FromPage(c.url, c.name))
-  );
-
-  vsResults.forEach((r, i) => {
-    if (r.status === 'fulfilled' && r.value) {
-      servers.push({
-        name:    vidsrcCandidates[i].name,
-        url:     r.value.url,
-        type:    r.value.type,
-        quality: r.value.quality || 'auto',
-        lang:    'multi',
+  for (const apiUrl of OPEN_APIS) {
+    try {
+      const r = await fetch(apiUrl, {
+        headers: { 'User-Agent': 'Mozilla/5.0 Chrome/124.0' },
+        signal: AbortSignal.timeout(7000),
       });
-    }
-  });
+      if (!r.ok) continue;
+      const data = await r.json();
+      const srcs = data.sources || data.stream || data.streams || data.links || [];
+      for (const s of srcs) {
+        const url = s.url || s.file || s.link || s.src || '';
+        if (!url.startsWith('http')) continue;
+        servers.push({
+          name:    `ROX · ${mediaType === 'movie' ? 'فيلم' : 'مسلسل'}`,
+          url,
+          type:    url.includes('.m3u8') ? 'hls' : 'mp4',
+          quality: s.quality || s.label || 'auto',
+          lang:    'multi',
+        });
+      }
+      if (servers.length) {
+        console.log(`[VidSrc API] ✅ ${servers.length} مصدر`);
+        break;
+      }
+    } catch(e) { console.log(`[VidSrc API] فشل:`, e.message); }
+  }
 
-  /* ── Peachify ── */
-  const PEACHIFY_BASES = [
-    'https://peachify.net',
-    'https://peachify.xyz',
-  ];
+  // خطوة 3: Fallback — embed نظيف كـ iframe
+  if (!servers.length) {
+    console.log('[VidSrc] fallback إلى embed');
+    const embeds = mediaType === 'movie' ? [
+      { name:'VidSrc',  url:`https://vidsrc.to/embed/movie/${tmdbId}` },
+      { name:'EmbedSu', url:`https://embed.su/embed/movie/${tmdbId}` },
+      { name:'VidLink', url:`https://vidlink.pro/movie/${tmdbId}` },
+    ] : [
+      { name:'VidSrc',  url:`https://vidsrc.to/embed/tv/${tmdbId}/1/${ep}` },
+      { name:'EmbedSu', url:`https://embed.su/embed/tv/${tmdbId}/1/${ep}` },
+      { name:'VidLink', url:`https://vidlink.pro/tv/${tmdbId}/1/${ep}` },
+    ];
+    embeds.forEach(e => servers.push({ ...e, type:'iframe', quality:'auto', lang:'multi' }));
+  }
 
-  const peachCandidates = PEACHIFY_BASES.flatMap(base => [
-    { name: 'Peachify Movie',   url: `${base}/movie/${slug}` },
-    { name: 'Peachify Episode', url: `${base}/tv/${slug}/season/1/episode/${ep}` },
-  ]);
-
-  const pcResults = await Promise.allSettled(
-    peachCandidates.map(c => scrapeM3u8FromPage(c.url, c.name))
-  );
-
-  pcResults.forEach((r, i) => {
-    if (r.status === 'fulfilled' && r.value) {
-      servers.push({
-        name:    peachCandidates[i].name,
-        url:     r.value.url,
-        type:    r.value.type,
-        quality: r.value.quality || 'auto',
-        lang:    'multi',
-      });
-    }
-  });
-
-  console.log(`[VidSrc+Peachify] ${servers.length} سيرفر`);
+  console.log(`[VidSrc+TMDB] ${servers.length} سيرفر`);
   return servers;
 }
 
 /* ════════════════════════════════
-   Scrape M3U8 — يجلب HTML ويستخرج رابط m3u8 صافي
-════════════════════════════════ */
-async function scrapeM3u8FromPage(pageUrl, name) {
-  for (const proxy of PROXIES) {
-    try {
-      const r = await fetch(proxy(pageUrl), {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/124.0',
-          'Referer':    pageUrl,
-        },
-        signal: AbortSignal.timeout(12000),
-      });
-      if (!r.ok) continue;
-      const html = await r.text();
-
-      // أولوية لـ m3u8 الصافي
-      const m3u8Patterns = [
-        /https?:\/\/[^\s"'<>\\]+\.m3u8(?:[^\s"'<>\\]*)/g,
-        /["'](https?:\/\/[^"']+\.m3u8[^"']*)/g,
-        /file\s*:\s*["']([^"']+\.m3u8[^"']*)/g,
-        /source\s*src=["']([^"']+\.m3u8[^"']*)/g,
-        /hls\.loadSource\(["']([^"']+\.m3u8[^"']*)/g,
-      ];
-
-      for (const pattern of m3u8Patterns) {
-        const matches = [...html.matchAll(pattern)];
-        for (const m of matches) {
-          const url = (m[1] || m[0]).replace(/\\u002F/g, '/').trim();
-          if (url.startsWith('http') && url.includes('.m3u8')) {
-            // استخراج الجودة من المسار إن وجدت
-            const qualityMatch = url.match(/(\d{3,4})p/);
-            const quality = qualityMatch ? `${qualityMatch[1]}p` : 'auto';
-            console.log(`[M3U8-scrape] ✅ ${name}: ${url.slice(0, 70)}`);
-            return { url, type: 'hls', quality };
-          }
-        }
-      }
-
-      // fallback: iframe embed إن لم يوجد m3u8
-      const iframeMatch = html.match(/iframe[^>]+src=["'](https?:\/\/[^"']+)["']/i);
-      if (iframeMatch) {
-        // محاولة ثانية داخل الـ iframe
-        const iframeResult = await scrapeM3u8FromPage(iframeMatch[1], `${name}/iframe`).catch(() => null);
-        if (iframeResult) return iframeResult;
-      }
-
-    } catch (e) {
-      console.log(`[M3U8-scrape] ${name} فشل:`, e.message);
-    }
-  }
-  return null;
-}
-
-/* ════════════════════════════════
-   Scrape Helper — يجلب HTML ويستخرج رابط
+   Scrape Helper
 ════════════════════════════════ */
 const PROXIES = [
   u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
@@ -327,20 +297,13 @@ async function scrapeForVideo(pageUrl, name) {
 
 function extractVideoUrl(html) {
   const patterns = [
-    // M3U8 مباشر
     { re: /https?:\/\/[^\s"'<>]+\.m3u8[^\s"'<>]*/,           type: 'hls' },
-    // JWPlayer / Video.js file
     { re: /file\s*:\s*["']([^"']+\.m3u8[^"']*)/,             type: 'hls', g: 1 },
-    // MP4 مباشر
     { re: /https?:\/\/[^\s"'<>]+\.mp4[^\s"'<>]*/,            type: 'mp4' },
-    // video src
     { re: /<video[^>]+src=["']([^"']+)["']/i,                 type: 'mp4', g: 1 },
-    // src: "..." في الـ JS
     { re: /source\s*:\s*["']([^"']+\.mp4[^"']*)/,            type: 'mp4', g: 1 },
-    // iframe embed
     { re: /iframe[^>]+src=["'](https?:\/\/[^"']+)["']/i,     type: 'iframe', g: 1 },
   ];
-
   for (const p of patterns) {
     const m = html.match(p.re);
     if (m) return { url: p.g ? m[p.g] : m[0], type: p.type };
@@ -349,7 +312,7 @@ function extractVideoUrl(html) {
 }
 
 /* ════════════════════════════════
-   Scrape مخصص (من player.js)
+   Scrape مخصص
 ════════════════════════════════ */
 async function scrapeVideoUrl(pageUrl, res) {
   const result = await scrapeForVideo(pageUrl, 'custom');
@@ -369,4 +332,4 @@ function rot13(str) {
 function decodeAaUrl(url = '') {
   if (url.startsWith('--')) return rot13(url.slice(2));
   return url;
-          }
+}
