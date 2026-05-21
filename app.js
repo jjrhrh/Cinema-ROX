@@ -1767,7 +1767,11 @@ const freeSrvs = [
   { icon:'⚔️', name:'KATANA',  desc:'#29', url: srvUrl(S.SRV27, type, id, season, episode) },
   { icon:'🎖', name:'SIGMA',   desc:'#30', url: srvUrl(S.SRV23, type, id, season, episode) },
   { icon:'🏰', name:'CASTLE',  desc:'#31', url: srvUrl(S.SRV28, type, id, season, episode) },
-  { icon:'💥', name:'NOVA-X',  desc:'#32', url: srvUrl(S.SRV33, type, id, season, episode) },
+  { icon:'💥', name:'NOVA-X',   desc:'#32', url: srvUrl(S.SRV33, type, id, season, episode) },
+  { icon:'🪨', name:'SMASH',    desc:'#33', url: srvUrl(S.SRV34, type, id, season, episode) },
+  { icon:'🌿', name:'NEST',     desc:'#34', url: srvUrl(S.SRV35, type, id, season, episode) },
+  { icon:'🌟', name:'SUPERFLIX',desc:'#35', url: srvUrl(S.SRV36, type, id, season, episode) },
+  { icon:'🎬', name:'VIDNEST2', desc:'#36', url: srvUrl(S.SRV7,  type, id, season, episode) },
 ];
 const allSrvs = [...vipSrvs, ...proSrvs, ...freeSrvs];
 // جلب ROX من stream.js
