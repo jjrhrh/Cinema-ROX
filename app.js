@@ -1646,7 +1646,7 @@ const animeCC = `https://vidsrc.to/embed/tv/${id}/${season}/${episode}`;
 const S = CONFIG.SERVERS;
 const isTv = type !== 'movie';
 const vipSrvs = [
-  { icon:'🎯', name:'ROX',     desc:'مشغلي 🔥', url: srvUrl(S.SRV1, type, id, season, episode), rox:true, active:true },
+  { icon:'🎯', name:'ROX',     desc:'مشغلي 🔥', url: null, rox:true, active:true, stream:true },
   { icon:'🌌', name:'COSMOS',  desc:'#05',       url: srvUrl(S.SRV5, type, id, season, episode)  },
   { icon:'⭐', name:'STELLAR', desc:'#07',       url: srvUrl(S.SRV3, type, id, season, episode)  },
   { icon:'🌙', name:'ECLIPSE', desc:'#09',       url: srvUrl(S.SRV9, type, id, season, episode)  },
@@ -1687,7 +1687,19 @@ const freeSrvs = [
   { icon:'💥', name:'NOVA-X',  desc:'#32', url: srvUrl(S.SRV33, type, id, season, episode) },
 ];
 const allSrvs = [...vipSrvs, ...proSrvs, ...freeSrvs];
-
+// جلب ROX من stream.js
+const roxTitle = type === 'movie' ? (det.title || det.original_title) : (det.name || det.original_name);
+let roxStreamUrl = null;
+try {
+  const streamEp = type === 'tv' ? episode : 1;
+  const streamRes = await fetch(`/api/stream?title=${encodeURIComponent(roxTitle)}&ep=${streamEp}`);
+  const streamData = await streamRes.json();
+  const best = (streamData.sources || []).find(s => s.type === 'hls') || (streamData.sources || [])[0];
+  if (best?.url) roxStreamUrl = best.url;
+} catch(e) { console.warn('[ROX stream] فشل:', e.message); }
+// تحديث رابط ROX في vipSrvs
+const roxCard = vipSrvs.find(s => s.stream);
+if (roxCard) roxCard.url = roxStreamUrl || srvUrl(S.SRV1, type, id, season, episode);
 function srvHTML(list) {
   return list.map(s => `
     <div class="ws-card ${s.active?'ws-active':''}" data-url="${s.url}" data-name="${s.name}" ${s.rox?'data-rox="true"':''} onclick="wsSelectServer(this)">
