@@ -1,4 +1,5 @@
 const S = CONFIG.SERVERS;
+window._detailHistory = [];
 // ===== SIDEBAR =====
 function toggleSidebar() {
   const menu = document.getElementById('sidebarMenu');
