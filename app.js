@@ -99,6 +99,12 @@ function unmuteTrailer(id) {
 
 function goBack() {
   if (window._trailerTimer) { clearTimeout(window._trailerTimer); window._trailerTimer = null; }
+  if (window._detailHistory && window._detailHistory.length > 0) {
+  const prev = window._detailHistory.pop();
+  window._lastDetailId = null;
+  openDetail(prev.id, prev.type);
+  return;
+  }
   if (window._activeTrailerFrame) { window._activeTrailerFrame.src = ''; window._activeTrailerFrame = null; }
   const hero = document.getElementById('heroSection');
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
