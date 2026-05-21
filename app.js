@@ -1567,26 +1567,46 @@ function wsSelectServer(card) {
 function wsStartStream() {
   const active = document.querySelector('.ws-card.active');
   if (!active) return;
-  document.getElementById('wsFrame').src = active.dataset.url;
-  document.getElementById('wsOverlay').style.display = 'none';
+  const overlay = document.getElementById('wsOverlay');
+  if (overlay) overlay.style.display = 'none';
+  if (active.dataset.rox) {
+    loadRox(active.dataset.url);
+  } else {
+    document.getElementById('wsFrame').src = active.dataset.url;
+  }
+}
 }
   async function loadRox(url) {
-  const proxy = CONFIG.VIDEO.PROXY;
-  const res = await fetch(proxy + encodeURIComponent(url)).catch(()=>null);
-  if (!res) { document.getElementById('wsFrame').src = url; return; }
-  const html = await res.text();
-  const m = html.match(/["'](https?:\/\/[^"']+\.m3u8[^"']*)['"]/);
-  const v = document.getElementById('roxPlayer');
-  if (m) {
-    v.style.display = 'block';
-    document.getElementById('wsFrame').style.display = 'none';
-    if (window._plyr) window._plyr.destroy();
-    v.src = m[1];
-    window._plyr = new Plyr(v, { autoplay:true });
-  } else {
-    document.getElementById('wsFrame').src = url;
+  // أخفِ الـ iframe وأظهر مشغل ROX
+  const frame  = document.getElementById('wsFrame');
+  const player = document.getElementById('roxPlayer');
+  const wrap   = document.getElementById('roxPlayerWrap');
+  if (!url) { frame.src = ''; return; }
+  frame.style.display = 'none';
+  if (wrap)  wrap.style.display  = 'flex';
+  if (player) {
+    // دمر HLS السابق إن وجد
+    if (window._roxHls) { window._roxHls.destroy(); window._roxHls = null; }
+    player.pause();
+    if (typeof Hls !== 'undefined' && Hls.isSupported()) {
+      const hls = new Hls({ enableWorker: true, lowLatencyMode: true });
+      window._roxHls = hls;
+      hls.loadSource(url);
+      hls.attachMedia(player);
+      hls.on(Hls.Events.MANIFEST_PARSED, () => player.play().catch(()=>{}));
+      hls.on(Hls.Events.ERROR, (e, d) => { if (d.fatal) frame.src = url; });
+    } else if (player.canPlayType('application/vnd.apple.mpegurl')) {
+      // Safari — يدعم HLS أصلاً
+      player.src = url;
+      player.play().catch(()=>{});
+    } else {
+      // fallback للـ iframe
+      frame.style.display = 'block';
+      if (wrap) wrap.style.display = 'none';
+      frame.src = url;
+    }
   }
-  }
+}
 function wsGoBack() {
   document.body.classList.remove('cinema-mode');
   const dp = document.getElementById('detailPage');
