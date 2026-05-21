@@ -1928,29 +1928,13 @@ function wsShowTab(btn, tab) {
 let _cwTimer = null;
 function cwTrackTime(id, type, poster, title) {
   clearInterval(_cwTimer);
-  // VIDNEST postMessage — وقت حقيقي
-  window.addEventListener('message', function _vnTrack(event) {
-    if (event.origin !== 'https://vidnest.fun') return;
-    if (event.data?.type === 'MEDIA_DATA') {
-      const watched = event.data.data?.progress?.watched;
-      if (!watched) return;
-      const activeCard = document.querySelector('.ws-card.active');
-      const srv = activeCard?.dataset.name || '';
-      const url = activeCard?.dataset.url || '';
-      cwSave(id, type, '', title, Math.floor(watched), srv, url);
-    }
-    if (event.data?.type === 'PLAYER_EVENT' && event.data?.event === 'ended') {
-      window.removeEventListener('message', _vnTrack);
-    }
-  });
-  // Fallback للسيرفرات الثانية
   let sec = 0;
   _cwTimer = setInterval(() => {
     sec += 10;
     const activeCard = document.querySelector('.ws-card.active');
-    const srv = activeCard?.dataset.name || '';
-    const url = activeCard?.dataset.url || '';
-    cwSave(id, type, '', title, sec, srv, url);
+    const srv = activeCard ? (activeCard.dataset.name || '') : '';
+    const url = activeCard ? (activeCard.dataset.url || '') : '';
+    cwSave(id, type, poster, title, sec, srv, url);
   }, 10000);
 }
 const CW_KEY = 'rox_continue';
