@@ -3180,3 +3180,102 @@ window.addEventListener('popstate', function () {
     goBack();
   }
 });
+// ===== FILTER PANEL TOGGLE =====
+function toggleFilterPanel() {
+  const p = document.getElementById('filterPanel');
+  const b = document.getElementById('filterToggleBtn');
+  if (!p) return;
+  p.classList.toggle('open');
+  b.classList.toggle('active');
+}
+document.querySelectorAll('.filter-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+  });
+});
+// ===== LIVE TRENDS ROW =====
+async function loadLiveTrends() {
+  const row = document.getElementById('liveTrendsRow');
+  if (!row) return;
+  try {
+    const r = await fetch(`https://api.themoviedb.org/3/trending/all/day?api_key=${TMDB_KEY}&language=ar`);
+    const d = await r.json();
+    row.innerHTML = d.results.slice(0,10).map(m => `
+      <div class="trend-card" onclick="openDetail(${m.id},'${m.media_type}')">
+        <img src="https://image.tmdb.org/t/p/w300${m.backdrop_path||m.poster_path}" loading="lazy">
+        <div class="trend-card-label">${m.title||m.name}</div>
+        <span class="trend-live-badge">LIVE</span>
+      </div>`).join('');
+  } catch(e) {}
+}
+loadLiveTrends();
+// ===== SMART SERVER PING UI =====
+function injectServerPingBar(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container || document.getElementById('serverPingBar')) return;
+  const bar = document.createElement('div');
+  bar.id = 'serverPingBar';
+  bar.className = 'server-ping-bar';
+  bar.innerHTML = `
+    <div class="ping-indicator">
+      <div class="ping-dot ping-green"></div>
+      <span style="color:#00ff88">سريع جداً</span>
+    </div>
+    <button class="auto-select-btn" onclick="autoSelectFastestServer()">⚡ الأسرع تلقائياً</button>`;
+  container.prepend(bar);
+  colorServerCards();
+}
+function colorServerCards() {
+  document.querySelectorAll('.server-card, .src-card').forEach((card, i) => {
+    card.classList.add('server-node-card');
+    const isFast = i < 4;
+    card.classList.add(isFast ? 'fast' : 'medium');
+    const badge = document.createElement('div');
+    badge.className = `server-speed-badge ${isFast ? 'speed-fast' : 'speed-med'}`;
+    badge.textContent = isFast ? '⚡' : '~';
+    card.appendChild(badge);
+  });
+}
+function autoSelectFastestServer() {
+  const cards = document.querySelectorAll('.server-node-card.fast');
+  if (cards[0]) cards[0].click();
+}
+// ===== AMBILIGHT AURA =====
+(function() {
+  const aura = document.createElement('div');
+  aura.className = 'ambilight-aura';
+  aura.id = 'ambilightAura';
+  document.body.prepend(aura);
+})();
+
+function setAmbilightColor(hex) {
+  const aura = document.getElementById('ambilightAura');
+  if (!aura) return;
+  aura.style.background =
+    `radial-gradient(ellipse at center top, ${hex}55 0%, transparent 65%),
+     radial-gradient(ellipse at center bottom, ${hex}33 0%, transparent 60%)`;
+  aura.classList.add('active');
+}
+
+function activateCinemaMode(dominantHex) {
+  document.body.classList.add('cinema-mode');
+  setAmbilightColor(dominantHex || '#e50914');
+}
+function deactivateCinemaMode() {
+  document.body.classList.remove('cinema-mode');
+  const aura = document.getElementById('ambilightAura');
+  if (aura) aura.classList.remove('active');
+}
+
+// ===== SNAPSHOT SHARE =====
+function roxSnapshot() {
+  const iframe = document.querySelector('.watch-iframe, iframe');
+  if (!iframe) { alert('شغّل الفيديو أولاً'); return; }
+  navigator.share ? navigator.share({
+    title: document.title,
+    text: 'شاهد هذا على Cinema ROX 🎬',
+    url: window.location.href
+  }) : navigator.clipboard.writeText(window.location.href)
+    .then(() => alert('تم نسخ الرابط ✅'));
+}
