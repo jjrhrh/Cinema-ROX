@@ -1782,7 +1782,10 @@ try {
 } catch(e) { console.warn('[ROX stream] فشل:', e.message); }
 // تحديث رابط ROX في vipSrvs
 const roxCard = vipSrvs.find(s => s.stream);
-if (roxCard) roxCard.url = roxStreamUrl || srvUrl(S.SRV1, type, id, season, episode);
+const multiUrl = type === 'movie'
+  ? `https://multiembed.mov/?video_id=${id}&tmdb=1`
+  : `https://multiembed.mov/?video_id=${id}&tmdb=1&s=1&e=${episode}`;
+if (roxCard) roxCard.url = roxStreamUrl || multiUrl;
 function srvHTML(list) {
   return list.map(s => `
     <div class="ws-card ${s.active?'ws-active':''}" data-url="${s.url||''}" data-name="${s.name}" ${s.rox?'data-rox="true"':''} onclick="wsSelectServer(this)">
