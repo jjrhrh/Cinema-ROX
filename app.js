@@ -1730,6 +1730,7 @@ const superflixUrl = type === 'movie'
 
 const vipSrvs = [
   { icon:'🎯', name:'ROX',     desc:'مشغلي 🔥', url: null, rox:true, active:true, stream:true },
+  { icon:'🎌', name:'ANIME',  desc:'أنمي', url: `https://2anime.xyz/embed/${id}/${season}/${episode}` },
   { icon:'🌌', name:'COSMOS',  desc:'#05',       url: srvUrl(S.SRV5,  type, id, season, episode) },
   { icon:'⭐', name:'STELLAR', desc:'#07',       url: srvUrl(S.SRV3,  type, id, season, episode) },
   { icon:'🌙', name:'ECLIPSE', desc:'#09',       url: srvUrl(S.SRV9,  type, id, season, episode) },
