@@ -208,43 +208,27 @@ async function fetchVidSrcTMDB(title, epNum) {
 
   console.log(`[VidSrc] TMDB ID: ${tmdbId} | type: ${mediaType}`);
 
-  // خطوة 2: APIs مفتوحة تعطي m3u8 مباشرة
-  const OPEN_APIS = mediaType === 'movie' ? [
-    `https://vidsrc.rip/api/movie?tmdb=${tmdbId}`,
-    `https://vidbinge.dev/api/source/movie/${tmdbId}`,
-    `https://embed.su/api/movie/${tmdbId}`,
-  ] : [
-    `https://vidsrc.rip/api/tv?tmdb=${tmdbId}&season=1&episode=${ep}`,
-    `https://vidbinge.dev/api/source/tv/${tmdbId}/1/${ep}`,
-    `https://embed.su/api/tv/${tmdbId}/1/${ep}`,
-  ];
+  const VIDSRC_API = 'https://vidsrc-api-delta.vercel.app';
 
-  for (const apiUrl of OPEN_APIS) {
-    try {
-      const r = await fetch(apiUrl, {
-        headers: { 'User-Agent': 'Mozilla/5.0 Chrome/124.0' },
-        signal: AbortSignal.timeout(7000),
+const apiUrl = mediaType === 'movie'
+  ? `${VIDSRC_API}/api?tmdb=${tmdbId}&type=movie`
+  : `${VIDSRC_API}/api?tmdb=${tmdbId}&type=tv&season=1&episode=${ep}`;
+
+try {
+  const r = await fetch(apiUrl, { signal: AbortSignal.timeout(8000) });
+  if (r.ok) {
+    const data = await r.json();
+    (data || []).forEach(s => {
+      if (s.stream) servers.push({
+        name:    'ROX · Direct',
+        url:     s.stream,
+        type:    'hls',
+        quality: 'auto',
+        lang:    'multi',
       });
-      if (!r.ok) continue;
-      const data = await r.json();
-      const srcs = data.sources || data.stream || data.streams || data.links || [];
-      for (const s of srcs) {
-        const url = s.url || s.file || s.link || s.src || '';
-        if (!url.startsWith('http')) continue;
-        servers.push({
-          name:    `ROX · ${mediaType === 'movie' ? 'فيلم' : 'مسلسل'}`,
-          url,
-          type:    url.includes('.m3u8') ? 'hls' : 'mp4',
-          quality: s.quality || s.label || 'auto',
-          lang:    'multi',
-        });
-      }
-      if (servers.length) {
-        console.log(`[VidSrc API] ✅ ${servers.length} مصدر`);
-        break;
-      }
-    } catch(e) { console.log(`[VidSrc API] فشل:`, e.message); }
+    });
   }
+} catch(e) { console.log('[vidsrc-api] فشل:', e.message); }
 
   // خطوة 3: Fallback — embed نظيف كـ iframe
   if (!servers.length) {
