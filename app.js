@@ -1953,12 +1953,6 @@ function cwTrackTime(id, type, poster, title) {
     cwSave(id, type, '', title, sec, srv, url);
   }, 10000);
 }
-    const activeCard = document.querySelector('.ws-card.active');
-    const srv = activeCard ? (activeCard.dataset.name || '') : '';
-    const url = activeCard ? (activeCard.dataset.url || '') : '';
-    cwSave(id, type, poster, title, sec, srv, url);
-  }, 10000);
-}
 const CW_KEY = 'rox_continue';
 const CW_TTL = 604800000; // 7 أيام
 
