@@ -1694,11 +1694,15 @@ async function openWatchPage(id, type, season = 1, episode = 1, resumeSec = 0, r
   window.scrollTo(0, 0);
   try {
     const ep = type === 'tv' ? `/tv/${id}` : `/movie/${id}`;
-    const [det] = await Promise.all([fetch(buildTMDBUrl(ep)).then(r => r.json())]);
+    const [det] = await Promise.all([fetch(buildTMDBUrl(ep, {append_to_response:'release_dates,content_ratings'})).then(r => r.json())]);
     const backdrop = det.backdrop_path ? CONFIG.IMAGES.BACKDROP + det.backdrop_path : '';
     let title = type === 'movie' ? (det.title || det.original_title) : (det.name || det.original_name);
     const year  = (det.release_date || det.first_air_date || '').slice(0, 4);
     const rating = det.vote_average ? det.vote_average.toFixed(1) : '';
+    const runtime = det.runtime ? `${Math.floor(det.runtime/60)} ساعة ${det.runtime%60} دقيقة` : (det.episode_run_time?.[0] ? `${det.episode_run_time[0]} دقيقة` : '');
+    const certification = (det.release_dates?.results?.find(r=>r.iso_3166_1==='US')?.release_dates?.[0]?.certification) || '';
+    const hasArabic = (det.spoken_languages||[]).some(l=>l.iso_639_1==='ar');
+    const quality = '4K • HDR';
     let genres = (det.genres || []).map(g => g.name).join(' · ');
     const arData = await fetch(buildTMDBUrl(`/${type}/${id}`, { language: 'ar' })).then(r => r.json());
 let overview = arData.overview || '';
@@ -1874,22 +1878,35 @@ page.innerHTML = `
     <button class="rox-theater-btn" id="cinemaModeBtn" onclick="toggleCinemaMode()"><i class="ri-film-fill" style="color:#ff2a2a;filter:drop-shadow(0 0 5px #ff2a2a);margin-left:5px"></i> وضع السينما</button>
     <button class="rox-snapshot-btn" onclick="roxSnapshot()"><i class="ri-share-forward-box-fill" style="color:#00f2fe;filter:drop-shadow(0 0 5px #00f2fe);margin-left:5px"></i> مشاركة</button>
   </div>
-  <div class="ws-info-card-new">
-    <div class="ws-poster-wrap">
-      <img class="ws-poster" src="${cwPoster}" alt="${title}">
+  <div class="ws-hero-info">
+    <div class="ws-hero-left">
+      <img class="ws-poster-lg" src="${cwPoster}" alt="${title}">
     </div>
-    <div class="ws-info-main">
-      <div class="ws-rating-big">⭐ ${rating}<span>/10</span></div>
-      <p class="ws-overview-short">${overview}</p>
-      <div class="ws-meta-row">
-        <span class="ws-meta-chip"><i class="ri-calendar-line"></i> ${year}</span>
-        <span class="ws-meta-chip">${type==='tv'?'<i class="ri-tv-2-line"></i> مسلسل':'<i class="ri-movie-2-line"></i> فيلم'}</span>
+    <div class="ws-hero-right">
+      <div class="ws-brand-title">${title}</div>
+      <div class="ws-big-score"><i class="ri-star-fill" style="color:#ffd700"></i> ${rating}<span>/10</span></div>
+      <div class="ws-vote-label">تقييم الجمهور</div>
+      <div class="ws-rbar-list">
+        ${[5,4,3,2,1].map((s,i)=>{const w=['70%','20%','7%','2%','1%'][i];return `<div class="ws-rbar-row"><span>${s}★</span><div class="ws-rbar"><div class="ws-rbar-fill" style="width:${w}"></div></div><span>${w}</span></div>`;}).join('')}
+      </div>
+      <div class="ws-meta-chips">
+        ${runtime?`<div class="ws-meta-chip-v2"><i class="ri-time-line"></i><span>${runtime}</span></div>`:''}
+        <div class="ws-meta-chip-v2"><i class="ri-calendar-line"></i><span>${year}</span></div>
+        ${certification?`<div class="ws-meta-chip-v2 ws-chip-red"><span>${certification}+</span></div>`:''}
+      </div>
+      <p class="ws-overview-hero">${overview}</p>
+      <div class="ws-quality-row">
+        <div class="ws-qual-chip"><i class="ri-hd-fill"></i><span>${quality}</span></div>
+        ${hasArabic?`<div class="ws-qual-chip"><i class="ri-translate-2"></i><span>دبلجة عربية</span></div>`:''}
+        <div class="ws-qual-chip"><i class="ri-closed-captioning-fill"></i><span>ترجمة متوفرة</span></div>
+        <div class="ws-qual-chip"><i class="ri-calendar-check-line"></i><span>تاريخ الإصدار ${year}</span></div>
       </div>
     </div>
   </div>
-  <div class="ws-section">
+  <div class="ws-story-section">
     <h3 class="ws-stitle"><i class="ri-chat-quote-fill" style="color:#ff2a2a;filter:drop-shadow(0 0 8px #ff2a2a);margin-left:6px"></i> القصة</h3>
     <p class="ws-overview">${overview}</p>
+  </div>
   </div>
   <div class="ws-section">
     <h3 class="ws-stitle"><i class="ri-broadcast-line" style="color:#ff2a2a"></i> مصادر المشاهدة</h3>
