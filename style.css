@@ -5251,16 +5251,16 @@ button:hover .ri-film-fill, button:hover .ri-share-forward-box-fill { transform:
   filter: drop-shadow(0 2px 6px currentColor);
 }
 /* ===== SUBSCRIPTION GRID ===== */
-.subscription-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; padding:10px; }
-.sub-card { background:rgba(18,18,18,0.6); border-radius:16px; padding:14px 10px; text-align:center; border:1px solid rgba(255,255,255,0.05); backdrop-filter:blur(15px); transition:all 0.3s ease; cursor:pointer; }
+.subscription-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; padding:10px 16px; }
+.sub-card { border-radius:16px; padding:16px 12px; text-align:center; backdrop-filter:blur(15px); transition:all 0.3s ease; cursor:pointer; display:flex; flex-direction:column; gap:6px; }
 .sub-card h4 { font-size:0.85rem; color:#fff; margin-bottom:4px; display:flex; align-items:center; justify-content:center; gap:5px; font-family:'Tajawal',sans-serif; font-weight:800; }
 .sub-card p { font-size:0.65rem; color:rgba(255,255,255,0.5); margin-bottom:12px; font-family:'Tajawal',sans-serif; }
 .sub-btn { width:100%; padding:8px; border-radius:10px; font-size:0.75rem; font-weight:800; border:none; cursor:pointer; color:#fff; font-family:'Tajawal',sans-serif; transition:all 0.25s ease; }
-.vip-card { border-color:rgba(212,175,55,0.2); }
+.vip-card { background:linear-gradient(160deg,rgba(139,0,0,0.5),rgba(80,0,0,0.3)); border:1px solid rgba(255,80,80,0.3); }
 .vip-btn { background:linear-gradient(135deg,#8a1a1a,#521010); box-shadow:0 4px 15px rgba(138,26,26,0.4); }
-.pro-card { border-color:rgba(168,85,247,0.2); }
+.pro-card { background:linear-gradient(160deg,rgba(88,28,135,0.5),rgba(45,0,80,0.3)); border:1px solid rgba(168,85,247,0.3); }
 .pro-btn { background:linear-gradient(135deg,#3b0764,#1e0236); box-shadow:0 4px 15px rgba(59,7,100,0.4); }
-.free-card { border-color:rgba(234,179,8,0.2); }
+.free-card { background:linear-gradient(160deg,rgba(113,63,12,0.5),rgba(70,35,0,0.3)); border:1px solid rgba(234,179,8,0.3); }
 .free-btn { background:linear-gradient(135deg,#713f12,#452206); box-shadow:0 4px 15px rgba(113,63,18,0.4); }
 .sub-card:active { transform:translateY(-3px); }
 /* ===== SUGGESTIONS ===== */
