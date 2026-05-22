@@ -5345,3 +5345,23 @@ button:hover .ri-film-fill, button:hover .ri-share-forward-box-fill { transform:
 .ws-title-brand { font-size:2rem; font-weight:900; color:#fff; font-family:'Tajawal',sans-serif; line-height:1.2; text-shadow:0 2px 12px rgba(0,0,0,0.9); }
 .ws-title-meta { font-size:0.78rem; color:rgba(255,255,255,0.7); font-family:'Tajawal',sans-serif; margin-top:6px; }
 .ws-title-desc { font-size:0.75rem; color:rgba(255,255,255,0.75); font-family:'Tajawal',sans-serif; margin-top:8px; line-height:1.6; max-width:280px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; } 
+.ws-hero-banner{position:relative;width:100%;min-height:420px;background-size:cover;background-position:center top;border-radius:16px;overflow:hidden;display:flex;align-items:center;}
+.ws-hero-overlay{position:absolute;inset:0;background:linear-gradient(to left,rgba(0,0,0,0.92) 40%,rgba(0,0,0,0.4) 100%);}
+.ws-hero-content{position:relative;z-index:2;display:flex;flex-direction:row-reverse;align-items:center;justify-content:space-between;width:100%;padding:32px 24px;gap:24px;}
+.ws-hero-right{flex:1;text-align:right;}
+.ws-hero-logo{font-size:2rem;font-weight:900;color:#fff;margin-bottom:12px;text-shadow:0 2px 12px rgba(0,0,0,0.8);}
+.ws-hero-badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;justify-content:flex-end;}
+.ws-badge{background:rgba(255,255,255,0.15);color:#fff;padding:3px 10px;border-radius:20px;font-size:0.8rem;backdrop-filter:blur(4px);}
+.ws-badge-red{background:rgba(229,9,20,0.7);}
+.ws-badge-green{background:rgba(28,231,131,0.3);color:#1ce783;}
+.ws-hero-genres{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;justify-content:flex-end;}
+.ws-genre-pill{background:rgba(229,9,20,0.2);border:1px solid rgba(229,9,20,0.4);color:#fff;padding:3px 12px;border-radius:20px;font-size:0.78rem;}
+.ws-hero-overview{color:rgba(255,255,255,0.8);font-size:0.92rem;line-height:1.7;margin-bottom:14px;max-width:520px;margin-right:auto;}
+.ws-hero-rating{display:flex;align-items:center;gap:6px;justify-content:flex-end;}
+.ws-hero-score{font-size:1.6rem;font-weight:800;color:#ffd700;}
+.ws-hero-score-label{color:rgba(255,255,255,0.5);font-size:0.9rem;}
+.ws-hero-left{flex-shrink:0;}
+.ws-poster-wrap{position:relative;width:180px;border-radius:12px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.6);}
+.ws-hero-poster{width:100%;display:block;}
+.ws-poster-wrap .ws-overlay{border-radius:12px;}
+@media(max-width:600px){.ws-hero-content{flex-direction:column;align-items:center;}.ws-hero-right{text-align:center;}.ws-hero-badges,.ws-hero-genres,.ws-hero-rating{justify-content:center;}.ws-hero-overview{text-align:center;}.ws-poster-wrap{width:140px;}} 
