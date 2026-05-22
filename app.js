@@ -1937,14 +1937,17 @@ page.innerHTML = `
 }
 window._vipSrvs = null; window._proSrvs = null; window._freeSrvs = null;
 window.toggleVault = function(vaultId) {
-  const vault = document.getElementById('vault-' + vaultId);
-  const isOpen = vault.classList.contains('open');
-  document.querySelectorAll('.cinema-vault').forEach(v => v.classList.remove('open'));
+  const content = document.getElementById('content-' + vaultId);
+  if (!content) return;
+  const isOpen = content.classList.contains('open');
+  document.querySelectorAll('.vault-content').forEach(v => v.classList.remove('open'));
+  document.querySelectorAll('.sub-card').forEach(c => c.classList.remove('vault-open'));
   if (!isOpen) {
-    vault.classList.add('open');
+    content.classList.add('open');
+    content.closest('.sub-card')?.classList.add('vault-open');
     const map = {vip: window._vipSrvs, pro: window._proSrvs, free: window._freeSrvs};
     const list = map[vaultId] || [];
-    document.getElementById('content-' + vaultId).innerHTML = list.map(s => `
+    content.innerHTML = list.map(s => `
       <div class="mini-server-node ${s.active?'mini-active':''}" onclick="wsSelectServer(this,'${s.url||''}','${s.name}',${!!s.rox})">
         ${s.icon}
         <div class="mini-name">${s.name}</div>
