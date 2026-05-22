@@ -1939,7 +1939,7 @@ window.toggleVault = function(vaultId) {
         <div class="mini-name">${s.name}</div>
         <div class="mini-desc">${s.desc}</div>
         <div class="ping-dot"></div>
-      </div>
+      </div>`).join('');
   }
 }
 // ===== CONTINUE WATCHING =====
