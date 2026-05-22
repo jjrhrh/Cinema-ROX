@@ -1567,17 +1567,6 @@ function wsSelectServer(el, url, name, isRox) {
     if (isRox) { loadRox(null); } else { document.getElementById('wsFrame').src = url; }
   }
 }
-function wsStartStream() {
-  const active = document.querySelector('.ws-card.active');
-  if (!active) return;
-  const overlay = document.getElementById('wsOverlay');
-  if (overlay) overlay.style.display = 'none';
-  if (active.dataset.rox) {
-    loadRox(active.dataset.url);
-  } else {
-    document.getElementById('wsFrame').src = active.dataset.url;
-  }
-}
   async function loadRox(url) {
   // أخفِ الـ iframe وأظهر مشغل ROX
   const frame  = document.getElementById('wsFrame');
