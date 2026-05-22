@@ -1958,7 +1958,6 @@ setTimeout(() => {
           </div>`).join('');
       }).catch(()=>{});
   }, 800);
-}
 window._vipSrvs = null; window._proSrvs = null; window._freeSrvs = null;
 window.toggleVault = function(vaultId) {
   const content = document.getElementById('content-' + vaultId);
