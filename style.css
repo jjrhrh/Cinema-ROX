@@ -5292,15 +5292,10 @@ button:hover .ri-film-fill, button:hover .ri-share-forward-box-fill { transform:
 .ws-poster-lg { width:100%; height:auto; aspect-ratio:2/3; object-fit:cover; display:block; border-radius:12px; }
 .ws-hero-right { flex:1; padding:12px; display:flex; flex-direction:column; gap:6px; overflow:hidden; }
 .ws-brand-title { font-size:1rem; font-weight:900; color:#fff; font-family:'Tajawal',sans-serif; line-height:1.3; }
-.ws-big-score { font-size:1.4rem; font-weight:900; color:#ffd700; font-family:'Tajawal',sans-serif; }
-.ws-big-score span { font-size:0.75rem; color:rgba(255,255,255,0.4); }
-.ws-vote-label { font-size:0.6rem; color:rgba(255,255,255,0.4); font-family:'Tajawal',sans-serif; }
-.ws-rbar-list { display:flex; flex-direction:column; gap:2px; }
+.ws-big-score { font-size:2rem; font-weight:900; color:#ffd700; font-family:'Tajawal',sans-serif; }.ws-big-score span { font-size:0.75rem; color:rgba(255,255,255,0.4); }
+.ws-vote-label { font-size:0.75rem; color:rgba(255,255,255,0.5); font-family:'Tajawal',sans-serif; }.ws-rbar-list { display:flex; flex-direction:column; gap:2px; }
 .ws-rbar-row { display:flex; align-items:center; gap:4px; font-family:'Tajawal',sans-serif; }
-.ws-rbar-row span:first-child { width:16px; text-align:right; font-size:0.55rem; color:rgba(255,255,255,0.5); }
-.ws-rbar-row span:last-child { width:22px; font-size:0.55rem; color:rgba(255,255,255,0.4); }
-.ws-rbar { flex:1; height:3px; background:rgba(255,255,255,0.08); border-radius:2px; overflow:hidden; }
-.ws-rbar-fill { height:100%; background:linear-gradient(90deg,#ffd700,#ff9f00); border-radius:2px; }
+.ws-rbar-row span:first-child { width:22px; text-align:right; font-size:0.72rem; color:rgba(255,255,255,0.7); }.ws-rbar-row span:last-child { width:26px; font-size:0.72rem; color:rgba(255,255,255,0.6); }.ws-rbar { flex:1; height:5px; background:rgba(255,255,255,0.1); border-radius:3px; overflow:hidden; }.ws-rbar-fill { height:100%; background:linear-gradient(90deg,#ffd700,#ff9f00); border-radius:2px; }
 .ws-meta-chips { display:flex; gap:4px; flex-wrap:wrap; }
 .ws-meta-chip-v2 { display:flex; align-items:center; gap:3px; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.1); border-radius:20px; padding:3px 7px; font-size:0.6rem; color:#fff; font-family:'Tajawal',sans-serif; }
 .ws-chip-red { background:rgba(229,9,20,0.2); border-color:rgba(229,9,20,0.4); color:#ff6b6b; }
