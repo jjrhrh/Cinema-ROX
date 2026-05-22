@@ -1821,6 +1821,15 @@ page.innerHTML = `
   <div class="ws-player-wrap">
     <div class="ws-player-bg" style="background-image:url('${backdrop}')">
     <div class="video-ambient-glow"></div>
+    <div class="ws-title-overlay">
+      <div class="ws-title-brand">${title}</div>
+      <div class="ws-title-meta">${runtime||''} ${runtime&&year?'•':''} ${year} ${certification?'• '+certification+'+':''}</div>
+      <p class="ws-title-desc">${overview?.slice(0,120)}...</p>
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <button class="rox-theater-btn" onclick="toggleCinemaMode()"><i class="ri-film-fill" style="color:#ff2a2a;margin-left:5px"></i> وضع السينما</button>
+        <button class="rox-snapshot-btn" onclick="roxSnapshot()"><i class="ri-share-forward-box-fill" style="color:#00f2fe;margin-left:5px"></i> مشاركة</button>
+      </div>
+    </div>
       <div class="ws-ambient" style="background-image:url('${backdrop}')"></div>
       <div class="ws-overlay" id="wsOverlay" onclick="wsStartStream()">
         <div class="ws-play-btn">▶</div>
@@ -1874,10 +1883,6 @@ page.innerHTML = `
     <button class="ws-back" onclick="wsGoBack()">→ رجوع</button>
   </div>
   ${epInfo}
-  <div style="display:flex;gap:8px;padding:0 16px 10px;">
-    <button class="rox-theater-btn" id="cinemaModeBtn" onclick="toggleCinemaMode()"><i class="ri-film-fill" style="color:#ff2a2a;filter:drop-shadow(0 0 5px #ff2a2a);margin-left:5px"></i> وضع السينما</button>
-    <button class="rox-snapshot-btn" onclick="roxSnapshot()"><i class="ri-share-forward-box-fill" style="color:#00f2fe;filter:drop-shadow(0 0 5px #00f2fe);margin-left:5px"></i> مشاركة</button>
-  </div>
   <div class="ws-hero-info">
     <div class="ws-hero-left">
       <img class="ws-poster-lg" src="${cwPoster}" alt="${title}">
@@ -1942,29 +1947,40 @@ page.innerHTML = `
   }
 }
 setTimeout(() => {
-  const row = document.getElementById(`suggestions-row-${id}`);
-  if (!row) return;
-  fetch(buildTMDBUrl(`/${type}/${id}/similar`, {language:'ar'}))
-    .then(r => r.json()).then(d => {
-      row.innerHTML = (d.results||[]).slice(0,10).map(m => `
-        <div class="suggest-movie-card" onclick="openDetail(${m.id},'${type}')">
-          <img src="https://image.tmdb.org/t/p/w200${m.poster_path}" loading="lazy">
-          <div class="suggest-rating"><i class="ri-star-fill"></i> ${m.vote_average?.toFixed(1)||'?'}</div>
-        </div>`).join('');
-    }).catch(()=>{});
-}, 500);
+    const row = document.getElementById(`suggestions-row-${id}`);
+    if (!row) return;
+    fetch(buildTMDBUrl(`/${type}/${id}/similar`, {language:'ar'}))
+      .then(r => r.json()).then(d => {
+        row.innerHTML = (d.results||[]).slice(0,10).filter(m=>m.poster_path).map(m => `
+          <div class="suggest-movie-card" onclick="openDetail(${m.id},'${type}')">
+            <img src="https://image.tmdb.org/t/p/w200${m.poster_path}" loading="lazy">
+            <div class="suggest-rating"><i class="ri-star-fill"></i> ${m.vote_average?.toFixed(1)||'?'}</div>
+          </div>`).join('');
+      }).catch(()=>{});
+  }, 800);
+}
 window._vipSrvs = null; window._proSrvs = null; window._freeSrvs = null;
 window.toggleVault = function(vaultId) {
   const content = document.getElementById('content-' + vaultId);
   if (!content) return;
   const isOpen = content.classList.contains('open');
-  document.querySelectorAll('.vault-content').forEach(v => v.classList.remove('open'));
+  document.querySelectorAll('.vault-content').forEach(v => {
+    v.classList.remove('open');
+    v.style.maxHeight = '0';
+    v.style.padding = '0';
+  });
   document.querySelectorAll('.sub-card').forEach(c => c.classList.remove('vault-open'));
   if (!isOpen) {
     content.classList.add('open');
+    content.style.maxHeight = '400px';
+    content.style.padding = '10px';
     content.closest('.sub-card')?.classList.add('vault-open');
     const map = {vip: window._vipSrvs, pro: window._proSrvs, free: window._freeSrvs};
     const list = map[vaultId] || [];
+    if (!list.length) {
+      content.innerHTML = '<div style="color:rgba(255,255,255,0.4);font-size:0.75rem;font-family:Tajawal,sans-serif;text-align:center;padding:10px">لا توجد سيرفرات</div>';
+      return;
+    }
     content.innerHTML = list.map(s => `
       <div class="mini-server-node ${s.active?'mini-active':''}" onclick="wsSelectServer(this,'${s.url||''}','${s.name}',${!!s.rox})">
         ${s.icon}
