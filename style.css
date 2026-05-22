@@ -1520,8 +1520,8 @@ html, body {
 /* ===== HERO: إخفاء عند غير الرئيسية ===== */
 #heroSection[style*="display: none"] { display: none !important; }
 /* ===== WATCH PAGE ===== */
-.ws-player-wrap { position:relative; width:100%; height:260px; }
-.ws-player-bg { width:100%; height:100%; background-size:cover; background-position:center; position:relative; overflow:hidden; }
+.ws-player-wrap { position:relative; width:100%; }
+.ws-player-bg { width:100%; height:320px; background-size:cover; background-position:center; position:relative; overflow:hidden; }
 .ws-overlay { position:absolute; inset:0; background:rgba(0,0,0,0.55); display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; z-index:3; }
 .ws-play-btn { width:72px; height:72px; border-radius:50%; background:var(--accent); display:flex; align-items:center; justify-content:center; font-size:2rem; color:#fff; box-shadow:0 0 35px rgba(229,9,20,0.9); }
 .ws-play-lbl { margin-top:10px; color:rgba(255,255,255,0.9); font-size:0.88rem; }
@@ -5318,3 +5318,15 @@ button:hover .ri-film-fill, button:hover .ri-share-forward-box-fill { transform:
 .ws-player-bg { min-height:280px; }
 /* ===== INFO BOX ===== */
 .ws-hero-info { border:1px solid rgba(255,255,255,0.08); background:rgba(15,15,15,0.7); backdrop-filter:blur(20px); border-radius:20px; margin:12px 0; }
+/* ===== BACKDROP TOP ===== */
+.ws-backdrop-top { width:100%; height:160px; background-size:cover; background-position:center top; position:relative; overflow:hidden; flex-shrink:0; }
+.ws-backdrop-top::after { content:''; position:absolute; inset:0; background:linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.85)); }
+.ws-backdrop-info { position:absolute; bottom:12px; right:16px; z-index:2; text-align:right; }
+.ws-backdrop-title { font-size:1.1rem; font-weight:900; color:#fff; font-family:'Tajawal',sans-serif; text-shadow:0 2px 8px rgba(0,0,0,0.8); }
+.ws-backdrop-meta { font-size:0.7rem; color:rgba(255,255,255,0.6); font-family:'Tajawal',sans-serif; margin-top:2px; }
+/* ===== PLAY BTN NEW ===== */
+.ws-play-circle { width:56px; height:56px; border-radius:50%; background:rgba(229,9,20,0.9); display:flex; align-items:center; justify-content:center; box-shadow:0 0 20px rgba(229,9,20,0.6), 0 0 40px rgba(229,9,20,0.3); backdrop-filter:blur(4px); }
+.ws-play-circle i { font-size:1.6rem; color:#fff; margin-right:-3px; }
+.ws-play-lbl { font-size:0.75rem; color:rgba(255,255,255,0.7); font-family:'Tajawal',sans-serif; margin-top:8px; }
+/* ===== MINI SERVER SELECTED ===== */
+.mini-server-node.mini-active { border-color:rgba(229,9,20,0.6) !important; background:rgba(229,9,20,0.15) !important; box-shadow:0 0 12px rgba(229,9,20,0.3); }
