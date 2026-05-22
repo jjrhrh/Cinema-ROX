@@ -1935,10 +1935,11 @@ window.toggleVault = function(vaultId) {
     const list = map[vaultId] || [];
     document.getElementById('content-' + vaultId).innerHTML = list.map(s => `
       <div class="mini-server-node ${s.active?'mini-active':''}" onclick="wsSelectServer(this,'${s.url||''}','${s.name}',${!!s.rox})">
-        <div class="mini-icon">${s.icon}</div>
+        ${s.icon}
         <div class="mini-name">${s.name}</div>
         <div class="mini-desc">${s.desc}</div>
-      </div>`).join('');
+        <div class="ping-dot"></div>
+      </div>
   }
 }
 // ===== CONTINUE WATCHING =====
