@@ -1891,38 +1891,48 @@ page.innerHTML = `
     <p class="ws-overview">${overview}</p>
   </div>
   <div class="ws-section">
-    <div class="ws-srv-head">
-      <h3 class="ws-stitle">🟢 مصادر البث</h3>
-      <span class="ws-srv-sub">🔒 السيرفرات الخاصة</span>
-    </div>
-    <div class="vault-container">
-      <div class="cinema-vault" id="vault-vip">
-        <div class="vault-header" onclick="toggleVault('vip')">
-          <span class="vault-title"><i class="ri-vip-crown-fill" style="color:#f9ca24"></i> VIP الفاخرة</span>
-          <i class="ri-arrow-down-s-line arrow-icon"></i>
-        </div>
+    <h3 class="ws-stitle"><i class="ri-broadcast-line" style="color:#ff2a2a"></i> مصادر المشاهدة</h3>
+    <div class="subscription-grid">
+      <div class="sub-card vip-card" onclick="toggleVault('vip')">
+        <h4><i class="ri-vip-crown-fill" style="color:#ffd700"></i> الفاخرة VIP</h4>
+        <p>أفضل جودة • بدون إعلانات</p>
         <div class="vault-content" id="content-vip"></div>
+        <button class="sub-btn vip-btn">اشترك الآن</button>
       </div>
-      <div class="cinema-vault" id="vault-pro">
-        <div class="vault-header" onclick="toggleVault('pro')">
-          <span class="vault-title"><i class="ri-flashlight-fill" style="color:#fdcb6e"></i> PRO السريعة</span>
-          <i class="ri-arrow-down-s-line arrow-icon"></i>
-        </div>
+      <div class="sub-card pro-card" onclick="toggleVault('pro')">
+        <h4><i class="ri-flashlight-fill" style="color:#a855f7"></i> السريعة PRO</h4>
+        <p>جودة عالية وسرعة أكبر</p>
         <div class="vault-content" id="content-pro"></div>
+        <button class="sub-btn pro-btn">اشترك الآن</button>
       </div>
-      <div class="cinema-vault" id="vault-free">
-        <div class="vault-header" onclick="toggleVault('free')">
-          <span class="vault-title"><i class="ri-global-line" style="color:#55efc4"></i> FREE العامة</span>
-          <i class="ri-arrow-down-s-line arrow-icon"></i>
-        </div>
+      <div class="sub-card free-card" onclick="toggleVault('free')">
+        <h4><i class="ri-global-line" style="color:#eab308"></i> العامة FREE</h4>
+        <p>مشاهدة مجانية</p>
         <div class="vault-content" id="content-free"></div>
+        <button class="sub-btn free-btn">شاهد الآن</button>
       </div>
     </div>
     <p class="ws-note">إذا لم يعمل السيرفر جرب آخر</p>
   </div>
+  <div class="suggestions-section">
+    <h3 class="ws-stitle">⭐ قد يعجبك أيضاً</h3>
+    <div class="suggestions-scroll-row" id="suggestions-row-${id}"></div>
+  </div>
   ${prodHTML?`<div class="ws-section"><h3 class="ws-stitle">📊 بيانات الإنتاج</h3><div class="ws-prod-grid">${prodHTML}</div></div>`:''}`;
   } catch(e) {
     page.innerHTML = `<div class="loading">❌ خطأ<br><button onclick="wsGoBack()" class="detail-btn">← رجوع</button></div>`;
+    setTimeout(() => {
+    const row = document.getElementById('suggestions-row-${id}');
+    if (!row) return;
+    fetch(\`https://api.themoviedb.org/3/\${type}/\${id}/similar?api_key=${CONFIG.TMDB_KEY}&language=ar\`)
+      .then(r => r.json()).then(d => {
+        row.innerHTML = (d.results||[]).slice(0,10).map(m => `
+          <div class="suggest-movie-card" onclick="openDetail(\${m.id},'\${type}')">
+            <img src="https://image.tmdb.org/t/p/w200\${m.poster_path}" loading="lazy">
+            <div class="suggest-rating"><i class="ri-star-fill"></i> \${m.vote_average?.toFixed(1)||'?'}</div>
+          </div>`).join('');
+      }).catch(()=>{});
+  }, 500);
   }
 }
 window._vipSrvs = null; window._proSrvs = null; window._freeSrvs = null;
