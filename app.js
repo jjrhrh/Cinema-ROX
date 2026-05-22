@@ -1819,21 +1819,19 @@ const prodHTML = [
 
 page.innerHTML = `
   <div class="ws-player-wrap">
-    <div class="ws-player-bg" style="background-image:url('${backdrop}')">
-    <div class="video-ambient-glow"></div>
-    <div class="ws-title-overlay">
-      <div class="ws-title-brand">${title}</div>
-      <div class="ws-title-meta">${runtime||''} ${runtime&&year?'•':''} ${year} ${certification?'• '+certification+'+':''}</div>
-      <p class="ws-title-desc">${overview?.slice(0,120)}...</p>
-      <div style="display:flex;gap:8px;margin-top:8px;">
-        <button class="rox-theater-btn" onclick="toggleCinemaMode()"><i class="ri-film-fill" style="color:#ff2a2a;margin-left:5px"></i> وضع السينما</button>
-        <button class="rox-snapshot-btn" onclick="roxSnapshot()"><i class="ri-share-forward-box-fill" style="color:#00f2fe;margin-left:5px"></i> مشاركة</button>
+    <div class="ws-backdrop-top" style="background-image:url('${backdrop}')">
+      <div class="ws-backdrop-info">
+        <div class="ws-backdrop-title">${title}</div>
+        <div class="ws-backdrop-meta">${runtime||''} ${year?'• '+year:''}</div>
       </div>
     </div>
+    <div class="ws-player-bg" style="background-image:url('${backdrop}')">
+    <div class="video-ambient-glow"></div>
       <div class="ws-ambient" style="background-image:url('${backdrop}')"></div>
       <div class="ws-overlay" id="wsOverlay" onclick="wsStartStream()">
-        <div class="ws-play-btn">▶</div>
+        <div class="ws-play-circle"><i class="ri-play-fill"></i></div>
         <span class="ws-play-lbl">اضغط للمشاهدة</span>
+      </div>
       </div>
       <iframe id="wsFrame" class="ws-frame" src=""
         allowfullscreen
@@ -1881,6 +1879,10 @@ page.innerHTML = `
       </div>
     </div>
     <button class="ws-back" onclick="wsGoBack()">→ رجوع</button>
+  </div>
+  <div style="display:flex;gap:8px;padding:8px 16px;">
+    <button class="rox-theater-btn" id="cinemaModeBtn" onclick="toggleCinemaMode()"><i class="ri-film-fill" style="color:#ff2a2a;margin-left:5px"></i> وضع السينما</button>
+    <button class="rox-snapshot-btn" onclick="roxSnapshot()"><i class="ri-share-forward-box-fill" style="color:#00f2fe;margin-left:5px"></i> مشاركة</button>
   </div>
   ${epInfo}
   <div class="ws-hero-info">
@@ -1963,30 +1965,39 @@ window.toggleVault = function(vaultId) {
   const content = document.getElementById('content-' + vaultId);
   if (!content) return;
   const isOpen = content.classList.contains('open');
+  if (isOpen) return;
   document.querySelectorAll('.vault-content').forEach(v => {
     v.classList.remove('open');
     v.style.maxHeight = '0';
     v.style.padding = '0';
   });
   document.querySelectorAll('.sub-card').forEach(c => c.classList.remove('vault-open'));
-  if (!isOpen) {
-    content.classList.add('open');
-    content.style.maxHeight = '400px';
-    content.style.padding = '10px';
-    content.closest('.sub-card')?.classList.add('vault-open');
-    const map = {vip: window._vipSrvs, pro: window._proSrvs, free: window._freeSrvs};
-    const list = map[vaultId] || [];
-    if (!list.length) {
-      content.innerHTML = '<div style="color:rgba(255,255,255,0.4);font-size:0.75rem;font-family:Tajawal,sans-serif;text-align:center;padding:10px">لا توجد سيرفرات</div>';
-      return;
-    }
-    content.innerHTML = list.map(s => `
-      <div class="mini-server-node ${s.active?'mini-active':''}" onclick="wsSelectServer(this,'${s.url||''}','${s.name}',${!!s.rox})">
-        ${s.icon}
-        <div class="mini-name">${s.name}</div>
-        <div class="mini-desc">${s.desc}</div>
-        <div class="ping-dot"></div>
-      </div>`).join('');
+  content.classList.add('open');
+  content.style.maxHeight = '500px';
+  content.style.padding = '10px';
+  content.closest('.sub-card')?.classList.add('vault-open');
+  const map = {vip: window._vipSrvs, pro: window._proSrvs, free: window._freeSrvs};
+  const list = map[vaultId] || [];
+  content.innerHTML = list.map(s => `
+    <div class="mini-server-node ${s.active?'mini-active':''}" onclick="wsSelectServerNew(this,'${s.url||''}','${s.name}',${!!s.rox})">
+      ${s.icon}
+      <div class="mini-name">${s.name}</div>
+      <div class="mini-desc">${s.desc}</div>
+      <div class="ping-dot"></div>
+    </div>`).join('');
+}
+window.wsSelectServerNew = function(el, url, name, isRox) {
+  document.querySelectorAll('.mini-server-node').forEach(n => n.classList.remove('mini-active'));
+  el.classList.add('mini-active');
+  const sw = document.getElementById('wsSwitchOverlay');
+  if (sw) {
+    sw.style.display = 'flex';
+    setTimeout(() => {
+      if (isRox) { loadRox(null); } else { document.getElementById('wsFrame').src = url; }
+      setTimeout(() => { sw.style.display = 'none'; }, 1800);
+    }, 400);
+  } else {
+    if (isRox) { loadRox(null); } else { document.getElementById('wsFrame').src = url; }
   }
 }
 // ===== CONTINUE WATCHING =====
