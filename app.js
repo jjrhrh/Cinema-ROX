@@ -1874,16 +1874,17 @@ page.innerHTML = `
     <button class="rox-theater-btn" id="cinemaModeBtn" onclick="toggleCinemaMode()"><i class="ri-film-fill" style="color:#ff2a2a;filter:drop-shadow(0 0 5px #ff2a2a);margin-left:5px"></i> وضع السينما</button>
     <button class="rox-snapshot-btn" onclick="roxSnapshot()"><i class="ri-share-forward-box-fill" style="color:#00f2fe;filter:drop-shadow(0 0 5px #00f2fe);margin-left:5px"></i> مشاركة</button>
   </div>
-  <div class="ws-info-card">
-    <img class="ws-poster" src="${cwPoster}" alt="${title}">
-    <div class="ws-info-text">
-      <h2 class="ws-title">${title}</h2>
-      <div class="ws-badges">
-        <span class="ws-bdg">${type==='tv'?'<i class="ri-tv-2-line" style="color:#ffd700"></i> مسلسل':'<i class="ri-movie-2-line" style="color:#ffd700"></i> فيلم'}</span>
-        <span class="ws-bdg">📅 ${year}</span>
-        <span class="ws-bdg ws-bdg-gold">⭐ ${rating}</span>
+  <div class="ws-info-card-new">
+    <div class="ws-poster-wrap">
+      <img class="ws-poster" src="${cwPoster}" alt="${title}">
+    </div>
+    <div class="ws-info-main">
+      <div class="ws-rating-big">⭐ ${rating}<span>/10</span></div>
+      <p class="ws-overview-short">${overview}</p>
+      <div class="ws-meta-row">
+        <span class="ws-meta-chip"><i class="ri-calendar-line"></i> ${year}</span>
+        <span class="ws-meta-chip">${type==='tv'?'<i class="ri-tv-2-line"></i> مسلسل':'<i class="ri-movie-2-line"></i> فيلم'}</span>
       </div>
-      <p class="ws-genres">${genres}</p>
     </div>
   </div>
   <div class="ws-section">
@@ -1893,11 +1894,11 @@ page.innerHTML = `
   <div class="ws-section">
     <h3 class="ws-stitle"><i class="ri-broadcast-line" style="color:#ff2a2a"></i> مصادر المشاهدة</h3>
     <div class="subscription-grid">
-      <div class="sub-card vip-card" onclick="toggleVault('vip')">
-        <h4><i class="ri-vip-crown-fill" style="color:#ffd700"></i> الفاخرة VIP</h4>
-        <p>أفضل جودة • بدون إعلانات</p>
-        <div class="vault-content" id="content-vip"></div>
-        <button class="sub-btn vip-btn">اشترك الآن</button>
+      <div class="sub-card free-card" onclick="toggleVault('free')">
+        <h4><i class="ri-global-line" style="color:#eab308"></i> العامة FREE</h4>
+        <p>مشاهدة مجانية</p>
+        <div class="vault-content" id="content-free"></div>
+        <button class="sub-btn free-btn">شاهد الآن</button>
       </div>
       <div class="sub-card pro-card" onclick="toggleVault('pro')">
         <h4><i class="ri-flashlight-fill" style="color:#a855f7"></i> السريعة PRO</h4>
@@ -1905,11 +1906,11 @@ page.innerHTML = `
         <div class="vault-content" id="content-pro"></div>
         <button class="sub-btn pro-btn">اشترك الآن</button>
       </div>
-      <div class="sub-card free-card" onclick="toggleVault('free')">
-        <h4><i class="ri-global-line" style="color:#eab308"></i> العامة FREE</h4>
-        <p>مشاهدة مجانية</p>
-        <div class="vault-content" id="content-free"></div>
-        <button class="sub-btn free-btn">شاهد الآن</button>
+      <div class="sub-card vip-card" onclick="toggleVault('vip')">
+        <h4><i class="ri-vip-crown-fill" style="color:#ffd700"></i> الفاخرة VIP</h4>
+        <p>أفضل جودة • بدون إعلانات</p>
+        <div class="vault-content" id="content-vip"></div>
+        <button class="sub-btn vip-btn">اشترك الآن</button>
       </div>
     </div>
     <p class="ws-note">إذا لم يعمل السيرفر جرب آخر</p>
