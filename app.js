@@ -1921,20 +1921,20 @@ page.innerHTML = `
   ${prodHTML?`<div class="ws-section"><h3 class="ws-stitle">📊 بيانات الإنتاج</h3><div class="ws-prod-grid">${prodHTML}</div></div>`:''}`;
   } catch(e) {
     page.innerHTML = `<div class="loading">❌ خطأ<br><button onclick="wsGoBack()" class="detail-btn">← رجوع</button></div>`;
-    setTimeout(() => {
-    const row = document.getElementById('suggestions-row-${id}');
-    if (!row) return;
-    fetch(\`https://api.themoviedb.org/3/\${type}/\${id}/similar?api_key=${CONFIG.TMDB_KEY}&language=ar\`)
-      .then(r => r.json()).then(d => {
-        row.innerHTML = (d.results||[]).slice(0,10).map(m => `
-          <div class="suggest-movie-card" onclick="openDetail(\${m.id},'\${type}')">
-            <img src="https://image.tmdb.org/t/p/w200\${m.poster_path}" loading="lazy">
-            <div class="suggest-rating"><i class="ri-star-fill"></i> \${m.vote_average?.toFixed(1)||'?'}</div>
-          </div>`).join('');
-      }).catch(()=>{});
-  }, 500);
   }
 }
+setTimeout(() => {
+  const row = document.getElementById(`suggestions-row-${id}`);
+  if (!row) return;
+  fetch(`https://api.themoviedb.org/3/${type}/${id}/similar?api_key=${CONFIG.TMDB_KEY}&language=ar`)
+    .then(r => r.json()).then(d => {
+      row.innerHTML = (d.results||[]).slice(0,10).map(m => `
+        <div class="suggest-movie-card" onclick="openDetail(${m.id},'${type}')">
+          <img src="https://image.tmdb.org/t/p/w200${m.poster_path}" loading="lazy">
+          <div class="suggest-rating"><i class="ri-star-fill"></i> ${m.vote_average?.toFixed(1)||'?'}</div>
+        </div>`).join('');
+    }).catch(()=>{});
+}, 500);
 window._vipSrvs = null; window._proSrvs = null; window._freeSrvs = null;
 window.toggleVault = function(vaultId) {
   const content = document.getElementById('content-' + vaultId);
