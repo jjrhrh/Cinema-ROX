@@ -1951,15 +1951,19 @@ page.innerHTML = `
 setTimeout(() => {
     const row = document.getElementById(`suggestions-row-${id}`);
     if (!row) return;
-    fetch(buildTMDBUrl(`/${type}/${id}/similar`, {language:'ar'}))
-      .then(r => r.json()).then(d => {
-        row.innerHTML = (d.results||[]).slice(0,10).filter(m=>m.poster_path).map(m => `
+    const ep2 = `/${type}/${id}/similar`;
+    fetch(buildTMDBUrl(ep2, {language:'ar'}))
+      .then(r => r.json())
+      .then(d => {
+        const items = (d.results||[]).filter(m => m.poster_path).slice(0,12);
+        if (!items.length) { row.closest('.suggestions-section').style.display='none'; return; }
+        row.innerHTML = items.map(m => `
           <div class="suggest-movie-card" onclick="openDetail(${m.id},'${type}')">
-            <img src="https://image.tmdb.org/t/p/w200${m.poster_path}" loading="lazy">
+            <img src="https://image.tmdb.org/t/p/w200${m.poster_path}" loading="lazy" onerror="this.closest('.suggest-movie-card').remove()">
             <div class="suggest-rating"><i class="ri-star-fill"></i> ${m.vote_average?.toFixed(1)||'?'}</div>
           </div>`).join('');
-      }).catch(()=>{});
-  }, 800);
+      }).catch(()=>{ row.closest('.suggestions-section').style.display='none'; });
+  }, 1000);
 window._vipSrvs = null; window._proSrvs = null; window._freeSrvs = null;
 window.toggleVault = function(vaultId) {
   const content = document.getElementById('content-' + vaultId);
@@ -2800,12 +2804,13 @@ function shareContent(id, title, type) {
 }
 function toggleCinemaMode() {
   const isOn = document.body.classList.toggle('cinema-mode');
-  const btn  = document.getElementById('cinemaModeBtn');
-  if (btn) btn.classList.toggle('active', isOn);
-  if (isOn) {
-    window.scrollTo(0, 0);
-    showToast('🎬 وضع السينما — اضغط للخروج');
+  const btn = document.getElementById('cinemaModeBtn');
+  if (btn) {
+    btn.innerHTML = isOn
+      ? '<i class="ri-close-circle-fill" style="color:#ff2a2a;margin-left:5px"></i> إيقاف السينما'
+      : '<i class="ri-film-fill" style="color:#ff2a2a;margin-left:5px"></i> وضع السينما';
   }
+  if (isOn) { window.scrollTo(0,0); showToast('🎬 وضع السينما — اضغط للخروج'); }
 }
 async function loadRadarSection() {
   const alerts = getLib('rox_alerts');
