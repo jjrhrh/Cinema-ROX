@@ -5245,6 +5245,10 @@ button:hover .ri-film-fill, button:hover .ri-share-forward-box-fill { transform:
   padding: 14px !important;
   backdrop-filter: blur(12px);
   box-shadow: 0 8px 32px rgba(0,0,0,0.37);
+  font-size:0.95rem;
+  line-height:1.8;
+  color:rgba(255,255,255,0.8);
+  font-family:'Tajawal',sans-serif;
 }
 /* ===== ICONS GLOW ===== */
 .ri-star-fill, .ri-movie-2-line, .ri-chat-quote-fill {
