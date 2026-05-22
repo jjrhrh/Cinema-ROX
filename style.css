@@ -5105,10 +5105,8 @@ body.cinema-mode .ws-overlay        { border-radius: 0; }
   font-size: 0.72rem; font-weight: 700;
   font-family: 'Tajawal', sans-serif;
 }
-.ping-dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  animation: pingPulse 1.5s ease-in-out infinite;
-}
+.ping-dot { width:6px; height:6px; background:#00ff88; border-radius:50%; box-shadow:0 0 8px #00ff88; animation:blink 1.5s infinite; flex-shrink:0; }
+@keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
 .ping-green { background: #00ff88; box-shadow: 0 0 8px #00ff88; }
 .ping-yellow { background: #ffcc00; box-shadow: 0 0 8px #ffcc00; }
 @keyframes pingPulse {
@@ -5215,12 +5213,12 @@ body.cinema-mode .bottom-nav {
 .vault-title { font-weight:800; font-size:1rem; color:#fff; display:flex; align-items:center; gap:10px; font-family:'Tajawal',sans-serif; }
 .arrow-icon { transition:transform 0.3s ease; color:rgba(255,255,255,0.4); font-size:1.3rem; }
 .cinema-vault.open .arrow-icon { transform:rotate(180deg); color:#ff2a2a; }
-.cinema-vault.open { border-color:rgba(255,42,42,0.3); box-shadow:0 0 25px rgba(255,42,42,0.12); }
-.vault-content { max-height:0; overflow:hidden; transition:max-height 0.45s cubic-bezier(0.175,0.885,0.32,1.275); display:grid; grid-template-columns:repeat(3,1fr); gap:8px; padding:0 12px; }
-.cinema-vault.open .vault-content { max-height:600px; padding:12px; }
-.mini-server-node { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); padding:10px 6px; border-radius:12px; text-align:center; cursor:pointer; transition:all 0.25s ease; }
-.mini-server-node:active { background:rgba(255,42,42,0.3); transform:scale(0.95); }
-.mini-active { border-color:rgba(255,42,42,0.5); background:rgba(255,42,42,0.1); }
+#vault-vip.open { border-color:#ffd700; box-shadow:0 0 25px rgba(255,215,0,0.25); }
+#vault-pro.open { border-color:#ff2a2a; box-shadow:0 0 25px rgba(255,42,42,0.25); }
+#vault-free.open { border-color:#00f2fe; box-shadow:0 0 25px rgba(0,242,254,0.25); }
+.mini-server-node { background:linear-gradient(145deg,rgba(255,255,255,0.05),rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:12px 8px; display:flex; flex-direction:column; align-items:center; gap:6px; box-shadow:inset 0 0 10px rgba(255,255,255,0.02); cursor:pointer; transition:all 0.3s cubic-bezier(0.175,0.885,0.32,1.275); }
+.mini-server-node i { font-size:1.5rem; filter:drop-shadow(0 0 5px currentColor); }
+.mini-server-node:active { transform:scale(0.93); }
 .mini-icon { font-size:1.4rem; margin-bottom:4px; }
 .mini-name { font-size:0.72rem; font-weight:800; color:#fff; font-family:'Tajawal',sans-serif; }
 .mini-desc { font-size:0.62rem; color:rgba(255,255,255,0.4); font-family:'Tajawal',sans-serif; }
