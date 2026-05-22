@@ -1552,28 +1552,19 @@ function playTrailer(key) {
     frame.src = '';
   }, { once: true });
 }
-function wsSelectServer(card) {
-  document.querySelectorAll('.ws-card').forEach(c => {
-    c.classList.remove('active');
-    const chk = c.querySelector('.ws-check');
-    if (chk) chk.remove();
-  });
-  card.classList.add('active');
-  const chk = document.createElement('span');
-  chk.className = 'ws-check'; chk.textContent = '✔';
-  card.prepend(chk);
-  const overlay = document.getElementById('wsOverlay');
-  if (overlay && overlay.style.display === 'none') {
-    const sw = document.getElementById('wsSwitchOverlay');
-    if (sw) {
-      sw.style.display = 'flex';
-      setTimeout(() => {
-        if (card.dataset.rox) { loadRox(card.dataset.url); } else { document.getElementById('wsFrame').src = card.dataset.url; }
-        setTimeout(() => { sw.style.display = 'none'; }, 1800);
-      }, 400);
-    } else {
-      document.getElementById('wsFrame').src = card.dataset.url;
-    }
+function wsSelectServer(el, url, name, isRox) {
+  document.querySelectorAll('.mini-server-node').forEach(n => n.classList.remove('mini-active'));
+  el.classList.add('mini-active');
+  document.querySelectorAll('.cinema-vault').forEach(v => v.classList.remove('open'));
+  const sw = document.getElementById('wsSwitchOverlay');
+  if (sw) {
+    sw.style.display = 'flex';
+    setTimeout(() => {
+      if (isRox) { loadRox(null); } else { document.getElementById('wsFrame').src = url; }
+      setTimeout(() => { sw.style.display = 'none'; }, 1800);
+    }, 400);
+  } else {
+    if (isRox) { loadRox(null); } else { document.getElementById('wsFrame').src = url; }
   }
 }
 function wsStartStream() {
@@ -1794,6 +1785,7 @@ const freeSrvs = [
   { icon:'<i class="ri-clapperboard-fill style-icon" style="color:#ff9f43"></i>', name:'SMASHY', desc:'#37', url:srvUrl(S.SRV7,type,id,season,episode) },
 ];
 const allSrvs = [...vipSrvs, ...proSrvs, ...freeSrvs];
+window._vipSrvs = vipSrvs; window._proSrvs = proSrvs; window._freeSrvs = freeSrvs;
 // جلب ROX من stream.js
 const roxTitle = type === 'movie' ? (det.title || det.original_title) : (det.name || det.original_name);
 let roxStreamUrl = null;
