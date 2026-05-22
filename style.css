@@ -5255,8 +5255,8 @@ button:hover .ri-film-fill, button:hover .ri-share-forward-box-fill { transform:
   filter: drop-shadow(0 2px 6px currentColor);
 }
 /* ===== SUBSCRIPTION GRID ===== */
-.subscription-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; padding:10px 16px; }
-.sub-card { border-radius:16px; padding:16px 12px; text-align:center; backdrop-filter:blur(15px); transition:all 0.3s ease; cursor:pointer; display:flex; flex-direction:column; gap:6px; }
+.subscription-grid { display:flex; gap:10px; padding:10px 16px; align-items:flex-start; }
+.sub-card { border-radius:16px; padding:16px 12px; text-align:center; backdrop-filter:blur(15px); transition:all 0.35s ease; cursor:pointer; display:flex; flex-direction:column; gap:6px; flex:1; min-width:0; overflow:hidden; }
 .sub-card h4 { font-size:0.85rem; color:#fff; margin-bottom:4px; display:flex; align-items:center; justify-content:center; gap:5px; font-family:'Tajawal',sans-serif; font-weight:800; }
 .sub-card p { font-size:0.65rem; color:rgba(255,255,255,0.5); margin-bottom:12px; font-family:'Tajawal',sans-serif; }
 .sub-btn { width:100%; padding:8px; border-radius:10px; font-size:0.75rem; font-weight:800; border:none; cursor:pointer; color:#fff; font-family:'Tajawal',sans-serif; transition:all 0.25s ease; }
@@ -5330,8 +5330,8 @@ button:hover .ri-film-fill, button:hover .ri-share-forward-box-fill { transform:
 .ws-play-lbl { font-size:0.75rem; color:rgba(255,255,255,0.7); font-family:'Tajawal',sans-serif; margin-top:8px; }
 /* ===== MINI SERVER SELECTED ===== */
 .mini-server-node.mini-active { border-color:rgba(229,9,20,0.6) !important; background:rgba(229,9,20,0.15) !important; box-shadow:0 0 12px rgba(229,9,20,0.3); }
-.sub-card { height:auto; min-height:100px; }
+.sub-card { height:auto; min-height:80px; }
 .sub-card:not(.vault-open) .vault-content { max-height:0 !important; padding:0 !important; overflow:hidden; }
-.sub-card.vault-open { flex:1.5; } 
+.sub-card.vault-open { flex:2.8; }
 .vault-content { overflow-y:auto !important; max-height:300px; -webkit-overflow-scrolling:touch; }
 .cinema-vault.open .vault-content, .sub-card.vault-open .vault-content { max-height:300px !important; overflow-y:auto !important; } 
