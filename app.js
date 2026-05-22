@@ -1871,15 +1871,15 @@ page.innerHTML = `
   </div>
   ${epInfo}
   <div style="display:flex;gap:8px;padding:0 16px 10px;">
-    <button class="rox-theater-btn" id="cinemaModeBtn" onclick="toggleCinemaMode()">🎬 وضع السينما</button>
-    <button class="rox-snapshot-btn" onclick="roxSnapshot()">📸 مشاركة</button>
+    <button class="rox-theater-btn" id="cinemaModeBtn" onclick="toggleCinemaMode()"><i class="ri-film-fill" style="color:#ff2a2a;filter:drop-shadow(0 0 5px #ff2a2a);margin-left:5px"></i> وضع السينما</button>
+    <button class="rox-snapshot-btn" onclick="roxSnapshot()"><i class="ri-share-forward-box-fill" style="color:#00f2fe;filter:drop-shadow(0 0 5px #00f2fe);margin-left:5px"></i> مشاركة</button>
   </div>
   <div class="ws-info-card">
     <img class="ws-poster" src="${cwPoster}" alt="${title}">
     <div class="ws-info-text">
       <h2 class="ws-title">${title}</h2>
       <div class="ws-badges">
-        <span class="ws-bdg">${type==='tv'?'📺 مسلسل':'🎬 فيلم'}</span>
+        <span class="ws-bdg">${type==='tv'?'<i class="ri-tv-2-line" style="color:#ffd700"></i> مسلسل':'<i class="ri-movie-2-line" style="color:#ffd700"></i> فيلم'}</span>
         <span class="ws-bdg">📅 ${year}</span>
         <span class="ws-bdg ws-bdg-gold">⭐ ${rating}</span>
       </div>
@@ -1887,7 +1887,7 @@ page.innerHTML = `
     </div>
   </div>
   <div class="ws-section">
-    <h3 class="ws-stitle">📖 القصة</h3>
+    <h3 class="ws-stitle"><i class="ri-chat-quote-fill" style="color:#ff2a2a;filter:drop-shadow(0 0 8px #ff2a2a);margin-left:6px"></i> القصة</h3>
     <p class="ws-overview">${overview}</p>
   </div>
   <div class="ws-section">
