@@ -1927,7 +1927,7 @@ page.innerHTML = `
 setTimeout(() => {
   const row = document.getElementById(`suggestions-row-${id}`);
   if (!row) return;
-  fetch(`https://api.themoviedb.org/3/${type}/${id}/similar?api_key=${CONFIG.TMDB_KEY}&language=ar`)
+  fetch(buildTMDBUrl(`/${type}/${id}/similar`, {language:'ar'}))
     .then(r => r.json()).then(d => {
       row.innerHTML = (d.results||[]).slice(0,10).map(m => `
         <div class="suggest-movie-card" onclick="openDetail(${m.id},'${type}')">
