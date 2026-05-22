@@ -5212,13 +5212,16 @@ body.cinema-mode .bottom-nav {
 .vault-header { display:flex; justify-content:space-between; align-items:center; padding:16px; cursor:pointer; background:linear-gradient(90deg,rgba(255,42,42,0.06) 0%,transparent 100%); }
 .vault-title { font-weight:800; font-size:1rem; color:#fff; display:flex; align-items:center; gap:10px; font-family:'Tajawal',sans-serif; }
 .arrow-icon { transition:transform 0.3s ease; color:rgba(255,255,255,0.4); font-size:1.3rem; }
-.cinema-vault.open .arrow-icon { transform:rotate(180deg); color:#ff2a2a; }
-#vault-vip.open { border-color:#ffd700; box-shadow:0 0 25px rgba(255,215,0,0.25); }
+.vault-content { max-height:0; overflow:hidden; transition:max-height 0.4s cubic-bezier(0.175,0.885,0.32,1.275); display:grid; grid-template-columns:repeat(3,1fr); gap:10px; padding:0 12px; }
+.cinema-vault.open .vault-content { max-height:400px; padding:12px; }
 #vault-pro.open { border-color:#ff2a2a; box-shadow:0 0 25px rgba(255,42,42,0.25); }
-#vault-free.open { border-color:#00f2fe; box-shadow:0 0 25px rgba(0,242,254,0.25); }
-.mini-server-node { background:linear-gradient(145deg,rgba(255,255,255,0.05),rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:12px 8px; display:flex; flex-direction:column; align-items:center; gap:6px; box-shadow:inset 0 0 10px rgba(255,255,255,0.02); cursor:pointer; transition:all 0.3s cubic-bezier(0.175,0.885,0.32,1.275); }
-.mini-server-node i { font-size:1.5rem; filter:drop-shadow(0 0 5px currentColor); }
-.mini-server-node:active { transform:scale(0.93); }
-.mini-icon { font-size:1.4rem; margin-bottom:4px; }
-.mini-name { font-size:0.72rem; font-weight:800; color:#fff; font-family:'Tajawal',sans-serif; }
+#vault-vip.open .mini-server-node { border-color:rgba(255,215,0,0.2); }
+#vault-vip.open .mini-server-node:active { background:rgba(255,215,0,0.1); border-color:#ffd700; }
+#vault-pro.open .mini-server-node { border-color:rgba(255,42,42,0.2); }
+#vault-pro.open .mini-server-node:active { background:rgba(255,42,42,0.1); border-color:#ff2a2a; }
+#vault-free.open .mini-server-node { border-color:rgba(0,242,254,0.2); }
+#vault-free.open .mini-server-node:active { background:rgba(0,242,254,0.1); border-color:#00f2fe; }
 .mini-desc { font-size:0.62rem; color:rgba(255,255,255,0.4); font-family:'Tajawal',sans-serif; }
+/* ===== AMBIENT GLOW ===== */
+.video-ambient-glow { position:absolute; top:5%; left:5%; width:90%; height:90%; background:radial-gradient(circle,rgba(255,42,42,0.4) 0%,transparent 70%); filter:blur(50px); z-index:-1; pointer-events:none; animation:ambientPulse 4s infinite alternate; }
+@keyframes ambientPulse { 0%{opacity:0.5;transform:scale(1);} 100%{opacity:0.8;transform:scale(1.1);} }
