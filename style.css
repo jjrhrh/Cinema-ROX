@@ -5282,3 +5282,26 @@ button:hover .ri-film-fill, button:hover .ri-share-forward-box-fill { transform:
 .ws-overview-short { font-size:0.78rem; color:rgba(255,255,255,0.6); line-height:1.5; font-family:'Tajawal',sans-serif; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
 .ws-meta-row { display:flex; gap:8px; flex-wrap:wrap; }
 .ws-meta-chip { background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.1); border-radius:20px; padding:4px 10px; font-size:0.7rem; color:#fff; font-family:'Tajawal',sans-serif; display:flex; align-items:center; gap:4px; }
+/* ===== HERO INFO ===== */
+.ws-hero-info { display:flex; gap:0; margin:10px 0; background:rgba(255,255,255,0.02); border-radius:20px; overflow:hidden; border:1px solid rgba(255,255,255,0.06); }
+.ws-hero-left { flex-shrink:0; }
+.ws-poster-lg { width:130px; height:195px; object-fit:cover; display:block; }
+.ws-hero-right { flex:1; padding:12px; display:flex; flex-direction:column; gap:6px; overflow:hidden; }
+.ws-brand-title { font-size:1rem; font-weight:900; color:#fff; font-family:'Tajawal',sans-serif; line-height:1.3; }
+.ws-big-score { font-size:1.4rem; font-weight:900; color:#ffd700; font-family:'Tajawal',sans-serif; }
+.ws-big-score span { font-size:0.75rem; color:rgba(255,255,255,0.4); }
+.ws-vote-label { font-size:0.6rem; color:rgba(255,255,255,0.4); font-family:'Tajawal',sans-serif; }
+.ws-rbar-list { display:flex; flex-direction:column; gap:2px; }
+.ws-rbar-row { display:flex; align-items:center; gap:4px; font-family:'Tajawal',sans-serif; }
+.ws-rbar-row span:first-child { width:16px; text-align:right; font-size:0.55rem; color:rgba(255,255,255,0.5); }
+.ws-rbar-row span:last-child { width:22px; font-size:0.55rem; color:rgba(255,255,255,0.4); }
+.ws-rbar { flex:1; height:3px; background:rgba(255,255,255,0.08); border-radius:2px; overflow:hidden; }
+.ws-rbar-fill { height:100%; background:linear-gradient(90deg,#ffd700,#ff9f00); border-radius:2px; }
+.ws-meta-chips { display:flex; gap:4px; flex-wrap:wrap; }
+.ws-meta-chip-v2 { display:flex; align-items:center; gap:3px; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.1); border-radius:20px; padding:3px 7px; font-size:0.6rem; color:#fff; font-family:'Tajawal',sans-serif; }
+.ws-chip-red { background:rgba(229,9,20,0.2); border-color:rgba(229,9,20,0.4); color:#ff6b6b; }
+.ws-overview-hero { font-size:0.7rem; color:rgba(255,255,255,0.6); line-height:1.5; font-family:'Tajawal',sans-serif; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+.ws-quality-row { display:flex; gap:4px; flex-wrap:wrap; }
+.ws-qual-chip { display:flex; align-items:center; gap:3px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:3px 6px; font-size:0.58rem; color:rgba(255,255,255,0.7); font-family:'Tajawal',sans-serif; }
+.ws-qual-chip i { font-size:0.7rem; color:#74b9ff; }
+.ws-story-section { padding:10px 16px; }
