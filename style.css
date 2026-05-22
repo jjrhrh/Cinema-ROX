@@ -5270,3 +5270,5 @@ button:hover .ri-film-fill, button:hover .ri-share-forward-box-fill { transform:
 .suggest-movie-card img { width:100%; height:150px; object-fit:cover; }
 .suggest-rating { position:absolute; bottom:6px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.75); padding:2px 7px; border-radius:10px; font-size:0.68rem; color:#ffd700; font-weight:800; display:flex; align-items:center; gap:3px; white-space:nowrap; font-family:'Tajawal',sans-serif; }
 .suggest-movie-card:active { transform:scale(1.05); }
+.sub-card.vault-open { transform:translateY(-3px); }
+.sub-card .vault-content { margin-top:10px; } 
