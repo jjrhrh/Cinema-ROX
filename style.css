@@ -5325,8 +5325,7 @@ button:hover .ri-film-fill, button:hover .ri-share-forward-box-fill { transform:
 .ws-backdrop-title { font-size:1.1rem; font-weight:900; color:#fff; font-family:'Tajawal',sans-serif; text-shadow:0 2px 8px rgba(0,0,0,0.8); }
 .ws-backdrop-meta { font-size:0.7rem; color:rgba(255,255,255,0.6); font-family:'Tajawal',sans-serif; margin-top:2px; }
 /* ===== PLAY BTN NEW ===== */
-.ws-play-circle { width:64px; height:64px; border-radius:50%; background:rgba(255,255,255,0.15); border:2.5px solid rgba(255,255,255,0.6); display:flex; align-items:center; justify-content:center; box-shadow:0 0 30px rgba(255,255,255,0.15); backdrop-filter:blur(8px); }
-.ws-play-circle i { font-size:1.6rem; color:#fff; margin-right:-3px; }
+background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow:0 0 25px rgba(229,9,20,0.5);.ws-play-circle i { font-size:1.6rem; color:#fff; margin-right:-3px; }
 .ws-play-lbl { font-size:0.75rem; color:rgba(255,255,255,0.7); font-family:'Tajawal',sans-serif; margin-top:8px; }
 /* ===== MINI SERVER SELECTED ===== */
 .mini-server-node.mini-active { border-color:rgba(229,9,20,0.6) !important; background:rgba(229,9,20,0.15) !important; box-shadow:0 0 12px rgba(229,9,20,0.3); }
@@ -5341,7 +5340,4 @@ button:hover .ri-film-fill, button:hover .ri-share-forward-box-fill { transform:
 .ws-info-left { flex:1; display:flex; flex-direction:column; gap:8px; }
 .ws-rating-box { text-align:center; }
 .ws-player-bg { height:100svh; min-height:400px; background-size:cover; background-position:center top; position:relative; overflow:hidden; }
-.ws-title-overlay { position:absolute; top:0; right:0; left:0; bottom:0; padding:24px 20px; z-index:3; background:linear-gradient(to right, rgba(0,0,0,0.85) 45%, transparent 100%); display:flex; flex-direction:column; justify-content:center; align-items:flex-end; text-align:right; direction:rtl; }
-.ws-title-brand { font-size:2.4rem; font-weight:900; color:#fff; font-family:'Tajawal',sans-serif; line-height:1.15; text-shadow:0 2px 20px rgba(0,0,0,1); max-width:75%; }
-.ws-title-meta { font-size:0.78rem; color:rgba(255,255,255,0.7); font-family:'Tajawal',sans-serif; margin-top:6px; }
-.ws-title-desc { font-size:0.75rem; color:rgba(255,255,255,0.75); font-family:'Tajawal',sans-serif; margin-top:8px; line-height:1.6; max-width:280px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; } 
+min-height:320px; background-position:center;padding:20px 16px 20px 40%; background:linear-gradient(to right, rgba(0,0,0,0.8) 50%, transparent 100%);font-size:2.8rem; line-height:1.2;.ws-title-desc { font-size:0.75rem; color:rgba(255,255,255,0.75); font-family:'Tajawal',sans-serif; margin-top:8px; line-height:1.6; max-width:280px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; } 
