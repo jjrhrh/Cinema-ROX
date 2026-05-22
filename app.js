@@ -1819,101 +1819,97 @@ const prodHTML = [
 
 page.innerHTML = `
   <div class="ws-player-wrap">
-    <div class="ws-backdrop-top" style="background-image:url('${backdrop}')">
-      <div class="ws-backdrop-info">
-        <div class="ws-backdrop-title">${title}</div>
-        <div class="ws-backdrop-meta">${runtime||''} ${year?'• '+year:''}</div>
-      </div>
-    </div>
     <div class="ws-player-bg" style="background-image:url('${backdrop}')">
-    <div class="video-ambient-glow"></div>
+      <div class="video-ambient-glow"></div>
       <div class="ws-ambient" style="background-image:url('${backdrop}')"></div>
+      <div class="ws-title-overlay">
+        <div class="ws-title-brand">${det.original_title || det.original_name || title}</div>
+        <div class="ws-title-meta">${runtime||''} ${year?'• '+year:''} ${certification?'• '+certification+'+':''}</div>
+        <div class="ws-title-desc">${overview}</div>
+      </div>
       <div class="ws-overlay" id="wsOverlay" onclick="wsStartStream()">
         <div class="ws-play-circle"><i class="ri-play-fill"></i></div>
         <span class="ws-play-lbl">اضغط للمشاهدة</span>
       </div>
-      </div>
-      <iframe id="wsFrame" class="ws-frame" src=""
-        allowfullscreen
-        allow="autoplay; fullscreen; encrypted-media; picture-in-picture; web-share; clipboard-write; gyroscope; accelerometer"
-        referrerpolicy="no-referrer-when-downgrade"
-        onload="if(this.src)cwTrackTime(${id},'${type}','${cwPoster}','${cwTitle}')">
-      </iframe>
-      <div id="roxPlayerWrap" class="rox-player-wrap" style="display:none">
-        <video id="roxPlayer" class="rox-player-video" playsinline></video>
-        <div class="rox-player-controls" id="roxControls">
-          <div class="rox-ctrl-top">
-            <span class="rox-ctrl-title" id="roxCtrlTitle">ROX Player</span>
+    </div>
+    <iframe id="wsFrame" class="ws-frame" src=""
+      allowfullscreen
+      allow="autoplay; fullscreen; encrypted-media; picture-in-picture; web-share; clipboard-write; gyroscope; accelerometer"
+      referrerpolicy="no-referrer-when-downgrade"
+      onload="if(this.src)cwTrackTime(${id},'${type}','${cwPoster}','${cwTitle}')">
+    </iframe>
+    <div id="roxPlayerWrap" class="rox-player-wrap" style="display:none">
+      <video id="roxPlayer" class="rox-player-video" playsinline></video>
+      <div class="rox-player-controls" id="roxControls">
+        <div class="rox-ctrl-top">
+          <span class="rox-ctrl-title" id="roxCtrlTitle">ROX Player</span>
+        </div>
+        <div class="rox-progress-wrap">
+          <span class="rox-time" id="roxTimeCur">0:00</span>
+          <input type="range" class="rox-progress" id="roxProgress" value="0" min="0" max="100" step="0.1">
+          <span class="rox-time" id="roxTimeDur">0:00</span>
+        </div>
+        <div class="rox-ctrl-row">
+          <button class="rox-btn" id="roxPlayBtn" onclick="roxTogglePlay()">
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+          </button>
+          <button class="rox-btn" onclick="roxSkip(-10)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.49"/><text x="8" y="15" font-size="7" fill="currentColor" stroke="none">10</text></svg>
+          </button>
+          <button class="rox-btn" onclick="roxSkip(10)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.49-3.49"/><text x="8" y="15" font-size="7" fill="currentColor" stroke="none">10</text></svg>
+          </button>
+          <div class="rox-vol-wrap">
+            <button class="rox-btn" onclick="roxToggleMute()">
+              <svg id="roxVolIco" viewBox="0 0 24 24" fill="currentColor"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+            </button>
+            <input type="range" class="rox-vol" id="roxVol" value="100" min="0" max="100">
           </div>
-          <div class="rox-progress-wrap">
-            <span class="rox-time" id="roxTimeCur">0:00</span>
-            <input type="range" class="rox-progress" id="roxProgress" value="0" min="0" max="100" step="0.1">
-            <span class="rox-time" id="roxTimeDur">0:00</span>
-          </div>
-          <div class="rox-ctrl-row">
-            <button class="rox-btn" id="roxPlayBtn" onclick="roxTogglePlay()">
-              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
-            </button>
-            <button class="rox-btn" onclick="roxSkip(-10)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.49"/><text x="8" y="15" font-size="7" fill="currentColor" stroke="none">10</text></svg>
-            </button>
-            <button class="rox-btn" onclick="roxSkip(10)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.49-3.49"/><text x="8" y="15" font-size="7" fill="currentColor" stroke="none">10</text></svg>
-            </button>
-            <div class="rox-vol-wrap">
-              <button class="rox-btn" onclick="roxToggleMute()">
-                <svg id="roxVolIco" viewBox="0 0 24 24" fill="currentColor"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-              </button>
-              <input type="range" class="rox-vol" id="roxVol" value="100" min="0" max="100">
-            </div>
-            <span class="rox-spacer"></span>
-            <button class="rox-btn" onclick="roxFullscreen()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
-            </button>
-          </div>
+          <span class="rox-spacer"></span>
+          <button class="rox-btn" onclick="roxFullscreen()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+          </button>
         </div>
       </div>
-      <div id="wsSwitchOverlay" class="ws-switch-overlay" style="display:none">
-        <div class="ws-switch-spinner"></div>
-        <span class="ws-switch-txt">يتم الاتصال بسيرفرات Cinema-ROX...</span>
-      </div>
+    </div>
+    <div id="wsSwitchOverlay" class="ws-switch-overlay" style="display:none">
+      <div class="ws-switch-spinner"></div>
+      <span class="ws-switch-txt">يتم الاتصال بسيرفرات Cinema-ROX...</span>
     </div>
     <button class="ws-back" onclick="wsGoBack()">→ رجوع</button>
   </div>
-  <div style="display:flex;gap:8px;padding:8px 16px;">
+  <div class="ws-action-row">
     <button class="rox-theater-btn" id="cinemaModeBtn" onclick="toggleCinemaMode()"><i class="ri-film-fill" style="color:#ff2a2a;margin-left:5px"></i> وضع السينما</button>
     <button class="rox-snapshot-btn" onclick="roxSnapshot()"><i class="ri-share-forward-box-fill" style="color:#00f2fe;margin-left:5px"></i> مشاركة</button>
   </div>
   ${epInfo}
-  <div class="ws-hero-info">
-    <div class="ws-hero-left">
+  <div class="ws-info-block">
+    <div class="ws-info-right">
       <img class="ws-poster-lg" src="${cwPoster}" alt="${title}">
+      <div class="ws-rating-box">
+        <div class="ws-big-score"><i class="ri-star-fill" style="color:#ffd700"></i> ${rating}<span>/10</span></div>
+        <div class="ws-vote-label">تقييم الجمهور</div>
+        <div class="ws-rbar-list">
+          ${[5,4,3,2,1].map((s,i)=>{const w=['70%','20%','7%','2%','1%'][i];return `<div class="ws-rbar-row"><span>${s}★</span><div class="ws-rbar"><div class="ws-rbar-fill" style="width:${w}"></div></div><span>${w}</span></div>`;}).join('')}
+        </div>
+      </div>
     </div>
-    <div class="ws-hero-right">
+    <div class="ws-info-left">
       <div class="ws-brand-title">${title}</div>
-      <div class="ws-big-score"><i class="ri-star-fill" style="color:#ffd700"></i> ${rating}<span>/10</span></div>
-      <div class="ws-vote-label">تقييم الجمهور</div>
-      <div class="ws-rbar-list">
-        ${[5,4,3,2,1].map((s,i)=>{const w=['70%','20%','7%','2%','1%'][i];return `<div class="ws-rbar-row"><span>${s}★</span><div class="ws-rbar"><div class="ws-rbar-fill" style="width:${w}"></div></div><span>${w}</span></div>`;}).join('')}
+      <p class="ws-overview-hero">${overview}</p>
+      <div class="ws-quality-row">
+        ${genres ? `<div class="ws-qual-chip"><i class="ri-film-line"></i><span>${(arData.genres||det.genres||[]).map(g=>g.name).join(' · ')}</span></div>` : ''}
+        <div class="ws-qual-chip"><i class="ri-hd-fill"></i><span>${quality}</span></div>
+        ${hasArabic?`<div class="ws-qual-chip"><i class="ri-translate-2"></i><span>دبلجة عربية</span></div>`:''}
+        <div class="ws-qual-chip"><i class="ri-closed-captioning-fill"></i><span>ترجمة متوفرة</span></div>
+        <div class="ws-qual-chip"><i class="ri-calendar-check-line"></i><span>تاريخ الإصدار ${year}</span></div>
       </div>
       <div class="ws-meta-chips">
         ${runtime?`<div class="ws-meta-chip-v2"><i class="ri-time-line"></i><span>${runtime}</span></div>`:''}
         <div class="ws-meta-chip-v2"><i class="ri-calendar-line"></i><span>${year}</span></div>
         ${certification?`<div class="ws-meta-chip-v2 ws-chip-red"><span>${certification}+</span></div>`:''}
       </div>
-      <p class="ws-overview-hero">${overview}</p>
-      <div class="ws-quality-row">
-        <div class="ws-qual-chip"><i class="ri-hd-fill"></i><span>${quality}</span></div>
-        ${hasArabic?`<div class="ws-qual-chip"><i class="ri-translate-2"></i><span>دبلجة عربية</span></div>`:''}
-        <div class="ws-qual-chip"><i class="ri-closed-captioning-fill"></i><span>ترجمة متوفرة</span></div>
-        <div class="ws-qual-chip"><i class="ri-calendar-check-line"></i><span>تاريخ الإصدار ${year}</span></div>
-      </div>
     </div>
-  </div>
-  <div class="ws-story-section">
-    <h3 class="ws-stitle"><i class="ri-chat-quote-fill" style="color:#ff2a2a;filter:drop-shadow(0 0 8px #ff2a2a);margin-left:6px"></i> القصة</h3>
-    <p class="ws-overview">${overview}</p>
-  </div>
   </div>
   <div class="ws-section">
     <h3 class="ws-stitle"><i class="ri-broadcast-line" style="color:#ff2a2a"></i> مصادر المشاهدة</h3>
