@@ -5305,3 +5305,12 @@ button:hover .ri-film-fill, button:hover .ri-share-forward-box-fill { transform:
 .ws-qual-chip { display:flex; align-items:center; gap:3px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:3px 6px; font-size:0.58rem; color:rgba(255,255,255,0.7); font-family:'Tajawal',sans-serif; }
 .ws-qual-chip i { font-size:0.7rem; color:#74b9ff; }
 .ws-story-section { padding:10px 16px; }
+/* ===== TITLE OVERLAY ===== */
+.ws-title-overlay { position:absolute; top:0; right:0; left:0; padding:16px; z-index:3; background:linear-gradient(180deg,rgba(0,0,0,0.85) 0%,transparent 100%); direction:rtl; }
+.ws-title-brand { font-size:1.6rem; font-weight:900; color:#fff; font-family:'Tajawal',sans-serif; line-height:1.2; text-shadow:0 2px 8px rgba(0,0,0,0.8); }
+.ws-title-meta { font-size:0.75rem; color:rgba(255,255,255,0.6); font-family:'Tajawal',sans-serif; margin-top:4px; }
+.ws-title-desc { font-size:0.75rem; color:rgba(255,255,255,0.7); font-family:'Tajawal',sans-serif; margin-top:6px; line-height:1.5; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+/* ===== PLAYER BIG ===== */
+.ws-player-bg { min-height:280px; }
+/* ===== INFO BOX ===== */
+.ws-hero-info { border:1px solid rgba(255,255,255,0.08); background:rgba(15,15,15,0.7); backdrop-filter:blur(20px); border-radius:20px; margin:12px 0; }
