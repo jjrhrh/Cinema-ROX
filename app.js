@@ -1816,6 +1816,7 @@ const prodHTML = [
 page.innerHTML = `
   <div class="ws-player-wrap">
     <div class="ws-player-bg" style="background-image:url('${backdrop}')">
+    <div class="video-ambient-glow"></div>
       <div class="ws-ambient" style="background-image:url('${backdrop}')"></div>
       <div class="ws-overlay" id="wsOverlay" onclick="wsStartStream()">
         <div class="ws-play-btn">▶</div>
