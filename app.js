@@ -1818,16 +1818,41 @@ const prodHTML = [
 ].join('');
 
 page.innerHTML = `
-  <div class="ws-player-wrap">
+  <div class="ws-hero-banner" style="background-image:url('${backdrop}')">
+    <div class="ws-hero-overlay"></div>
+    <div class="ws-hero-content">
+      <div class="ws-hero-right">
+        <div class="ws-hero-logo">${det.original_title || det.original_name || title}</div>
+        <div class="ws-hero-badges">
+          ${year?`<span class="ws-badge">${year}</span>`:''}
+          ${certification?`<span class="ws-badge ws-badge-red">${certification}+</span>`:''}
+          ${runtime?`<span class="ws-badge">${runtime}</span>`:''}
+          ${hasArabic?`<span class="ws-badge ws-badge-green">دبلجة عربية</span>`:''}
+        </div>
+        <div class="ws-hero-genres">${(arData.genres||det.genres||[]).map(g=>`<span class="ws-genre-pill">${g.name}</span>`).join('')}</div>
+        <p class="ws-hero-overview">${overview}</p>
+        <div class="ws-hero-rating">
+          <i class="ri-star-fill" style="color:#ffd700"></i>
+          <span class="ws-hero-score">${rating}</span>
+          <span class="ws-hero-score-label">/10</span>
+        </div>
+      </div>
+      <div class="ws-hero-left">
+        <div class="ws-poster-wrap">
+          <img class="ws-hero-poster" src="${cwPoster}" alt="${title}">
+          <div class="ws-overlay" id="wsOverlay" onclick="wsStartStream()">
+            <div class="ws-play-circle"><i class="ri-play-fill"></i></div>
+            <span class="ws-play-lbl">اضغط للمشاهدة</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ws-player-wrap" style="display:none" id="wsPlayerWrap">
     <div class="ws-player-bg" style="background-image:url('${backdrop}')">
       <div class="video-ambient-glow"></div>
       <div class="ws-ambient" style="background-image:url('${backdrop}')"></div>
-      <div class="ws-title-overlay">
-        <div class="ws-title-brand">${det.original_title || det.original_name || title}</div>
-        <div class="ws-title-meta">${runtime||''} ${year?'• '+year:''} ${certification?'• '+certification+'+':''}</div>
-        <div class="ws-title-desc">${overview}</div>
-      </div>
-      <div class="ws-overlay" id="wsOverlay" onclick="wsStartStream()">
+      <div class="ws-overlay" id="wsOverlay2" onclick="wsStartStream()">
         <div class="ws-play-circle"><i class="ri-play-fill"></i></div>
         <span class="ws-play-lbl">اضغط للمشاهدة</span>
       </div>
@@ -1883,34 +1908,6 @@ page.innerHTML = `
     <button class="rox-snapshot-btn" onclick="roxSnapshot()"><i class="ri-share-forward-box-fill" style="color:#00f2fe;margin-left:5px"></i> مشاركة</button>
   </div>
   ${epInfo}
-  <div class="ws-info-block">
-    <div class="ws-info-right">
-      <img class="ws-poster-lg" src="${cwPoster}" alt="${title}">
-      <div class="ws-rating-box">
-        <div class="ws-big-score"><i class="ri-star-fill" style="color:#ffd700"></i> ${rating}<span>/10</span></div>
-        <div class="ws-vote-label">تقييم الجمهور</div>
-        <div class="ws-rbar-list">
-          ${[5,4,3,2,1].map((s,i)=>{const w=['70%','20%','7%','2%','1%'][i];return `<div class="ws-rbar-row"><span>${s}★</span><div class="ws-rbar"><div class="ws-rbar-fill" style="width:${w}"></div></div><span>${w}</span></div>`;}).join('')}
-        </div>
-      </div>
-    </div>
-    <div class="ws-info-left">
-      <div class="ws-brand-title">${title}</div>
-      <p class="ws-overview-hero">${overview}</p>
-      <div class="ws-quality-row">
-        ${genres ? `<div class="ws-qual-chip"><i class="ri-film-line"></i><span>${(arData.genres||det.genres||[]).map(g=>g.name).join(' · ')}</span></div>` : ''}
-        <div class="ws-qual-chip"><i class="ri-hd-fill"></i><span>${quality}</span></div>
-        ${hasArabic?`<div class="ws-qual-chip"><i class="ri-translate-2"></i><span>دبلجة عربية</span></div>`:''}
-        <div class="ws-qual-chip"><i class="ri-closed-captioning-fill"></i><span>ترجمة متوفرة</span></div>
-        <div class="ws-qual-chip"><i class="ri-calendar-check-line"></i><span>تاريخ الإصدار ${year}</span></div>
-      </div>
-      <div class="ws-meta-chips">
-        ${runtime?`<div class="ws-meta-chip-v2"><i class="ri-time-line"></i><span>${runtime}</span></div>`:''}
-        <div class="ws-meta-chip-v2"><i class="ri-calendar-line"></i><span>${year}</span></div>
-        ${certification?`<div class="ws-meta-chip-v2 ws-chip-red"><span>${certification}+</span></div>`:''}
-      </div>
-    </div>
-  </div>
   <div class="ws-section">
     <h3 class="ws-stitle"><i class="ri-broadcast-line" style="color:#ff2a2a"></i> مصادر المشاهدة</h3>
     <div class="subscription-grid">
