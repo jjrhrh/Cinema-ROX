@@ -1913,14 +1913,29 @@ page.innerHTML = `
       <h3 class="ws-stitle">🟢 مصادر البث</h3>
       <span class="ws-srv-sub">🔒 السيرفرات الخاصة</span>
     </div>
-    <div class="ws-tabs">
-      <button class="ws-tab active" onclick="wsShowTab(this,'vip')">🏆 VIP</button>
-      <button class="ws-tab" onclick="wsShowTab(this,'pro')">⚡ PRO</button>
-      <button class="ws-tab" onclick="wsShowTab(this,'free')">🌐 FREE</button>
+    <div class="vault-container">
+      <div class="cinema-vault" id="vault-vip">
+        <div class="vault-header" onclick="toggleVault('vip')">
+          <span class="vault-title"><i class="ri-vip-crown-fill" style="color:#f9ca24"></i> VIP الفاخرة</span>
+          <i class="ri-arrow-down-s-line arrow-icon"></i>
+        </div>
+        <div class="vault-content" id="content-vip"></div>
+      </div>
+      <div class="cinema-vault" id="vault-pro">
+        <div class="vault-header" onclick="toggleVault('pro')">
+          <span class="vault-title"><i class="ri-flashlight-fill" style="color:#fdcb6e"></i> PRO السريعة</span>
+          <i class="ri-arrow-down-s-line arrow-icon"></i>
+        </div>
+        <div class="vault-content" id="content-pro"></div>
+      </div>
+      <div class="cinema-vault" id="vault-free">
+        <div class="vault-header" onclick="toggleVault('free')">
+          <span class="vault-title"><i class="ri-global-line" style="color:#55efc4"></i> FREE العامة</span>
+          <i class="ri-arrow-down-s-line arrow-icon"></i>
+        </div>
+        <div class="vault-content" id="content-free"></div>
+      </div>
     </div>
-    <div id="wsTabVip" class="ws-tab-pane ws-grid">${srvHTML(vipSrvs)}</div>
-    <div id="wsTabPro" class="ws-tab-pane ws-grid" style="display:none">${srvHTML(proSrvs)}</div>
-    <div id="wsTabFree" class="ws-tab-pane ws-grid" style="display:none">${srvHTML(freeSrvs)}</div>
     <p class="ws-note">إذا لم يعمل السيرفر جرب آخر</p>
   </div>
   ${prodHTML?`<div class="ws-section"><h3 class="ws-stitle">📊 بيانات الإنتاج</h3><div class="ws-prod-grid">${prodHTML}</div></div>`:''}`;
@@ -1928,11 +1943,22 @@ page.innerHTML = `
     page.innerHTML = `<div class="loading">❌ خطأ<br><button onclick="wsGoBack()" class="detail-btn">← رجوع</button></div>`;
   }
 }
-function wsShowTab(btn, tab) {
-  document.querySelectorAll('.ws-tab').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('.ws-tab-pane').forEach(p => p.style.display = 'none');
-  document.getElementById('wsTab' + tab.charAt(0).toUpperCase() + tab.slice(1)).style.display = 'grid';
+window._vipSrvs = null; window._proSrvs = null; window._freeSrvs = null;
+window.toggleVault = function(vaultId) {
+  const vault = document.getElementById('vault-' + vaultId);
+  const isOpen = vault.classList.contains('open');
+  document.querySelectorAll('.cinema-vault').forEach(v => v.classList.remove('open'));
+  if (!isOpen) {
+    vault.classList.add('open');
+    const map = {vip: window._vipSrvs, pro: window._proSrvs, free: window._freeSrvs};
+    const list = map[vaultId] || [];
+    document.getElementById('content-' + vaultId).innerHTML = list.map(s => `
+      <div class="mini-server-node ${s.active?'mini-active':''}" onclick="wsSelectServer(this,'${s.url||''}','${s.name}',${!!s.rox})">
+        <div class="mini-icon">${s.icon}</div>
+        <div class="mini-name">${s.name}</div>
+        <div class="mini-desc">${s.desc}</div>
+      </div>`).join('');
+  }
 }
 // ===== CONTINUE WATCHING =====
 let _cwTimer = null;
