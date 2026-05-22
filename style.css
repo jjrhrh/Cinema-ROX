@@ -5225,3 +5225,5 @@ body.cinema-mode .bottom-nav {
 /* ===== AMBIENT GLOW ===== */
 .video-ambient-glow { position:absolute; top:5%; left:5%; width:90%; height:90%; background:radial-gradient(circle,rgba(255,42,42,0.4) 0%,transparent 70%); filter:blur(50px); z-index:-1; pointer-events:none; animation:ambientPulse 4s infinite alternate; }
 @keyframes ambientPulse { 0%{opacity:0.5;transform:scale(1);} 100%{opacity:0.8;transform:scale(1.1);} }
+.ri-film-fill, .ri-share-forward-box-fill, .ri-chat-quote-fill { transition:transform 0.3s cubic-bezier(0.175,0.885,0.32,1.275); display:inline-block; }
+button:hover .ri-film-fill, button:hover .ri-share-forward-box-fill { transform:scale(1.2) rotate(-8deg); } 
