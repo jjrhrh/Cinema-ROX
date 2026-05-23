@@ -400,15 +400,24 @@ document.body.style.backgroundImage = '';
   if (yearEl) yearEl.textContent = m.release_date ? m.release_date.slice(0,4) : '';
 
   if (titleEl) {
-    titleEl.style.opacity = '0';
-    titleEl.style.transform = 'translateY(12px)';
-    setTimeout(() => {
+  titleEl.style.opacity = '0';
+  setTimeout(async () => {
+    try {
+      const logoRes = await fetch(`${CONFIG.API.TMDB_BASE}/movie/${m.id}/images?api_key=${CONFIG.KEYS.TMDB}&include_image_language=en,null`);
+      const logoData = await logoRes.json();
+      const logo = logoData.logos?.[0]?.file_path;
+      if (logo) {
+        titleEl.innerHTML = `<img src="${CONFIG.IMAGES.ORIGINAL}${logo}" style="max-height:80px;max-width:80%;object-fit:contain;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.8));">`;
+      } else {
+        titleEl.textContent = m.title || m.original_title || '';
+      }
+    } catch {
       titleEl.textContent = m.title || m.original_title || '';
-      titleEl.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-      titleEl.style.opacity = '1';
-      titleEl.style.transform = 'translateY(0)';
-    }, 200);
-  }
+    }
+    titleEl.style.transition = 'opacity 0.6s ease';
+    titleEl.style.opacity = '1';
+  }, 200);
+}
 
   if (genresEl) {
     const names = (m.genre_ids || []).slice(0,3).map(id => GENRES[id]).filter(Boolean);
