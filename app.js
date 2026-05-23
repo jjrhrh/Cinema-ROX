@@ -339,8 +339,15 @@ let movies = await fetchMovies('/trending/movie/week', { limit: CONFIG.HERO.LIMI
     },
     speed: 800,
     on: {
-      init: function() { updateHeroInfo(movies, 0); },
-      slideChange: function() { updateHeroInfo(movies, this.realIndex); }
+      init: function() {
+  updateHeroInfo(movies, 0);
+  const dotsEl = document.getElementById('heroDots');
+  if (dotsEl) dotsEl.innerHTML = movies.map((_,i) => `<div class="hero-dot ${i===0?'active':''}"></div>`).join('');
+},
+slideChange: function() {
+  updateHeroInfo(movies, this.realIndex);
+  document.querySelectorAll('.hero-dot').forEach((d,i) => d.classList.toggle('active', i===this.realIndex));
+}
     }
   });
 }
