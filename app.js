@@ -49,13 +49,10 @@ function bnavGo(tab) {
   
   document.getElementById(pageMap[tab])?.classList.add('active');
   document.getElementById(btnMap[tab])?.classList.add('active');
-  const bubble = document.getElementById('bnavBubble');
-const activeBtn = document.getElementById(btnMap[tab] || 'bnavHome');
-if (bubble && activeBtn) {
-  const rect = activeBtn.getBoundingClientRect();
-  const navRect = activeBtn.closest('nav').getBoundingClientRect();
-  bubble.style.left = (r.left - n.left + r.width/2 - 27) + 'px';
-}
+  if (hero) {
+    hero.style.display = (tab === 'home' || tab === 'otaku') ? '' : 'none';
+    hero.style.visibility = (tab === 'home' || tab === 'otaku') ? '' : 'hidden';
+  }
   if (tab === 'home') { loadHeroSwiper(); loadHomePage(); loadNewsSection('newsFeed', CONFIG.NEWS.CINEMA, 'red'); const _t=document.getElementById('newsSectionTitle'); if(_t) _t.textContent='📰 أخبار السينما الحية'; }
   if (tab === 'library') loadLibraryPage();
   if (tab === 'search') { initSearchDiscovery(); const inp = document.getElementById('searchInput2'); if(inp) { inp.value=''; setTimeout(()=>inp.focus(),200); } }
