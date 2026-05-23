@@ -88,19 +88,29 @@ html, body {
 }
 .bnav-btn .bnav-icon svg {
   filter: grayscale(0.4) brightness(0.45);
-  transition: filter 0.4s ease;
+  transition: filter 0.5s cubic-bezier(0.25,1,0.5,1);
 }
 /* — Active State — */
 .bnav-btn.active {
   color: var(--rox-laser, #00e5ff);
   transform: translateY(-10px) scale(1.08);
   filter: drop-shadow(0 0 10px var(--rox-laser, #00e5ff));
-  transition: transform 0.45s cubic-bezier(0.34,1.56,0.64,1),
-              filter 0.45s ease;
+  transition: color 0.5s cubic-bezier(0.25,1,0.5,1),
+            transform 0.5s cubic-bezier(0.25,1,0.5,1),
+            filter 0.5s cubic-bezier(0.25,1,0.5,1);
 }
 .bnav-btn.active .bnav-icon svg {
   filter: none;
 }
+.bnav-btn.active .bnav-label {
+  color: #fff;
+  text-shadow: 0 0 10px var(--rox-laser, #00e5ff),
+               0 0 20px var(--rox-laser, #00e5ff);
+  transition: all 0.5s cubic-bezier(0.25,1,0.5,1);
+}
+.bnav-btn .bnav-label {
+  transition: all 0.5s cubic-bezier(0.25,1,0.5,1);
+} 
 .bnav-btn.active { animation: navBounce 0.4s cubic-bezier(0.175,0.885,0.32,1.275); }
 @keyframes navBounce { 0%{transform:translateY(-10px) scale(1);} 40%{transform:translateY(-13px) scale(1.1);} 100%{transform:translateY(-10px) scale(1.08);} } 
 /* — Floating Halo — */
