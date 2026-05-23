@@ -164,10 +164,9 @@ transition: background 0.5s cubic-bezier(0.25,1,0.5,1);
 #bnavOtaku.active   { --rox-laser:#ff4d00; color:#ff4d00; }
 /* — Animations — */
 @keyframes clickBounce {
-  0%   { transform:translateY(0)    scale(1);    }
-  40%  { transform:translateY(-8px) scale(1.22); }
-  70%  { transform:translateY(-3px) scale(1.1);  }
-  100% { transform:translateY(0)    scale(1.15); }
+  0%   { transform:translateY(-10px) scale(1.08); }
+  40%  { transform:translateY(-13px) scale(1.15); }
+  100% { transform:translateY(-10px) scale(1.08); }
 }
 @keyframes rox-breathe {
   0%,100% { filter:drop-shadow(0 0 5px var(--rox-laser)) drop-shadow(0 0 12px var(--rox-laser)); }
