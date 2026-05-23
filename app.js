@@ -407,7 +407,7 @@ document.body.style.backgroundImage = '';
       const logoData = await logoRes.json();
       const logo = logoData.logos?.[0]?.file_path;
       if (logo) {
-        titleEl.innerHTML = `<img src="${CONFIG.IMAGES.ORIGINAL}${logo}" style="max-height:80px;max-width:80%;object-fit:contain;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.8));">`;
+        titleEl.innerHTML = `<img src="${CONFIG.IMAGES.ORIGINAL}${logo}" style="max-height:75px;max-width:70%;object-fit:contain;object-position:left;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.8));display:block;margin:0;">`;
       } else {
         titleEl.textContent = m.title || m.original_title || '';
       }
@@ -428,7 +428,11 @@ document.body.style.backgroundImage = '';
     ratingEl.innerHTML = rating ? `<span class="hero-cap hero-cap-rating"><svg width="11" height="11" viewBox="0 0 24 24" fill="var(--gold)" style="vertical-align:middle;margin-left:3px"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>${rating}</span>` : '';
   }
   const overviewEl = document.getElementById('heroInfoOverview');
-  if (overviewEl) overviewEl.textContent = m.overview_ar || m.overview || '';
+  if (overviewEl) {
+  const arRes = await fetch(`${CONFIG.API.TMDB_BASE}/movie/${m.id}?api_key=${CONFIG.KEYS.TMDB}&language=ar`);
+  const arData = await arRes.json();
+  overviewEl.textContent = arData.overview || m.overview || '';
+}
   const durEl = document.getElementById('heroInfoDuration');
   if (durEl) durEl.textContent = m.media_type === 'movie' ? '🎬 فيلم' : '📺 مسلسل';
   const playBtn = document.getElementById('heroPlayBtn');
