@@ -25,7 +25,7 @@ function closeSidebarNews() {
 // ===== NAVIGATION =====
 function bnavGo(tab) {
   const hero = document.getElementById('heroSection');
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.dock-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.bnav-btn').forEach(b => {
   b.style.opacity = '0.5';
   setTimeout(() => { b.classList.remove('active'); b.style.opacity = ''; }, 150);
@@ -51,11 +51,9 @@ function bnavGo(tab) {
   const btnMap  = { home:'bnavHome', search:'bnavSearch', library:'bnavLibrary', profile:'bnavProfile', otaku:'bnavOtaku' };
   
   document.getElementById(pageMap[tab])?.classList.add('active');
-  const activeBtn = document.getElementById(btnMap[tab]);
-if (activeBtn) {
-  activeBtn.style.opacity = '0';
-  activeBtn.classList.add('active');
-  requestAnimationFrame(() => { activeBtn.style.opacity = ''; });
+  document.getElementById(pageMap[tab])?.classList.add('active');
+const _ab = document.getElementById(btnMap[tab]);
+if(_ab) { _ab.style.width='auto'; _ab.classList.add('active'); }
 }
   if (hero) {
     hero.style.display = (tab === 'home' || tab === 'otaku') ? '' : 'none';
