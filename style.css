@@ -41,7 +41,7 @@
 * { scrollbar-width: thin; scrollbar-color: #ff2a2a rgba(0,0,0,0.2); }
 * { scrollbar-width: thin; scrollbar-color: #e50914 transparent; }
 html, body {
-  background: #0a0000;
+  background: #02203c;
   color: var(--text);
   font-family: 'Tajawal', sans-serif;
   min-height: 100vh;
