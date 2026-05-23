@@ -326,6 +326,7 @@ transition: background 0.5s cubic-bezier(0.25,1,0.5,1);
   justify-content: space-between;
   padding: 14px 16px;
   flex-direction: row-reverse;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 100%);
 }
 .hero-topbar-right {
   display: flex;
