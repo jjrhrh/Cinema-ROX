@@ -1411,13 +1411,24 @@ transition: background 0.5s cubic-bezier(0.25,1,0.5,1);
 } 
 /* ===== HERO SWIPER NEW ===== */
 .hero-swiper {
-  position: relative !important;
-  z-index: 2 !important;
+  position: absolute !important;
+  inset: 0 !important;
   width: 100% !important;
-  height: 420px !important;
-  margin-bottom: 0 !important;
-  padding: 10px 0 0 !important;
-  overflow: visible !important;
+  height: 100% !important;
+  z-index: 1 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+}
+.hero-swiper .swiper-slide {
+  width: 100% !important;
+  height: 100% !important;
+}
+.hero-swiper .swiper-slide img,
+.hero-swiper .swiper-slide > div {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .swiper-slide-active.hero-swiper-slide,
 .hero-swiper-slide.swiper-slide-active {
