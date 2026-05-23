@@ -296,12 +296,16 @@ transition: background 0.5s cubic-bezier(0.25,1,0.5,1);
   background: #000;
 }
 .hero-backdrop {
-  position: absolute; inset: 0;
-  background-size: cover;
-  background-position: center 20%;
-  transition: opacity 0.8s ease;
-  will-change: opacity;
+  position: absolute;
+  inset: 0;
+  background-size: cover !important;
+  background-position: center top !important;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity 1s ease;
+  z-index: 1;
 }
+.hero-backdrop.loaded { opacity: 1; }
 .hero-gradient {
   position: absolute; inset: 0; z-index: 2;
   background: linear-gradient(
