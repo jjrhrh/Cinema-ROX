@@ -115,11 +115,6 @@ html, body {
   0%   { opacity: 1; filter: blur(18px) brightness(1.8); }
   100% { opacity: 0.9; filter: blur(16px) brightness(1); }
 }
-@keyframes pulseGlow {
-  0%   { opacity: 1; filter: blur(18px) brightness(1.8); }
-  100% { opacity: 0.9; filter: blur(16px) brightness(1); }
-}
-}
 .bnav-btn.active { animation: navBounce 0.4s cubic-bezier(0.175,0.885,0.32,1.275); }
 @keyframes navBounce { 0%{transform:translateY(-10px) scale(1);} 40%{transform:translateY(-13px) scale(1.1);} 100%{transform:translateY(-10px) scale(1.08);} } 
 /* — Floating Halo — */
@@ -130,7 +125,7 @@ html, body {
   transform: translateX(-50%);
   width: 52px; height: 52px;
   border-radius: 50%;
-  opacity: 0.9;
+  animation: pulseGlow 0.8s cubic-bezier(0.25,1,0.5,1) forwards;
   z-index: -1;
   filter: blur(16px);
 border-radius: 25px;
