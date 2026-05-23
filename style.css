@@ -41,7 +41,7 @@
 * { scrollbar-width: thin; scrollbar-color: #ff2a2a rgba(0,0,0,0.2); }
 * { scrollbar-width: thin; scrollbar-color: #e50914 transparent; }
 html, body {
-  background: #02203c;
+  background: #0a0000;
   color: var(--text);
   font-family: 'Tajawal', sans-serif;
   min-height: 100vh;
@@ -60,9 +60,9 @@ html, body {
   bottom: 0 !important; left: 0 !important; right: 0 !important;
   width: 100% !important;
   height: var(--nav-height) !important;
-  background: #02203c !important;
-  backdrop-filter: none !important;
--webkit-backdrop-filter: none !important;
+  background: rgba(5,0,0,0.78) !important;
+  backdrop-filter: blur(36px) saturate(2) !important;
+  -webkit-backdrop-filter: blur(36px) saturate(2) !important;
   border-top: 1px solid rgba(255,255,255,0.055) !important;
   box-shadow: 0 -12px 40px rgba(0,0,0,0.65),
               0 -1px 0 rgba(255,255,255,0.04),
@@ -72,17 +72,6 @@ html, body {
   justify-content: space-around !important;
   z-index: 9999 !important;
   padding: 0 6px !important;
-}
-.bnav-bubble {
-  position: absolute;
-  top: -24px; left: 0;
-  width: 54px; height: 54px;
-  background: #fff;
-  border-radius: 50%;
-  transition: left 0.4s cubic-bezier(0.34,1.56,0.64,1);
-  pointer-events: none;
-  z-index: 1;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.4), 0 0 0 4px #02203c;
 }
 .bnav-btn {
   flex: 1; display: flex; flex-direction: column;
@@ -101,18 +90,39 @@ html, body {
 }
 /* — Active State — */
 .bnav-btn.active {
-  color: #111;
-  transform: translateY(-16px);
-  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  color: var(--rox-laser, #00e5ff);
+  transform: translateY(-10px) scale(1.08);
+  filter: drop-shadow(0 0 10px var(--rox-laser, #00e5ff));
+  transition: transform 0.45s cubic-bezier(0.34,1.56,0.64,1),
+              filter 0.45s ease;
+}
+.bnav-btn.active .bnav-icon svg {
   filter: none;
 }
-.bnav-btn.active .bnav-icon svg { filter: brightness(0); }
 .bnav-btn.active { animation: navBounce 0.4s cubic-bezier(0.175,0.885,0.32,1.275); }
-@keyframes navBounce { 0%{transform:translateY(0);} 60%{transform:translateY(-20px);} 100%{transform:translateY(-16px);} }
+@keyframes navBounce { 0%{transform:translateY(-10px) scale(1.08);} 50%{transform:translateY(-14px) scale(1.15);} 100%{transform:translateY(-10px) scale(1.08);} } 
 /* — Floating Halo — */
-.bnav-btn::after { display: none; }
-.bnav-btn.active::after { display: none; }
-.bnav-btn.active::before { display: none; }
+.bnav-btn.active::before {
+  content: '';
+  position: absolute;
+  top: 2px; left: 50%;
+  transform: translateX(-50%);
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  opacity: 0.9;
+  z-index: -1;
+  filter: blur(14px);
+  transition: background 0.4s ease;
+}
+#bnavHome.active::before,
+#bnavSearch.active::before,
+#bnavLibrary.active::before,
+#bnavProfile.active::before {
+  background: radial-gradient(circle, rgba(0,229,255,0.28) 0%, transparent 72%);
+}
+#bnavOtaku.active::before {
+  background: radial-gradient(circle, rgba(255,77,0,0.28) 0%, transparent 72%);
+}
 /* — Dot Indicator — */
 .bnav-btn::after {
   content: '';
@@ -147,39 +157,13 @@ html, body {
   50%     { filter:drop-shadow(0 0 18px var(--rox-laser)) drop-shadow(0 0 36px var(--rox-laser)); opacity:.8; }
 }
 .bnav-btn.active .bnav-icon {
-  animation: none;
+  animation: clickBounce 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards,
+             rox-breathe 3s ease-in-out 0.4s infinite;
 }
-.bnav-indicator {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  width: 50px; height: 50px;
-  border-radius: 50%;
-  background: #02203c;
-  border: 2.5px solid var(--rox-laser, #00e5ff);
-  box-shadow: 0 0 14px var(--rox-laser, #00e5ff),
-              0 0 0 6px #02203c;
-  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s ease;
-  opacity: 0;
-  z-index: -1;
-  pointer-events: none;
-}
-.bnav-btn.active .bnav-indicator {
-  transform: translate(-50%, -50%) scale(1);
-  opacity: 1;
-}
-#bnavOtaku.active .bnav-indicator {
-  background: #02203c;
-  border-color: #ff4d00;
-  box-shadow: 0 0 14px #ff4d00, 0 0 0 6px #02203c;
-}
-.bnav-btn.active .bnav-indicator {
-  display: none;
-} 
 /* — Sizes — */
 .bnav-icon     { font-size:1.3rem; line-height:1; }
 .bnav-icon svg { width:1.5rem; height:1.5rem; }
-.bnav-label    { display: none; }
+.bnav-label    { font-size:0.67rem; font-weight:700; letter-spacing:0.01em; }
 .bnav-center {
   width: 60px !important; height: 60px !important;
   flex: 0 0 60px !important;
