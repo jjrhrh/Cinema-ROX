@@ -26,7 +26,10 @@ function closeSidebarNews() {
 function bnavGo(tab) {
   const hero = document.getElementById('heroSection');
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.bnav-btn').forEach(b => {
+  b.style.opacity = '0.5';
+  setTimeout(() => { b.classList.remove('active'); b.style.opacity = ''; }, 150);
+});
   document.getElementById('newsSection').style.display = 'none';
   document.getElementById('studioBar').style.display = 'none';
   if (tab === 'browse') { toggleRoxMenu(); return; }
@@ -48,7 +51,12 @@ function bnavGo(tab) {
   const btnMap  = { home:'bnavHome', search:'bnavSearch', library:'bnavLibrary', profile:'bnavProfile', otaku:'bnavOtaku' };
   
   document.getElementById(pageMap[tab])?.classList.add('active');
-  document.getElementById(btnMap[tab])?.classList.add('active');
+  const activeBtn = document.getElementById(btnMap[tab]);
+if (activeBtn) {
+  activeBtn.style.opacity = '0';
+  activeBtn.classList.add('active');
+  requestAnimationFrame(() => { activeBtn.style.opacity = ''; });
+}
   if (hero) {
     hero.style.display = (tab === 'home' || tab === 'otaku') ? '' : 'none';
     hero.style.visibility = (tab === 'home' || tab === 'otaku') ? '' : 'hidden';
