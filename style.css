@@ -383,8 +383,8 @@ min-height: 340px;
   left: 0;
   z-index: 6;
   padding: 0 16px 16px;
-  direction: rtl;
-  text-align: right;
+  direction: ltr;
+  text-align: left;
   background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.5) 60%, transparent 100%);
 }
 .hero-trending-badge {
