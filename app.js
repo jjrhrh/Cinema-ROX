@@ -1834,11 +1834,12 @@ page.innerHTML = `
       </div>
     </div>
     <iframe id="wsFrame" class="ws-frame" src=""
-      allowfullscreen
-      allow="autoplay; fullscreen; encrypted-media; picture-in-picture; web-share; clipboard-write; gyroscope; accelerometer"
-      referrerpolicy="no-referrer-when-downgrade"
-      onload="if(this.src)cwTrackTime(${id},'${type}','${cwPoster}','${cwTitle}')">
-    </iframe>
+  allowfullscreen
+  sandbox="allow-scripts allow-same-origin allow-forms allow-presentation allow-popups-to-escape-sandbox"
+  allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+  referrerpolicy="no-referrer-when-downgrade"
+  onload="if(this.src)cwTrackTime(${id},'${type}','${cwPoster}','${cwTitle}')">
+</iframe>
     <div id="roxPlayerWrap" class="rox-player-wrap" style="display:none">
       <video id="roxPlayer" class="rox-player-video" playsinline></video>
       <div class="rox-player-controls" id="roxControls">
