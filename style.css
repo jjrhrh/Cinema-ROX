@@ -91,7 +91,7 @@ html, body {
 /* — Active State — */
 .bnav-btn.active {
   color: var(--rox-laser, #00e5ff);
-  transform: scale(1.08);
+  transform: none;
   filter: drop-shadow(0 0 10px var(--rox-laser, #00e5ff));
   transition: transform 0.45s cubic-bezier(0.34,1.56,0.64,1),
               filter 0.45s ease;
@@ -157,8 +157,7 @@ html, body {
   50%     { filter:drop-shadow(0 0 18px var(--rox-laser)) drop-shadow(0 0 36px var(--rox-laser)); opacity:.8; }
 }
 .bnav-btn.active .bnav-icon {
-  animation: rox-breathe 3s ease-in-out infinite;
-             rox-breathe 3s ease-in-out 0.4s infinite;
+  animation: none;
 }
 /* — Sizes — */
 .bnav-icon     { font-size:1.3rem; line-height:1; }
