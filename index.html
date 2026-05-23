@@ -28,54 +28,73 @@
 <div id="heroSection" class="hero-section">
   <div class="hero-backdrop" id="heroBackdrop"></div>
   <div class="hero-gradient"></div>
-  <div class="hero-logo">Cinema <span>ROX</span></div>
-<!-- TOP-LEFT: HAMBURGER + NOTIFICATION BELL -->
-<div class="hero-topbar-left">
-  <button class="topbar-btn hamburger-btn" id="hamburgerBtn" onclick="toggleSidebar()" aria-label="القائمة">
-    <span></span><span></span><span></span>
-  </button>
-  <button class="topbar-btn bell-btn" id="bellBtn" onclick="toggleNotifSidebar()" aria-label="الإشعارات">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-      <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-    </svg>
-    <span class="notif-badge" id="notifBadge" style="display:none">0</span>
-  </button>
-</div>
-  <!-- SIDEBAR MENU -->
-<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
-<div class="sidebar-menu" id="sidebarMenu">
-  <div class="sidebar-header">
-    <div class="sidebar-logo">Cinema <span>ROX</span></div>
-    <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
-  </div>
 
-  <div class="sidebar-section-title">📰 الأخبار</div>
-  <button class="sidebar-item" onclick="openSidebarNews('cinema')">🎬 أخبار الأفلام والمسلسلات</button>
-  <button class="sidebar-item" onclick="openSidebarNews('anime')">🎌 أخبار الأنمي</button>
-</div>
-
-<!-- NEWS PANEL -->
-<div class="news-panel" id="newsPanel">
-  <div class="news-panel-header">
-    <button class="news-panel-back" onclick="closeSidebarNews()">← رجوع</button>
-    <div class="news-panel-title" id="newsPanelTitle">الأخبار</div>
-  </div>
-  <div id="newsPanelFeed" class="news-panel-feed"></div>
-</div>
-  <div class="swiper hero-swiper" id="heroSwiper" dir="ltr">
-    <div class="swiper-wrapper" id="heroSwiperWrapper">
-      <!-- slides injected by JS -->
+  <!-- TOPBAR -->
+  <div class="hero-topbar">
+    <div class="hero-topbar-right">
+      <div class="hero-logo-new">ROX</div>
+      <div class="hero-search-bar" onclick="bnavGo('search')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="17" y1="17" x2="21" y2="21"/></svg>
+        <span>ابحث عن فيلم أو مسلسل...</span>
+      </div>
+    </div>
+    <div class="hero-topbar-left">
+      <button class="topbar-btn bell-btn" id="bellBtn" onclick="toggleNotifSidebar()">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="notif-badge" id="notifBadge" style="display:none">0</span>
+      </button>
+      <button class="topbar-btn avatar-btn" onclick="bnavGo('profile')">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="7" r="4"/><path d="M4 21v-2a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v2"/></svg>
+      </button>
+      <button class="topbar-btn hamburger-btn" id="hamburgerBtn" onclick="toggleSidebar()">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </div>
 
-  <div class="hero-info-container" id="hero-info-area">
-  <div class="hero-trending-badge">🔥 الأكثر مشاهدة</div>
-  <div class="hero-info-year"  id="heroInfoYear"></div>
-  <div class="hero-info-title" id="heroInfoTitle"></div>
-  <div class="hero-info-caps"  id="heroInfoGenres"></div>
-</div>
+  <!-- SIDEBAR -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <div class="sidebar-menu" id="sidebarMenu">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">Cinema <span>ROX</span></div>
+      <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
+    </div>
+    <div class="sidebar-section-title">📰 الأخبار</div>
+    <button class="sidebar-item" onclick="openSidebarNews('cinema')">🎬 أخبار الأفلام والمسلسلات</button>
+    <button class="sidebar-item" onclick="openSidebarNews('anime')">🎌 أخبار الأنمي</button>
+  </div>
 
+  <!-- NEWS PANEL -->
+  <div class="news-panel" id="newsPanel">
+    <div class="news-panel-header">
+      <button class="news-panel-back" onclick="closeSidebarNews()">← رجوع</button>
+      <div class="news-panel-title" id="newsPanelTitle">الأخبار</div>
+    </div>
+    <div id="newsPanelFeed" class="news-panel-feed"></div>
+  </div>
+
+  <!-- SWIPER -->
+  <div class="swiper hero-swiper" id="heroSwiper" dir="ltr">
+    <div class="swiper-wrapper" id="heroSwiperWrapper"></div>
+  </div>
+
+  <!-- HERO INFO -->
+  <div class="hero-info-container" id="hero-info-area">
+    <div class="hero-trending-badge">🔥 الأكثر مشاهدة</div>
+    <div class="hero-meta-row">
+      <span class="hero-info-year" id="heroInfoYear"></span>
+      <span class="hero-meta-chip" id="heroInfoRating"></span>
+      <span class="hero-meta-chip" id="heroInfoDuration"></span>
+      <span class="hero-match-chip">98% تطابق</span>
+    </div>
+    <div class="hero-info-title" id="heroInfoTitle"></div>
+    <div class="hero-info-overview" id="heroInfoOverview"></div>
+    <div class="hero-info-caps" id="heroInfoGenres"></div>
+    <div class="hero-action-row">
+      <button class="hero-btn-play" id="heroPlayBtn">▶ شاهد الآن</button>
+      <button class="hero-btn-add" id="heroAddBtn">قائمتي ⊕</button>
+    </div>
+  </div>
 </div>
 <!-- PAGES -->
   <div id="studioBar" class="studio-bar" style="display:none">
