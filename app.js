@@ -367,7 +367,7 @@ async function updateHeroInfo(movies, index) {
 
   const backdrop = document.getElementById('heroBackdrop');
   if (backdrop) {
-    backdrop.style.filter = 'blur(60px) brightness(0.4) saturate(3)';
+    backdrop.style.filter = 'none';
     backdrop.style.backgroundImage = `url('${CONFIG.IMAGES[CONFIG.HERO.BACKDROP_SIZE]}${m.backdrop_path || m.poster_path}')`;
     backdrop.classList.remove('loaded');
     setTimeout(() => backdrop.classList.add('loaded'), 80);
