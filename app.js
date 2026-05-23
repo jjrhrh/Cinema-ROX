@@ -49,12 +49,16 @@ function bnavGo(tab) {
   
   document.getElementById(pageMap[tab])?.classList.add('active');
   document.getElementById(btnMap[tab])?.classList.add('active');
-  const curve = document.getElementById('bnavCurve');
+  const svgPath = document.getElementById('bnavSvgPath');
 const activeBtn = document.getElementById(btnMap[tab] || 'bnavHome');
-if (curve && activeBtn) {
+if (svgPath && activeBtn) {
   const rect = activeBtn.getBoundingClientRect();
   const navRect = activeBtn.closest('nav').getBoundingClientRect();
-  curve.style.left = (rect.left - navRect.left + rect.width/2 - 35) + 'px';
+  const cx = ((rect.left - navRect.left + rect.width/2) / navRect.width) * 500;
+  const r = 38;
+  svgPath.setAttribute('d',
+    `M0,0 L${cx-r-18},0 Q${cx-r},0 ${cx-r},${r} A${r},${r} 0 0,0 ${cx+r},${r} Q${cx+r},0 ${cx+r+18},0 L500,0 L500,80 L0,80 Z`
+  );
 }
   if (hero) {
     hero.style.display = (tab === 'home' || tab === 'otaku') ? '' : 'none';
