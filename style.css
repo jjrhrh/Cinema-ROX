@@ -195,6 +195,9 @@ border: 3px solid rgba(255,255,255,0.15);
   border-color: #ff4d00;
   box-shadow: 0 0 14px #ff4d00, 0 0 0 6px #02203c;
 }
+.bnav-btn.active .bnav-indicator {
+  display: none;
+} 
 /* — Sizes — */
 .bnav-icon     { font-size:1.3rem; line-height:1; }
 .bnav-icon svg { width:1.5rem; height:1.5rem; }
