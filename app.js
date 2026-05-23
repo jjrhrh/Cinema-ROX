@@ -49,6 +49,13 @@ function bnavGo(tab) {
   
   document.getElementById(pageMap[tab])?.classList.add('active');
   document.getElementById(btnMap[tab])?.classList.add('active');
+  const curve = document.getElementById('bnavCurve');
+const activeBtn = document.getElementById(btnMap[tab] || 'bnavHome');
+if (curve && activeBtn) {
+  const rect = activeBtn.getBoundingClientRect();
+  const navRect = activeBtn.closest('nav').getBoundingClientRect();
+  curve.style.left = (rect.left - navRect.left + rect.width/2 - 35) + 'px';
+}
   if (hero) {
     hero.style.display = (tab === 'home' || tab === 'otaku') ? '' : 'none';
     hero.style.visibility = (tab === 'home' || tab === 'otaku') ? '' : 'hidden';
