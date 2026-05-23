@@ -5550,3 +5550,10 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
 .hero-gradient { z-index: 2 !important; }
 .hero-topbar { z-index: 10 !important; }
 .hero-info-container { z-index: 5 !important; } 
+.hero-info-title img {
+  max-width: 290px;
+  max-height: 90px;
+  object-fit: contain;
+  object-position: left;
+  display: block;
+} 
