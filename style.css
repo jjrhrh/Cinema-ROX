@@ -92,8 +92,8 @@ html, body {
 }
 /* — Active State — */
 .bnav-btn.active {
-  color: var(--rox-laser, #00e5ff);
-  transform: translateY(-10px) scale(1.08);
+  color: var(--rox-laser, #00e5ff) !important;
+  transform: translateY(-10px) scale(1.08) !important;
   filter: drop-shadow(0 0 10px var(--rox-laser, #00e5ff));
   transition: color 0.5s cubic-bezier(0.25,1,0.5,1),
             transform 0.5s cubic-bezier(0.25,1,0.5,1),
