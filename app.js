@@ -51,7 +51,6 @@ function bnavGo(tab) {
   const btnMap  = { home:'bnavHome', search:'bnavSearch', library:'bnavLibrary', profile:'bnavProfile', otaku:'bnavOtaku' };
   
   document.getElementById(pageMap[tab])?.classList.add('active');
-  document.getElementById(pageMap[tab])?.classList.add('active');
 const _ab = document.getElementById(btnMap[tab]);
 if(_ab) { _ab.style.width='auto'; _ab.classList.add('active'); }
 }
