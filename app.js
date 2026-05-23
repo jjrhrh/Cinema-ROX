@@ -1823,7 +1823,7 @@ page.innerHTML = `
     <div class="ws-player-bg" style="background-image:url('${backdrop}')">
       <div class="video-ambient-glow"></div>
       <div class="ws-ambient" style="background-image:url('${backdrop}')"></div>
-      <div class="ws-title-overlay">
+      <div class="ws-title-overlay" id="wsTitleOverlay">
         <div class="ws-title-brand">${det.original_title || det.original_name || title}</div>
         <div class="ws-title-meta">${runtime||''} ${year?'• '+year:''} ${certification?'• '+certification+'+':''}</div>
         <div class="ws-title-desc">${overview}</div>
@@ -2004,7 +2004,9 @@ window.wsSelectServerNew = function(el, url, name, isRox) {
 window.wsStartStream = function() {
   const overlay = document.getElementById('wsOverlay');
   if (overlay) overlay.style.display = 'none';
-  const firstCard = document.querySelector('.ws-card');
+  const titleOverlay = document.getElementById('wsTitleOverlay');
+  if (titleOverlay) titleOverlay.style.display = 'none';
+  const firstCard = [...document.querySelectorAll('.ws-card')].find(c => c.dataset.url && c.dataset.url !== 'null' && c.dataset.url !== '');
   if (firstCard) firstCard.click();
 };
 // ===== CONTINUE WATCHING =====
