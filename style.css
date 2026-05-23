@@ -26,6 +26,9 @@
 
 /* ===== BASE ===== */
 *, *::before, *::after {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
   margin: 0; padding: 0; box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
@@ -454,6 +457,8 @@ justify-content: flex-start;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  font-weight: 400;
+letter-spacing: 0.3px;
 }
 .hero-info-caps {
   font-size: 0.72rem;
