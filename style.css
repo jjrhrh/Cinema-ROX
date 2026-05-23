@@ -293,10 +293,11 @@ transition: background 0.5s cubic-bezier(0.25,1,0.5,1);
   position: relative;
   width: 100%;
   height: 45vh;
-max-height: 460px;
-min-height: 340px;
+  max-height: 460px;
+  min-height: 340px;
   overflow: hidden;
   background: #000;
+  margin-top: 60px;
 }
 .hero-backdrop {
   position: absolute;
