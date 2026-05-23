@@ -25,10 +25,9 @@ function closeSidebarNews() {
 // ===== NAVIGATION =====
 function bnavGo(tab) {
   const hero = document.getElementById('heroSection');
-  document.querySelectorAll('.dock-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.bnav-btn').forEach(b => {
-  b.style.opacity = '0.5';
-  setTimeout(() => { b.classList.remove('active'); b.style.opacity = ''; }, 150);
+  document.querySelectorAll('.dock-btn').forEach(b => {
+  b.classList.remove('active');
+  b.style.width = '';
 });
   document.getElementById('newsSection').style.display = 'none';
   document.getElementById('studioBar').style.display = 'none';
