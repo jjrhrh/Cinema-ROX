@@ -1722,7 +1722,7 @@ genres = (arData.genres || det.genres || []).map(g => `<span class="genre-tag">$
     // احفظ فوراً في Continue Watching
     const cwPoster = det.poster_path ? CONFIG.IMAGES.POSTER_MD + det.poster_path : CONFIG.IMAGES.PLACEHOLDER;
     const cwTitle  = type === 'movie' ? (det.title || det.original_title) : (det.name || det.original_name);
-    cwSave(id, type, cwPoster, cwTitle, resumeSec || 0, '', resumeSrv || '');
+    if (resumeSec > 0) cwSave(id, type, cwPoster, cwTitle, resumeSec, '', resumeSrv || '');
 // تحقق إذا الأنمي (genre_id 16 = Animation + JP)
 const isAnime = (det.genres||[]).some(g => g.id === 16)
              && (det.origin_country||[]).includes('JP');
