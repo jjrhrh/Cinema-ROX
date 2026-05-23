@@ -185,7 +185,7 @@ html, body {
 /* — Sizes — */
 .bnav-icon     { font-size:1.3rem; line-height:1; }
 .bnav-icon svg { width:1.5rem; height:1.5rem; }
-.bnav-label    { font-size:0.67rem; font-weight:700; letter-spacing:0.01em; }
+.bnav-label    { display: none; }
 .bnav-center {
   width: 60px !important; height: 60px !important;
   flex: 0 0 60px !important;
