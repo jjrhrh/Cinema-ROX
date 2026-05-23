@@ -315,28 +315,33 @@ async function loadHeroSwiper() {
   const wrapper = document.getElementById('heroSwiperWrapper');
   if (!wrapper) return;
 
-  const testMovie = {
-    id: 762509,
-    title: "Mufasa: The Lion King",
-    backdrop_path: "/AM5gBcYMmVZ6T1Q4BMFoFtt6lmm.jpg",
-    poster_path: "/AM5gBcYMmVZ6T1Q4BMFoFtt6lmm.jpg",
-    overview: "Mufasa, a lion cub, gets separated from his parents and embarks on an epic journey.",
-    genre_ids: [16, 12, 18],
-    media_type: "movie",
-    release_date: "2024-12-20",
-    vote_average: 7.5
-  };
+let movies = await fetchMovies('/trending/movie/week', { limit: CONFIG.HERO.LIMIT, requirePoster: true });
+  if (!movies.length) movies = await fetchMovies('/movie/popular', { limit: CONFIG.HERO.LIMIT, requirePoster: true });
+  if (!movies.length) return;
 
-  const movies = [testMovie];
-  const bg = `${CONFIG.IMAGES.BACKDROP}${testMovie.backdrop_path}`;
-  wrapper.innerHTML = `<div class="swiper-slide hero-swiper-slide" style="background-image:url('${bg}');background-size:cover;background-position:center;width:100%;height:100%;"></div>`;
+  wrapper.innerHTML = movies.map(m => {
+    const bg = m.backdrop_path
+      ? `${CONFIG.IMAGES.BACKDROP}${m.backdrop_path}`
+      : `${CONFIG.IMAGES.POSTER_XL}${m.poster_path}`;
+    return `<div class="swiper-slide hero-swiper-slide" style="background-image:url('${bg}');background-size:cover;background-position:center;width:100%;height:100%;"></div>`;
+  }).join('');
 
   heroSwiper = new Swiper('#heroSwiper', {
     effect: 'fade',
     fadeEffect: { crossFade: true },
+    grabCursor: false,
+    centeredSlides: true,
     slidesPerView: 1,
-    loop: false,
-    on: { init: function() { updateHeroInfo(movies, 0); } }
+    loop: true,
+    autoplay: {
+      delay: CONFIG.HERO?.AUTOPLAY_MS || 6500,
+      disableOnInteraction: false,
+    },
+    speed: 800,
+    on: {
+      init: function() { updateHeroInfo(movies, 0); },
+      slideChange: function() { updateHeroInfo(movies, this.realIndex); }
+    }
   });
 }
 async function getFanartBackdrop(tmdbId, mediaType) {
