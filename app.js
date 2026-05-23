@@ -320,32 +320,24 @@ let movies = await fetchMovies('/trending/movie/week', { limit: CONFIG.HERO.LIMI
   if (!movies.length) return;
 
   wrapper.innerHTML = movies.map(m => {
-    const poster = `${CONFIG.IMAGES.POSTER_XL}${m.poster_path}`;
-    return `<div class="swiper-slide hero-swiper-slide" onclick="openDetail(${m.id},'movie')">
-      <img src="${poster}" alt="${m.title || m.original_title}"
-           onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
-    </div>`;
+    const bg = m.backdrop_path
+      ? `${CONFIG.IMAGES.BACKDROP}${m.backdrop_path}`
+      : `${CONFIG.IMAGES.POSTER_XL}${m.poster_path}`;
+    return `<div class="swiper-slide hero-swiper-slide" style="background-image:url('${bg}');background-size:cover;background-position:center;width:100%;height:100%;"></div>`;
   }).join('');
 
   heroSwiper = new Swiper('#heroSwiper', {
-    effect: 'coverflow',
-    grabCursor: true,
+    effect: 'fade',
+    fadeEffect: { crossFade: true },
+    grabCursor: false,
     centeredSlides: true,
-    slidesPerView: 1.5,
-    spaceBetween: 20,
+    slidesPerView: 1,
     loop: true,
     autoplay: {
       delay: CONFIG.HERO?.AUTOPLAY_MS || 6500,
       disableOnInteraction: false,
     },
-    speed: 400,
-    coverflowEffect: {
-      rotate: 50,
-      stretch: -100,
-      depth: 400,
-      modifier: 1,
-      slideShadows: false,
-    },
+    speed: 800,
     on: {
       init: function() { updateHeroInfo(movies, 0); },
       slideChange: function() { updateHeroInfo(movies, this.realIndex); }
