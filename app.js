@@ -25,7 +25,8 @@ function closeSidebarNews() {
 // ===== NAVIGATION =====
 function bnavGo(tab) {
   const hero = document.getElementById('heroSection');
-  document.querySelectorAll('.dock-btn').forEach(b => {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+document.querySelectorAll('.dock-btn').forEach(b => {
   b.classList.remove('active');
   b.style.width = '';
 });
