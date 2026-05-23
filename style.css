@@ -403,8 +403,9 @@ min-height: 340px;
 .hero-meta-row {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 6px;
+  gap: 6px;
+  margin-top: 6px;
+  margin-bottom: 8px;
   flex-wrap: wrap;
 }
 .hero-info-year {
@@ -433,29 +434,33 @@ min-height: 340px;
   color: #fff;
   font-family: 'Tajawal', sans-serif;
   line-height: 1.2;
-  margin-bottom: 4px;
-  text-align: right;
+  margin-top: 8px;
+  margin-bottom: 6px;
   text-shadow: 0 2px 8px rgba(0,0,0,0.9);
   -webkit-text-stroke: 0;
 }
 .hero-info-overview {
   font-size: 0.78rem;
-  color: rgba(255,255,255,0.8);
+  color: rgba(255,255,255,0.7);
   font-family: 'Tajawal', sans-serif;
   line-height: 1.6;
-  margin-bottom: 8px;
-  text-align: right;
-  direction: rtl;
+  margin-top: 10px;
+  margin-bottom: 12px;
+  max-width: 480px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 .hero-info-caps {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: rgba(255,255,255,0.5);
   font-family: 'Tajawal', sans-serif;
-  margin-bottom: 14px;
+  margin-top: 8px;
+  margin-bottom: 10px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
 }
 .hero-action-row {
   display: flex;
