@@ -5353,3 +5353,103 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
 .ws-title-overlay { min-height:320px; background-position:center; padding:20px 16px 20px 40%; background:linear-gradient(to right, rgba(0,0,0,0.8) 50%, transparent 100%); }
 .ws-title-brand { font-size:2.8rem; line-height:1.2; }
 .ws-title-desc { font-size:0.75rem; color:rgba(255,255,255,0.75); font-family:'Tajawal',sans-serif; margin-top:8px; line-height:1.6; max-width:280px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+/* ===== CYBER DOCK ===== */
+.cyber-dock {
+  position: fixed;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(8,0,0,0.75);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 999px;
+  z-index: 9999;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);
+}
+.dock-btn {
+  display: flex;
+  align-items: center;
+  gap: 0px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 999px;
+  color: rgba(255,255,255,0.35);
+  cursor: pointer;
+  padding: 10px;
+  width: 44px;
+  height: 44px;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.175,0.885,0.32,1.275);
+  font-family: 'Tajawal', sans-serif;
+  white-space: nowrap;
+  position: relative;
+}
+.dock-btn .dock-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+.dock-btn .dock-icon svg {
+  filter: grayscale(0.5) brightness(0.5);
+  transition: filter 0.5s cubic-bezier(0.175,0.885,0.32,1.275);
+}
+.dock-btn .dock-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.175,0.885,0.32,1.275);
+  margin-right: 0;
+}
+/* Active */
+.dock-btn.active {
+  width: auto;
+  padding: 10px 16px;
+  gap: 8px;
+  color: #fff;
+  border-color: rgba(0,229,255,0.3);
+  background: rgba(0,229,255,0.12);
+  box-shadow: 0 0 20px rgba(0,229,255,0.2), inset 0 0 12px rgba(0,229,255,0.08);
+}
+.dock-btn.active .dock-label {
+  max-width: 80px;
+  opacity: 1;
+  margin-right: 2px;
+}
+.dock-btn.active .dock-icon svg {
+  filter: none;
+  drop-shadow(0 0 8px #00e5ff);
+}
+/* Otaku active */
+.dock-btn.dock-otaku.active {
+  border-color: rgba(255,77,0,0.4);
+  background: rgba(255,77,0,0.15);
+  box-shadow: 0 0 20px rgba(255,77,0,0.25), inset 0 0 12px rgba(255,77,0,0.1);
+  color: #ff9966;
+}
+/* Center btn */
+.dock-center {
+  background: linear-gradient(145deg,#ff2a2a,#8B0000) !important;
+  border-color: rgba(255,80,80,0.4) !important;
+  color: #fff !important;
+  box-shadow: 0 0 20px rgba(229,9,20,0.5) !important;
+  width: 44px !important;
+  padding: 10px !important;
+}
+/* Scale down non-active */
+.dock-btn:not(.active):not(.dock-center) {
+  transform: scale(0.92);
+}
+.dock-btn:not(.active):not(.dock-center):hover {
+  transform: scale(1);
+  background: rgba(255,255,255,0.08);
+}
