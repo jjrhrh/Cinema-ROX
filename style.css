@@ -438,6 +438,9 @@ min-height: 340px;
   margin-bottom: 6px;
   text-shadow: 0 2px 8px rgba(0,0,0,0.9);
   -webkit-text-stroke: 0;
+  text-align: left;
+display: flex;
+justify-content: flex-start;
 }
 .hero-info-overview {
   font-size: 0.78rem;
