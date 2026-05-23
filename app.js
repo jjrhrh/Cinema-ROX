@@ -54,7 +54,7 @@ const activeBtn = document.getElementById(btnMap[tab] || 'bnavHome');
 if (bubble && activeBtn) {
   const rect = activeBtn.getBoundingClientRect();
   const navRect = activeBtn.closest('nav').getBoundingClientRect();
-  bubble.style.left = (rect.left - navRect.left + rect.width/2 - 27) + 'px';
+  bubble.style.left = (r.left - n.left + r.width/2 - 27) + 'px';
 }
   if (tab === 'home') { loadHeroSwiper(); loadHomePage(); loadNewsSection('newsFeed', CONFIG.NEWS.CINEMA, 'red'); const _t=document.getElementById('newsSectionTitle'); if(_t) _t.textContent='📰 أخبار السينما الحية'; }
   if (tab === 'library') loadLibraryPage();
