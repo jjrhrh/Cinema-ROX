@@ -50,9 +50,8 @@ function bnavGo(tab) {
   const btnMap  = { home:'bnavHome', search:'bnavSearch', library:'bnavLibrary', profile:'bnavProfile', otaku:'bnavOtaku' };
   
   document.getElementById(pageMap[tab])?.classList.add('active');
-const _ab = document.getElementById(btnMap[tab]);
-if(_ab) { _ab.style.width='auto'; _ab.classList.add('active'); }
-}
+  const _ab = document.getElementById(btnMap[tab]);
+  if(_ab) { _ab.style.width='auto'; _ab.classList.add('active'); }
   if (hero) {
     hero.style.display = (tab === 'home' || tab === 'otaku') ? '' : 'none';
     hero.style.visibility = (tab === 'home' || tab === 'otaku') ? '' : 'hidden';
@@ -61,7 +60,7 @@ if(_ab) { _ab.style.width='auto'; _ab.classList.add('active'); }
   if (tab === 'library') loadLibraryPage();
   if (tab === 'search') { initSearchDiscovery(); const inp = document.getElementById('searchInput2'); if(inp) { inp.value=''; setTimeout(()=>inp.focus(),200); } }
   if (tab === 'profile') loadProfilePage();
-if (tab === 'otaku') { if(hero){hero.style.display='';hero.style.visibility='';} _otakuOn=true; document.getElementById('htmlRoot').classList.add('otaku-mode'); document.getElementById('bnavOtaku').classList.add('active'); loadOtakuPage(); loadNewsSection('newsFeed',CONFIG.NEWS.ANIME,'purple'); document.getElementById('newsSectionTitle').textContent='📰 أخبار الأنمي'; document.getElementById('newsSection').style.display='block'; document.getElementById('studioBar').style.display='block'; }
+  if (tab === 'otaku') { if(hero){hero.style.display='';hero.style.visibility='';} _otakuOn=true; document.getElementById('htmlRoot').classList.add('otaku-mode'); document.getElementById('bnavOtaku').classList.add('active'); loadOtakuPage(); loadNewsSection('newsFeed',CONFIG.NEWS.ANIME,'purple'); document.getElementById('newsSectionTitle').textContent='📰 أخبار الأنمي'; document.getElementById('newsSection').style.display='block'; document.getElementById('studioBar').style.display='block'; }
   window.scrollTo(0,0);
 }
 function testNotifAlert() {
