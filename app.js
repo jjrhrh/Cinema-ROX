@@ -1689,6 +1689,7 @@ async function openWatchPage(id, type, season = 1, episode = 1, resumeSec = 0, r
   if (!page) return;
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('heroSection').style.display = 'none';
+  document.getElementById('newsSection').style.display = 'none';
   page.classList.add('active');
   page.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
   window.scrollTo(0, 0);
@@ -2000,6 +2001,12 @@ window.wsSelectServerNew = function(el, url, name, isRox) {
     if (isRox) { loadRox(null); } else { document.getElementById('wsFrame').src = url; }
   }
 }
+window.wsStartStream = function() {
+  const overlay = document.getElementById('wsOverlay');
+  if (overlay) overlay.style.display = 'none';
+  const firstCard = document.querySelector('.ws-card');
+  if (firstCard) firstCard.click();
+};
 // ===== CONTINUE WATCHING =====
 let _cwTimer = null;
 function cwTrackTime(id, type, poster, title) {
