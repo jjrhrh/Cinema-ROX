@@ -408,7 +408,7 @@ document.body.style.backgroundImage = '';
       const logoData = await logoRes.json();
       const logo = logoData.logos?.[0]?.file_path;
       if (logo) {
-        titleEl.innerHTML = `<img src="${CONFIG.IMAGES.ORIGINAL}${logo}" style="max-height:75px;max-width:70%;object-fit:contain;object-position:left;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.8));display:block;margin:0;">`;
+        titleEl.innerHTML = `<img src="${CONFIG.IMAGES.ORIGINAL}${logo}" style="max-height:100px;max-width:85%;width:auto;object-fit:contain;object-position:left bottom;filter:drop-shadow(0 2px 12px rgba(0,0,0,0.9));display:block;margin:0;">`;
       } else {
         titleEl.textContent = m.title || m.original_title || '';
       }
