@@ -458,12 +458,6 @@ transition: background 0.5s cubic-bezier(0.25,1,0.5,1);
   text-shadow: 0 0 10px rgba(70,211,105,0.7);
   box-shadow: 0 0 12px rgba(46,211,105,0.18), inset 0 1px 0 rgba(70,211,105,0.12);
 }
-.hero-match-chip {
-  color: #46d369;
-  font-size: 0.78rem;
-  font-weight: 800;
-  font-family: 'Tajawal', sans-serif;
-}
 .hero-info-title {
   font-size: 1.3rem;
   font-weight: 900;
