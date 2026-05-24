@@ -571,13 +571,6 @@ justify-content: flex-start;
   width: 26px;
   box-shadow: 0 0 6px rgba(229,9,20,0.7);
 }
-.hero-match-chip {
-  color: #46d369 !important;
-  font-size: 0.78rem;
-  font-weight: 800;
-  font-family: 'Tajawal', sans-serif;
-  text-shadow: 0 0 10px rgba(70,211,105,0.5);
-}
 /* ===== SECTIONS ===== */
 .home-section { padding: 20px 0 8px; background: #080000; position: relative; z-index: 5; transform: translateZ(0); }
 #homePage > .home-section:first-child { margin-top: -30px; }
