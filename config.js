@@ -167,6 +167,12 @@ NEWS: Object.freeze({
     CINEMA : 'https://www.aljazeera.net/rss/culture-arts',
     ANIME  : 'https://myanimelist.net/rss/news.xml',
   }),
+  FOOTBALL: Object.freeze({
+    FD_KEY: '161287f676394fec817e8056efda8b9b',
+    FD_BASE: 'https://api.football-data.org/v4',
+    APIF_KEY: '4892914a1c196a558042c078efd1ed8a44b177542f29256b021de759f5d1e0aa',
+    APIF_BASE: 'https://v3.football.api-sports.io',
+  }),
 });
 
 // ─────────────────────────────────────────
