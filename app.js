@@ -3390,12 +3390,187 @@ function roxSnapshot() {
   }) : navigator.clipboard.writeText(window.location.href)
     .then(() => alert('تم نسخ الرابط ✅'));
 }
-function filterBarGo(tab) {
+function filterBarGo(tab, el) {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  event.currentTarget.classList.add('active');
-  if (tab === 'home') bnavGo('home');
-  else if (tab === 'movies') openBrowseAll('movie', '/movie/popular', 'الأفلام');
-  else if (tab === 'series') openBrowseAll('tv', '/tv/popular', 'المسلسلات');
-  else if (tab === 'library') bnavGo('library');
-  else if (tab === 'genres') bnavGo('search');
+  if (el) el.classList.add('active');
+
+  if (tab === 'home') {
+    bnavGo('home');
+  } else if (tab === 'movies') {
+    loadFilteredHome('movie');
+  } else if (tab === 'series') {
+    loadFilteredHome('tv');
+  } else if (tab === 'library') {
+    loadFilteredLibrary();
+  } else if (tab === 'genres') {
+    loadGenresPage();
+  }
+}
+
+async function loadFilteredHome(type) {
+  const page = document.getElementById('homePage');
+  if (!page) return;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('heroSection').style.display = '';
+  document.getElementById('heroSection').style.visibility = '';
+  page.classList.add('active');
+
+  const SECTIONS = type === 'movie' ? [
+    { id: 'flt_popular',  title: 'الأفلام الرائجة',    endpoint: '/movie/popular',   type: 'movie' },
+    { id: 'flt_toprated', title: 'الأعلى تقييماً',     endpoint: '/movie/top_rated', type: 'movie' },
+    { id: 'flt_upcoming', title: 'قادم قريباً',         endpoint: '/movie/upcoming',  type: 'movie' },
+  ] : [
+    { id: 'flt_tvpop',    title: 'المسلسلات الرائجة',  endpoint: '/tv/popular',      type: 'tv' },
+    { id: 'flt_tvtop',    title: 'الأعلى تقييماً',     endpoint: '/tv/top_rated',    type: 'tv' },
+    { id: 'flt_tvair',    title: 'يُعرض الآن',          endpoint: '/tv/on_the_air',   type: 'tv' },
+  ];
+
+  page.innerHTML = SECTIONS.map(s => `
+    <div class="home-section" id="${s.id}">
+      <div class="section-header">
+        <span class="section-bar"></span>
+        <h2 class="section-title">${s.title}</h2>
+        <button class="browse-all-btn" onclick="openBrowseAll('${s.type}','${s.endpoint}','${s.title}')">عرض الكل ›</button>
+      </div>
+      <div class="otaku-slider-wrap">
+        <button class="otaku-arrow otaku-arrow-left" onclick="otakuSlide('${s.id}_row',-1)">‹</button>
+        <div class="movies-row" id="${s.id}_row">
+          ${Array(4).fill('<div class="movie-card skeleton-card"></div>').join('')}
+        </div>
+        <button class="otaku-arrow otaku-arrow-right" onclick="otakuSlide('${s.id}_row',1)">›</button>
+      </div>
+    </div>`).join('');
+
+  SECTIONS.forEach(async s => {
+    try {
+      const movies = await fetchMovies(s.endpoint, { type: s.type });
+      const row = document.getElementById(`${s.id}_row`);
+      if (!row) return;
+      row.innerHTML = movies.map((m,i) => buildMovieCard(m, s.type, '', i+1)).join('');
+    } catch { document.getElementById(s.id)?.remove(); }
+  });
+}
+
+async function loadFilteredLibrary() {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('heroSection').style.display = 'none';
+  const page = document.getElementById('libraryPage');
+  if (!page) return;
+  page.classList.add('active');
+  if (!window.ROX_USER) {
+    page.innerHTML = `<div class="prof-wrap"><div class="prof-logo">Cinema<span style="color:var(--accent)">ROX</span></div><p class="prof-sub">🔐 سجّل دخولك لعرض مكتبتك</p><button class="prof-google-btn" onclick="bnavGo('profile')">تسجيل الدخول</button></div>`;
+    return;
+  }
+  page.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
+  const watchlist  = getLib('rox_watchlist');
+  const watchlater = getLib('rox_watchlater');
+  const EMPTY = `<p class="lib-radar-empty">لا يوجد عناصر حالياً</p>`;
+  const buildCard = (item) => `<div class="lib-card" onclick="openDetail(${item.id},'${item.type === 'anime' ? 'tv' : item.type}')">
+    <img class="lib-card-img" src="${item.poster||CONFIG.IMAGES.PLACEHOLDER}" loading="lazy" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+    <div class="lib-card-overlay"><span>▶</span></div>
+    ${item.rating ? `<span class="lib-card-rating">${item.rating}</span>` : ''}
+  </div>`;
+  const fetchCards = async (items) => {
+    if (!items.length) return EMPTY;
+    const cards = await Promise.all(items.map(async item => {
+      try {
+        const ep = (item.type === 'tv'||item.type === 'anime') ? `/tv/${item.id}` : `/movie/${item.id}`;
+        const d = await fetch(buildTMDBUrl(ep)).then(r => r.json());
+        item.poster = d.poster_path ? `${CONFIG.IMAGES.POSTER_SM}${d.poster_path}` : CONFIG.IMAGES.PLACEHOLDER;
+        item.rating = d.vote_average ? d.vote_average.toFixed(1) : '';
+        return buildCard(item);
+      } catch { return ''; }
+    }));
+    return `<div class="lib-grid">${cards.join('')}</div>`;
+  };
+  const [archiveHTML, waitlistHTML] = await Promise.all([
+    fetchCards(watchlist),
+    fetchCards(watchlater)
+  ]);
+  page.innerHTML = `
+    <div class="lib-section">
+      <div class="lib-sec-head"><span class="lib-laser lib-laser-red"></span><h3 class="lib-sec-title">أرشيفي الخاص</h3></div>
+      ${archiveHTML}
+    </div>
+    <div class="lib-section">
+      <div class="lib-sec-head"><span class="lib-laser lib-laser-blue"></span><h3 class="lib-sec-title">قائمة الانتظار</h3></div>
+      ${waitlistHTML}
+    </div>`;
+}
+
+async function loadGenresPage() {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('heroSection').style.display = 'none';
+  const page = document.getElementById('homePage');
+  if (!page) return;
+  page.classList.add('active');
+
+  const GENRES = [
+    { id:28,   name:'أكشن',      icon:'ri-sword-line',        img:'https://image.tmdb.org/t/p/w500/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg' },
+    { id:12,   name:'مغامرة',    icon:'ri-map-2-line',         img:'https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg' },
+    { id:878,  name:'خيال علمي', icon:'ri-rocket-line',        img:'https://image.tmdb.org/t/p/w500/d5NXSklpcuveqHmyIkbmIaDWVFo.jpg' },
+    { id:18,   name:'دراما',     icon:'ri-film-line',          img:'https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsLLeHjmIDKm.jpg' },
+    { id:27,   name:'رعب',       icon:'ri-ghost-2-line',       img:'https://image.tmdb.org/t/p/w500/xfNHRI2f5kHGvogxld27BoKqFhJ.jpg' },
+    { id:37,   name:'غربي',      icon:'ri-riding-line',        img:'https://image.tmdb.org/t/p/w500/oVDLBMOgEIWvJk45OYWq5nHMMtc.jpg' },
+    { id:16,   name:'أنيميشن',   icon:'ri-emotion-happy-line', img:'https://image.tmdb.org/t/p/w500/mY7SeH4HFFxW1hiI6cWuwCRKptN.jpg' },
+    { id:10749,name:'رومانسي',   icon:'ri-heart-3-line',       img:'https://image.tmdb.org/t/p/w500/fi67TkFvMvqkIqrpCHOJwuM6zPG.jpg' },
+  ];
+
+  const MOODS = [
+    { name:'خفيف',  icon:'ri-leaf-line',         params:'with_genres=35' },
+    { name:'عائلي', icon:'ri-group-line',         params:'with_genres=10751' },
+    { name:'مضحك',  icon:'ri-emotion-laugh-line', params:'with_genres=35' },
+    { name:'مؤثر',  icon:'ri-drama-line',         params:'with_genres=18' },
+    { name:'ر18+',  icon:'ri-user-forbid-line',   params:'certification_country=US&certification=R' },
+    { name:'ملهم',  icon:'ri-sparkling-2-line',   params:'with_genres=18&sort_by=vote_average.desc' },
+  ];
+
+  const YEARS = [new Date().getFullYear(), new Date().getFullYear()-1, new Date().getFullYear()-2, new Date().getFullYear()-3, new Date().getFullYear()-4];
+
+  const COUNTRIES = [
+    { code:'US', name:'أمريكا', flag:'🇺🇸' },
+    { code:'KR', name:'كوريا',  flag:'🇰🇷' },
+    { code:'JP', name:'اليابان',flag:'🇯🇵' },
+    { code:'IN', name:'الهند',  flag:'🇮🇳' },
+    { code:'TR', name:'تركيا',  flag:'🇹🇷' },
+    { code:'GB', name:'بريطانيا',flag:'🇬🇧' },
+  ];
+
+  page.innerHTML = `
+    <div class="genres-page">
+      <div class="section-header"><span class="section-bar"></span><h2 class="section-title">التصنيفات</h2></div>
+      <div class="genres-grid">
+        ${GENRES.map(g => `
+          <div class="genre-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=${g.id}','${g.name}')" style="background-image:url('${g.img}')">
+            <div class="genre-overlay"></div>
+            <i class="${g.icon} genre-icon"></i>
+            <span class="genre-name">${g.name}</span>
+          </div>`).join('')}
+      </div>
+
+      <div class="section-header" style="margin-top:20px"><span class="section-bar"></span><h2 class="section-title">تصفح حسب المزاج</h2></div>
+      <div class="moods-row">
+        ${MOODS.map(m => `
+          <button class="mood-btn" onclick="openBrowseAll('movie','/discover/movie?${m.params}','${m.name}')">
+            <i class="${m.icon}"></i><span>${m.name}</span>
+          </button>`).join('')}
+      </div>
+
+      <div class="section-header" style="margin-top:20px"><span class="section-bar"></span><h2 class="section-title">تصفح حسب السنوات</h2></div>
+      <div class="years-row">
+        ${YEARS.map((y,i) => `
+          <button class="year-btn ${i===0?'active':''}" onclick="openBrowseAll('movie','/discover/movie?primary_release_year=${y}','${y}')">
+            ${y}${i===0?'<br><small>جديد</small>':''}
+          </button>`).join('')}
+      </div>
+
+      <div class="section-header" style="margin-top:20px"><span class="section-bar"></span><h2 class="section-title">تصفح حسب البلد</h2></div>
+      <div class="countries-row">
+        ${COUNTRIES.map(c => `
+          <button class="country-btn" onclick="openBrowseAll('movie','/discover/movie?with_origin_country=${c.code}','${c.name}')">
+            <span class="country-flag">${c.flag}</span>
+            <span>${c.name}</span>
+          </button>`).join('')}
+      </div>
+    </div>`;
 }
