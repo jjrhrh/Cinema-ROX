@@ -3574,3 +3574,19 @@ async function loadGenresPage() {
       </div>
     </div>`;
 }
+function toggleFootballVault() {
+  const vault = document.getElementById('footballVault');
+  const overlay = document.getElementById('fvOverlay');
+  const btn = document.getElementById('bnavFootball');
+  const isHidden = vault.classList.contains('hidden');
+  vault.classList.toggle('hidden', !isHidden);
+  overlay.classList.toggle('hidden', !isHidden);
+  btn.classList.toggle('fv-active', isHidden);
+}
+function openFootballStream(matchId) {
+  document.getElementById('fvStreamPanel').classList.remove('hidden');
+}
+function fvSelectDay(el, day) {
+  document.querySelectorAll('.fv-day-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
