@@ -332,6 +332,7 @@ let movies = await fetchMovies('/trending/movie/week', { limit: CONFIG.HERO.LIMI
   centeredSlides: true,
   slidesPerView: 1,
   loop: true,
+  loopedSlides: movies.length,
   autoplay: {
     delay: CONFIG.HERO?.AUTOPLAY_MS || 6500,
     disableOnInteraction: false,
@@ -363,27 +364,16 @@ async function getFanartBackdrop(tmdbId, mediaType) {
 async function updateHeroInfo(movies, index) {
   const m = movies[index % movies.length];
   if (!m) return;
-const snapId = m.id;
-  const fanartBd = await getFanartBackdrop(m.id, m.media_type || 'movie');
-  const imgUrl = fanartBd
-    ? fanartBd
-    : m.backdrop_path
-    ? `${CONFIG.IMAGES[CONFIG.HERO.BACKDROP_SIZE]}${m.backdrop_path}`
-    : `${CONFIG.IMAGES.POSTER_LG}${m.poster_path}`;
+  const snapId = m.id;
 
-  const backdrop = document.getElementById('heroBackdrop');
-  if (backdrop) {
-    backdrop.style.filter = 'none';
-    backdrop.style.backgroundImage = `url('${CONFIG.IMAGES[CONFIG.HERO.BACKDROP_SIZE]}${m.backdrop_path || m.poster_path}')`;
-    backdrop.classList.remove('loaded');
-    setTimeout(() => backdrop.classList.add('loaded'), 80);
-  }
-  const bdUrl = m.backdrop_path ? `${CONFIG.IMAGES.POSTER_XL}${m.backdrop_path}` : '';
-document.body.style.backgroundImage = '';
-  document.body.style.backgroundSize = 'cover';
-  document.body.style.backgroundPosition = 'center';
-  document.body.style.backgroundAttachment = 'fixed';
-  document.body.style.filter = 'none';
+  // ===== تحديث فوري بدون انتظار =====
+  const yearEl     = document.getElementById('heroInfoYear');
+  const titleEl    = document.getElementById('heroInfoTitle');
+  const overviewEl = document.getElementById('heroInfoOverview');
+  const genresEl   = document.getElementById('heroInfoGenres');
+  const ratingEl   = document.getElementById('heroInfoRating');
+  const durEl      = document.getElementById('heroInfoDuration');
+
   const GENRES = {
     28:'أكشن',12:'مغامرة',16:'رسوم متحركة',35:'كوميديا',80:'جريمة',
     99:'وثائقي',18:'دراما',10751:'عائلي',14:'خيال',36:'تاريخي',
@@ -391,58 +381,60 @@ document.body.style.backgroundImage = '';
     878:'خيال علمي',53:'إثارة',10752:'حرب'
   };
 
-  const yearEl   = document.getElementById('heroInfoYear');
-  const titleEl  = document.getElementById('heroInfoTitle');
-  const genresEl = document.getElementById('heroInfoGenres');
-  const ratingEl = document.getElementById('heroInfoRating');
-
-  if (yearEl) yearEl.textContent = m.release_date ? m.release_date.slice(0,4) : '';
-const overviewElFast = document.getElementById('heroInfoOverview');
-if (overviewElFast) overviewElFast.textContent = m.overview || '';
-const titleElFast = document.getElementById('heroInfoTitle');
-if (titleElFast) titleElFast.textContent = m.title || m.name || m.original_title || '';
+  const date = m.release_date || m.first_air_date || '';
+  if (yearEl) yearEl.textContent = date.slice(0,4);
+  if (overviewEl) overviewEl.textContent = m.overview || '';
   if (titleEl) {
-  titleEl.style.opacity = '0';
-  setTimeout(async () => {
-    titleEl.style.opacity = '0.01';
-    try {
-      const type = m.media_type === 'tv' ? 'tv' : 'movie';
-const logoRes = await fetch(`${CONFIG.API.TMDB_BASE}/${type}/${m.id}/images?api_key=${CONFIG.KEYS.TMDB}&include_image_language=en,null`);
-      const logoData = await logoRes.json();
-      const logo = logoData.logos?.[0]?.file_path;
-      if (m.id !== snapId) return;
-      if (logo) {
-        titleEl.innerHTML = `<img src="${CONFIG.IMAGES.ORIGINAL}${logo}" style="max-height:100px;max-width:85%;width:auto;object-fit:contain;object-position:left bottom;filter:drop-shadow(0 2px 12px rgba(0,0,0,0.9));display:block;margin:0;">`;
-      } else {
-        titleEl.textContent = m.title || m.original_title || '';
-      }
-    } catch {
-      titleEl.textContent = m.title || m.original_title || '';
-    }
-    titleEl.style.transition = 'opacity 0.6s ease';
+    titleEl.style.transition = 'none';
     titleEl.style.opacity = '1';
-  }, 200);
-}
-
+    titleEl.textContent = m.title || m.name || m.original_title || '';
+    titleEl.style.fontSize = '';
+  }
   if (genresEl) {
-    const names = (m.genre_ids || []).slice(0,3).map(id => GENRES[id]).filter(Boolean);
-    genresEl.innerHTML = names.map(n => `<span class="hero-cap">${n}</span>`).join('');
+    const names = (m.genre_ids||[]).slice(0,3).map(id=>GENRES[id]).filter(Boolean);
+    genresEl.innerHTML = names.map(n=>`<span class="hero-cap">${n}</span>`).join('');
   }
   if (ratingEl) {
     const rating = m.vote_average ? m.vote_average.toFixed(1) : '';
     ratingEl.innerHTML = rating ? `<span class="hero-cap hero-cap-rating"><svg width="11" height="11" viewBox="0 0 24 24" fill="var(--gold)" style="vertical-align:middle;margin-left:3px"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>${rating}</span>` : '';
   }
-  const overviewEl = document.getElementById('heroInfoOverview');
-  if (overviewEl) {
-  const type2 = m.media_type === 'tv' ? 'tv' : 'movie';
-const arRes = await fetch(`${CONFIG.API.TMDB_BASE}/${type2}/${m.id}?api_key=${CONFIG.KEYS.TMDB}&language=ar`);
-  const arData = await arRes.json();
-  if (m.id !== snapId) return;
-  overviewEl.textContent = arData.overview || m.overview || '';
-  if (!overviewEl.textContent) overviewEl.textContent = m.overview || '';
-}
-  const durEl = document.getElementById('heroInfoDuration');
-  if (durEl) durEl.innerHTML = m.media_type === 'movie' ? '<i class="ri-film-line" style="margin-left:5px;vertical-align:middle"></i> فيلم' : '<i class="ri-tv-2-line" style="margin-left:5px;vertical-align:middle"></i> مسلسل';
+  if (durEl) durEl.innerHTML = m.media_type === 'movie'
+    ? '<i class="ri-film-line" style="margin-left:5px;vertical-align:middle"></i> فيلم'
+    : '<i class="ri-tv-2-line" style="margin-left:5px;vertical-align:middle"></i> مسلسل';
+
+  // ===== خلفية فورية =====
+  const backdrop = document.getElementById('heroBackdrop');
+  if (backdrop) {
+    backdrop.style.backgroundImage = `url('${CONFIG.IMAGES[CONFIG.HERO.BACKDROP_SIZE]}${m.backdrop_path||m.poster_path}')`;
+    backdrop.classList.remove('loaded');
+    setTimeout(()=>backdrop.classList.add('loaded'),80);
+  }
+
+  // ===== شعار + وصف عربي (async لكن محمي بـ snapId) =====
+  const type = m.media_type === 'tv' ? 'tv' : 'movie';
+  try {
+    const [logoRes, arRes] = await Promise.all([
+      fetch(`${CONFIG.API.TMDB_BASE}/${type}/${m.id}/images?api_key=${CONFIG.KEYS.TMDB}&include_image_language=en,null`),
+      fetch(`${CONFIG.API.TMDB_BASE}/${type}/${m.id}?api_key=${CONFIG.KEYS.TMDB}&language=ar`)
+    ]);
+    if (m.id !== snapId) return;
+    const [logoData, arData] = await Promise.all([logoRes.json(), arRes.json()]);
+    if (m.id !== snapId) return;
+
+    if (titleEl) {
+      const logo = logoData.logos?.[0]?.file_path;
+      if (logo) {
+        titleEl.innerHTML = `<img src="${CONFIG.IMAGES.ORIGINAL}${logo}" style="max-height:90px;max-width:80%;width:auto;object-fit:contain;object-position:left bottom;filter:drop-shadow(0 2px 12px rgba(0,0,0,0.9));display:block;margin:0;">`;
+      } else {
+        titleEl.textContent = m.title || m.name || m.original_title || '';
+      }
+    }
+    if (overviewEl && arData.overview) overviewEl.textContent = arData.overview;
+  } catch {
+    if (m.id !== snapId) return;
+    if (titleEl) titleEl.textContent = m.title || m.name || m.original_title || '';
+  }
+
   const playBtn = document.getElementById('heroPlayBtn');
   if (playBtn) playBtn.onclick = () => openDetail(m.id, m.media_type || 'movie');
   const addBtn = document.getElementById('heroAddBtn');
@@ -707,25 +699,26 @@ async function loadOtakuHero() {
   }).join('');
 
   heroSwiper = new Swiper('#heroSwiper', {
-    grabCursor: true,
-    allowTouchMove: true,
-    centeredSlides: true,
-    slidesPerView: 1,
-    loop: true,
-    autoplay: { delay: CONFIG.HERO?.AUTOPLAY_MS || 6500, disableOnInteraction: false },
-    speed: 600,
-    on: {
-      init: function() {
-        updateHeroInfo(movies, 0);
-        const dotsEl = document.getElementById('heroDots');
-        if (dotsEl) dotsEl.innerHTML = movies.map((_,i) => `<div class="hero-dot ${i===0?'active':''}"></div>`).join('');
-      },
-      slideChange: function() {
-        updateHeroInfo(movies, this.realIndex);
-        document.querySelectorAll('.hero-dot').forEach((d,i) => d.classList.toggle('active', i===this.realIndex));
-      }
+  grabCursor: true,
+  allowTouchMove: true,
+  centeredSlides: true,
+  slidesPerView: 1,
+  loop: true,
+  loopedSlides: movies.length,
+  autoplay: { delay: CONFIG.HERO?.AUTOPLAY_MS || 6500, disableOnInteraction: false },
+  speed: 600,
+  on: {
+    init: function() {
+      updateHeroInfo(movies, 0);
+      const dotsEl = document.getElementById('heroDots');
+      if (dotsEl) dotsEl.innerHTML = movies.map((_,i) => `<div class="hero-dot ${i===0?'active':''}"></div>`).join('');
+    },
+    slideChange: function() {
+      updateHeroInfo(movies, this.realIndex);
+      document.querySelectorAll('.hero-dot').forEach((d,i) => d.classList.toggle('active', i===this.realIndex));
     }
-  });
+  }
+});
 }
 async function loadHomePage() {
   const page = document.getElementById('homePage');
