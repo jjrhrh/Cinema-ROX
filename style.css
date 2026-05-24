@@ -5881,15 +5881,38 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
 }
 .fv-matches-list { padding: 0 12px; display: flex; flex-direction: column; gap: 10px; }
 .fv-match-card {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(46,211,105,0.15);
-  border-radius: 16px;
-  padding: 12px 14px;
+  background: rgba(0,20,0,0.5);
+  border: 1px solid rgba(46,211,105,0.18);
+  border-radius: 18px;
+  padding: 14px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 0 20px rgba(46,211,105,0.05), inset 0 1px 0 rgba(46,211,105,0.08);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  flex-wrap: wrap;
+}
+.fv-match-card:hover {
+  border-color: rgba(46,211,105,0.45);
+  box-shadow: 0 0 24px rgba(46,211,105,0.15);
+}
+.fv-team-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+}
+.fv-team-logo {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  padding: 4px;
 }
 .fv-team {
   font-family: 'Tajawal', sans-serif;
@@ -5941,16 +5964,24 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
   background: linear-gradient(135deg,#ff2a2a,#8b0000);
   border: none;
   border-radius: 20px;
-  padding: 6px 10px;
+  padding: 7px 12px;
   color: #fff;
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   font-family: 'Tajawal', sans-serif;
   white-space: nowrap;
-  box-shadow: 0 2px 10px rgba(255,42,42,0.3);
+  box-shadow: 0 0 14px rgba(255,42,42,0.4);
+  animation: fvWatchPulse 2s ease-in-out infinite;
+  width: 100%;
+  justify-content: center;
+  margin-top: 8px;
+}
+@keyframes fvWatchPulse {
+  0%,100% { box-shadow: 0 0 14px rgba(255,42,42,0.4); }
+  50% { box-shadow: 0 0 24px rgba(255,42,42,0.7); }
 }
 .fv-days-row {
   display: flex;
@@ -5988,14 +6019,16 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
 .fv-schedule-row::-webkit-scrollbar { display: none; }
 .fv-sched-card {
   flex: 0 0 auto;
-  min-width: 140px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(46,211,105,0.12);
+  min-width: 130px;
+  background: rgba(0,20,0,0.45);
+  border: 1px solid rgba(46,211,105,0.15);
   border-radius: 14px;
-  padding: 12px;
+  padding: 10px;
   text-align: center;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
+  transition: border-color 0.3s ease;
 }
+.fv-sched-card:hover { border-color: rgba(46,211,105,0.4); }
 .fv-sched-time {
   font-size: 1.1rem;
   font-weight: 900;
@@ -6011,10 +6044,14 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
   font-weight: 700;
 }
 .fv-sched-league {
-  font-size: 0.62rem;
-  color: rgba(255,255,255,0.45);
+  font-size: 0.6rem;
+  color: #46d369;
   font-family: 'Tajawal', sans-serif;
-  margin-top: 2px;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
 }
 .fv-news-row {
   display: flex;
@@ -6026,27 +6063,34 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
 .fv-news-row::-webkit-scrollbar { display: none; }
 .fv-news-card {
   flex: 0 0 auto;
-  width: 160px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
+  width: 170px;
+  height: 130px;
   border-radius: 14px;
   overflow: hidden;
   cursor: pointer;
-  transition: transform 0.3s ease;
+  position: relative;
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-.fv-news-card:hover { transform: scale(1.04); }
+.fv-news-card:hover { transform: scale(1.05); box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
+.fv-news-card:hover .fv-news-img { transform: scale(1.08); }
 .fv-news-img {
-  height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+  display: block;
 }
 .fv-news-text {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
   padding: 8px;
-  font-size: 0.68rem;
-  color: rgba(255,255,255,0.8);
+  font-size: 0.66rem;
+  color: #fff;
   font-family: 'Tajawal', sans-serif;
-  line-height: 1.4;
+  line-height: 1.35;
+  background: linear-gradient(to top, rgba(0,0,0,0.88), transparent);
+  direction: rtl;
 }
 .fv-stream-panel {
   margin: 12px;
