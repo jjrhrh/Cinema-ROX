@@ -327,18 +327,28 @@ let movies = await fetchMovies('/trending/movie/week', { limit: CONFIG.HERO.LIMI
   }).join('');
 
   heroSwiper = new Swiper('#heroSwiper', {
-    effect: 'fade',
-    fadeEffect: { crossFade: true },
-    grabCursor: true,
-allowTouchMove: true,
-    centeredSlides: true,
-    slidesPerView: 1,
-    loop: true,
-    autoplay: {
-      delay: CONFIG.HERO?.AUTOPLAY_MS || 6500,
-      disableOnInteraction: false,
+  grabCursor: true,
+  allowTouchMove: true,
+  centeredSlides: true,
+  slidesPerView: 1,
+  loop: true,
+  autoplay: {
+    delay: CONFIG.HERO?.AUTOPLAY_MS || 6500,
+    disableOnInteraction: false,
+  },
+  speed: 600,
+  on: {
+    init: function() {
+      updateHeroInfo(movies, 0);
+      const dotsEl = document.getElementById('heroDots');
+      if (dotsEl) dotsEl.innerHTML = movies.map((_,i) => `<div class="hero-dot ${i===0?'active':''}"></div>`).join('');
     },
-    speed: 800,
+    slideChange: function() {
+      updateHeroInfo(movies, this.realIndex);
+      document.querySelectorAll('.hero-dot').forEach((d,i) => d.classList.toggle('active', i===this.realIndex));
+    }
+  }
+});
     on: {
       init: function() {
   updateHeroInfo(movies, 0);
@@ -399,7 +409,10 @@ document.body.style.backgroundImage = '';
   const ratingEl = document.getElementById('heroInfoRating');
 
   if (yearEl) yearEl.textContent = m.release_date ? m.release_date.slice(0,4) : '';
-
+const overviewElFast = document.getElementById('heroInfoOverview');
+if (overviewElFast) overviewElFast.textContent = m.overview || '';
+const titleElFast = document.getElementById('heroInfoTitle');
+if (titleElFast) titleElFast.textContent = m.title || m.name || m.original_title || '';
   if (titleEl) {
   titleEl.style.opacity = '0';
   setTimeout(async () => {
@@ -688,27 +701,41 @@ function studioGoBack() {
   window.scrollTo(0, 0);
 }
 async function loadOtakuHero() {
+  if (heroSwiper) { heroSwiper.destroy(true, true); heroSwiper = null; }
+  const wrapper = document.getElementById('heroSwiperWrapper');
+  if (!wrapper) return;
+
   const movies = await fetchMovies('/discover/tv', {
     type: 'tv', limit: CONFIG.HERO.LIMIT, requirePoster: true,
     params: { with_genres:'16', with_origin_country:'JP', sort_by:'popularity.desc' }
   });
-  const wrapper = document.getElementById('heroSwiperWrapper');
-  if (!wrapper || !movies.length) return;
+  if (!movies.length) return;
+
   wrapper.innerHTML = movies.map(m => {
-    const poster = `${CONFIG.IMAGES.POSTER_XL}${m.poster_path}`;
-    return `<div class="swiper-slide hero-swiper-slide" onclick="openDetail(${m.id},'tv')">
-      <img src="${poster}" alt="${m.name||''}" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
-    </div>`;
+    const bg = m.backdrop_path
+      ? `${CONFIG.IMAGES.BACKDROP}${m.backdrop_path}`
+      : `${CONFIG.IMAGES.POSTER_XL}${m.poster_path}`;
+    return `<div class="swiper-slide hero-swiper-slide" style="background-image:url('${bg}');background-size:cover;background-position:center;width:100%;height:100%;"></div>`;
   }).join('');
-  if (heroSwiper) { heroSwiper.destroy(true,true); heroSwiper=null; }
+
   heroSwiper = new Swiper('#heroSwiper', {
-    effect:'coverflow', grabCursor:true, centeredSlides:true,
-    slidesPerView:1.5, spaceBetween:20, loop:true,
-    autoplay:{delay:5000,disableOnInteraction:false}, speed:400,
-    coverflowEffect:{rotate:50,stretch:-100,depth:400,modifier:1,slideShadows:false},
-    on:{
-      init: function(){ updateHeroInfo(movies, 0); },
-      slideChange: function(){ updateHeroInfo(movies, this.realIndex); }
+    grabCursor: true,
+    allowTouchMove: true,
+    centeredSlides: true,
+    slidesPerView: 1,
+    loop: true,
+    autoplay: { delay: CONFIG.HERO?.AUTOPLAY_MS || 6500, disableOnInteraction: false },
+    speed: 600,
+    on: {
+      init: function() {
+        updateHeroInfo(movies, 0);
+        const dotsEl = document.getElementById('heroDots');
+        if (dotsEl) dotsEl.innerHTML = movies.map((_,i) => `<div class="hero-dot ${i===0?'active':''}"></div>`).join('');
+      },
+      slideChange: function() {
+        updateHeroInfo(movies, this.realIndex);
+        document.querySelectorAll('.hero-dot').forEach((d,i) => d.classList.toggle('active', i===this.realIndex));
+      }
     }
   });
 }
