@@ -3583,9 +3583,41 @@ async function toggleFootballVault() {
 function spNav(tab, el) {
   document.querySelectorAll('.sp-snav-btn').forEach(b => b.classList.remove('sp-snav-active'));
   el.classList.add('sp-snav-active');
-  if (tab === 'home') loadSportsUI();
-  if (tab === 'matches') loadSpMatchesLive();
-  if (tab === 'leagues') renderSpLeagues();
+
+  const row = document.getElementById('spMatchesRow');
+  const leaguesRow = document.getElementById('spLeaguesRow');
+  const newsList = document.getElementById('spNewsList');
+  const hero = document.querySelector('.sp-hero');
+
+  // إخفاء كل شيء أولاً
+  if (row) row.parentElement.style.display = 'none';
+  if (leaguesRow) leaguesRow.parentElement.style.display = 'none';
+  if (newsList) newsList.parentElement.style.display = 'none';
+  if (hero) hero.style.display = 'none';
+
+  if (tab === 'home') {
+    if (hero) hero.style.display = '';
+    if (row) row.parentElement.style.display = '';
+    if (leaguesRow) leaguesRow.parentElement.style.display = '';
+    if (newsList) newsList.parentElement.style.display = '';
+    loadSportsUI();
+  }
+  if (tab === 'matches') {
+    if (row) row.parentElement.style.display = '';
+    loadSpMatchesLive();
+  }
+  if (tab === 'leagues') {
+    if (leaguesRow) leaguesRow.parentElement.style.display = '';
+    renderSpLeagues();
+  }
+  if (tab === 'clubs') {
+    if (row) row.parentElement.style.display = '';
+    row.innerHTML = '<div class="sp-loading">قريباً — قسم الأندية</div>';
+  }
+  if (tab === 'fav') {
+    if (newsList) newsList.parentElement.style.display = '';
+    newsList.innerHTML = '<div class="sp-loading">لا توجد مباريات في المفضلة بعد ⭐</div>';
+  }
 }
 async function loadSportsUI() {
   renderSpHero();
