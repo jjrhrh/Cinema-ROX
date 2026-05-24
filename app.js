@@ -364,7 +364,7 @@ async function getFanartBackdrop(tmdbId, mediaType) {
 async function updateHeroInfo(movies, index) {
   const m = movies[index % movies.length];
   if (!m) return;
-
+const snapId = m.id;
   const fanartBd = await getFanartBackdrop(m.id, m.media_type || 'movie');
   const imgUrl = fanartBd
     ? fanartBd
@@ -407,6 +407,7 @@ document.body.style.backgroundImage = '';
       const logoRes = await fetch(`${CONFIG.API.TMDB_BASE}/movie/${m.id}/images?api_key=${CONFIG.KEYS.TMDB}&include_image_language=en,null`);
       const logoData = await logoRes.json();
       const logo = logoData.logos?.[0]?.file_path;
+      if (m.id !== snapId) return;
       if (logo) {
         titleEl.innerHTML = `<img src="${CONFIG.IMAGES.ORIGINAL}${logo}" style="max-height:100px;max-width:85%;width:auto;object-fit:contain;object-position:left bottom;filter:drop-shadow(0 2px 12px rgba(0,0,0,0.9));display:block;margin:0;">`;
       } else {
@@ -432,6 +433,7 @@ document.body.style.backgroundImage = '';
   if (overviewEl) {
   const arRes = await fetch(`${CONFIG.API.TMDB_BASE}/movie/${m.id}?api_key=${CONFIG.KEYS.TMDB}&language=ar`);
   const arData = await arRes.json();
+if (m.id !== snapId) return;
   overviewEl.textContent = arData.overview || m.overview || '';
 }
   const durEl = document.getElementById('heroInfoDuration');
