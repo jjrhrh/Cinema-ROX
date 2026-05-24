@@ -6134,3 +6134,7 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
   display: flex; align-items: center; gap: 5px; justify-content: center;
 }
 #bnavFootball.fv-active .dock-icon i { color: #e50914 !important; filter: drop-shadow(0 0 6px #e50914); }
+#footballPage.active ~ #platformsSection,
+#footballPage.active ~ .filter-bar {
+  display: none !important;
+}
