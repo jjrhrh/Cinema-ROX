@@ -5801,17 +5801,18 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
 /* ===== PREMIUM SPORTS UI ===== */
 .football-vault {
   position: fixed;
-  bottom: 0; left: 0; right: 0;
-  height: 92vh;
-  background: #070d07;
+  inset: 0;
+  width: 100%;
+  min-height: 100vh;
+  background: #0b0b0c;
   z-index: 9000;
-  border-radius: 24px 24px 0 0;
   overflow-y: auto;
   overflow-x: hidden;
-  padding-bottom: 110px;
+  padding-bottom: 80px;
   transform: translateY(0);
   transition: transform 0.5s cubic-bezier(0.175,0.885,0.32,1.1);
   scrollbar-width: none;
+  border-radius: 0;
 }
 .football-vault::-webkit-scrollbar { display: none; }
 .football-vault.hidden { transform: translateY(100%); pointer-events: none; }
@@ -5861,7 +5862,7 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
 /* HERO */
 .sp-hero {
   position: relative; overflow: hidden;
-  height: 240px; margin: 0;
+  height: 280px; margin: 0;
   background: #0a0f0a;
 }
 .sp-hero-bg {
@@ -5914,7 +5915,7 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
 }
 
 /* SECTIONS */
-.sp-section { padding: 16px 0 4px; }
+.sp-section { padding: 24px 0 8px; }
 .sp-section-hdr {
   display: flex; align-items: center; gap: 8px;
   padding: 0 16px 12px; direction: rtl;
