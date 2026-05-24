@@ -3613,11 +3613,19 @@ async function loadFvMatches() {
         : isEnd
         ? `<div class="fv-center"><span class="fv-time-badge">انتهت ${score}</span></div>`
         : `<div class="fv-center"><span class="fv-time-badge"><i class="ri-time-line"></i> ${time}</span></div>`;
+      const homeLogo = m.homeTeam.crest || '';
+      const awayLogo = m.awayTeam.crest || '';
       return `<div class="fv-match-card">
-        <span class="fv-team">${m.homeTeam.shortName||m.homeTeam.name}</span>
+        <div class="fv-team-block">
+          ${homeLogo ? `<img class="fv-team-logo" src="${homeLogo}" onerror="this.style.display='none'">` : ''}
+          <span class="fv-team">${m.homeTeam.shortName||m.homeTeam.name}</span>
+        </div>
         ${center}
-        <span class="fv-team">${m.awayTeam.shortName||m.awayTeam.name}</span>
-        ${isLive ? `<button class="fv-watch-btn" onclick="openFootballStream('${m.id}')"><i class="ri-live-line"></i> بث</button>` : ''}
+        <div class="fv-team-block">
+          ${awayLogo ? `<img class="fv-team-logo" src="${awayLogo}" onerror="this.style.display='none'">` : ''}
+          <span class="fv-team">${m.awayTeam.shortName||m.awayTeam.name}</span>
+        </div>
+        ${isLive ? `<button class="fv-watch-btn" onclick="openFootballStream('${m.id}')"><i class="ri-live-line"></i> شاهد البث الحي ▶</button>` : ''}
       </div>`;
     }).join('');
   } catch(e) {
@@ -3641,9 +3649,9 @@ async function loadFvSchedule() {
     row.innerHTML = matches.map(m => {
       const time = new Date(m.utcDate).toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});
       return `<div class="fv-sched-card">
+        <div class="fv-sched-league"><i class="ri-trophy-line"></i> ${m.competition.name}</div>
         <div class="fv-sched-time">${time}</div>
         <div class="fv-sched-teams">${m.homeTeam.shortName||m.homeTeam.name} vs ${m.awayTeam.shortName||m.awayTeam.name}</div>
-        <div class="fv-sched-league">${m.competition.name}</div>
       </div>`;
     }).join('');
   } catch(e) {
