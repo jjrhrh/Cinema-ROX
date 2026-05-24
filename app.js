@@ -349,18 +349,6 @@ let movies = await fetchMovies('/trending/movie/week', { limit: CONFIG.HERO.LIMI
     }
   }
 });
-    on: {
-      init: function() {
-  updateHeroInfo(movies, 0);
-  const dotsEl = document.getElementById('heroDots');
-  if (dotsEl) dotsEl.innerHTML = movies.map((_,i) => `<div class="hero-dot ${i===0?'active':''}"></div>`).join('');
-},
-slideChange: function() {
-  updateHeroInfo(movies, this.realIndex);
-  document.querySelectorAll('.hero-dot').forEach((d,i) => d.classList.toggle('active', i===this.realIndex));
-}
-    }
-  });
 }
 async function getFanartBackdrop(tmdbId, mediaType) {
   try {
