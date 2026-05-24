@@ -1443,20 +1443,20 @@ justify-content: flex-start;
 }
 @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
 .hero-info-year {
-  display: inline-block;
-  font-size: 0.58rem;
-  color: #ff2233 !important;
-  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.73rem;
+  color: #ff6a6a;
   font-weight: 800;
-  margin-bottom: 4px;
-  letter-spacing: 7px;
-  background: transparent;
-  border: none;
-  padding: 0;
-  text-shadow:
-    0 0 4px #ff0000,
-    0 0 12px rgba(229,9,20,0.8),
-    0 0 24px rgba(229,9,20,0.4);
+  letter-spacing: 3px;
+  background: rgba(255,42,42,0.08);
+  border: 1px solid rgba(255,42,42,0.4);
+  border-radius: 20px;
+  padding: 5px 14px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  text-shadow: 0 0 8px #ff2a2a;
+  box-shadow: 0 0 10px rgba(255,42,42,0.15), inset 0 1px 0 rgba(255,100,100,0.1);
 }
 .hero-info-title {
   display: block;
