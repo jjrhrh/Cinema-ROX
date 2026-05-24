@@ -3582,6 +3582,7 @@ async function toggleFootballVault() {
   vault.classList.toggle('hidden', !isHidden);
   overlay.classList.toggle('hidden', !isHidden);
   btn.classList.toggle('fv-active', isHidden);
+  document.body.style.overflow = isHidden ? 'hidden' : '';
   if (isHidden) loadFootballData();
 }
 
@@ -3596,7 +3597,7 @@ async function loadFvMatches() {
   list.innerHTML = '<div style="color:rgba(255,255,255,0.4);text-align:center;padding:16px;font-family:Tajawal">⏳ جاري التحميل...</div>';
   try {
     const today = new Date().toISOString().slice(0,10);
-    const res = await fetch(`${CONFIG.FOOTBALL.FD_BASE}/matches?dateFrom=${today}&dateTo=${today}`, {
+    const res = await fetch(`https://corsproxy.io/?${encodeURIComponent(CONFIG.FOOTBALL.FD_BASE+'/matches?dateFrom='+today+'&dateTo='+today)}`, {
       headers: { 'X-Auth-Token': CONFIG.FOOTBALL.FD_KEY }
     });
     const data = await res.json();
@@ -3631,7 +3632,7 @@ async function loadFvSchedule() {
   try {
     const today = new Date().toISOString().slice(0,10);
     const tomorrow = new Date(Date.now()+86400000).toISOString().slice(0,10);
-    const res = await fetch(`${CONFIG.FOOTBALL.FD_BASE}/matches?dateFrom=${today}&dateTo=${tomorrow}`, {
+    const res = await fetch(`https://corsproxy.io/?${encodeURIComponent(CONFIG.FOOTBALL.FD_BASE+'/matches?dateFrom='+today+'&dateTo='+tomorrow)}`, {
       headers: { 'X-Auth-Token': CONFIG.FOOTBALL.FD_KEY }
     });
     const data = await res.json();
