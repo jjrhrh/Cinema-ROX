@@ -402,6 +402,7 @@ document.body.style.backgroundImage = '';
   if (titleEl) {
   titleEl.style.opacity = '0';
   setTimeout(async () => {
+    titleEl.style.opacity = '0.01';
     try {
       const logoRes = await fetch(`${CONFIG.API.TMDB_BASE}/movie/${m.id}/images?api_key=${CONFIG.KEYS.TMDB}&include_image_language=en,null`);
       const logoData = await logoRes.json();
