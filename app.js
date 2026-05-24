@@ -3390,3 +3390,12 @@ function roxSnapshot() {
   }) : navigator.clipboard.writeText(window.location.href)
     .then(() => alert('تم نسخ الرابط ✅'));
 }
+function filterBarGo(tab) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  if (tab === 'home') bnavGo('home');
+  else if (tab === 'movies') openBrowseAll('movie', '/movie/popular', 'الأفلام');
+  else if (tab === 'series') openBrowseAll('tv', '/tv/popular', 'المسلسلات');
+  else if (tab === 'library') bnavGo('library');
+  else if (tab === 'genres') bnavGo('search');
+}
