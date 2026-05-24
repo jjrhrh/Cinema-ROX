@@ -261,11 +261,70 @@
 <div id="profilePage"    class="page"></div>
 <div id="detailPage"     class="page"></div>
 <div id="watchPage" class="page"></div>
+  <!-- FOOTBALL VAULT -->
+<div id="footballVault" class="football-vault hidden">
+  <div class="fv-header">
+    <span class="fv-live-dot"></span>
+    <span class="fv-title"><i class="ri-football-line"></i> عالم الساحرة المستديرة</span>
+    <button class="fv-close" onclick="toggleFootballVault()"><i class="ri-close-line"></i></button>
+  </div>
+
+  <div class="fv-section-title"><i class="ri-live-line" style="color:#ff2a2a"></i> مباريات اليوم المشتعلة</div>
+  <div class="fv-matches-list" id="fvMatchesList">
+    <div class="fv-match-card">
+      <span class="fv-team">ريال مدريد</span>
+      <div class="fv-center"><span class="fv-live-badge"><span class="fv-pulse"></span>مباشر</span><span class="fv-score">2 - 1</span></div>
+      <span class="fv-team">برشلونة</span>
+      <button class="fv-watch-btn" onclick="openFootballStream('elclasico')"><i class="ri-live-line"></i> بث</button>
+    </div>
+    <div class="fv-match-card">
+      <span class="fv-team">مانشستر سيتي</span>
+      <div class="fv-center"><span class="fv-time-badge"><i class="ri-time-line"></i> 22:00</span></div>
+      <span class="fv-team">ليفربول</span>
+      <button class="fv-watch-btn" onclick="openFootballStream('mancity-liverpool')"><i class="ri-calendar-line"></i> تذكير</button>
+    </div>
+  </div>
+
+  <div class="fv-section-title"><i class="ri-calendar-2-line" style="color:#46d369"></i> جدول القمم</div>
+  <div class="fv-days-row">
+    <button class="fv-day-btn" onclick="fvSelectDay(this,'yesterday')">أمس</button>
+    <button class="fv-day-btn active" onclick="fvSelectDay(this,'today')">اليوم</button>
+    <button class="fv-day-btn" onclick="fvSelectDay(this,'tomorrow')">غداً</button>
+    <button class="fv-day-btn" onclick="fvSelectDay(this,'week')">الأسبوع</button>
+  </div>
+  <div class="fv-schedule-row" id="fvSchedule">
+    <div class="fv-sched-card"><div class="fv-sched-time">20:45</div><div class="fv-sched-teams">PSG vs Bayern</div><div class="fv-sched-league">دوري أبطال أوروبا</div></div>
+    <div class="fv-sched-card"><div class="fv-sched-time">22:00</div><div class="fv-sched-teams">Arsenal vs Chelsea</div><div class="fv-sched-league">الدوري الإنجليزي</div></div>
+    <div class="fv-sched-card"><div class="fv-sched-time">21:00</div><div class="fv-sched-teams">Juventus vs Inter</div><div class="fv-sched-league">الدوري الإيطالي</div></div>
+  </div>
+
+  <div class="fv-section-title"><i class="ri-flashlight-line" style="color:#ffd700"></i> الرادار الإخباري</div>
+  <div class="fv-news-row" id="fvNews">
+    <div class="fv-news-card"><div class="fv-news-img" style="background:linear-gradient(135deg,#1a1a2e,#16213e)"><i class="ri-trophy-fill" style="font-size:2rem;color:#ffd700"></i></div><div class="fv-news-text">ريال مدريد يتوّج بلقب دوري الأبطال للمرة الـ15 في تاريخه</div></div>
+    <div class="fv-news-card"><div class="fv-news-img" style="background:linear-gradient(135deg,#1a1a2e,#16213e)"><i class="ri-football-line" style="font-size:2rem;color:#46d369"></i></div><div class="fv-news-text">姆باппي يسجل هاتريك رائعاً في فوز باريس الكبير على الغريم</div></div>
+    <div class="fv-news-card"><div class="fv-news-img" style="background:linear-gradient(135deg,#1a1a2e,#16213e)"><i class="ri-medal-line" style="font-size:2rem;color:#ff9500"></i></div><div class="fv-news-text">محمد صلاح يتصدر قائمة الهدافين في الدوري الإنجليزي الممتاز</div></div>
+  </div>
+
+  <div id="fvStreamPanel" class="fv-stream-panel hidden">
+    <div class="fv-stream-title"><i class="ri-live-line"></i> اختر سيرفر البث</div>
+    <div class="fv-stream-btns">
+      <button class="fv-srv-btn" onclick="alert('ROX Sports')"><i class="ri-tv-line"></i> ROX Sports</button>
+      <button class="fv-srv-btn" onclick="alert('Arena HD')"><i class="ri-broadcast-line"></i> Arena HD</button>
+      <button class="fv-srv-btn" onclick="alert('Match TV')"><i class="ri-signal-tower-line"></i> Match TV</button>
+    </div>
+    <button class="fv-stream-close" onclick="document.getElementById('fvStreamPanel').classList.add('hidden')"><i class="ri-close-circle-line"></i> إغلاق</button>
+  </div>
+</div>
+<div id="fvOverlay" class="fv-overlay hidden" onclick="toggleFootballVault()"></div>
   <!-- BOTTOM NAV -->
 <nav class="cyber-dock" id="cyberDock">
   <button class="dock-btn active" id="bnavHome" onclick="bnavGo('home')">
     <span class="dock-icon"><svg width="22" height="22" viewBox="0 0 24 24"><defs><linearGradient id="hg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#80ffff"/><stop offset="55%" stop-color="#00e5ff"/><stop offset="100%" stop-color="#006b99"/></linearGradient></defs><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" fill="url(#hg)"/><rect x="9" y="13" width="6" height="9" rx="1" fill="rgba(0,0,0,0.35)"/></svg></span>
     <span class="dock-label">الرئيسية</span>
+  </button>
+  <button class="dock-btn" id="bnavFootball" onclick="toggleFootballVault()">
+    <span class="dock-icon"><i class="ri-football-line" style="font-size:22px;color:#46d369"></i></span>
+    <span class="dock-label" style="color:#46d369">الستاد</span>
   </button>
   <button class="dock-btn" id="bnavSearch" onclick="bnavGo('search')">
     <span class="dock-icon"><svg width="22" height="22" viewBox="0 0 24 24"><defs><linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#80ffff"/><stop offset="55%" stop-color="#00e5ff"/><stop offset="100%" stop-color="#006b99"/></linearGradient></defs><circle cx="11" cy="11" r="8" fill="url(#sg)" opacity="0.92"/><line x1="17" y1="17" x2="21" y2="21" stroke="url(#sg)" stroke-width="2.8" stroke-linecap="round"/></svg></span>
