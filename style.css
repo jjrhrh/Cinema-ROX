@@ -445,14 +445,16 @@ transition: background 0.5s cubic-bezier(0.25,1,0.5,1);
   box-shadow: 0 0 10px rgba(255,42,42,0.15), inset 0 1px 0 rgba(255,100,100,0.1);
 }
 .hero-match-chip {
-  color: #46d369 !important;
-  font-size: 0.78rem;
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.73rem;
   font-weight: 800;
   font-family: 'Tajawal', sans-serif;
+  color: #46d369 !important;
   background: rgba(46,211,105,0.08);
   border: 1px solid rgba(46,211,105,0.35);
   border-radius: 20px;
-  padding: 5px 12px;
+  padding: 5px 14px;
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   text-shadow: 0 0 10px rgba(70,211,105,0.7);
