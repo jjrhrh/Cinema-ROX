@@ -6152,3 +6152,70 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
   70% { transform: scale(0.9); }
   100% { transform: scale(1); }
 }
+/* ===== SCORERS ===== */
+.fv-scorers-list {
+  margin: 0 12px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.fv-scorer-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0,20,0,0.45);
+  border: 1px solid rgba(46,211,105,0.12);
+  border-radius: 12px;
+  padding: 8px 12px;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.fv-scorer-row:hover {
+  border-color: rgba(46,211,105,0.4);
+  box-shadow: 0 0 12px rgba(46,211,105,0.1);
+}
+.fv-scorer-rank {
+  font-size: 0.75rem;
+  font-weight: 900;
+  color: #46d369;
+  width: 18px;
+  text-align: center;
+  font-family: monospace;
+  text-shadow: 0 0 6px rgba(46,211,105,0.5);
+}
+.fv-scorer-logo {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+.fv-scorer-name {
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #fff;
+  flex: 1;
+}
+.fv-scorer-club {
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.68rem;
+  color: rgba(255,255,255,0.45);
+}
+.fv-scorer-goals {
+  font-family: monospace;
+  font-size: 0.82rem;
+  font-weight: 900;
+  color: #ffd700;
+  text-shadow: 0 0 8px rgba(255,215,0,0.4);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+/* ===== DAY BUTTONS NEON ===== */
+.fv-day-btn.active {
+  background: rgba(46,211,105,0.12);
+  border-color: rgba(46,211,105,0.6);
+  color: #46d369;
+  box-shadow: 0 0 12px rgba(46,211,105,0.25), inset 0 0 6px rgba(46,211,105,0.08);
+}
+.fv-section-title {
+  text-shadow: 0 0 8px rgba(46,211,105,0.15);
+}
