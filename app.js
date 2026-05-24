@@ -62,6 +62,7 @@ document.querySelectorAll('.dock-btn').forEach(b => {
   if (tab === 'search') { initSearchDiscovery(); const inp = document.getElementById('searchInput2'); if(inp) { inp.value=''; setTimeout(()=>inp.focus(),200); } }
   if (tab === 'profile') loadProfilePage();
   if (tab === 'football') loadSportsUI();
+  if (tab !== 'football') document.getElementById('platformsSection').style.display = tab === 'home' ? '' : 'none';
   if (tab === 'otaku') { if(hero){hero.style.display='';hero.style.visibility='';} _otakuOn=true; document.getElementById('htmlRoot').classList.add('otaku-mode'); document.getElementById('bnavOtaku').classList.add('active'); loadOtakuPage(); loadNewsSection('newsFeed',CONFIG.NEWS.ANIME,'purple'); document.getElementById('newsSectionTitle').textContent='📰 أخبار الأنمي'; document.getElementById('newsSection').style.display='block'; document.getElementById('studioBar').style.display='block'; }
   window.scrollTo(0,0);
 }
@@ -3582,8 +3583,10 @@ async function toggleFootballVault() {
 function spNav(tab, el) {
   document.querySelectorAll('.sp-snav-btn').forEach(b => b.classList.remove('sp-snav-active'));
   el.classList.add('sp-snav-active');
+  if (tab === 'home') loadSportsUI();
+  if (tab === 'matches') loadSpMatchesLive();
+  if (tab === 'leagues') renderSpLeagues();
 }
-
 async function loadSportsUI() {
   renderSpHero();
   renderSpLeagues();
