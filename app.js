@@ -315,8 +315,8 @@ async function loadHeroSwiper() {
   const wrapper = document.getElementById('heroSwiperWrapper');
   if (!wrapper) return;
 
-let movies = await fetchMovies('/trending/movie/week', { limit: CONFIG.HERO.LIMIT, requirePoster: true });
-  if (!movies.length) movies = await fetchMovies('/movie/popular', { limit: CONFIG.HERO.LIMIT, requirePoster: true });
+let movies = await fetchMovies('/trending/movie/week', { limit: 5, requirePoster: true });
+  if (!movies.length) movies = await fetchMovies('/movie/popular', { limit: 5, requirePoster: true });
   if (!movies.length) return;
 
   wrapper.innerHTML = movies.map(m => {
@@ -366,7 +366,6 @@ async function updateHeroInfo(movies, index) {
   if (!m) return;
   const snapId = m.id;
 
-  // ===== تحديث فوري بدون انتظار =====
   const yearEl     = document.getElementById('heroInfoYear');
   const titleEl    = document.getElementById('heroInfoTitle');
   const overviewEl = document.getElementById('heroInfoOverview');
@@ -385,10 +384,8 @@ async function updateHeroInfo(movies, index) {
   if (yearEl) yearEl.textContent = date.slice(0,4);
   if (overviewEl) overviewEl.textContent = m.overview || '';
   if (titleEl) {
-    titleEl.style.transition = 'none';
-    titleEl.style.opacity = '1';
+    titleEl.innerHTML = '';
     titleEl.textContent = m.title || m.name || m.original_title || '';
-    titleEl.style.fontSize = '';
   }
   if (genresEl) {
     const names = (m.genre_ids||[]).slice(0,3).map(id=>GENRES[id]).filter(Boolean);
@@ -402,7 +399,6 @@ async function updateHeroInfo(movies, index) {
     ? '<i class="ri-film-line" style="margin-left:5px;vertical-align:middle"></i> فيلم'
     : '<i class="ri-tv-2-line" style="margin-left:5px;vertical-align:middle"></i> مسلسل';
 
-  // ===== خلفية فورية =====
   const backdrop = document.getElementById('heroBackdrop');
   if (backdrop) {
     backdrop.style.backgroundImage = `url('${CONFIG.IMAGES[CONFIG.HERO.BACKDROP_SIZE]}${m.backdrop_path||m.poster_path}')`;
@@ -410,7 +406,6 @@ async function updateHeroInfo(movies, index) {
     setTimeout(()=>backdrop.classList.add('loaded'),80);
   }
 
-  // ===== شعار + وصف عربي (async لكن محمي بـ snapId) =====
   const type = m.media_type === 'tv' ? 'tv' : 'movie';
   try {
     const [logoRes, arRes] = await Promise.all([
@@ -425,14 +420,14 @@ async function updateHeroInfo(movies, index) {
       const logo = logoData.logos?.[0]?.file_path;
       if (logo) {
         titleEl.innerHTML = `<img src="${CONFIG.IMAGES.ORIGINAL}${logo}" style="max-height:90px;max-width:80%;width:auto;object-fit:contain;object-position:left bottom;filter:drop-shadow(0 2px 12px rgba(0,0,0,0.9));display:block;margin:0;">`;
-      } else {
-        titleEl.textContent = m.title || m.name || m.original_title || '';
       }
     }
-    if (overviewEl && arData.overview) overviewEl.textContent = arData.overview;
+    if (overviewEl) {
+      const arOverview = arData.overview || '';
+      overviewEl.textContent = arOverview || m.overview || '';
+    }
   } catch {
     if (m.id !== snapId) return;
-    if (titleEl) titleEl.textContent = m.title || m.name || m.original_title || '';
   }
 
   const playBtn = document.getElementById('heroPlayBtn');
@@ -686,7 +681,7 @@ async function loadOtakuHero() {
   if (!wrapper) return;
 
   const movies = await fetchMovies('/discover/tv', {
-    type: 'tv', limit: CONFIG.HERO.LIMIT, requirePoster: true,
+    type: 'tv', limit: 5, requirePoster: true,
     params: { with_genres:'16', with_origin_country:'JP', sort_by:'popularity.desc' }
   });
   if (!movies.length) return;
