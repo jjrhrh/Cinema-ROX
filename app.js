@@ -47,8 +47,8 @@ document.querySelectorAll('.dock-btn').forEach(b => {
     return;
   }
 
-  const pageMap = { home:'homePage', search:'searchPage', library:'libraryPage', profile:'profilePage', otaku:'homePage' };
-  const btnMap  = { home:'bnavHome', search:'bnavSearch', library:'bnavLibrary', profile:'bnavProfile', otaku:'bnavOtaku' };
+  const pageMap = { home:'homePage', search:'searchPage', library:'libraryPage', profile:'profilePage', otaku:'homePage', football:'footballPage' };
+  const btnMap = { home:'bnavHome', search:'bnavSearch', library:'bnavLibrary', profile:'bnavProfile', otaku:'bnavOtaku', football:'bnavFootball' };
   
   document.getElementById(pageMap[tab])?.classList.add('active');
   const _ab = document.getElementById(btnMap[tab]);
@@ -61,6 +61,7 @@ document.querySelectorAll('.dock-btn').forEach(b => {
   if (tab === 'library') loadLibraryPage();
   if (tab === 'search') { initSearchDiscovery(); const inp = document.getElementById('searchInput2'); if(inp) { inp.value=''; setTimeout(()=>inp.focus(),200); } }
   if (tab === 'profile') loadProfilePage();
+  if (tab === 'football') loadSportsUI();
   if (tab === 'otaku') { if(hero){hero.style.display='';hero.style.visibility='';} _otakuOn=true; document.getElementById('htmlRoot').classList.add('otaku-mode'); document.getElementById('bnavOtaku').classList.add('active'); loadOtakuPage(); loadNewsSection('newsFeed',CONFIG.NEWS.ANIME,'purple'); document.getElementById('newsSectionTitle').textContent='📰 أخبار الأنمي'; document.getElementById('newsSection').style.display='block'; document.getElementById('studioBar').style.display='block'; }
   window.scrollTo(0,0);
 }
@@ -3575,15 +3576,7 @@ async function loadGenresPage() {
     </div>`;
 }
 async function toggleFootballVault() {
-  const vault   = document.getElementById('footballVault');
-  const overlay = document.getElementById('fvOverlay');
-  const btn     = document.getElementById('bnavFootball');
-  const isHidden = vault.classList.contains('hidden');
-  vault.classList.toggle('hidden', !isHidden);
-  overlay.classList.toggle('hidden', !isHidden);
-  btn.classList.toggle('fv-active', isHidden);
-  document.body.style.overflow = isHidden ? 'hidden' : '';
-  if (isHidden) loadSportsUI();
+  bnavGo('football');
 }
 
 function spNav(tab, el) {
@@ -3591,63 +3584,70 @@ function spNav(tab, el) {
   el.classList.add('sp-snav-active');
 }
 
-function loadSportsUI() {
+async function loadSportsUI() {
   renderSpHero();
-  renderSpMatches();
   renderSpLeagues();
-  renderSpNews();
+  await loadSpMatchesLive();
+  await loadSpNews();
 }
 
 function renderSpHero() {
-  const players = [
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Erling_Haaland_2024.jpg/440px-Erling_Haaland_2024.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/5/57/Kylian_Mbapp%C3%A9_in_2022_%28cropped%29.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/1/1e/Mohamed_Salah_2018.jpg'
-  ];
   const wrap = document.getElementById('spHeroPlayers');
   if (!wrap) return;
+  const players = [
+    'https://upload.wikimedia.org/wikipedia/commons/1/1e/Mohamed_Salah_2018.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/5/57/Kylian_Mbapp%C3%A9_in_2022_%28cropped%29.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/e/e0/Vinicius_Junior_2023.jpg'
+  ];
   wrap.innerHTML = players.map((src, i) =>
-    `<img src="${src}" style="margin-left:${i === 0 ? '0' : '-40px'};z-index:${3 - i};position:relative;" onerror="this.style.display='none'">`
+    `<img src="${src}" style="margin-left:${i===0?'0':'-35px'};z-index:${3-i};position:relative;opacity:${1-i*0.15}" onerror="this.style.display='none'">`
   ).join('');
 }
 
-function renderSpMatches() {
+async function loadSpMatchesLive() {
   const row = document.getElementById('spMatchesRow');
   if (!row) return;
-  const matches = [
-    { league: 'الدوري الإنجليزي', homeName: 'ليفربول', awayName: 'أرسنال', homeLogo: 'https://crests.football-data.org/64.svg', awayLogo: 'https://crests.football-data.org/57.svg', score: '2 - 1', live: true, period: 'الشوط الثاني' },
-    { league: 'دوري أبطال أوروبا', homeName: 'ريال مدريد', awayName: 'بايرن', homeLogo: 'https://crests.football-data.org/86.svg', awayLogo: 'https://crests.football-data.org/5.svg', time: '10:00 مساءً', date: 'الأربعاء 8 مايو' },
-    { league: 'الدوري الإسباني', homeName: 'برشلونة', awayName: 'ريال سوسيداد', homeLogo: 'https://crests.football-data.org/81.svg', awayLogo: 'https://crests.football-data.org/92.svg', time: '8:00 مساءً', date: 'السبت 11 مايو' },
-    { league: 'الدوري الإيطالي', homeName: 'يوفنتوس', awayName: 'إنتر', homeLogo: 'https://crests.football-data.org/109.svg', awayLogo: 'https://crests.football-data.org/108.svg', time: '9:45 مساءً', date: 'الجمعة 10 مايو' },
-    { league: 'الدوري الألماني', homeName: 'دورتموند', awayName: 'بايرن', homeLogo: 'https://crests.football-data.org/4.svg', awayLogo: 'https://crests.football-data.org/5.svg', time: '7:30 مساءً', date: 'السبت 11 مايو' },
-  ];
-  row.innerHTML = matches.map(m => {
-    const centerHtml = m.live
-      ? `<div class="sp-match-center">
-           <div class="sp-match-live-badge"><span class="sp-match-live-dot"></span>مباشرة</div>
-           <div class="sp-match-score">${m.score}</div>
-           <div class="sp-match-time" style="font-size:0.62rem;color:rgba(255,255,255,0.4)">${m.period}</div>
-         </div>`
-      : `<div class="sp-match-center">
-           <div class="sp-match-score" style="font-size:1rem">${m.time}</div>
-         </div>`;
-    return `<div class="sp-match-card ${m.live ? 'is-live' : ''}" onclick="${m.live ? `openFootballStream('live')` : ''}">
-      <div class="sp-match-league">${m.league}</div>
-      <div class="sp-match-teams-row">
-        <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
-          <img class="sp-match-team-logo" src="${m.homeLogo}" onerror="this.src='https://placehold.co/30x30/111/fff?text=⚽'">
-          <div class="sp-match-team-name">${m.homeName}</div>
+  row.innerHTML = '<div class="sp-loading">⏳ جاري التحميل...</div>';
+  try {
+    const today = new Date().toISOString().slice(0,10);
+    const res = await fetch(
+      `https://corsproxy.io/?${encodeURIComponent(CONFIG.FOOTBALL.FD_BASE+'/matches?dateFrom='+today+'&dateTo='+today)}`,
+      { headers: { 'X-Auth-Token': CONFIG.FOOTBALL.FD_KEY } }
+    );
+    const data = await res.json();
+    const matches = (data.matches || []).slice(0, 8);
+    if (!matches.length) { row.innerHTML = '<div class="sp-loading">لا توجد مباريات اليوم</div>'; return; }
+    row.innerHTML = matches.map(m => {
+      const isLive = m.status === 'IN_PLAY' || m.status === 'PAUSED';
+      const isEnd  = m.status === 'FINISHED';
+      const score  = (isLive || isEnd) ? `${m.score.fullTime.home ?? 0} - ${m.score.fullTime.away ?? 0}` : '';
+      const time   = new Date(m.utcDate).toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});
+      const date   = new Date(m.utcDate).toLocaleDateString('ar-SA',{weekday:'long',day:'numeric',month:'long'});
+      const centerHtml = isLive
+        ? `<div class="sp-match-center"><div class="sp-match-live-badge"><span class="sp-match-live-dot"></span>مباشرة</div><div class="sp-match-score">${score}</div></div>`
+        : isEnd
+        ? `<div class="sp-match-center"><div class="sp-match-score">${score}</div><div class="sp-match-time" style="font-size:0.65rem;color:rgba(255,255,255,0.35)">انتهت</div></div>`
+        : `<div class="sp-match-center"><div class="sp-match-score" style="font-size:1rem">${time}</div></div>`;
+      return `<div class="sp-match-card ${isLive?'is-live':''}">
+        <div class="sp-match-league">${m.competition.name}</div>
+        <div class="sp-match-teams-row">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+            ${m.homeTeam.crest?`<img class="sp-match-team-logo" src="${m.homeTeam.crest}" onerror="this.style.display='none'">`:``}
+            <div class="sp-match-team-name">${m.homeTeam.shortName||m.homeTeam.name}</div>
+          </div>
+          ${centerHtml}
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+            ${m.awayTeam.crest?`<img class="sp-match-team-logo" src="${m.awayTeam.crest}" onerror="this.style.display='none'">`:``}
+            <div class="sp-match-team-name">${m.awayTeam.shortName||m.awayTeam.name}</div>
+          </div>
         </div>
-        ${centerHtml}
-        <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
-          <img class="sp-match-team-logo" src="${m.awayLogo}" onerror="this.src='https://placehold.co/30x30/111/fff?text=⚽'">
-          <div class="sp-match-team-name">${m.awayName}</div>
-        </div>
-      </div>
-      ${m.date ? `<div class="sp-match-date"><i class="ri-calendar-line"></i>${m.date}</div>` : ''}
-      ${m.live ? `<button class="sp-match-watch-btn" onclick="event.stopPropagation();openFootballStream('live')"><i class="ri-live-line"></i> شاهد البث الحي</button>` : ''}
-    </div>`;
-  }).join('');
+        <div class="sp-match-date"><i class="ri-calendar-line"></i>${date}</div>
+        ${isLive?`<button class="sp-match-watch-btn" onclick="event.stopPropagation();openFootballStream('${m.id}')"><i class="ri-live-line"></i> شاهد البث الحي</button>`:''}
+      </div>`;
+    }).join('');
+  } catch(e) {
+    row.innerHTML = '<div class="sp-loading" style="color:#e50914">تعذر تحميل المباريات</div>';
+  }
 }
 
 function renderSpLeagues() {
@@ -3663,38 +3663,61 @@ function renderSpLeagues() {
   ];
   row.innerHTML = leagues.map(l =>
     `<div class="sp-league-card">
-      <img class="sp-league-logo" src="${l.logo}" onerror="this.src='https://placehold.co/44x44/111/fff?text=🏆'">
+      <img class="sp-league-logo" src="${l.logo}" onerror="this.style.opacity='0.4'">
       <div class="sp-league-name">${l.name}</div>
     </div>`
   ).join('');
 }
 
-function renderSpNews() {
+async function loadSpNews() {
   const list = document.getElementById('spNewsList');
   if (!list) return;
-  const news = [
-    { time: 'منذ 30 دقيقة', title: 'ليفربول يقترب من حسم لقب الدوري الإنجليزي', sub: 'فوز مهم على أرسنال يقرّب الريدز من اللقب', img: 'https://upload.wikimedia.org/wikipedia/commons/1/1e/Mohamed_Salah_2018.jpg' },
-    { time: 'منذ ساعة', title: 'مبابي يعلن عن رحيله عن باريس سان جيرمان', sub: 'النجم الفرنسي يبدأ فصلاً جديداً في مسيرته', img: 'https://upload.wikimedia.org/wikipedia/commons/5/57/Kylian_Mbapp%C3%A9_in_2022_%28cropped%29.jpg' },
-    { time: 'منذ ساعتين', title: 'هالاند يكسر رقم الهدافين في تاريخ الدوري الإنجليزي', sub: 'السويدي العملاق يسجل هدفه التاريخي 37 هذا الموسم', img: 'https://placehold.co/80x70/111/fff?text=⚽' },
-    { time: 'منذ 3 ساعات', title: 'ريال مدريد يتأهل لنهائي دوري الأبطال بثلاثية', sub: 'الملكي يؤكد هيمنته على أوروبا للموسم الثاني', img: 'https://upload.wikimedia.org/wikipedia/commons/c/c7/UEFA_Champions_League_trophy.jpg' },
-  ];
-  list.innerHTML = news.map(n =>
-    `<div class="sp-news-card">
-      <div class="sp-news-text-block">
-        <div class="sp-news-time">${n.time}</div>
-        <div class="sp-news-title">${n.title}</div>
-        <div class="sp-news-sub">${n.sub}</div>
-      </div>
-      <img class="sp-news-img" src="${n.img}" onerror="this.src='https://placehold.co/80x70/111/fff?text=⚽'">
-    </div>`
-  ).join('');
+  list.innerHTML = '<div class="sp-loading">⏳ جاري تحميل الأخبار...</div>';
+  try {
+    const res = await fetch(
+      `https://corsproxy.io/?${encodeURIComponent(CONFIG.API.NEWS_BASE+'/everything?q=football+soccer&language=ar&pageSize=6&sortBy=publishedAt&apiKey='+CONFIG.KEYS.NEWS)}`,
+    );
+    const data = await res.json();
+    const articles = (data.articles || []).filter(a => a.urlToImage).slice(0, 5);
+    if (!articles.length) throw new Error('no articles');
+    list.innerHTML = articles.map(a => {
+      const ago = getTimeAgo(new Date(a.publishedAt));
+      return `<div class="sp-news-card">
+        <div class="sp-news-text-block">
+          <div class="sp-news-time">${ago}</div>
+          <div class="sp-news-title">${a.title}</div>
+          <div class="sp-news-sub">${a.description||''}</div>
+        </div>
+        <img class="sp-news-img" src="${a.urlToImage}" onerror="this.src='https://placehold.co/80x70/1a1a1a/e50914?text=⚽'">
+      </div>`;
+    }).join('');
+  } catch(e) {
+    const news = [
+      { time: 'منذ 30 دقيقة', title: 'ليفربول يقترب من حسم لقب الدوري الإنجليزي', sub: 'فوز مهم على أرسنال يقرّب الريدز من اللقب', img: 'https://upload.wikimedia.org/wikipedia/commons/1/1e/Mohamed_Salah_2018.jpg' },
+      { time: 'منذ ساعة', title: 'مبابي يعلن رحيله عن باريس سان جيرمان', sub: 'النجم الفرنسي يبدأ فصلاً جديداً في مسيرته', img: 'https://upload.wikimedia.org/wikipedia/commons/5/57/Kylian_Mbapp%C3%A9_in_2022_%28cropped%29.jpg' },
+      { time: 'منذ ساعتين', title: 'هالاند يكسر رقم الهدافين في تاريخ الدوري الإنجليزي', sub: 'السويدي العملاق يسجل هدفه التاريخي 37 هذا الموسم', img: 'https://upload.wikimedia.org/wikipedia/commons/e/e0/Vinicius_Junior_2023.jpg' },
+      { time: 'منذ 3 ساعات', title: 'ريال مدريد يتأهل لنهائي دوري الأبطال بثلاثية', sub: 'الملكي يؤكد هيمنته على أوروبا للموسم الثاني', img: 'https://upload.wikimedia.org/wikipedia/commons/c/c7/UEFA_Champions_League_trophy.jpg' },
+    ];
+    list.innerHTML = news.map(n =>
+      `<div class="sp-news-card">
+        <div class="sp-news-text-block">
+          <div class="sp-news-time">${n.time}</div>
+          <div class="sp-news-title">${n.title}</div>
+          <div class="sp-news-sub">${n.sub}</div>
+        </div>
+        <img class="sp-news-img" src="${n.img}" onerror="this.src='https://placehold.co/80x70/1a1a1a/e50914?text=⚽'">
+      </div>`
+    ).join('');
+  }
+}
+
+function getTimeAgo(date) {
+  const diff = Math.floor((Date.now() - date) / 60000);
+  if (diff < 60) return `منذ ${diff} دقيقة`;
+  if (diff < 1440) return `منذ ${Math.floor(diff/60)} ساعة`;
+  return `منذ ${Math.floor(diff/1440)} يوم`;
 }
 
 function openFootballStream(id) {
   document.getElementById('fvStreamPanel')?.classList.remove('hidden');
-}
-
-function fvSelectDay(el, day) {
-  document.querySelectorAll('.fv-day-btn').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
 }
