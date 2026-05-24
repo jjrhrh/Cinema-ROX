@@ -3574,19 +3574,78 @@ async function loadGenresPage() {
       </div>
     </div>`;
 }
-function toggleFootballVault() {
-  const vault = document.getElementById('footballVault');
-  const overlay = document.getElementById('fvOverlay');
-  const btn = document.getElementById('bnavFootball');
+async function toggleFootballVault() {
+  const vault  = document.getElementById('footballVault');
+  const overlay= document.getElementById('fvOverlay');
+  const btn    = document.getElementById('bnavFootball');
   const isHidden = vault.classList.contains('hidden');
   vault.classList.toggle('hidden', !isHidden);
   overlay.classList.toggle('hidden', !isHidden);
   btn.classList.toggle('fv-active', isHidden);
+  if (isHidden) loadFootballData();
 }
-function openFootballStream(matchId) {
-  document.getElementById('fvStreamPanel').classList.remove('hidden');
+
+async function loadFootballData() {
+  loadFvMatches();
+  loadFvSchedule();
 }
-function fvSelectDay(el, day) {
-  document.querySelectorAll('.fv-day-btn').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
+
+async function loadFvMatches() {
+  const list = document.getElementById('fvMatchesList');
+  if (!list) return;
+  list.innerHTML = '<div style="color:rgba(255,255,255,0.4);text-align:center;padding:16px;font-family:Tajawal">⏳ جاري التحميل...</div>';
+  try {
+    const today = new Date().toISOString().slice(0,10);
+    const res = await fetch(`${CONFIG.FOOTBALL.FD_BASE}/matches?dateFrom=${today}&dateTo=${today}`, {
+      headers: { 'X-Auth-Token': CONFIG.FOOTBALL.FD_KEY }
+    });
+    const data = await res.json();
+    const matches = (data.matches || []).slice(0, 8);
+    if (!matches.length) { list.innerHTML = '<div style="color:rgba(255,255,255,0.4);text-align:center;padding:16px;font-family:Tajawal">لا توجد مباريات اليوم</div>'; return; }
+    list.innerHTML = matches.map(m => {
+      const isLive = m.status === 'IN_PLAY' || m.status === 'PAUSED';
+      const isEnd  = m.status === 'FINISHED';
+      const score  = isLive || isEnd ? `${m.score.fullTime.home ?? 0} - ${m.score.fullTime.away ?? 0}` : '';
+      const time   = new Date(m.utcDate).toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});
+      const center = isLive
+        ? `<div class="fv-center"><span class="fv-live-badge"><span class="fv-pulse"></span>مباشر</span>${score ? `<span class="fv-score">${score}</span>` : ''}</div>`
+        : isEnd
+        ? `<div class="fv-center"><span class="fv-time-badge">انتهت ${score}</span></div>`
+        : `<div class="fv-center"><span class="fv-time-badge"><i class="ri-time-line"></i> ${time}</span></div>`;
+      return `<div class="fv-match-card">
+        <span class="fv-team">${m.homeTeam.shortName||m.homeTeam.name}</span>
+        ${center}
+        <span class="fv-team">${m.awayTeam.shortName||m.awayTeam.name}</span>
+        ${isLive ? `<button class="fv-watch-btn" onclick="openFootballStream('${m.id}')"><i class="ri-live-line"></i> بث</button>` : ''}
+      </div>`;
+    }).join('');
+  } catch(e) {
+    list.innerHTML = '<div style="color:rgba(255,42,42,0.7);text-align:center;padding:16px;font-family:Tajawal">تعذر تحميل المباريات</div>';
+  }
+}
+
+async function loadFvSchedule() {
+  const row = document.getElementById('fvSchedule');
+  if (!row) return;
+  row.innerHTML = '<div style="color:rgba(255,255,255,0.4);padding:16px;font-family:Tajawal">⏳</div>';
+  try {
+    const today = new Date().toISOString().slice(0,10);
+    const tomorrow = new Date(Date.now()+86400000).toISOString().slice(0,10);
+    const res = await fetch(`${CONFIG.FOOTBALL.FD_BASE}/matches?dateFrom=${today}&dateTo=${tomorrow}`, {
+      headers: { 'X-Auth-Token': CONFIG.FOOTBALL.FD_KEY }
+    });
+    const data = await res.json();
+    const matches = (data.matches || []).filter(m => m.status === 'TIMED' || m.status === 'SCHEDULED').slice(0,10);
+    if (!matches.length) { row.innerHTML = '<div style="color:rgba(255,255,255,0.4);padding:16px;font-family:Tajawal">لا توجد مباريات قادمة</div>'; return; }
+    row.innerHTML = matches.map(m => {
+      const time = new Date(m.utcDate).toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});
+      return `<div class="fv-sched-card">
+        <div class="fv-sched-time">${time}</div>
+        <div class="fv-sched-teams">${m.homeTeam.shortName||m.homeTeam.name} vs ${m.awayTeam.shortName||m.awayTeam.name}</div>
+        <div class="fv-sched-league">${m.competition.name}</div>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    row.innerHTML = '<div style="color:rgba(255,42,42,0.7);padding:16px;font-family:Tajawal">تعذر التحميل</div>';
+  }
 }
