@@ -423,13 +423,14 @@ transition: background 0.5s cubic-bezier(0.25,1,0.5,1);
   font-family: 'Tajawal', sans-serif;
 }
 .hero-meta-chip {
-  background: rgba(255,255,255,0.15);
-  border: 1px solid rgba(255,255,255,0.2);
-  border-radius: 6px;
-  padding: 2px 8px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 8px;
+  padding: 3px 10px;
   font-size: 0.72rem;
-  color: rgba(255,255,255,0.8);
+  color: rgba(255,255,255,0.85);
   font-family: 'Tajawal', sans-serif;
+  backdrop-filter: blur(8px);
 }
 .hero-match-chip {
   color: #46d369;
