@@ -5882,18 +5882,21 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
 }
 .sp-hero-content {
   position: relative; z-index: 3;
-  padding: 28px 20px; 
+  padding: 32px 20px 24px;
+  display: flex; flex-direction: column;
+  align-items: flex-end; text-align: right;
 }
 .sp-hero-title {
   font-family: 'Tajawal', sans-serif;
   font-size: 1.7rem; font-weight: 900;
-  color: #fff; margin: 0 0 6px; line-height: 1.2;
+  color: #fff; margin: 0 0 10px; line-height: 1.2;
 }
 .sp-hero-rox { color: #e50914; }
 .sp-hero-sub {
   font-family: 'Tajawal', sans-serif;
   font-size: 0.82rem; color: rgba(255,255,255,0.6);
-  margin: 0 0 16px;
+  margin: 0 0 20px;
+  max-width: 220px; text-align: right; line-height: 1.5;
 }
 .sp-hero-btn {
   background: linear-gradient(135deg, #e50914, #b0070f);
@@ -5917,7 +5920,7 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
 }
 
 /* SECTIONS */
-.sp-section { padding: 24px 0 8px; }
+.sp-section { padding: 28px 0 8px; }
 .sp-section-hdr {
   display: flex; align-items: center; gap: 8px;
   padding: 0 16px 12px; direction: rtl;
