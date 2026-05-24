@@ -329,7 +329,8 @@ let movies = await fetchMovies('/trending/movie/week', { limit: CONFIG.HERO.LIMI
   heroSwiper = new Swiper('#heroSwiper', {
     effect: 'fade',
     fadeEffect: { crossFade: true },
-    grabCursor: false,
+    grabCursor: true,
+allowTouchMove: true,
     centeredSlides: true,
     slidesPerView: 1,
     loop: true,
@@ -404,7 +405,8 @@ document.body.style.backgroundImage = '';
   setTimeout(async () => {
     titleEl.style.opacity = '0.01';
     try {
-      const logoRes = await fetch(`${CONFIG.API.TMDB_BASE}/movie/${m.id}/images?api_key=${CONFIG.KEYS.TMDB}&include_image_language=en,null`);
+      const type = m.media_type === 'tv' ? 'tv' : 'movie';
+const logoRes = await fetch(`${CONFIG.API.TMDB_BASE}/${type}/${m.id}/images?api_key=${CONFIG.KEYS.TMDB}&include_image_language=en,null`);
       const logoData = await logoRes.json();
       const logo = logoData.logos?.[0]?.file_path;
       if (m.id !== snapId) return;
@@ -431,10 +433,12 @@ document.body.style.backgroundImage = '';
   }
   const overviewEl = document.getElementById('heroInfoOverview');
   if (overviewEl) {
-  const arRes = await fetch(`${CONFIG.API.TMDB_BASE}/movie/${m.id}?api_key=${CONFIG.KEYS.TMDB}&language=ar`);
+  const type2 = m.media_type === 'tv' ? 'tv' : 'movie';
+const arRes = await fetch(`${CONFIG.API.TMDB_BASE}/${type2}/${m.id}?api_key=${CONFIG.KEYS.TMDB}&language=ar`);
   const arData = await arRes.json();
-if (m.id !== snapId) return;
+  if (m.id !== snapId) return;
   overviewEl.textContent = arData.overview || m.overview || '';
+  if (!overviewEl.textContent) overviewEl.textContent = m.overview || '';
 }
   const durEl = document.getElementById('heroInfoDuration');
   if (durEl) durEl.innerHTML = m.media_type === 'movie' ? '<i class="ri-film-line" style="margin-left:5px;vertical-align:middle"></i> فيلم' : '<i class="ri-tv-2-line" style="margin-left:5px;vertical-align:middle"></i> مسلسل';
