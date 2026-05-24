@@ -435,7 +435,7 @@ document.body.style.backgroundImage = '';
   overviewEl.textContent = arData.overview || m.overview || '';
 }
   const durEl = document.getElementById('heroInfoDuration');
-  if (durEl) durEl.textContent = m.media_type === 'movie' ? '🎬 فيلم' : '📺 مسلسل';
+  if (durEl) durEl.innerHTML = m.media_type === 'movie' ? '<i class="ri-film-line" style="margin-left:5px;vertical-align:middle"></i> فيلم' : '<i class="ri-tv-2-line" style="margin-left:5px;vertical-align:middle"></i> مسلسل';
   const playBtn = document.getElementById('heroPlayBtn');
   if (playBtn) playBtn.onclick = () => openDetail(m.id, m.media_type || 'movie');
   const addBtn = document.getElementById('heroAddBtn');
