@@ -413,9 +413,20 @@ transition: background 0.5s cubic-bezier(0.25,1,0.5,1);
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-top: 6px;
+  margin-top: 8px;
   margin-bottom: 8px;
   flex-wrap: wrap;
+  direction: ltr;
+}
+.hero-meta-chip {
+  background: rgba(30,30,30,0.75);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 6px;
+  padding: 3px 10px;
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.85);
+  font-family: 'Tajawal', sans-serif;
+  backdrop-filter: blur(8px);
 }
 .hero-info-year {
   font-size: 0.8rem;
@@ -469,6 +480,10 @@ justify-content: flex-start;
   overflow: hidden;
   font-weight: 400;
   letter-spacing: 0.3px;
+  font-family: 'Tajawal', sans-serif;
+  font-weight: 500;
+  direction: rtl;
+  text-align: right;
 }
 .hero-info-caps {
   font-size: 0.72rem;
