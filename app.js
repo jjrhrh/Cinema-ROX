@@ -3694,11 +3694,12 @@ function renderSpLeagues() {
     { name: 'الدوري الإسباني', logo: 'https://upload.wikimedia.org/wikipedia/commons/1/13/LaLiga_logo_2023.svg' },
     { name: 'الدوري الإيطالي', logo: 'https://upload.wikimedia.org/wikipedia/en/e/e1/Serie_A_logo_%282019%29.svg' },
     { name: 'الدوري الألماني', logo: 'https://upload.wikimedia.org/wikipedia/en/d/df/Bundesliga_logo_%282017%29.svg' },
-    { name: 'دوري أبطال آسيا', logo: 'https://upload.wikimedia.org/wikipedia/en/a/a0/AFC_Champions_League_logo.svg' },
+    { name: 'دوري أبطال آسيا', logo: 'https://img.freepik.com/premium-vector/afc-champions-league-vector-logo_779267-294.jpg' },
+    { name: 'الدوري الفرنسي', logo: 'https://upload.wikimedia.org/wikipedia/commons/e/e7/Ligue1.svg' },
   ];
   row.innerHTML = leagues.map(l =>
     `<div class="sp-league-card">
-      <img class="sp-league-logo" src="${l.logo}" onerror="this.style.opacity='0.4'">
+      <img class="sp-league-logo" src="${l.logo}" onerror="this.src='https://placehold.co/44x44/1a0505/e50914?text=🏆';this.style.opacity='1'">
       <div class="sp-league-name">${l.name}</div>
     </div>`
   ).join('');
@@ -3730,8 +3731,9 @@ async function loadSpNews() {
     const news = [
       { time: 'منذ 30 دقيقة', title: 'ليفربول يقترب من حسم لقب الدوري الإنجليزي', sub: 'فوز مهم على أرسنال يقرّب الريدز من اللقب', img: 'https://upload.wikimedia.org/wikipedia/commons/1/1e/Mohamed_Salah_2018.jpg' },
       { time: 'منذ ساعة', title: 'مبابي يعلن رحيله عن باريس سان جيرمان', sub: 'النجم الفرنسي يبدأ فصلاً جديداً في مسيرته', img: 'https://upload.wikimedia.org/wikipedia/commons/5/57/Kylian_Mbapp%C3%A9_in_2022_%28cropped%29.jpg' },
-      { time: 'منذ ساعتين', title: 'هالاند يكسر رقم الهدافين في تاريخ الدوري الإنجليزي', sub: 'السويدي العملاق يسجل هدفه التاريخي 37 هذا الموسم', img: 'https://upload.wikimedia.org/wikipedia/commons/e/e0/Vinicius_Junior_2023.jpg' },
-      { time: 'منذ 3 ساعات', title: 'ريال مدريد يتأهل لنهائي دوري الأبطال بثلاثية', sub: 'الملكي يؤكد هيمنته على أوروبا للموسم الثاني', img: 'https://upload.wikimedia.org/wikipedia/commons/c/c7/UEFA_Champions_League_trophy.jpg' },
+      { time: 'منذ ساعتين', title: 'هالاند يكسر رقم الهدافين في تاريخ الدوري الإنجليزي', sub: 'السويدي العملاق يسجل هدفه التاريخي 37 هذا الموسم', img: 'https://images.unsplash.com/photo-1521537634581-0dced2fee2ef?w=160&q=80' },
+      { time: 'منذ 3 ساعات', title: 'ريال مدريد يتأهل لنهائي دوري الأبطال بثلاثية', sub: 'الملكي يؤكد هيمنته على أوروبا للموسم الثاني', img: 'https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=160&q=80' },
+      { time: 'منذ 4 ساعات', title: 'فينيسيوس يفوز بجائزة أفضل لاعب في العالم', sub: 'النجم البرازيلي يتوّج بالجائزة الكبرى لعام 2025', img: 'https://upload.wikimedia.org/wikipedia/commons/e/e0/Vinicius_Junior_2023.jpg' },
     ];
     list.innerHTML = news.map(n =>
       `<div class="sp-news-card">
