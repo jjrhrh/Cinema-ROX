@@ -313,12 +313,13 @@
 
   <!-- ⚽ أرشيف مباريات زمان -->
   <div class="sp-section" id="football-archive-section">
-    <div class="sp-section-hdr"><span class="sp-section-bar"></span><span class="sp-section-title">🏆 أرشيف مباريات زمان</span></div>
+    <div class="sp-section-hdr"><span class="sp-section-bar"></span><span class="sp-section-title"><i class="ri-archive-fill" style="color:#46d369;margin-left:6px"></i> أرشيف مباريات زمان</span><div class="radar-pill" onclick="openTransferRadar()"><span class="radar-dot"></span> رادار الانتقالات</div></div>
     <div class="arch-filters-row">
-      <button class="arch-filter-btn active" onclick="filterArchive('yesterday',this)">📅 أمس</button>
-      <button class="arch-filter-btn" onclick="filterArchive('beforeyesterday',this)">📅 قبل أمس</button>
-      <button class="arch-filter-btn" onclick="filterArchive('thismonth',this)">📅 هذا الشهر</button>
-      <button class="arch-filter-btn" onclick="filterArchive('classics',this)">⏳ كلاسيكيات قديمة</button>
+      <button class="arch-filter-btn active" onclick="filterArchive('yesterday',this)"><i class="ri-calendar-check-fill"></i> أمس</button>
+      <button class="arch-filter-btn" onclick="filterArchive('beforeyesterday',this)"><i class="ri-calendar-2-fill"></i> قبل أمس</button>
+      <button class="arch-filter-btn" onclick="filterArchive('thismonth',this)"><i class="ri-calendar-fill"></i> هذا الشهر</button>
+      <button class="arch-filter-btn" onclick="filterArchive('month3',this)"><i class="ri-history-fill"></i> 3 أشهر</button>
+      <button class="arch-filter-btn" onclick="filterArchive('classics',this)"><i class="ri-trophy-fill"></i> كلاسيكيات</button>
     </div>
     <div class="arch-grid" id="archiveGrid"></div>
   </div>
@@ -327,23 +328,37 @@
   <!-- Live Stream Vault -->
   <div id="liveStreamVault" class="live-stream-vault hidden">
     <div class="lsv-header">
-      <div class="lsv-match-title" id="lsvMatchTitle">ليفربول vs أرسنال</div>
-      <div class="lsv-live-pill"><span class="lsv-ping"></span>مباشر الآن</div>
+      <div class="lsv-match-title" id="lsvMatchTitle">المباراة</div>
+      <div class="lsv-live-pill" id="lsvModePill"><span class="lsv-ping"></span><span id="lsvModeText">مباشر الآن</span></div>
       <button class="lsv-close-btn" onclick="closeLiveStream()"><i class="ri-close-line"></i></button>
     </div>
-    <div class="lsv-player">
+    <div class="lsv-player" id="lsvPlayerWrap">
       <div class="lsv-player-inner">
         <div class="lsv-play-icon"><i class="ri-play-circle-fill"></i></div>
-        <div class="lsv-player-label">البث الحي — جارٍ التشغيل</div>
+        <div class="lsv-player-label" id="lsvPlayerLabel">اختر سيرفراً للتشغيل</div>
       </div>
     </div>
-    <div class="lsv-servers-label">اختر جودة البث</div>
-    <div class="lsv-servers-row">
-      <button class="lsv-srv active" onclick="lsvSelect(this)"><span class="lsv-dot"></span>ROX Sports HD</button>
-      <button class="lsv-srv" onclick="lsvSelect(this)"><span class="lsv-dot"></span>BeIN Prime</button>
-      <button class="lsv-srv" onclick="lsvSelect(this)"><span class="lsv-dot"></span>Arena Live</button>
-      <button class="lsv-srv" onclick="lsvSelect(this)"><span class="lsv-dot"></span>Stellar Stream</button>
+    <div class="lsv-quality-row">
+      <button class="lsv-quality-btn active" onclick="lsvQuality(this,'4K')">4K</button>
+      <button class="lsv-quality-btn" onclick="lsvQuality(this,'1080p')">1080p</button>
+      <button class="lsv-quality-btn" onclick="lsvQuality(this,'720p')">720p</button>
     </div>
+    <div class="lsv-servers-label"><i class="ri-server-line"></i> اختر السيرفر</div>
+    <div class="lsv-servers-row">
+      <button class="lsv-srv active" onclick="lsvSelect(this,'ROX Sports')"><span class="lsv-dot"></span>ROX Sports HD</button>
+      <button class="lsv-srv" onclick="lsvSelect(this,'BeIN')"><span class="lsv-dot"></span>BeIN Prime</button>
+      <button class="lsv-srv" onclick="lsvSelect(this,'Arena')"><span class="lsv-dot"></span>Arena Live</button>
+      <button class="lsv-srv" onclick="lsvSelect(this,'Stellar')"><span class="lsv-dot"></span>Stellar Stream</button>
+    </div>
+  </div>
+    <!-- Transfer Radar Modal -->
+  <div id="transferRadar" class="transfer-radar hidden">
+    <div class="tr-header">
+      <div class="tr-title"><i class="ri-radar-line"></i> رادار الانتقالات المباشر</div>
+      <button class="lsv-close-btn" onclick="closeTransferRadar()"><i class="ri-close-line"></i></button>
+    </div>
+    <div class="tr-list" id="trList"><div class="sp-neon-spinner-wrap"><div class="sp-neon-spinner"></div></div></div>
+  </div>
   </div>
 </div>
 <div id="fvOverlay" class="fv-overlay hidden" onclick="toggleFootballVault()"></div>
