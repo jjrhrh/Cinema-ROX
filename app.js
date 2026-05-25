@@ -3723,52 +3723,66 @@ async function loadSpNews() {
   list.innerHTML = '<div class="sp-neon-spinner-wrap"><div class="sp-neon-spinner"></div></div>';
   const FALLBACK_IMG = 'https://images.unsplash.com/photo-1556056504-5c7696c4c28d?w=200&q=80';
   const feeds = [
-    'https://www.goal.com/ar/feeds/news',
     'https://www.bbc.co.uk/sport/football/rss.xml',
     'https://feeds.skysports.com/skysports/football',
     'https://www.espn.com/espn/rss/soccer/news',
     'https://www.goal.com/feeds/en/news',
+    'https://www.90min.com/posts.rss',
   ];
-  try {
-    const results = await Promise.allSettled(
-      feeds.map(f =>
-        fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(f)}&api_key=public&count=20`)
-          .then(r => r.json())
-      )
-    );
-    let allItems = [];
-    results.forEach(r => {
-      if (r.status === 'fulfilled' && r.value.items) {
-        allItems = allItems.concat(r.value.items);
-      }
-    });
-    allItems = allItems.filter((v, i, a) => a.findIndex(x => x.title === v.title) === i);
-    allItems.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
-    if (!allItems.length) throw new Error('empty');
-    list.innerHTML = allItems.slice(0, 40).map(a => {
-      const ago = getTimeAgo(new Date(a.pubDate));
-      let img = FALLBACK_IMG;
-      if (a.thumbnail && a.thumbnail.startsWith('http')) img = a.thumbnail;
-      else if (a.enclosure?.link && a.enclosure.link.startsWith('http')) img = a.enclosure.link;
-      else {
-        const m = (a.content || a.description || '').match(/<img[^>]+src=["']([^"']+)["']/);
-        if (m) img = m[1];
-      }
-      const link = a.link || '#';
-      const title = (a.title || '').replace(/'/g, '&#39;');
-      const sub = (a.description || '').replace(/<[^>]+>/g, '').slice(0, 90);
-      return `<div class="sp-news-card" onclick="window.open('${link}','_blank')">
-        <div class="sp-news-text-block">
-          <div class="sp-news-time">${ago}</div>
-          <div class="sp-news-title">${title}</div>
-          <div class="sp-news-sub">${sub}</div>
-        </div>
-        <img class="sp-news-img" src="${img}" onerror="this.src='${FALLBACK_IMG}'" loading="lazy">
-      </div>`;
-    }).join('');
-  } catch(e) {
-    list.innerHTML = '<div style="color:rgba(255,255,255,0.4);padding:20px;text-align:center;font-family:Tajawal">تعذر تحميل الأخبار — تحقق من الاتصال</div>';
+  async function tryFeed(url) {
+    const via1 = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}&api_key=public&count=20`;
+    const via2 = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+    try {
+      const r = await fetch(via1);
+      const d = await r.json();
+      if (d.items && d.items.length) return d.items;
+    } catch(e) {}
+    try {
+      const r = await fetch(via2);
+      const d = await r.json();
+      const parser = new DOMParser();
+      const xml = parser.parseFromString(d.contents, 'text/xml');
+      const items = [...xml.querySelectorAll('item')].map(i => ({
+        title: i.querySelector('title')?.textContent || '',
+        link: i.querySelector('link')?.textContent || '#',
+        pubDate: i.querySelector('pubDate')?.textContent || '',
+        description: i.querySelector('description')?.textContent || '',
+        thumbnail: i.querySelector('enclosure')?.getAttribute('url') || '',
+      }));
+      return items;
+    } catch(e) {}
+    return [];
   }
+  const results = await Promise.allSettled(feeds.map(f => tryFeed(f)));
+  let allItems = [];
+  results.forEach(r => { if (r.status === 'fulfilled') allItems = allItems.concat(r.value); });
+  allItems = allItems.filter((v, i, a) => a.findIndex(x => x.title === v.title) === i);
+  allItems.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+  if (!allItems.length) {
+    list.innerHTML = '<div style="color:rgba(255,255,255,0.4);padding:20px;text-align:center;font-family:Tajawal">تعذر تحميل الأخبار</div>';
+    return;
+  }
+  list.innerHTML = allItems.slice(0, 40).map(a => {
+    const ago = getTimeAgo(new Date(a.pubDate));
+    let img = FALLBACK_IMG;
+    if (a.thumbnail && a.thumbnail.startsWith('http')) img = a.thumbnail;
+    else if (a.enclosure?.link && a.enclosure.link.startsWith('http')) img = a.enclosure.link;
+    else {
+      const m = (a.content || a.description || '').match(/<img[^>]+src=["']([^"']+)["']/);
+      if (m) img = m[1];
+    }
+    const link = a.link || '#';
+    const title = (a.title || '').replace(/'/g, '&#39;');
+    const sub = (a.description || '').replace(/<[^>]+>/g, '').slice(0, 90);
+    return `<div class="sp-news-card" onclick="window.open('${link}','_blank')">
+      <div class="sp-news-text-block">
+        <div class="sp-news-time">${ago}</div>
+        <div class="sp-news-title">${title}</div>
+        <div class="sp-news-sub">${sub}</div>
+      </div>
+      <img class="sp-news-img" src="${img}" onerror="this.src='${FALLBACK_IMG}'" loading="lazy">
+    </div>`;
+  }).join('');
 }
 
 function getTimeAgo(date) {
