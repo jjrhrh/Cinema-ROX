@@ -3723,59 +3723,62 @@ async function loadSpNews() {
   list.innerHTML = '<div class="sp-neon-spinner-wrap"><div class="sp-neon-spinner"></div></div>';
   const FALLBACK_IMG = 'https://images.unsplash.com/photo-1556056504-5c7696c4c28d?w=200&q=80';
   const feeds = [
+    'https://www.goal.com/ar/feeds/news',
     'https://www.bbc.co.uk/sport/football/rss.xml',
     'https://feeds.skysports.com/skysports/football',
-    'https://www.goal.com/feeds/en/news',
     'https://www.espn.com/espn/rss/soccer/news',
+    'https://www.goal.com/feeds/en/news',
   ];
   try {
     const results = await Promise.allSettled(
-      feeds.map(f => fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(f)}&api_key=public&count=15`).then(r=>r.json()))
+      feeds.map(f =>
+        fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(f)}&api_key=public&count=20`)
+          .then(r => r.json())
+      )
     );
     let allItems = [];
-    results.forEach(r => { if (r.status==='fulfilled') allItems = allItems.concat(r.value.items||[]); });
-    allItems = allItems.filter((v,i,a) => a.findIndex(x=>x.title===v.title)===i);
-    allItems.sort((a,b) => new Date(b.pubDate)-new Date(a.pubDate));
+    results.forEach(r => {
+      if (r.status === 'fulfilled' && r.value.items) {
+        allItems = allItems.concat(r.value.items);
+      }
+    });
+    allItems = allItems.filter((v, i, a) => a.findIndex(x => x.title === v.title) === i);
+    allItems.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
     if (!allItems.length) throw new Error('empty');
-    list.innerHTML = allItems.slice(0,30).map(a => {
+    list.innerHTML = allItems.slice(0, 40).map(a => {
       const ago = getTimeAgo(new Date(a.pubDate));
-      const img = (a.thumbnail && a.thumbnail.startsWith('http')) ? a.thumbnail : (a.enclosure?.link || FALLBACK_IMG);
-      return `<div class="sp-news-card" onclick="window.open('${a.link||'#'}','_blank')">
+      let img = FALLBACK_IMG;
+      if (a.thumbnail && a.thumbnail.startsWith('http')) img = a.thumbnail;
+      else if (a.enclosure?.link && a.enclosure.link.startsWith('http')) img = a.enclosure.link;
+      else {
+        const m = (a.content || a.description || '').match(/<img[^>]+src=["']([^"']+)["']/);
+        if (m) img = m[1];
+      }
+      const link = a.link || '#';
+      const title = (a.title || '').replace(/'/g, '&#39;');
+      const sub = (a.description || '').replace(/<[^>]+>/g, '').slice(0, 90);
+      return `<div class="sp-news-card" onclick="window.open('${link}','_blank')">
         <div class="sp-news-text-block">
           <div class="sp-news-time">${ago}</div>
-          <div class="sp-news-title">${a.title}</div>
-          <div class="sp-news-sub">${(a.description||'').replace(/<[^>]+>/g,'').slice(0,80)}</div>
+          <div class="sp-news-title">${title}</div>
+          <div class="sp-news-sub">${sub}</div>
         </div>
-        <img class="sp-news-img" src="${img}" onerror="this.src='${FALLBACK_IMG}'">
+        <img class="sp-news-img" src="${img}" onerror="this.src='${FALLBACK_IMG}'" loading="lazy">
       </div>`;
     }).join('');
   } catch(e) {
-    const news = [
-      { time:'منذ ساعة', title:'ريال مدريد يتأهل لنهائي دوري الأبطال', sub:'الملكي يتخطى البايرن بثنائية نظيفة', img:'https://upload.wikimedia.org/wikipedia/commons/c/c7/UEFA_Champions_League_trophy.jpg' },
-      { time:'منذ ساعتين', title:'هالاند يسجل هاتريك أمام أرسنال', sub:'الهداف النرويجي يقود السيتي لفوز كبير', img:FALLBACK_IMG },
-      { time:'منذ 3 ساعات', title:'برشلونة يضم نجم الدوري الفرنسي', sub:'صفقة الصيف الأضخم تقترب من الإعلان', img:FALLBACK_IMG },
-      { time:'منذ 4 ساعات', title:'مبابي يقود فرنسا بهدفين في التصفيات', sub:'النجم الفرنسي يتألق في الليلة الكبيرة', img:FALLBACK_IMG },
-      { time:'منذ 5 ساعات', title:'يوفنتوس يجدد عقد نجمه حتى 2028', sub:'الملكة تؤمن خدمات المدافع لثلاثة مواسم', img:FALLBACK_IMG },
-      { time:'منذ 6 ساعات', title:'أتلتيكو مدريد يضرب بقوة في الدوري', sub:'سيميوني يستعد لمرحلة ما بعد المنتصف', img:FALLBACK_IMG },
-    ];
-    list.innerHTML = news.map(n =>
-      `<div class="sp-news-card">
-        <div class="sp-news-text-block">
-          <div class="sp-news-time">${n.time}</div>
-          <div class="sp-news-title">${n.title}</div>
-          <div class="sp-news-sub">${n.sub}</div>
-        </div>
-        <img class="sp-news-img" src="${n.img}" onerror="this.src='${FALLBACK_IMG}'">
-      </div>`
-    ).join('');
+    list.innerHTML = '<div style="color:rgba(255,255,255,0.4);padding:20px;text-align:center;font-family:Tajawal">تعذر تحميل الأخبار — تحقق من الاتصال</div>';
   }
 }
 
 function getTimeAgo(date) {
   const diff = Math.floor((Date.now() - date) / 60000);
+  if (diff < 1) return 'الآن';
   if (diff < 60) return `منذ ${diff} دقيقة`;
-  if (diff < 1440) return `منذ ${Math.floor(diff/60)} ساعة`;
-  return `منذ ${Math.floor(diff/1440)} يوم`;
+  if (diff < 120) return 'منذ ساعة';
+  if (diff < 1440) return `منذ ${Math.floor(diff/60)} ساعات`;
+  if (diff < 2880) return 'منذ يوم';
+  return `منذ ${Math.floor(diff/1440)} أيام`;
 }
 
 function openFootballStream(type, matchTitle) {
