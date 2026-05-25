@@ -313,7 +313,7 @@
 
   <!-- ⚽ أرشيف مباريات زمان -->
   <div class="sp-section" id="football-archive-section">
-    <div class="sp-section-hdr"><span class="sp-section-bar"></span><span class="sp-section-title"><i class="ri-archive-fill" style="color:#46d369;margin-left:6px"></i> أرشيف مباريات زمان</span><div class="radar-pill" onclick="openTransferRadar()"><span class="radar-dot"></span> رادار الانتقالات</div></div>
+<div class="sp-section-hdr"><span class="sp-section-bar"></span><span class="sp-section-title"><i class="ri-archive-fill" style="color:#46d369;margin-left:6px"></i> أرشيف مباريات زمان</span><button class="sp-see-all-btn" onclick="spShowAllArchive()"><i class="ri-calendar-2-line"></i> عرض الكل</button></div>    
     <div class="arch-filters-row">
       <button class="arch-filter-btn active" onclick="filterArchive('yesterday',this)"><i class="ri-calendar-check-fill"></i> أمس</button>
       <button class="arch-filter-btn" onclick="filterArchive('beforeyesterday',this)"><i class="ri-calendar-2-fill"></i> قبل أمس</button>
@@ -350,14 +350,6 @@
       <button class="lsv-srv" onclick="lsvSelect(this,'Arena')"><span class="lsv-dot"></span>Arena Live</button>
       <button class="lsv-srv" onclick="lsvSelect(this,'Stellar')"><span class="lsv-dot"></span>Stellar Stream</button>
     </div>
-  </div>
-    <!-- Transfer Radar Modal -->
-  <div id="transferRadar" class="transfer-radar hidden">
-    <div class="tr-header">
-      <div class="tr-title"><i class="ri-radar-line"></i> رادار الانتقالات المباشر</div>
-      <button class="lsv-close-btn" onclick="closeTransferRadar()"><i class="ri-close-line"></i></button>
-    </div>
-    <div class="tr-list" id="trList"><div class="sp-neon-spinner-wrap"><div class="sp-neon-spinner"></div></div></div>
   </div>
   </div>
 </div>
