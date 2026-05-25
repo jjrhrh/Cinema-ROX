@@ -3583,18 +3583,14 @@ async function toggleFootballVault() {
 function spNav(tab, el) {
   document.querySelectorAll('.sp-snav-btn').forEach(b => b.classList.remove('sp-snav-active'));
   el.classList.add('sp-snav-active');
-
   const row = document.getElementById('spMatchesRow');
   const leaguesRow = document.getElementById('spLeaguesRow');
   const newsList = document.getElementById('spNewsList');
   const hero = document.querySelector('.sp-hero');
-
-  // إخفاء كل شيء أولاً
   if (row) row.parentElement.style.display = 'none';
   if (leaguesRow) leaguesRow.parentElement.style.display = 'none';
   if (newsList) newsList.parentElement.style.display = 'none';
   if (hero) hero.style.display = 'none';
-
   if (tab === 'home') {
     if (hero) hero.style.display = '';
     if (row) row.parentElement.style.display = '';
@@ -3602,23 +3598,12 @@ function spNav(tab, el) {
     if (newsList) newsList.parentElement.style.display = '';
     loadSportsUI();
   }
-  if (tab === 'matches') {
-    if (row) row.parentElement.style.display = '';
-    loadSpMatchesLive();
-  }
-  if (tab === 'leagues') {
-    if (leaguesRow) leaguesRow.parentElement.style.display = '';
-    renderSpLeagues();
-  }
-  if (tab === 'clubs') {
-    if (row) row.parentElement.style.display = '';
-    row.innerHTML = '<div class="sp-loading">قريباً — قسم الأندية</div>';
-  }
-  if (tab === 'fav') {
-    if (newsList) newsList.parentElement.style.display = '';
-    newsList.innerHTML = '<div class="sp-loading">لا توجد مباريات في المفضلة بعد ⭐</div>';
-  }
+  if (tab === 'matches') { if (row) row.parentElement.style.display = ''; loadSpMatchesLive(); }
+  if (tab === 'leagues') { if (leaguesRow) leaguesRow.parentElement.style.display = ''; renderSpLeagues(); }
+  if (tab === 'clubs') { if (row) row.parentElement.style.display = ''; row.innerHTML = '<div class="sp-loading">قريباً — قسم الأندية</div>'; }
+  if (tab === 'fav') { if (newsList) newsList.parentElement.style.display = ''; newsList.innerHTML = '<div class="sp-loading">لا توجد مباريات في المفضلة بعد</div>'; }
 }
+
 async function loadSportsUI() {
   renderSpHero();
   renderSpLeagues();
@@ -3635,75 +3620,80 @@ function renderSpHero() {
     'https://upload.wikimedia.org/wikipedia/commons/e/e0/Vinicius_Junior_2023.jpg'
   ];
   wrap.innerHTML = players.map((src, i) =>
-    `<img src="${src}" style="margin-left:${i===0?'0':'-35px'};z-index:${3-i};position:relative;opacity:${1-i*0.15}" onerror="this.style.display='none'">`
+    '<img src="'+src+'" style="margin-left:'+(i===0?'0':'-35px')+';z-index:'+(3-i)+';position:relative;opacity:'+(1-i*0.15)+'" onerror="this.style.display=\'none\'">'
   ).join('');
 }
 
 async function loadSpMatchesLive() {
   const row = document.getElementById('spMatchesRow');
   if (!row) return;
-  row.innerHTML = '<div class="sp-loading">⏳ جاري التحميل...</div>';
+  row.innerHTML = '<div class="sp-loading">جاري التحميل...</div>';
   try {
     const today = new Date().toISOString().slice(0,10);
     const res = await fetch(
-      `https://corsproxy.io/?${encodeURIComponent(CONFIG.FOOTBALL.FD_BASE+'/matches?dateFrom='+today+'&dateTo='+today)}`,
+      'https://corsproxy.io/?' + encodeURIComponent(CONFIG.FOOTBALL.FD_BASE+'/matches?dateFrom='+today+'&dateTo='+today),
       { headers: { 'X-Auth-Token': CONFIG.FOOTBALL.FD_KEY } }
     );
     const data = await res.json();
-    const matches = (data.matches || []).filter(m => m.status !== 'FINISHED').slice(0, 8);
+    const matches = (data.matches || []).filter(function(m){ return m.status !== 'FINISHED'; }).slice(0, 8);
     if (!matches.length) throw new Error('no live');
-    row.innerHTML = matches.map(m => {
-      const isLive = m.status === 'IN_PLAY' || m.status === 'PAUSED';
-      const score  = isLive ? `${m.score.fullTime.home ?? 0} - ${m.score.fullTime.away ?? 0}` : '';
-      const time   = new Date(m.utcDate).toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});
-      const date   = new Date(m.utcDate).toLocaleDateString('ar-SA',{weekday:'long',day:'numeric',month:'long'});
-      const centerHtml = isLive
-        ? `<div class="sp-match-center"><div class="sp-match-live-badge"><span class="sp-match-live-dot"></span>مباشرة</div><div class="sp-match-score">${score}</div></div>`
-        : `<div class="sp-match-center"><div class="sp-match-score" style="font-size:1rem">${time}</div></div>`;
-      return `<div class="sp-match-card ${isLive?'is-live':''}">
-        <div class="sp-match-league">${m.competition.name}</div>
-        <div class="sp-match-teams-row">
-          <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
-            ${m.homeTeam.crest?`<img class="sp-match-team-logo" src="${m.homeTeam.crest}" onerror="this.style.display='none'">`:``}
-            <div class="sp-match-team-name">${m.homeTeam.shortName||m.homeTeam.name}</div>
-          </div>
-          ${centerHtml}
-          <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
-            ${m.awayTeam.crest?`<img class="sp-match-team-logo" src="${m.awayTeam.crest}" onerror="this.style.display='none'">`:``}
-            <div class="sp-match-team-name">${m.awayTeam.shortName||m.awayTeam.name}</div>
-          </div>
-        </div>
-        <div class="sp-match-date"><i class="ri-calendar-line"></i>${date}</div>
-        ${isLive?`<button class="sp-match-watch-btn" onclick="openFootballStream('live','${m.homeTeam.shortName||m.homeTeam.name} vs ${m.awayTeam.shortName||m.awayTeam.name}')"><i class="ri-live-line"></i> شاهد البث الحي</button>`:''}
-      }).join('');
+    row.innerHTML = matches.map(function(m) {
+      var isLive = m.status === 'IN_PLAY' || m.status === 'PAUSED';
+      var score  = isLive ? ((m.score.fullTime.home||0) + ' - ' + (m.score.fullTime.away||0)) : '';
+      var time   = new Date(m.utcDate).toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});
+      var date   = new Date(m.utcDate).toLocaleDateString('ar-SA',{weekday:'long',day:'numeric',month:'long'});
+      var centerHtml = isLive
+        ? '<div class="sp-match-center"><div class="sp-match-live-badge"><span class="sp-match-live-dot"></span>مباشرة</div><div class="sp-match-score">'+score+'</div></div>'
+        : '<div class="sp-match-center"><div class="sp-match-score" style="font-size:1rem">'+time+'</div></div>';
+      var homeName = m.homeTeam.shortName||m.homeTeam.name;
+      var awayName = m.awayTeam.shortName||m.awayTeam.name;
+      return '<div class="sp-match-card '+(isLive?'is-live':'')+'">'+
+        '<div class="sp-match-league">'+m.competition.name+'</div>'+
+        '<div class="sp-match-teams-row">'+
+          '<div style="display:flex;flex-direction:column;align-items:center;gap:3px">'+
+            (m.homeTeam.crest?'<img class="sp-match-team-logo" src="'+m.homeTeam.crest+'" onerror="this.style.display=\'none\'">':'')+
+            '<div class="sp-match-team-name">'+homeName+'</div>'+
+          '</div>'+
+          centerHtml+
+          '<div style="display:flex;flex-direction:column;align-items:center;gap:3px">'+
+            (m.awayTeam.crest?'<img class="sp-match-team-logo" src="'+m.awayTeam.crest+'" onerror="this.style.display=\'none\'">':'')+
+            '<div class="sp-match-team-name">'+awayName+'</div>'+
+          '</div>'+
+        '</div>'+
+        '<div class="sp-match-date"><i class="ri-calendar-line"></i>'+date+'</div>'+
+        (isLive?'<button class="sp-match-watch-btn" onclick="openFootballStream(\'live\',\''+homeName+' vs '+awayName+'\')"><i class="ri-live-line"></i> شاهد البث الحي</button>':'')+
+      '</div>';
+    }).join('');
   } catch(e) {
-    const fallback = [
+    var fallback = [
       { league: 'الدوري الإنجليزي', home: 'ليفربول', away: 'أرسنال', homeLogo: 'https://crests.football-data.org/64.svg', awayLogo: 'https://crests.football-data.org/57.svg', score: '2 - 1', live: true, period: 'الشوط الثاني' },
-      { league: 'الدوري الإسباني', home: 'برشلونة', away: 'ريال سوسيداد', homeLogo: 'https://crests.football-data.org/81.svg', awayLogo: 'https://crests.football-data.org/92.svg', time: '8:00 مساءً', date: 'السبت 11 مايو' },
-      { league: 'دوري أبطال أوروبا', home: 'ريال مدريد', away: 'بايرن', homeLogo: 'https://crests.football-data.org/86.svg', awayLogo: 'https://crests.football-data.org/5.svg', time: '10:00 مساءً', date: 'الأربعاء 8 مايو' },
-      { league: 'الدوري الإيطالي', home: 'يوفنتوس', away: 'إنتر', homeLogo: 'https://crests.football-data.org/109.svg', awayLogo: 'https://crests.football-data.org/108.svg', time: '9:45 مساءً', date: 'الجمعة 10 مايو' },
+      { league: 'الدوري الإسباني', home: 'برشلونة', away: 'ريال سوسيداد', homeLogo: 'https://crests.football-data.org/81.svg', awayLogo: 'https://crests.football-data.org/92.svg', time: '8:00 مساء', date: 'السبت 11 مايو' },
+      { league: 'دوري أبطال أوروبا', home: 'ريال مدريد', away: 'بايرن', homeLogo: 'https://crests.football-data.org/86.svg', awayLogo: 'https://crests.football-data.org/5.svg', time: '10:00 مساء', date: 'الأربعاء 8 مايو' },
+      { league: 'الدوري الإيطالي', home: 'يوفنتوس', away: 'إنتر', homeLogo: 'https://crests.football-data.org/109.svg', awayLogo: 'https://crests.football-data.org/108.svg', time: '9:45 مساء', date: 'الجمعة 10 مايو' },
     ];
-    row.innerHTML = fallback.map(function(m) { return `
-      <div class="sp-match-card ${m.live?'is-live':''}">
-        <div class="sp-match-league">${m.league}</div>
-        <div class="sp-match-teams-row">
-          <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
-            <img class="sp-match-team-logo" src="${m.homeLogo}" onerror="this.style.display='none'">
-            <div class="sp-match-team-name">${m.home}</div>
-          </div>
-          <div class="sp-match-center">
-            ${m.live
-              ? '<div class="sp-match-live-badge"><span class="sp-match-live-dot"></span>مباشرة</div><div class="sp-match-score">'+(m.score||'')+'</div>'
-              : '<div class="sp-match-score" style="font-size:1rem">'+(m.time||'')+'</div>'
-            }
-          </div>
-          <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
-            <img class="sp-match-team-logo" src="${m.awayLogo}" onerror="this.style.display='none'">
-            <div class="sp-match-team-name">${m.away}</div>
-          </div>
-        </div>
-        ${m.date?`<div class="sp-match-date"><i class="ri-calendar-line"></i>${m.date}</div>`:''}
-      </div>`; }).join('');
+    row.innerHTML = fallback.map(function(m) {
+      var center = m.live
+        ? '<div class="sp-match-live-badge"><span class="sp-match-live-dot"></span>مباشرة</div><div class="sp-match-score">'+(m.score||'')+'</div>'
+        : '<div class="sp-match-score" style="font-size:1rem">'+(m.time||'')+'</div>';
+      return '<div class="sp-match-card '+(m.live?'is-live':'')+'">'+
+        '<div class="sp-match-league">'+m.league+'</div>'+
+        '<div class="sp-match-teams-row">'+
+          '<div style="display:flex;flex-direction:column;align-items:center;gap:3px">'+
+            '<img class="sp-match-team-logo" src="'+m.homeLogo+'" onerror="this.style.display=\'none\'">'+
+            '<div class="sp-match-team-name">'+m.home+'</div>'+
+          '</div>'+
+          '<div class="sp-match-center">'+center+'</div>'+
+          '<div style="display:flex;flex-direction:column;align-items:center;gap:3px">'+
+            '<img class="sp-match-team-logo" src="'+m.awayLogo+'" onerror="this.style.display=\'none\'">'+
+            '<div class="sp-match-team-name">'+m.away+'</div>'+
+          '</div>'+
+        '</div>'+
+        (m.date?'<div class="sp-match-date"><i class="ri-calendar-line"></i>'+m.date+'</div>':'')+
+        (m.live
+          ?'<button class="sp-match-watch-btn" onclick="openFootballStream(\'live\',\''+m.home+' vs '+m.away+'\')"><i class="ri-live-line"></i> شاهد البث الحي</button>'
+          :'<button class="sp-match-watch-btn" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);color:rgba(255,255,255,0.5)" onclick="spBellAlert(this,\''+m.home+' vs '+m.away+'\')"><i class="ri-notification-3-line"></i> تنبيه</button>')+
+      '</div>';
+    }).join('');
   }
 }
 
