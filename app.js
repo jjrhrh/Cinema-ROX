@@ -3609,6 +3609,7 @@ async function loadSportsUI() {
   renderSpLeagues();
   await loadSpMatchesLive();
   await loadSpNews();
+  injectArchiveMatches('yesterday');
 }
 
 function renderSpHero() {
@@ -3627,7 +3628,7 @@ function renderSpHero() {
 async function loadSpMatchesLive() {
   const row = document.getElementById('spMatchesRow');
   if (!row) return;
-  row.innerHTML = '<div class="sp-loading">جاري التحميل...</div>';
+  row.innerHTML = '<div class="sp-neon-spinner-wrap"><div class="sp-neon-spinner"></div></div>';
   try {
     const today = new Date().toISOString().slice(0,10);
     const res = await fetch(
@@ -3665,33 +3666,32 @@ async function loadSpMatchesLive() {
       '</div>';
     }).join('');
   } catch(e) {
+    // Fallback ذكي: مباريات مجدولة بناءً على التاريخ الفعلي
+    var now = new Date();
+    var todayStr = now.toLocaleDateString('ar-SA',{weekday:'long',day:'numeric',month:'long'});
+    var tomorrowStr = new Date(now.getTime()+86400000).toLocaleDateString('ar-SA',{weekday:'long',day:'numeric',month:'long'});
     var fallback = [
-      { league: 'الدوري الإنجليزي', home: 'ليفربول', away: 'أرسنال', homeLogo: 'https://crests.football-data.org/64.svg', awayLogo: 'https://crests.football-data.org/57.svg', score: '2 - 1', live: true, period: 'الشوط الثاني' },
-      { league: 'الدوري الإسباني', home: 'برشلونة', away: 'ريال سوسيداد', homeLogo: 'https://crests.football-data.org/81.svg', awayLogo: 'https://crests.football-data.org/92.svg', time: '8:00 مساء', date: 'السبت 11 مايو' },
-      { league: 'دوري أبطال أوروبا', home: 'ريال مدريد', away: 'بايرن', homeLogo: 'https://crests.football-data.org/86.svg', awayLogo: 'https://crests.football-data.org/5.svg', time: '10:00 مساء', date: 'الأربعاء 8 مايو' },
-      { league: 'الدوري الإيطالي', home: 'يوفنتوس', away: 'إنتر', homeLogo: 'https://crests.football-data.org/109.svg', awayLogo: 'https://crests.football-data.org/108.svg', time: '9:45 مساء', date: 'الجمعة 10 مايو' },
+      { league: 'الدوري الإسباني', home: 'برشلونة', away: 'ريال سوسيداد', homeLogo: 'https://crests.football-data.org/81.svg', awayLogo: 'https://crests.football-data.org/92.svg', time: '8:00 مساء', date: tomorrowStr },
+      { league: 'دوري أبطال أوروبا', home: 'ريال مدريد', away: 'بايرن', homeLogo: 'https://crests.football-data.org/86.svg', awayLogo: 'https://crests.football-data.org/5.svg', time: '10:00 مساء', date: tomorrowStr },
+      { league: 'الدوري الإيطالي', home: 'يوفنتوس', away: 'إنتر', homeLogo: 'https://crests.football-data.org/109.svg', awayLogo: 'https://crests.football-data.org/108.svg', time: '9:45 مساء', date: todayStr },
+      { league: 'الدوري الألماني', home: 'بايرن', away: 'دورتموند', homeLogo: 'https://crests.football-data.org/5.svg', awayLogo: 'https://crests.football-data.org/4.svg', time: '7:30 مساء', date: todayStr },
     ];
     row.innerHTML = fallback.map(function(m) {
-      var center = m.live
-        ? '<div class="sp-match-live-badge"><span class="sp-match-live-dot"></span>مباشرة</div><div class="sp-match-score">'+(m.score||'')+'</div>'
-        : '<div class="sp-match-score" style="font-size:1rem">'+(m.time||'')+'</div>';
-      return '<div class="sp-match-card '+(m.live?'is-live':'')+'">'+
+      return '<div class="sp-match-card">'+
         '<div class="sp-match-league">'+m.league+'</div>'+
         '<div class="sp-match-teams-row">'+
           '<div style="display:flex;flex-direction:column;align-items:center;gap:3px">'+
             '<img class="sp-match-team-logo" src="'+m.homeLogo+'" onerror="this.style.display=\'none\'">'+
             '<div class="sp-match-team-name">'+m.home+'</div>'+
           '</div>'+
-          '<div class="sp-match-center">'+center+'</div>'+
+          '<div class="sp-match-center"><div class="sp-match-score" style="font-size:1rem">'+m.time+'</div></div>'+
           '<div style="display:flex;flex-direction:column;align-items:center;gap:3px">'+
             '<img class="sp-match-team-logo" src="'+m.awayLogo+'" onerror="this.style.display=\'none\'">'+
             '<div class="sp-match-team-name">'+m.away+'</div>'+
           '</div>'+
         '</div>'+
-        (m.date?'<div class="sp-match-date"><i class="ri-calendar-line"></i>'+m.date+'</div>':'')+
-        (m.live
-          ?'<button class="sp-match-watch-btn" onclick="openFootballStream(\'live\',\''+m.home+' vs '+m.away+'\')"><i class="ri-live-line"></i> شاهد البث الحي</button>'
-          :'<button class="sp-match-watch-btn" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);color:rgba(255,255,255,0.5)" onclick="spBellAlert(this,\''+m.home+' vs '+m.away+'\')"><i class="ri-notification-3-line"></i> تنبيه</button>')+
+        '<div class="sp-match-date"><i class="ri-calendar-line"></i>'+m.date+'</div>'+
+        '<button class="sp-match-watch-btn" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);color:rgba(255,255,255,0.5)" onclick="spBellAlert(this,\''+m.home+' vs '+m.away+'\')"><i class="ri-notification-3-line"></i> تنبيه</button>'+
       '</div>';
     }).join('');
   }
@@ -3719,13 +3719,13 @@ function renderSpLeagues() {
 async function loadSpNews() {
   const list = document.getElementById('spNewsList');
   if (!list) return;
-  list.innerHTML = '<div class="sp-loading">⏳ جاري تحميل الأخبار...</div>';
+  list.innerHTML = '<div class="sp-neon-spinner-wrap"><div class="sp-neon-spinner"></div></div>';
   try {
     const res = await fetch(
       `https://corsproxy.io/?${encodeURIComponent(CONFIG.API.NEWS_BASE+'/everything?q=football+soccer&language=ar&pageSize=6&sortBy=publishedAt&apiKey='+CONFIG.KEYS.NEWS)}`,
     );
     const data = await res.json();
-    const articles = (data.articles || []).filter(a => a.urlToImage).slice(0, 5);
+    const articles = (data.articles || []).slice(0, 5);
     if (!articles.length) throw new Error('no articles');
     list.innerHTML = articles.map(a => {
       const ago = getTimeAgo(new Date(a.publishedAt));
@@ -3735,7 +3735,7 @@ async function loadSpNews() {
           <div class="sp-news-title">${a.title}</div>
           <div class="sp-news-sub">${a.description||''}</div>
         </div>
-        <img class="sp-news-img" src="${a.urlToImage}" onerror="this.src='https://placehold.co/80x70/1a1a1a/e50914?text=⚽'">
+        <img class="sp-news-img" src="${a.urlToImage||'https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=200&q=80'}" onerror="this.src='https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=200&q=80'">
       </div>`;
     }).join('');
   } catch(e) {
@@ -3818,3 +3818,83 @@ async function spShowAllNews() {
     list.innerHTML = '<div class="sp-loading" style="color:#e50914">تعذر تحميل الأخبار</div>';
   }
 }
+// ===== ARCHIVE MATCHES =====
+var _archiveFilter = 'yesterday';
+function filterArchive(period, el) {
+  document.querySelectorAll('.arch-filter-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  _archiveFilter = period;
+  injectArchiveMatches(period);
+}
+
+async function injectArchiveMatches(period) {
+  const grid = document.getElementById('archiveGrid');
+  if (!grid) return;
+  grid.innerHTML = '<div class="sp-neon-spinner-wrap"><div class="sp-neon-spinner"></div></div>';
+  var now = new Date();
+  var dateFrom, dateTo;
+  if (period === 'yesterday') {
+    var d = new Date(now); d.setDate(d.getDate()-1);
+    dateFrom = dateTo = d.toISOString().slice(0,10);
+  } else if (period === 'beforeyesterday') {
+    var d = new Date(now); d.setDate(d.getDate()-2);
+    dateFrom = dateTo = d.toISOString().slice(0,10);
+  } else if (period === 'thismonth') {
+    dateFrom = now.toISOString().slice(0,8)+'01';
+    dateTo = new Date(now.getTime()-86400000).toISOString().slice(0,10);
+  } else {
+    dateFrom = '2020-01-01';
+    dateTo = new Date(now.getTime()-30*86400000).toISOString().slice(0,10);
+  }
+  try {
+    var res = await fetch(
+      'https://corsproxy.io/?' + encodeURIComponent(CONFIG.FOOTBALL.FD_BASE+'/matches?dateFrom='+dateFrom+'&dateTo='+dateTo+'&status=FINISHED'),
+      { headers: { 'X-Auth-Token': CONFIG.FOOTBALL.FD_KEY } }
+    );
+    var data = await res.json();
+    var matches = (data.matches || []).slice(0, 12);
+    if (!matches.length) throw new Error('empty');
+    grid.innerHTML = matches.map(function(m) {
+      var hs = (m.score.fullTime.home !== null ? m.score.fullTime.home : '?');
+      var as = (m.score.fullTime.away !== null ? m.score.fullTime.away : '?');
+      var dateLabel = new Date(m.utcDate).toLocaleDateString('ar-SA',{weekday:'long',day:'numeric',month:'long'});
+      var home = m.homeTeam.shortName||m.homeTeam.name;
+      var away = m.awayTeam.shortName||m.awayTeam.name;
+      return '<div class="arch-card" onclick="openFootballStream(\'archive\',\''+home+' '+hs+' - '+as+' '+away+'\')">' +
+        '<div class="arch-play-overlay"><i class="ri-play-circle-fill"></i></div>'+
+        '<div class="arch-league">'+m.competition.name+'</div>'+
+        '<div class="arch-teams-row">'+
+          '<div class="arch-team">'+
+            (m.homeTeam.crest?'<img class="arch-logo" src="'+m.homeTeam.crest+'" onerror="this.style.display=\'none\'">':'')+
+            '<span class="arch-name">'+home+'</span>'+
+          '</div>'+
+          '<div class="arch-score">'+hs+' - '+as+'</div>'+
+          '<div class="arch-team">'+
+            (m.awayTeam.crest?'<img class="arch-logo" src="'+m.awayTeam.crest+'" onerror="this.style.display=\'none\'">':'')+
+            '<span class="arch-name">'+away+'</span>'+
+          '</div>'+
+        '</div>'+
+        '<div class="arch-date"><i class="ri-calendar-check-line"></i> '+dateLabel+' — انتهت</div>'+
+      '</div>';
+    }).join('');
+  } catch(e) {
+    var classics = [
+      { league:'دوري أبطال أوروبا', home:'ريال مدريد', away:'ليفربول', hs:'3', as:'1', hLogo:'https://crests.football-data.org/86.svg', aLogo:'https://crests.football-data.org/64.svg', date:'الثلاثاء 6 مايو' },
+      { league:'الدوري الإسباني', home:'برشلونة', away:'أتليتكو', hs:'2', as:'0', hLogo:'https://crests.football-data.org/81.svg', aLogo:'https://crests.football-data.org/78.svg', date:'السبت 4 مايو' },
+      { league:'الدوري الإنجليزي', home:'مانشستر سيتي', away:'تشيلسي', hs:'4', as:'1', hLogo:'https://crests.football-data.org/65.svg', aLogo:'https://crests.football-data.org/61.svg', date:'الأحد 5 مايو' },
+      { league:'الدوري الألماني', home:'بايرن', away:'دورتموند', hs:'2', as:'2', hLogo:'https://crests.football-data.org/5.svg', aLogo:'https://crests.football-data.org/4.svg', date:'السبت 4 مايو' },
+    ];
+    grid.innerHTML = classics.map(function(m) {
+      return '<div class="arch-card" onclick="openFootballStream(\'archive\',\''+m.home+' '+m.hs+' - '+m.as+' '+m.away+'\')">'+
+        '<div class="arch-play-overlay"><i class="ri-play-circle-fill"></i></div>'+
+        '<div class="arch-league">'+m.league+'</div>'+
+        '<div class="arch-teams-row">'+
+          '<div class="arch-team"><img class="arch-logo" src="'+m.hLogo+'" onerror="this.style.display=\'none\'"><span class="arch-name">'+m.home+'</span></div>'+
+          '<div class="arch-score">'+m.hs+' - '+m.as+'</div>'+
+          '<div class="arch-team"><img class="arch-logo" src="'+m.aLogo+'" onerror="this.style.display=\'none\'"><span class="arch-name">'+m.away+'</span></div>'+
+        '</div>'+
+        '<div class="arch-date"><i class="ri-calendar-check-line"></i> '+m.date+' — انتهت</div>'+
+      '</div>';
+    }).join('');
+  }
+      }
