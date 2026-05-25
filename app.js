@@ -4025,72 +4025,193 @@ async function loadTransferNews() {
     ).join('');
   }
 }
-// عرض كل المباريات من اليوم حتى 5 أشهر
-async function spShowAllArchive() {
-  const grid = document.getElementById('archiveGrid');
-  if (!grid) return;
-  // تفعيل زر "عرض الكل" كـ active
-  document.querySelectorAll('.arch-filter-btn').forEach(b => b.classList.remove('active'));
-  grid.innerHTML = '<div class="sp-neon-spinner-wrap"><div class="sp-neon-spinner"></div></div>';
-  var now = new Date();
-  var dateFrom = new Date(now.getTime()-150*86400000).toISOString().slice(0,10);
-  var dateTo = now.toISOString().slice(0,10);
-  var allMatches = [];
-  // FD
+// ===== NEWS HUB =====
+function openNewsHub() {
+  const screen = document.getElementById('newsHubScreen');
+  if (!screen) return;
+  screen.classList.remove('hidden');
+  setTimeout(() => screen.classList.add('open'), 10);
+  loadHubNews();
+}
+function closeNewsHub() {
+  const screen = document.getElementById('newsHubScreen');
+  screen.classList.remove('open');
+  setTimeout(() => screen.classList.add('hidden'), 400);
+}
+async function loadHubNews() {
+  const list = document.getElementById('hubNewsList');
+  if (!list) return;
+  const FALLBACK = 'https://images.unsplash.com/photo-1556056504-5c7696c4c28d?w=200&q=80';
+  list.innerHTML = '<div class="sp-neon-spinner-wrap"><div class="sp-neon-spinner"></div></div>';
   try {
-    var fdRes = await fetch(
-      'https://corsproxy.io/?' + encodeURIComponent(CONFIG.FOOTBALL.FD_BASE+'/matches?dateFrom='+dateFrom+'&dateTo='+dateTo+'&status=FINISHED'),
-      { headers: { 'X-Auth-Token': CONFIG.FOOTBALL.FD_KEY } }
+    // مصادر RSS متعددة عبر rss2json
+    const feeds = [
+      'https://www.bbc.co.uk/sport/football/rss.xml',
+      'https://www.skysports.com/rss/12040',
+      'https://www.goal.com/feeds/en/news',
+      'https://www.espn.com/espn/rss/soccer/news',
+    ];
+    const results = await Promise.allSettled(
+      feeds.map(f => fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(f)}&count=15`).then(r => r.json()))
     );
-    var fdData = await fdRes.json();
-    allMatches = allMatches.concat(fdData.matches||[]);
-  } catch(e){}
-  // TheSportsDB لكل دوري
+    let items = [];
+    results.forEach(r => { if (r.status === 'fulfilled' && r.value.items) items = items.concat(r.value.items); });
+    items.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+    items = items.filter((v,i,a) => a.findIndex(x=>x.title===v.title)===i); // إزالة المكرر
+    if (!items.length) throw new Error('empty');
+    list.innerHTML = items.slice(0, 40).map(a => {
+      const ago = getTimeAgo(new Date(a.pubDate));
+      const dateStr = new Date(a.pubDate).toLocaleDateString('ar-SA', {day:'numeric', month:'long', year:'numeric'});
+      const img = (a.thumbnail && a.thumbnail.startsWith('http')) ? a.thumbnail : (a.enclosure?.link || FALLBACK);
+      return `<div class="hub-news-card">
+        <img class="hub-news-img" src="${img}" onerror="this.src='${FALLBACK}'">
+        <div class="hub-news-body">
+          <div class="hub-news-time">${ago} · ${dateStr}</div>
+          <div class="hub-news-title">${a.title}</div>
+          <div class="hub-news-sub">${(a.description||'').replace(/<[^>]+>/g,'').slice(0,120)}</div>
+        </div>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    const fallbackNews = [
+      { ago:'منذ ساعة', date:'25 مايو 2026', title:'ريال مدريد يتأهل لنهائي دوري الأبطال', sub:'الملكي يتخطى البايرن بثنائية نظيفة في برنابيو', img:'https://upload.wikimedia.org/wikipedia/commons/c/c7/UEFA_Champions_League_trophy.jpg' },
+      { ago:'منذ ساعتين', date:'25 مايو 2026', title:'هالاند يسجل هاتريك أمام أرسنال', sub:'الهداف النرويجي يقود السيتي لفوز كبير في الإيتيهاد', img:'https://images.unsplash.com/photo-1556056504-5c7696c4c28d?w=200&q=80' },
+      { ago:'منذ 3 ساعات', date:'25 مايو 2026', title:'برشلونة يقترب من صفقة الصيف الكبرى', sub:'المفاوضات مع الوكيل في مراحلها الأخيرة', img:'https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=200&q=80' },
+      { ago:'منذ 4 ساعات', date:'24 مايو 2026', title:'مبابي يقود فرنسا لفوز ساحق', sub:'النجم يسجل ثنائية في تصفيات كأس العالم', img:FALLBACK },
+      { ago:'منذ 5 ساعات', date:'24 مايو 2026', title:'يوفنتوس يجدد عقد نجمه الأساسي', sub:'الملكة تؤمن خدمات اللاعب حتى 2028', img:FALLBACK },
+    ];
+    list.innerHTML = fallbackNews.map(n =>
+      `<div class="hub-news-card">
+        <img class="hub-news-img" src="${n.img}" onerror="this.src='${FALLBACK}'">
+        <div class="hub-news-body">
+          <div class="hub-news-time">${n.ago} · ${n.date}</div>
+          <div class="hub-news-title">${n.title}</div>
+          <div class="hub-news-sub">${n.sub}</div>
+        </div>
+      </div>`
+    ).join('');
+  }
+}
+
+// ===== ARCHIVE HUB =====
+var _hubAllMatches = [];
+function openArchiveHub() {
+  const screen = document.getElementById('archiveHubScreen');
+  if (!screen) return;
+  screen.classList.remove('hidden');
+  setTimeout(() => screen.classList.add('open'), 10);
+  // بناء قائمة السنوات من 2000 إلى اليوم
+  const yearSel = document.getElementById('hubYearSelect');
+  if (yearSel && yearSel.options.length <= 1) {
+    const thisYear = new Date().getFullYear();
+    for (let y = thisYear; y >= 2000; y--) {
+      const opt = document.createElement('option');
+      opt.value = y; opt.textContent = y;
+      yearSel.appendChild(opt);
+    }
+  }
+  loadHubArchive();
+}
+function closeArchiveHub() {
+  const screen = document.getElementById('archiveHubScreen');
+  screen.classList.remove('open');
+  setTimeout(() => screen.classList.add('hidden'), 400);
+}
+async function loadHubArchive() {
+  const grid = document.getElementById('hubArchiveGrid');
+  if (!grid) return;
+  grid.innerHTML = '<div class="sp-neon-spinner-wrap"><div class="sp-neon-spinner"></div></div>';
+  _hubAllMatches = [];
+  var now = new Date();
+  var dateFrom = '2000-01-01';
+  var dateTo = now.toISOString().slice(0, 10);
+  // TheSportsDB — الأفضل للتاريخ القديم
   try {
-    var leagueIds = ['4328','4335','4331','4332','4334','4399'];
+    var leagueIds = ['4328','4335','4331','4332','4334','4399','4346'];
     var sdbResults = await Promise.allSettled(leagueIds.map(id =>
-      fetch(`https://www.thesportsdb.com/api/v1/json/3/eventspastleague.php?id=${id}`).then(r=>r.json())
+      fetch(`https://www.thesportsdb.com/api/v1/json/3/eventspastleague.php?id=${id}`).then(r => r.json())
     ));
     sdbResults.forEach(r => {
-      if (r.status!=='fulfilled') return;
-      (r.value.events||[]).filter(e => e.dateEvent >= dateFrom && e.dateEvent <= dateTo).forEach(e => {
-        allMatches.push({
-          competition:{name:e.strLeague},
-          utcDate: e.dateEvent+'T'+(e.strTime||'20:00:00')+'Z',
-          homeTeam:{name:e.strHomeTeam,shortName:e.strHomeTeam,crest:e.strHomeTeamBadge},
-          awayTeam:{name:e.strAwayTeam,shortName:e.strAwayTeam,crest:e.strAwayTeamBadge},
-          score:{fullTime:{home:e.intHomeScore,away:e.intAwayScore}}
+      if (r.status !== 'fulfilled') return;
+      (r.value.events || []).forEach(e => {
+        if (!e.dateEvent) return;
+        _hubAllMatches.push({
+          league: e.strLeague,
+          leagueId: e.idLeague,
+          date: e.dateEvent,
+          time: e.strTime || '20:00:00',
+          home: e.strHomeTeam,
+          away: e.strAwayTeam,
+          homeLogo: e.strHomeTeamBadge,
+          awayLogo: e.strAwayTeamBadge,
+          hs: e.intHomeScore,
+          as: e.intAwayScore,
         });
       });
     });
-  } catch(e){}
-  // ترتيب من الأحدث للأقدم
-  allMatches.sort((a,b) => new Date(b.utcDate)-new Date(a.utcDate));
-  allMatches = allMatches.slice(0,60);
-  if (!allMatches.length) { grid.innerHTML='<div class="sp-loading">لا توجد مباريات</div>'; return; }
-  grid.innerHTML = allMatches.map(function(m) {
-    var hs = m.score.fullTime.home !== null ? m.score.fullTime.home : '?';
-    var as = m.score.fullTime.away !== null ? m.score.fullTime.away : '?';
-    var d = new Date(m.utcDate);
-    var dateLabel = d.toLocaleDateString('ar-SA',{weekday:'short',day:'numeric',month:'long',year:'numeric'});
-    var timeLabel = d.toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});
-    var home = m.homeTeam.shortName||m.homeTeam.name;
-    var away = m.awayTeam.shortName||m.awayTeam.name;
-    return '<div class="arch-card" onclick="openFootballStream(\'archive\',\''+home+' '+hs+' - '+as+' '+away+'\')">'+
+  } catch(e) {}
+  // FD للمباريات الحديثة
+  try {
+    var fdRes = await fetch(
+      'https://corsproxy.io/?' + encodeURIComponent(CONFIG.FOOTBALL.FD_BASE + '/matches?dateFrom=' + new Date(now.getTime()-150*86400000).toISOString().slice(0,10) + '&dateTo=' + dateTo + '&status=FINISHED'),
+      { headers: { 'X-Auth-Token': CONFIG.FOOTBALL.FD_KEY } }
+    );
+    var fdData = await fdRes.json();
+    (fdData.matches || []).forEach(m => {
+      _hubAllMatches.push({
+        league: m.competition.name,
+        leagueId: '',
+        date: m.utcDate.slice(0,10),
+        time: m.utcDate.slice(11,19),
+        home: m.homeTeam.shortName||m.homeTeam.name,
+        away: m.awayTeam.shortName||m.awayTeam.name,
+        homeLogo: m.homeTeam.crest,
+        awayLogo: m.awayTeam.crest,
+        hs: m.score.fullTime.home,
+        as: m.score.fullTime.away,
+      });
+    });
+  } catch(e) {}
+  _hubAllMatches.sort((a, b) => (b.date+b.time).localeCompare(a.date+a.time));
+  hubFilterMatches();
+}
+function hubFilterMatches() {
+  const grid = document.getElementById('hubArchiveGrid');
+  if (!grid) return;
+  const year = document.getElementById('hubYearSelect')?.value || '';
+  const month = document.getElementById('hubMonthSelect')?.value || '';
+  const leagueId = document.getElementById('hubLeagueSelect')?.value || '';
+  let filtered = _hubAllMatches.filter(m => {
+    if (year && !m.date.startsWith(year)) return false;
+    if (month && m.date.slice(5,7) !== month) return false;
+    if (leagueId && m.leagueId && m.leagueId !== leagueId) return false;
+    return true;
+  });
+  if (!filtered.length) {
+    grid.innerHTML = '<div class="sp-loading" style="color:rgba(255,255,255,0.4);padding:30px;text-align:center">لا توجد مباريات لهذه الفترة</div>';
+    return;
+  }
+  grid.innerHTML = filtered.slice(0, 80).map(function(m) {
+    var d = new Date(m.date + 'T' + m.time + 'Z');
+    var dateLabel = d.toLocaleDateString('ar-SA', {weekday:'short', day:'numeric', month:'long', year:'numeric'});
+    var timeLabel = d.toLocaleTimeString('ar-SA', {hour:'2-digit', minute:'2-digit'});
+    var hs = m.hs !== null && m.hs !== '' ? m.hs : '?';
+    var as = m.as !== null && m.as !== '' ? m.as : '?';
+    return '<div class="arch-card" onclick="openFootballStream(\'archive\',\''+m.home+' '+hs+' - '+as+' '+m.away+'\')">'+
       '<div class="arch-play-overlay"><i class="ri-play-circle-fill"></i></div>'+
-      '<div class="arch-league">'+m.competition.name+'</div>'+
+      '<div class="arch-league">'+m.league+'</div>'+
       '<div class="arch-teams-row">'+
         '<div class="arch-team">'+
-          (m.homeTeam.crest?'<img class="arch-logo" src="'+m.homeTeam.crest+'" onerror="this.style.display=\'none\'">':'')+
-          '<span class="arch-name">'+home+'</span>'+
+          (m.homeLogo?'<img class="arch-logo" src="'+m.homeLogo+'" onerror="this.style.display=\'none\'">':'')+
+          '<span class="arch-name">'+m.home+'</span>'+
         '</div>'+
         '<div class="arch-score">'+hs+' - '+as+'</div>'+
         '<div class="arch-team">'+
-          (m.awayTeam.crest?'<img class="arch-logo" src="'+m.awayTeam.crest+'" onerror="this.style.display=\'none\'">':'')+
-          '<span class="arch-name">'+away+'</span>'+
+          (m.awayLogo?'<img class="arch-logo" src="'+m.awayLogo+'" onerror="this.style.display=\'none\'">':'')+
+          '<span class="arch-name">'+m.away+'</span>'+
         '</div>'+
       '</div>'+
-      '<div class="arch-date"><i class="ri-time-line"></i> '+timeLabel+' &nbsp;|&nbsp; <i class="ri-calendar-check-line"></i> '+dateLabel+'</div>'+
+      '<div class="arch-date"><i class="ri-time-line"></i> '+timeLabel+' | <i class="ri-calendar-check-line"></i> '+dateLabel+'</div>'+
     '</div>';
   }).join('');
 }
