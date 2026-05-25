@@ -310,6 +310,18 @@
     </div>
     <div class="sp-news-list" id="spNewsList"></div>
   </div>
+
+  <!-- ⚽ أرشيف مباريات زمان -->
+  <div class="sp-section" id="football-archive-section">
+    <div class="sp-section-hdr"><span class="sp-section-bar"></span><span class="sp-section-title">🏆 أرشيف مباريات زمان</span></div>
+    <div class="arch-filters-row">
+      <button class="arch-filter-btn active" onclick="filterArchive('yesterday',this)">📅 أمس</button>
+      <button class="arch-filter-btn" onclick="filterArchive('beforeyesterday',this)">📅 قبل أمس</button>
+      <button class="arch-filter-btn" onclick="filterArchive('thismonth',this)">📅 هذا الشهر</button>
+      <button class="arch-filter-btn" onclick="filterArchive('classics',this)">⏳ كلاسيكيات قديمة</button>
+    </div>
+    <div class="arch-grid" id="archiveGrid"></div>
+  </div>
   </div>
 
   <!-- Live Stream Vault -->
