@@ -3703,8 +3703,7 @@ async function loadSpMatchesLive() {
           </div>
         </div>
         ${m.date?`<div class="sp-match-date"><i class="ri-calendar-line"></i>${m.date}</div>`:''}
-      ${m.live ? `<button class="sp-match-watch-btn" onclick="openFootballStream('live','${m.home} vs ${m.away}')"><i class="ri-live-line"></i> شاهد البث الحي</button>` : `<button class="sp-match-watch-btn" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);color:rgba(255,255,255,0.5)" onclick="spBellAlert(this,'${m.home} vs ${m.away}')"><i class="ri-notification-3-line"></i> تنبيه</button>`}
-    ).join('');
+      </div>`; }).join('');
   }
 }
 
