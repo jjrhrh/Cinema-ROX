@@ -5877,14 +5877,15 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
 }
 .sp-hero-overlay {
   position: absolute; inset: 0;
-  background: linear-gradient(to right, rgba(7,13,7,0.85) 35%, transparent 100%);
+  background: linear-gradient(to left, rgba(7,13,7,0) 20%, rgba(7,13,7,0.92) 65%);
   z-index: 2;
 }
 .sp-hero-content {
   position: relative; z-index: 3;
-  padding: 32px 20px 24px;
+  padding: 36px 20px 28px;
   display: flex; flex-direction: column;
-  align-items: flex-end; text-align: right;
+  align-items: flex-start; text-align: left;
+  max-width: 55%;
 }
 .sp-hero-title {
   font-family: 'Tajawal', sans-serif;
@@ -5894,9 +5895,12 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
 .sp-hero-rox { color: #e50914; }
 .sp-hero-sub {
   font-family: 'Tajawal', sans-serif;
-  font-size: 0.82rem; color: rgba(255,255,255,0.6);
-  margin: 0 0 20px;
-  max-width: 220px; text-align: right; line-height: 1.5;
+  font-size: 0.82rem; font-weight: 400;
+  color: rgba(255,255,255,0.65);
+  margin: 0 0 22px;
+  max-width: 200px; text-align: right;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
 }
 .sp-hero-btn {
   background: linear-gradient(135deg, #e50914, #b0070f);
@@ -5920,7 +5924,7 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
 }
 
 /* SECTIONS */
-.sp-section { padding: 28px 0 8px; }
+.sp-section { padding: 32px 0 10px; }
 .sp-section-hdr {
   display: flex; align-items: center; gap: 8px;
   padding: 0 16px 12px; direction: rtl;
@@ -5967,8 +5971,9 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
   box-shadow: 0 8px 32px rgba(229,9,20,0.15);
 }
 .sp-match-card.is-live {
-  border-color: rgba(229,9,20,0.4);
-  background: rgba(229,9,20,0.06);
+  border: 1px solid #ff2a2a;
+  background: rgba(229,9,20,0.07);
+  box-shadow: 0 0 12px rgba(255,42,42,0.2), inset 0 0 12px rgba(255,42,42,0.04);
 }
 .sp-match-card.is-live::after {
   content: ''; position: absolute;
@@ -5988,7 +5993,9 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
   justify-content: space-between; width: 100%; gap: 4px;
 }
 .sp-match-team-logo {
-  width: 30px; height: 30px; object-fit: contain;
+  width: 36px; height: 36px; object-fit: contain;
+  background: rgba(255,255,255,0.06);
+  border-radius: 50%; padding: 3px;
 }
 .sp-match-center { display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 1; }
 .sp-match-score {
@@ -6158,3 +6165,5 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
 .sp-news-title { font-family:'Tajawal',sans-serif; font-size:0.9rem; font-weight:700; color:#fff; line-height:1.4; }
 .sp-news-sub { font-family:'Tajawal',sans-serif; font-size:0.73rem; color:rgba(255,255,255,0.45); }
 .sp-news-img { width:85px; height:75px; object-fit:cover; border-radius:12px; flex-shrink:0; } 
+#footballPage * { -webkit-font-smoothing: antialiased; }
+.sp-news-list { gap: 8px; }
