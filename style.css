@@ -6462,7 +6462,7 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
   display: flex; flex-direction: column;
   transform: translateX(-100%);
   transition: transform 0.4s cubic-bezier(0.25,1,0.5,1);
-  overflow: hidden;
+  overflow-y: auto;
 }
 .hub-screen.open { transform: translateX(0); }
 .hub-screen.hidden { display: none; }
@@ -6488,9 +6488,9 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
 
 /* NEWS HUB */
 .hub-news-list {
-  flex: 1; overflow-y: auto; padding: 12px;
+  flex: 1; overflow-y: auto; padding: 12px 12px 80px;
   display: flex; flex-direction: column; gap: 10px;
-  direction: rtl;
+  direction: rtl; -webkit-overflow-scrolling: touch;
 }
 .hub-news-card {
   display: flex; flex-direction: column; gap: 0;
@@ -6538,10 +6538,10 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
 }
 .hub-select option { background: #1a1a1a; color: #fff; }
 .hub-archive-grid {
-  flex: 1; overflow-y: auto; padding: 12px;
+  flex: 1; overflow-y: auto; padding: 12px 12px 80px;
   display: grid; grid-template-columns: repeat(2,1fr);
   gap: 10px; direction: rtl;
-  align-content: start;
+  align-content: start; -webkit-overflow-scrolling: touch;
 }
 
 /* صورة الأخبار أكبر في القائمة الرئيسية */
