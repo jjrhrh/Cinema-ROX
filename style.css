@@ -6260,3 +6260,100 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
   transition: all 0.2s;
 }
 .sp-see-all-btn:hover { background: rgba(229,9,20,0.1); }
+/* ===== NEON SPINNER ===== */
+.sp-neon-spinner-wrap {
+  display: flex; align-items: center; justify-content: center;
+  padding: 32px; width: 100%;
+}
+.sp-neon-spinner {
+  width: 36px; height: 36px;
+  border: 3px solid rgba(46,211,105,0.15);
+  border-top-color: #46d369;
+  border-radius: 50%;
+  animation: neonSpin 0.8s linear infinite;
+  box-shadow: 0 0 12px rgba(46,211,105,0.4);
+}
+@keyframes neonSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* ===== ARCHIVE SECTION ===== */
+.arch-filters-row {
+  display: flex; gap: 8px; overflow-x: auto;
+  padding: 0 16px 14px; scrollbar-width: none; direction: rtl;
+}
+.arch-filters-row::-webkit-scrollbar { display: none; }
+.arch-filter-btn {
+  flex-shrink: 0; background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.55);
+  font-family: 'Tajawal',sans-serif; font-size: 0.78rem; font-weight: 600;
+  padding: 7px 14px; border-radius: 20px; cursor: pointer;
+  transition: all 0.25s ease; white-space: nowrap;
+}
+.arch-filter-btn:hover { color: #fff; border-color: rgba(255,255,255,0.25); }
+.arch-filter-btn.active {
+  background: rgba(46,211,105,0.12);
+  border-color: rgba(46,211,105,0.45);
+  color: #46d369;
+  box-shadow: 0 0 10px rgba(46,211,105,0.2);
+}
+.arch-grid {
+  display: grid; grid-template-columns: repeat(2,1fr);
+  gap: 10px; padding: 0 16px 16px; direction: rtl;
+}
+.arch-card {
+  position: relative; overflow: hidden;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px; padding: 12px 10px 10px;
+  cursor: pointer;
+  transition: transform 0.35s cubic-bezier(0.25,1,0.5,1), border-color 0.3s, box-shadow 0.3s;
+}
+.arch-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(229,9,20,0.35);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.5);
+}
+.arch-play-overlay {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.6); border-radius: 14px;
+  opacity: 0; transition: opacity 0.3s ease;
+  font-size: 3rem; color: #e50914;
+  text-shadow: 0 0 20px rgba(229,9,20,0.8), 0 0 40px rgba(229,9,20,0.4);
+}
+.arch-card:hover .arch-play-overlay { opacity: 1; }
+.arch-league {
+  font-family: 'Tajawal',sans-serif; font-size: 0.65rem;
+  color: rgba(255,255,255,0.4); margin-bottom: 8px; text-align: right;
+}
+.arch-teams-row {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 4px; direction: rtl;
+}
+.arch-team {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  flex: 1;
+}
+.arch-logo {
+  width: 28px; height: 28px; object-fit: contain; border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+}
+.arch-name {
+  font-family: 'Tajawal',sans-serif; font-size: 0.68rem;
+  font-weight: 700; color: #fff; text-align: center; line-height: 1.2;
+}
+.arch-score {
+  font-family: 'Tajawal',sans-serif; font-size: 1.1rem;
+  font-weight: 900; color: #46d369;
+  text-shadow: 0 0 10px rgba(46,211,105,0.5);
+  flex-shrink: 0; padding: 0 4px; text-align: center;
+}
+.arch-date {
+  font-family: 'Tajawal',sans-serif; font-size: 0.62rem;
+  color: rgba(255,255,255,0.3); margin-top: 8px;
+  text-align: right; display: flex; align-items: center; gap: 4px;
+  }
