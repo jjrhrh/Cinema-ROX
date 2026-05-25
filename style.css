@@ -6164,6 +6164,99 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
 .sp-news-time { font-family:'Tajawal',sans-serif; font-size:0.68rem; color:#e50914; font-weight:700; }
 .sp-news-title { font-family:'Tajawal',sans-serif; font-size:0.9rem; font-weight:700; color:#fff; line-height:1.4; }
 .sp-news-sub { font-family:'Tajawal',sans-serif; font-size:0.73rem; color:rgba(255,255,255,0.45); }
-.sp-news-img { width:85px; height:75px; object-fit:cover; border-radius:12px; flex-shrink:0; } 
+.sp-news-img { width:100px; height:85px; object-fit:cover; border-radius:12px; flex-shrink:0; background:#1a1a1a; }
 #footballPage * { -webkit-font-smoothing: antialiased; }
 .sp-news-list { gap: 8px; }
+/* LIVE STREAM VAULT */
+.live-stream-vault {
+  position: fixed; inset: 0; z-index: 9500;
+  background: rgba(0,0,0,0.96);
+  backdrop-filter: blur(20px);
+  display: flex; flex-direction: column;
+  padding: 20px 16px; gap: 14px;
+  transform: translateY(100%);
+  transition: transform 0.5s cubic-bezier(0.25,1,0.5,1);
+}
+.live-stream-vault.open { transform: translateY(0); }
+.live-stream-vault.hidden { display: none; }
+.lsv-header {
+  display: flex; align-items: center; gap: 10px;
+  direction: rtl;
+}
+.lsv-match-title {
+  font-family: 'Tajawal',sans-serif; font-weight: 800;
+  font-size: 1rem; color: #fff; flex: 1;
+}
+.lsv-live-pill {
+  background: rgba(229,9,20,0.15);
+  border: 1px solid rgba(229,9,20,0.4);
+  color: #e50914; border-radius: 20px;
+  padding: 3px 10px; font-size: 0.72rem;
+  font-family: 'Tajawal',sans-serif; font-weight: 700;
+  display: flex; align-items: center; gap: 5px;
+  animation: badgePulse 1.5s infinite;
+}
+.lsv-ping {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #e50914; animation: dotBlink 1s infinite;
+}
+.lsv-close-btn {
+  background: rgba(255,255,255,0.08); border: none;
+  color: #fff; border-radius: 50%; width: 32px; height: 32px;
+  font-size: 18px; cursor: pointer; display: flex;
+  align-items: center; justify-content: center;
+}
+.lsv-player {
+  width: 100%; aspect-ratio: 16/9;
+  background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.lsv-player-inner { text-align: center; }
+.lsv-play-icon { font-size: 3.5rem; color: #e50914; line-height: 1; }
+.lsv-player-label {
+  font-family: 'Tajawal',sans-serif; font-size: 0.8rem;
+  color: rgba(255,255,255,0.5); margin-top: 8px;
+}
+.lsv-servers-label {
+  font-family: 'Tajawal',sans-serif; font-size: 0.78rem;
+  color: rgba(255,255,255,0.4); text-align: right;
+  direction: rtl;
+}
+.lsv-servers-row {
+  display: grid; grid-template-columns: repeat(2,1fr); gap: 8px;
+}
+.lsv-srv {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(46,211,105,0.2);
+  border-radius: 12px; padding: 10px 12px;
+  color: rgba(255,255,255,0.75);
+  font-family: 'Tajawal',sans-serif; font-size: 0.8rem;
+  font-weight: 600; cursor: pointer;
+  display: flex; align-items: center; gap: 7px;
+  transition: all 0.3s ease; direction: rtl;
+}
+.lsv-srv:hover, .lsv-srv.active {
+  background: rgba(46,211,105,0.1);
+  border-color: rgba(46,211,105,0.5);
+  color: #2ed369;
+  box-shadow: 0 0 12px rgba(46,211,105,0.15);
+}
+.lsv-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #2ed369; flex-shrink: 0;
+  animation: dotBlink 1.5s infinite;
+}
+.lsv-srv.active .lsv-dot { background: #2ed369; animation: none; opacity: 1; }
+.sp-see-all-btn {
+  margin-right: auto; background: none;
+  border: 1px solid rgba(229,9,20,0.3);
+  color: #e50914; border-radius: 20px;
+  padding: 3px 12px; font-family: 'Tajawal',sans-serif;
+  font-size: 0.72rem; font-weight: 700; cursor: pointer;
+  transition: all 0.2s;
+}
+.sp-see-all-btn:hover { background: rgba(229,9,20,0.1); }
