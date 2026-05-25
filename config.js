@@ -16,6 +16,7 @@ const CONFIG = Object.freeze({
     YOUTUBE : 'AIzaSyC14y1pNjfqbP8h0eMYLynl_XIi87yXyis',
     TRAKT   : '11ce43a6882f1da18a6f875a07d2a863ee62b1a7e3bd1d00a64f7a9fd8759301',
     NEWS    : '7451bf041d1e4011a57e520ebba343e8',
+   GNEWS_KEY: '22923d9dcfadf4899be2864da3cba05b',
   }),
 HERO: Object.freeze({
     LIMIT         : 5,
