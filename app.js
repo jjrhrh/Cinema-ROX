@@ -4114,7 +4114,7 @@ function openArchiveHub() {
   const yearSel = document.getElementById('hubYearSelect');
   if (yearSel && yearSel.options.length <= 1) {
     const thisYear = new Date().getFullYear();
-    for (let y = thisYear; y >= 2000; y--) {
+    for (let y = 2025; y >= 2015; y--) {
       const opt = document.createElement('option');
       opt.value = y; opt.textContent = y;
       yearSel.appendChild(opt);
@@ -4153,7 +4153,7 @@ async function loadHubArchive() {
     (r.value.events || []).forEach(e => {
       if (!e.dateEvent || !e.intHomeScore) return;
       _hubAllMatches.push({
-        league: e.strLeague, leagueId: String(e.idLeague),
+        league: e.strLeague, leagueId: e.strLeague,
         date: e.dateEvent, time: e.strTime || '20:00:00',
         home: e.strHomeTeam, away: e.strAwayTeam,
         homeLogo: e.strHomeTeamBadge, awayLogo: e.strAwayTeamBadge,
@@ -4176,7 +4176,7 @@ async function loadHubArchive() {
     var fdData = await fdRes.json();
     (fdData.matches || []).forEach(m => {
       _hubAllMatches.push({
-        league: m.competition.name, leagueId: '',
+        league: m.competition.name, leagueId: m.competition.name,
         date: m.utcDate.slice(0,10), time: m.utcDate.slice(11,19),
         home: m.homeTeam.shortName||m.homeTeam.name,
         away: m.awayTeam.shortName||m.awayTeam.name,
@@ -4189,14 +4189,14 @@ async function loadHubArchive() {
   // إذا لا يزال فارغاً — fallback ثابت
   if (!_hubAllMatches.length) {
     _hubAllMatches = [
-      {league:'دوري أبطال أوروبا',leagueId:'4399',date:'2024-05-01',time:'20:00:00',home:'ريال مدريد',away:'بايرن',homeLogo:'https://crests.football-data.org/86.svg',awayLogo:'https://crests.football-data.org/5.svg',hs:'2',as:'1'},
-      {league:'الدوري الإسباني',leagueId:'4335',date:'2024-04-27',time:'18:00:00',home:'برشلونة',away:'ريال مدريد',homeLogo:'https://crests.football-data.org/81.svg',awayLogo:'https://crests.football-data.org/86.svg',hs:'3',as:'2'},
-      {league:'الدوري الإنجليزي',leagueId:'4328',date:'2024-04-24',time:'19:30:00',home:'مانشستر سيتي',away:'أرسنال',homeLogo:'https://crests.football-data.org/65.svg',awayLogo:'https://crests.football-data.org/57.svg',hs:'1',as:'0'},
-      {league:'الدوري الألماني',leagueId:'4332',date:'2024-04-20',time:'17:30:00',home:'بايرن',away:'دورتموند',homeLogo:'https://crests.football-data.org/5.svg',awayLogo:'https://crests.football-data.org/4.svg',hs:'4',as:'2'},
-      {league:'الدوري الإيطالي',leagueId:'4331',date:'2024-04-14',time:'19:45:00',home:'إنتر',away:'يوفنتوس',homeLogo:'https://crests.football-data.org/108.svg',awayLogo:'https://crests.football-data.org/109.svg',hs:'2',as:'2'},
-      {league:'دوري أبطال أوروبا',leagueId:'4399',date:'2023-06-10',time:'20:00:00',home:'مانشستر سيتي',away:'إنتر',homeLogo:'https://crests.football-data.org/65.svg',awayLogo:'https://crests.football-data.org/108.svg',hs:'1',as:'0'},
-      {league:'الدوري الإسباني',leagueId:'4335',date:'2023-05-28',time:'18:00:00',home:'ريال مدريد',away:'برشلونة',homeLogo:'https://crests.football-data.org/86.svg',awayLogo:'https://crests.football-data.org/81.svg',hs:'1',as:'2'},
-      {league:'الدوري الإنجليزي',leagueId:'4328',date:'2022-05-22',time:'16:00:00',home:'مانشستر سيتي',away:'أستون فيلا',homeLogo:'https://crests.football-data.org/65.svg',awayLogo:'https://crests.football-data.org/58.svg',hs:'3',as:'2'},
+      {league:'دوري أبطال أوروبا',leagueId:'دوري أبطال أوروبا',date:'2024-05-01',time:'20:00:00',home:'ريال مدريد',away:'بايرن',homeLogo:'https://crests.football-data.org/86.svg',awayLogo:'https://crests.football-data.org/5.svg',hs:'2',as:'1'},
+      {league:'الدوري الإسباني',leagueId:'الدوري الإسباني',date:'2024-04-27',time:'18:00:00',home:'برشلونة',away:'ريال مدريد',homeLogo:'https://crests.football-data.org/81.svg',awayLogo:'https://crests.football-data.org/86.svg',hs:'3',as:'2'},
+      {league:'الدوري الإنجليزي',leagueId:'الدوري الإنجليزي',date:'2024-04-24',time:'19:30:00',home:'مانشستر سيتي',away:'أرسنال',homeLogo:'https://crests.football-data.org/65.svg',awayLogo:'https://crests.football-data.org/57.svg',hs:'1',as:'0'},
+      {league:'الدوري الألماني',leagueId:'الدوري الألماني',date:'2024-04-20',time:'17:30:00',home:'بايرن',away:'دورتموند',homeLogo:'https://crests.football-data.org/5.svg',awayLogo:'https://crests.football-data.org/4.svg',hs:'4',as:'2'},
+      {league:'الدوري الإيطالي',leagueId:'الدوري الإيطالي',date:'2024-04-14',time:'19:45:00',home:'إنتر',away:'يوفنتوس',homeLogo:'https://crests.football-data.org/108.svg',awayLogo:'https://crests.football-data.org/109.svg',hs:'2',as:'2'},
+      {league:'دوري أبطال أوروبا',leagueId:'دوري أبطال أوروبا',date:'2023-06-10',time:'20:00:00',home:'مانشستر سيتي',away:'إنتر',homeLogo:'https://crests.football-data.org/65.svg',awayLogo:'https://crests.football-data.org/108.svg',hs:'1',as:'0'},
+      {league:'الدوري الإسباني',leagueId:'الدوري الإسباني',date:'2023-05-28',time:'18:00:00',home:'ريال مدريد',away:'برشلونة',homeLogo:'https://crests.football-data.org/86.svg',awayLogo:'https://crests.football-data.org/81.svg',hs:'1',as:'2'},
+      {league:'الدوري الإنجليزي',leagueId:'الدوري الإنجليزي',date:'2022-05-22',time:'16:00:00',home:'مانشستر سيتي',away:'أستون فيلا',homeLogo:'https://crests.football-data.org/65.svg',awayLogo:'https://crests.football-data.org/58.svg',hs:'3',as:'2'},
     ];
   }
 
@@ -4212,7 +4212,7 @@ function hubFilterMatches() {
   let filtered = _hubAllMatches.filter(m => {
     if (year && !m.date.startsWith(year)) return false;
     if (month && m.date.slice(5,7) !== month) return false;
-    if (leagueId && m.leagueId && m.leagueId !== leagueId) return false;
+    if (leagueId && !m.league.includes(leagueId) && !m.leagueId.includes(leagueId)) return false;
     return true;
   });
   if (!filtered.length) {
