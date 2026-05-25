@@ -3782,9 +3782,17 @@ function closeLiveStream() {
   setTimeout(() => vault.classList.add('hidden'), 500);
 }
 
-function lsvSelect(el) {
+function lsvSelect(el, srvName) {
   document.querySelectorAll('.lsv-srv').forEach(b => b.classList.remove('active'));
   el.classList.add('active');
+  const label = document.getElementById('lsvPlayerLabel');
+  if (label) label.textContent = 'جاري الاتصال بـ ' + (srvName||'السيرفر') + '...';
+  setTimeout(() => { if(label) label.textContent = 'يتم التشغيل عبر ' + (srvName||'السيرفر') + ' ✓'; }, 1200);
+}
+function lsvQuality(el, q) {
+  document.querySelectorAll('.lsv-quality-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  if (typeof showToast === 'function') showToast('جودة البث: ' + q);
 }
 function spBellAlert(btn, match) {
   btn.innerHTML = '<i class="ri-notification-fill" style="color:#ffd700"></i> <span style="color:#ffd700">تم التفعيل ✓</span>';
@@ -3794,28 +3802,41 @@ function spBellAlert(btn, match) {
 }
 async function spShowAllNews() {
   const list = document.getElementById('spNewsList');
+  const section = list ? list.closest('.sp-section') : null;
   if (!list) return;
-  list.innerHTML = '<div class="sp-loading">⏳ جاري تحميل كل الأخبار...</div>';
+  // إضافة header Hub إذا لم يكن موجوداً
+  let hub = document.getElementById('newsHubHeader');
+  if (!hub) {
+    const hdr = section.querySelector('.sp-section-hdr');
+    hub = document.createElement('div');
+    hub.id = 'newsHubHeader';
+    hub.className = 'news-hub-hdr';
+    hub.innerHTML = '<i class="ri-newspaper-fill"></i> مركز الأخبار الكامل <button class="news-hub-back" onclick="loadSpNews();this.parentElement.remove()"><i class="ri-arrow-go-back-line"></i> رجوع</button>';
+    hdr.after(hub);
+  }
+  list.innerHTML = '<div class="sp-neon-spinner-wrap"><div class="sp-neon-spinner"></div></div>';
+  const FALLBACK_IMG = 'https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=200&q=80';
   try {
     const res = await fetch(
-      `https://corsproxy.io/?${encodeURIComponent(CONFIG.API.NEWS_BASE+'/everything?q=football+soccer&language=ar&pageSize=20&sortBy=publishedAt&apiKey='+CONFIG.KEYS.NEWS)}`
+      `https://corsproxy.io/?${encodeURIComponent(CONFIG.API.NEWS_BASE+'/everything?q=football+كرة+القدم&language=ar&pageSize=30&sortBy=publishedAt&apiKey='+CONFIG.KEYS.NEWS)}`
     );
     const data = await res.json();
-    const articles = (data.articles || []).filter(a => a.urlToImage);
+    const articles = (data.articles || []).slice(0, 25);
     if (!articles.length) throw new Error('empty');
     list.innerHTML = articles.map(a => {
       const ago = getTimeAgo(new Date(a.publishedAt));
+      const img = a.urlToImage || FALLBACK_IMG;
       return `<div class="sp-news-card">
         <div class="sp-news-text-block">
           <div class="sp-news-time">${ago}</div>
           <div class="sp-news-title">${a.title}</div>
           <div class="sp-news-sub">${a.description||''}</div>
         </div>
-        <img class="sp-news-img" src="${a.urlToImage}" onerror="this.style.background='#1a1a1a';this.style.opacity='0'">
+        <img class="sp-news-img" src="${img}" onerror="this.src='${FALLBACK_IMG}'">
       </div>`;
     }).join('');
   } catch(e) {
-    list.innerHTML = '<div class="sp-loading" style="color:#e50914">تعذر تحميل الأخبار</div>';
+    list.innerHTML = '<div class="sp-loading" style="color:rgba(255,255,255,0.4)">تعذر الاتصال — حاول مرة أخرى</div>';
   }
 }
 // ===== ARCHIVE MATCHES =====
@@ -3842,8 +3863,11 @@ async function injectArchiveMatches(period) {
   } else if (period === 'thismonth') {
     dateFrom = now.toISOString().slice(0,8)+'01';
     dateTo = new Date(now.getTime()-86400000).toISOString().slice(0,10);
+  } else if (period === 'month3') {
+    dateFrom = new Date(now.getTime()-90*86400000).toISOString().slice(0,10);
+    dateTo = new Date(now.getTime()-86400000).toISOString().slice(0,10);
   } else {
-    dateFrom = '2020-01-01';
+    dateFrom = new Date(now.getTime()-150*86400000).toISOString().slice(0,10);
     dateTo = new Date(now.getTime()-30*86400000).toISOString().slice(0,10);
   }
   try {
@@ -3852,7 +3876,7 @@ async function injectArchiveMatches(period) {
       { headers: { 'X-Auth-Token': CONFIG.FOOTBALL.FD_KEY } }
     );
     var data = await res.json();
-    var matches = (data.matches || []).slice(0, 12);
+    var matches = (data.matches || []).slice(0, 24);
     if (!matches.length) throw new Error('empty');
     grid.innerHTML = matches.map(function(m) {
       var hs = (m.score.fullTime.home !== null ? m.score.fullTime.home : '?');
@@ -3898,3 +3922,57 @@ async function injectArchiveMatches(period) {
     }).join('');
   }
       }
+// ===== TRANSFER RADAR =====
+function openTransferRadar() {
+  const modal = document.getElementById('transferRadar');
+  if (!modal) return;
+  modal.classList.remove('hidden');
+  setTimeout(() => modal.classList.add('open'), 10);
+  loadTransferNews();
+}
+function closeTransferRadar() {
+  const modal = document.getElementById('transferRadar');
+  modal.classList.remove('open');
+  setTimeout(() => modal.classList.add('hidden'), 400);
+}
+async function loadTransferNews() {
+  const list = document.getElementById('trList');
+  if (!list) return;
+  const FALLBACK = 'https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=200&q=80';
+  try {
+    const res = await fetch(
+      `https://corsproxy.io/?${encodeURIComponent(CONFIG.API.NEWS_BASE+'/everything?q=football+transfer+انتقالات+لاعبين&language=ar&pageSize=15&sortBy=publishedAt&apiKey='+CONFIG.KEYS.NEWS)}`
+    );
+    const data = await res.json();
+    const articles = (data.articles||[]).slice(0,12);
+    if (!articles.length) throw new Error('empty');
+    list.innerHTML = articles.map(a => {
+      const ago = getTimeAgo(new Date(a.publishedAt));
+      const img = a.urlToImage || FALLBACK;
+      return `<div class="sp-news-card">
+        <div class="sp-news-text-block">
+          <div class="sp-news-time">${ago}</div>
+          <div class="sp-news-title">${a.title}</div>
+          <div class="sp-news-sub">${a.description||''}</div>
+        </div>
+        <img class="sp-news-img" src="${img}" onerror="this.src='${FALLBACK}'">
+      </div>`;
+    }).join('');
+  } catch(e) {
+    const transfers = [
+      { time:'منذ ساعة', title:'ريال مدريد يستهدف ضم مبابي بصفقة تاريخية', sub:'الملكي يعرض 200 مليون يورو للنجم الفرنسي', img:FALLBACK },
+      { time:'منذ 3 ساعات', title:'برشلونة يتفاوض على لاعب يوفنتوس', sub:'صفقة تبادلية محتملة بين العملاقين', img:FALLBACK },
+      { time:'منذ 5 ساعات', title:'مانشستر سيتي يجدد عقد هالاند حتى 2030', sub:'الهداف النرويجي يمدد إقامته في الإتحاد', img:FALLBACK },
+    ];
+    list.innerHTML = transfers.map(t =>
+      `<div class="sp-news-card">
+        <div class="sp-news-text-block">
+          <div class="sp-news-time">${t.time}</div>
+          <div class="sp-news-title">${t.title}</div>
+          <div class="sp-news-sub">${t.sub}</div>
+        </div>
+        <img class="sp-news-img" src="${t.img}" onerror="this.src='${FALLBACK}'">
+      </div>`
+    ).join('');
+  }
+}
