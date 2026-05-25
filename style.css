@@ -6357,3 +6357,101 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
   color: rgba(255,255,255,0.3); margin-top: 8px;
   text-align: right; display: flex; align-items: center; gap: 4px;
   }
+/* ===== RADAR PILL ===== */
+.radar-pill {
+  margin-right: auto; display: flex; align-items: center; gap: 5px;
+  background: rgba(229,9,20,0.12); border: 1px solid rgba(229,9,20,0.4);
+  color: #e50914; border-radius: 20px; padding: 4px 12px;
+  font-family: 'Tajawal',sans-serif; font-size: 0.7rem; font-weight: 700;
+  cursor: pointer; animation: radarPulse 2.5s ease-in-out infinite;
+  white-space: nowrap; flex-shrink: 0;
+}
+.radar-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #e50914; animation: dotBlink 1s infinite;
+  flex-shrink: 0;
+}
+@keyframes radarPulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(229,9,20,0); }
+  50% { box-shadow: 0 0 0 6px rgba(229,9,20,0.15); }
+}
+
+/* ===== TRANSFER RADAR MODAL ===== */
+.transfer-radar {
+  position: fixed; inset: 0; z-index: 9600;
+  background: rgba(0,0,0,0.97); backdrop-filter: blur(20px);
+  display: flex; flex-direction: column; padding: 20px 16px; gap: 14px;
+  transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.25,1,0.5,1);
+  overflow-y: auto;
+}
+.transfer-radar.open { transform: translateY(0); }
+.transfer-radar.hidden { display: none; }
+.tr-header {
+  display: flex; align-items: center; justify-content: space-between;
+  direction: rtl; margin-bottom: 4px;
+}
+.tr-title {
+  font-family: 'Tajawal',sans-serif; font-weight: 800;
+  font-size: 1.05rem; color: #e50914;
+  display: flex; align-items: center; gap: 8px;
+}
+.tr-list { display: flex; flex-direction: column; gap: 10px; }
+
+/* ===== NEWS HUB HEADER ===== */
+.news-hub-hdr {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 16px; background: rgba(46,211,105,0.07);
+  border: 1px solid rgba(46,211,105,0.2); border-radius: 12px;
+  margin: 0 16px 10px; color: #46d369;
+  font-family: 'Tajawal',sans-serif; font-size: 0.85rem; font-weight: 700;
+  direction: rtl;
+}
+.news-hub-back {
+  margin-right: auto; background: rgba(46,211,105,0.1);
+  border: 1px solid rgba(46,211,105,0.3); color: #46d369;
+  border-radius: 20px; padding: 4px 12px;
+  font-family: 'Tajawal',sans-serif; font-size: 0.75rem; cursor: pointer;
+  display: flex; align-items: center; gap: 5px;
+}
+
+/* ===== LSV QUALITY ROW ===== */
+.lsv-quality-row {
+  display: flex; gap: 8px; direction: rtl;
+}
+.lsv-quality-btn {
+  flex: 1; background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.5);
+  font-family: 'Tajawal',sans-serif; font-size: 0.8rem; font-weight: 700;
+  padding: 8px; border-radius: 10px; cursor: pointer;
+  transition: all 0.2s;
+}
+.lsv-quality-btn.active {
+  background: rgba(46,211,105,0.12);
+  border-color: rgba(46,211,105,0.5); color: #46d369;
+  box-shadow: 0 0 10px rgba(46,211,105,0.2);
+}
+
+/* ===== PITCH GREEN AURA (إضاءة خلفية عشبية) ===== */
+#football-archive-section {
+  position: relative;
+}
+#football-archive-section::before {
+  content: ''; position: absolute;
+  top: -40px; left: 50%; transform: translateX(-50%);
+  width: 80%; height: 200px;
+  background: radial-gradient(ellipse at center, rgba(46,211,105,0.08) 0%, transparent 70%);
+  pointer-events: none; z-index: 0;
+}
+.arch-grid, .arch-filters-row { position: relative; z-index: 1; }
+
+/* ===== GLASSMORPHIC NEWS CARDS (upgrade) ===== */
+.sp-news-card {
+  background: rgba(0,0,0,0.5) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255,255,255,0.07) !important;
+}
+.sp-news-img {
+  background: linear-gradient(135deg, #0a1a0a, #1a1a1a) !important;
+  min-width: 100px; min-height: 85px;
+  }
