@@ -303,19 +303,35 @@
 
   <!-- أخبار كرة القدم -->
   <div class="sp-section">
-    <div class="sp-section-hdr"><span class="sp-section-bar"></span><span class="sp-section-title">أخبار كرة القدم</span></div>
+    <div class="sp-section-hdr">
+      <span class="sp-section-bar"></span>
+      <span class="sp-section-title">أخبار كرة القدم</span>
+      <button class="sp-see-all-btn" onclick="spShowAllNews()">عرض الكل</button>
+    </div>
     <div class="sp-news-list" id="spNewsList"></div>
   </div>
+  </div>
 
-  <!-- Stream Panel -->
-  <div id="fvStreamPanel" class="fv-stream-panel hidden">
-    <div class="fv-stream-title"><i class="ri-live-line"></i> اختر سيرفر البث</div>
-    <div class="fv-stream-btns">
-      <button class="fv-srv-btn" onclick="alert('ROX Sports')"><i class="ri-tv-line"></i> ROX Sports</button>
-      <button class="fv-srv-btn" onclick="alert('Arena HD')"><i class="ri-broadcast-line"></i> Arena HD</button>
-      <button class="fv-srv-btn" onclick="alert('Match TV')"><i class="ri-signal-tower-line"></i> Match TV</button>
+  <!-- Live Stream Vault -->
+  <div id="liveStreamVault" class="live-stream-vault hidden">
+    <div class="lsv-header">
+      <div class="lsv-match-title" id="lsvMatchTitle">ليفربول vs أرسنال</div>
+      <div class="lsv-live-pill"><span class="lsv-ping"></span>مباشر الآن</div>
+      <button class="lsv-close-btn" onclick="closeLiveStream()"><i class="ri-close-line"></i></button>
     </div>
-    <button class="fv-stream-close" onclick="document.getElementById('fvStreamPanel').classList.add('hidden')"><i class="ri-close-circle-line"></i> إغلاق</button>
+    <div class="lsv-player">
+      <div class="lsv-player-inner">
+        <div class="lsv-play-icon"><i class="ri-play-circle-fill"></i></div>
+        <div class="lsv-player-label">البث الحي — جارٍ التشغيل</div>
+      </div>
+    </div>
+    <div class="lsv-servers-label">اختر جودة البث</div>
+    <div class="lsv-servers-row">
+      <button class="lsv-srv active" onclick="lsvSelect(this)"><span class="lsv-dot"></span>ROX Sports HD</button>
+      <button class="lsv-srv" onclick="lsvSelect(this)"><span class="lsv-dot"></span>BeIN Prime</button>
+      <button class="lsv-srv" onclick="lsvSelect(this)"><span class="lsv-dot"></span>Arena Live</button>
+      <button class="lsv-srv" onclick="lsvSelect(this)"><span class="lsv-dot"></span>Stellar Stream</button>
+    </div>
   </div>
 </div>
 <div id="fvOverlay" class="fv-overlay hidden" onclick="toggleFootballVault()"></div>
