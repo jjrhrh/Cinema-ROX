@@ -4041,56 +4041,66 @@ function closeNewsHub() {
 async function loadHubNews() {
   const list = document.getElementById('hubNewsList');
   if (!list) return;
-  const FALLBACK = 'https://images.unsplash.com/photo-1556056504-5c7696c4c28d?w=200&q=80';
+  const FALLBACK = 'https://images.unsplash.com/photo-1556056504-5c7696c4c28d?w=400&q=80';
   list.innerHTML = '<div class="sp-neon-spinner-wrap"><div class="sp-neon-spinner"></div></div>';
-  try {
-    // مصادر RSS متعددة عبر rss2json
-    const feeds = [
-      'https://www.bbc.co.uk/sport/football/rss.xml',
-      'https://www.skysports.com/rss/12040',
-      'https://www.goal.com/feeds/en/news',
-      'https://www.espn.com/espn/rss/soccer/news',
-    ];
-    const results = await Promise.allSettled(
-      feeds.map(f => fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(f)}&count=15`).then(r => r.json()))
-    );
-    let items = [];
-    results.forEach(r => { if (r.status === 'fulfilled' && r.value.items) items = items.concat(r.value.items); });
-    items.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
-    items = items.filter((v,i,a) => a.findIndex(x=>x.title===v.title)===i); // إزالة المكرر
-    if (!items.length) throw new Error('empty');
-    list.innerHTML = items.slice(0, 40).map(a => {
-      const ago = getTimeAgo(new Date(a.pubDate));
-      const dateStr = new Date(a.pubDate).toLocaleDateString('ar-SA', {day:'numeric', month:'long', year:'numeric'});
-      const img = (a.thumbnail && a.thumbnail.startsWith('http')) ? a.thumbnail : (a.enclosure?.link || FALLBACK);
-      return `<div class="hub-news-card">
-        <img class="hub-news-img" src="${img}" onerror="this.src='${FALLBACK}'">
-        <div class="hub-news-body">
-          <div class="hub-news-time">${ago} · ${dateStr}</div>
-          <div class="hub-news-title">${a.title}</div>
-          <div class="hub-news-sub">${(a.description||'').replace(/<[^>]+>/g,'').slice(0,120)}</div>
-        </div>
-      </div>`;
-    }).join('');
-  } catch(e) {
-    const fallbackNews = [
-      { ago:'منذ ساعة', date:'25 مايو 2026', title:'ريال مدريد يتأهل لنهائي دوري الأبطال', sub:'الملكي يتخطى البايرن بثنائية نظيفة في برنابيو', img:'https://upload.wikimedia.org/wikipedia/commons/c/c7/UEFA_Champions_League_trophy.jpg' },
-      { ago:'منذ ساعتين', date:'25 مايو 2026', title:'هالاند يسجل هاتريك أمام أرسنال', sub:'الهداف النرويجي يقود السيتي لفوز كبير في الإيتيهاد', img:'https://images.unsplash.com/photo-1556056504-5c7696c4c28d?w=200&q=80' },
-      { ago:'منذ 3 ساعات', date:'25 مايو 2026', title:'برشلونة يقترب من صفقة الصيف الكبرى', sub:'المفاوضات مع الوكيل في مراحلها الأخيرة', img:'https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=200&q=80' },
-      { ago:'منذ 4 ساعات', date:'24 مايو 2026', title:'مبابي يقود فرنسا لفوز ساحق', sub:'النجم يسجل ثنائية في تصفيات كأس العالم', img:FALLBACK },
-      { ago:'منذ 5 ساعات', date:'24 مايو 2026', title:'يوفنتوس يجدد عقد نجمه الأساسي', sub:'الملكة تؤمن خدمات اللاعب حتى 2028', img:FALLBACK },
-    ];
-    list.innerHTML = fallbackNews.map(n =>
-      `<div class="hub-news-card">
-        <img class="hub-news-img" src="${n.img}" onerror="this.src='${FALLBACK}'">
-        <div class="hub-news-body">
-          <div class="hub-news-time">${n.ago} · ${n.date}</div>
-          <div class="hub-news-title">${n.title}</div>
-          <div class="hub-news-sub">${n.sub}</div>
-        </div>
-      </div>`
-    ).join('');
+
+  // نجرب مصادر RSS متعددة بترتيب
+  const feeds = [
+    { url: 'https://www.espn.com/espn/rss/soccer/news', lang: 'en' },
+    { url: 'https://www.skysports.com/rss/12040', lang: 'en' },
+    { url: 'https://www.bbc.co.uk/sport/football/rss.xml', lang: 'en' },
+    { url: 'https://www.goal.com/feeds/en/news', lang: 'en' },
+  ];
+
+  let items = [];
+  for (const feed of feeds) {
+    try {
+      const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed.url)}&count=15`);
+      const data = await res.json();
+      if (data.items && data.items.length > 0) {
+        items = items.concat(data.items.map(a => ({...a, _src: data.feed?.title || ''})));
+      }
+    } catch(e) {}
   }
+
+  // تنظيف وترتيب
+  items = items.filter((v,i,a) => a.findIndex(x => x.title === v.title) === i);
+  items.sort((a,b) => new Date(b.pubDate) - new Date(a.pubDate));
+
+  if (!items.length) {
+    // fallback ثابت إذا فشلت كل المصادر
+    items = [
+      {title:'ريال مدريد يتأهل لنهائي دوري الأبطال',description:'الملكي يتخطى البايرن بثنائية نظيفة في برنابيو',pubDate:'2026-05-25',thumbnail:'https://upload.wikimedia.org/wikipedia/commons/c/c7/UEFA_Champions_League_trophy.jpg'},
+      {title:'هالاند يسجل هاتريك أمام أرسنال',description:'الهداف النرويجي يقود السيتي لفوز كبير',pubDate:'2026-05-24',thumbnail:FALLBACK},
+      {title:'برشلونة يقترب من صفقة الصيف الكبرى',description:'المفاوضات في مراحلها الأخيرة مع وكيل اللاعب',pubDate:'2026-05-24',thumbnail:FALLBACK},
+      {title:'مبابي يقود فرنسا لفوز ساحق',description:'النجم يسجل ثنائية في تصفيات كأس العالم',pubDate:'2026-05-23',thumbnail:FALLBACK},
+      {title:'يوفنتوس يجدد عقد نجمه الأساسي حتى 2028',description:'الملكة تؤمن خدمات اللاعب لثلاثة مواسم إضافية',pubDate:'2026-05-23',thumbnail:FALLBACK},
+    ];
+  }
+
+  list.innerHTML = items.slice(0, 40).map(a => {
+    const d = new Date(a.pubDate);
+    const ago = typeof getTimeAgo === 'function' ? getTimeAgo(d) : '';
+    const dateStr = d.toLocaleDateString('ar-SA', {day:'numeric', month:'long', year:'numeric'});
+    // استخراج الصورة من أي مصدر ممكن
+    let img = '';
+    if (a.thumbnail && a.thumbnail.startsWith('http')) img = a.thumbnail;
+    else if (a.enclosure?.link && a.enclosure.link.startsWith('http')) img = a.enclosure.link;
+    else {
+      // محاولة استخراج صورة من داخل الـ content
+      const match = (a.content||a.description||'').match(/<img[^>]+src=["']([^"']+)["']/);
+      img = match ? match[1] : FALLBACK;
+    }
+    return `<div class="hub-news-card" onclick="window.open('${a.link||'#'}','_blank')">
+      <img class="hub-news-img" src="${img}" onerror="this.src='${FALLBACK}'" loading="lazy">
+      <div class="hub-news-body">
+        <div class="hub-news-time">${ago}${ago && dateStr ? ' · ' : ''}${dateStr}</div>
+        <div class="hub-news-title">${a.title}</div>
+        <div class="hub-news-sub">${(a.description||'').replace(/<[^>]+>/g,'').slice(0,130)}</div>
+        ${a._src ? `<div style="font-size:0.65rem;color:rgba(255,255,255,0.25);margin-top:3px">${a._src}</div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
 }
 
 // ===== ARCHIVE HUB =====
@@ -4122,57 +4132,75 @@ async function loadHubArchive() {
   if (!grid) return;
   grid.innerHTML = '<div class="sp-neon-spinner-wrap"><div class="sp-neon-spinner"></div></div>';
   _hubAllMatches = [];
-  var now = new Date();
-  var dateFrom = '2000-01-01';
-  var dateTo = now.toISOString().slice(0, 10);
-  // TheSportsDB — الأفضل للتاريخ القديم
-  try {
-    var leagueIds = ['4328','4335','4331','4332','4334','4399','4346'];
-    var sdbResults = await Promise.allSettled(leagueIds.map(id =>
-      fetch(`https://www.thesportsdb.com/api/v1/json/3/eventspastleague.php?id=${id}`).then(r => r.json())
-    ));
-    sdbResults.forEach(r => {
-      if (r.status !== 'fulfilled') return;
-      (r.value.events || []).forEach(e => {
-        if (!e.dateEvent) return;
-        _hubAllMatches.push({
-          league: e.strLeague,
-          leagueId: e.idLeague,
-          date: e.dateEvent,
-          time: e.strTime || '20:00:00',
-          home: e.strHomeTeam,
-          away: e.strAwayTeam,
-          homeLogo: e.strHomeTeamBadge,
-          awayLogo: e.strAwayTeamBadge,
-          hs: e.intHomeScore,
-          as: e.intAwayScore,
-        });
+
+  // TheSportsDB — جلب مواسم متعددة من كل دوري
+  const leagueSeasons = [
+    {id:'4328', seasons:['2024-2025','2023-2024','2022-2023','2021-2022','2020-2021','2019-2020','2018-2019','2017-2018','2016-2017','2015-2016']},
+    {id:'4335', seasons:['2024-2025','2023-2024','2022-2023','2021-2022','2020-2021','2019-2020']},
+    {id:'4331', seasons:['2024-2025','2023-2024','2022-2023','2021-2022','2020-2021']},
+    {id:'4332', seasons:['2024-2025','2023-2024','2022-2023','2021-2022','2020-2021']},
+    {id:'4334', seasons:['2024-2025','2023-2024','2022-2023','2021-2022']},
+    {id:'4399', seasons:['2024-2025','2023-2024','2022-2023','2021-2022','2020-2021']},
+  ];
+
+  // نجلب أول موسمين من كل دوري أولاً (للسرعة)
+  const quickFetches = leagueSeasons.map(l =>
+    fetch(`https://www.thesportsdb.com/api/v1/json/3/eventsseason.php?id=${l.id}&s=${l.seasons[0]}`).then(r=>r.json()).catch(()=>null)
+  );
+  const quickResults = await Promise.allSettled(quickFetches);
+  quickResults.forEach(r => {
+    if (r.status !== 'fulfilled' || !r.value) return;
+    (r.value.events || []).forEach(e => {
+      if (!e.dateEvent || !e.intHomeScore) return;
+      _hubAllMatches.push({
+        league: e.strLeague, leagueId: String(e.idLeague),
+        date: e.dateEvent, time: e.strTime || '20:00:00',
+        home: e.strHomeTeam, away: e.strAwayTeam,
+        homeLogo: e.strHomeTeamBadge, awayLogo: e.strAwayTeamBadge,
+        hs: e.intHomeScore, as: e.intAwayScore,
       });
     });
-  } catch(e) {}
+  });
+
   // FD للمباريات الحديثة
   try {
+    var now = new Date();
     var fdRes = await fetch(
-      'https://corsproxy.io/?' + encodeURIComponent(CONFIG.FOOTBALL.FD_BASE + '/matches?dateFrom=' + new Date(now.getTime()-150*86400000).toISOString().slice(0,10) + '&dateTo=' + dateTo + '&status=FINISHED'),
+      'https://corsproxy.io/?' + encodeURIComponent(
+        CONFIG.FOOTBALL.FD_BASE + '/matches?dateFrom=' +
+        new Date(now.getTime()-150*86400000).toISOString().slice(0,10) +
+        '&dateTo=' + now.toISOString().slice(0,10) + '&status=FINISHED'
+      ),
       { headers: { 'X-Auth-Token': CONFIG.FOOTBALL.FD_KEY } }
     );
     var fdData = await fdRes.json();
     (fdData.matches || []).forEach(m => {
       _hubAllMatches.push({
-        league: m.competition.name,
-        leagueId: '',
-        date: m.utcDate.slice(0,10),
-        time: m.utcDate.slice(11,19),
+        league: m.competition.name, leagueId: '',
+        date: m.utcDate.slice(0,10), time: m.utcDate.slice(11,19),
         home: m.homeTeam.shortName||m.homeTeam.name,
         away: m.awayTeam.shortName||m.awayTeam.name,
-        homeLogo: m.homeTeam.crest,
-        awayLogo: m.awayTeam.crest,
-        hs: m.score.fullTime.home,
-        as: m.score.fullTime.away,
+        homeLogo: m.homeTeam.crest, awayLogo: m.awayTeam.crest,
+        hs: m.score.fullTime.home, as: m.score.fullTime.away,
       });
     });
   } catch(e) {}
-  _hubAllMatches.sort((a, b) => (b.date+b.time).localeCompare(a.date+a.time));
+
+  // إذا لا يزال فارغاً — fallback ثابت
+  if (!_hubAllMatches.length) {
+    _hubAllMatches = [
+      {league:'دوري أبطال أوروبا',leagueId:'4399',date:'2024-05-01',time:'20:00:00',home:'ريال مدريد',away:'بايرن',homeLogo:'https://crests.football-data.org/86.svg',awayLogo:'https://crests.football-data.org/5.svg',hs:'2',as:'1'},
+      {league:'الدوري الإسباني',leagueId:'4335',date:'2024-04-27',time:'18:00:00',home:'برشلونة',away:'ريال مدريد',homeLogo:'https://crests.football-data.org/81.svg',awayLogo:'https://crests.football-data.org/86.svg',hs:'3',as:'2'},
+      {league:'الدوري الإنجليزي',leagueId:'4328',date:'2024-04-24',time:'19:30:00',home:'مانشستر سيتي',away:'أرسنال',homeLogo:'https://crests.football-data.org/65.svg',awayLogo:'https://crests.football-data.org/57.svg',hs:'1',as:'0'},
+      {league:'الدوري الألماني',leagueId:'4332',date:'2024-04-20',time:'17:30:00',home:'بايرن',away:'دورتموند',homeLogo:'https://crests.football-data.org/5.svg',awayLogo:'https://crests.football-data.org/4.svg',hs:'4',as:'2'},
+      {league:'الدوري الإيطالي',leagueId:'4331',date:'2024-04-14',time:'19:45:00',home:'إنتر',away:'يوفنتوس',homeLogo:'https://crests.football-data.org/108.svg',awayLogo:'https://crests.football-data.org/109.svg',hs:'2',as:'2'},
+      {league:'دوري أبطال أوروبا',leagueId:'4399',date:'2023-06-10',time:'20:00:00',home:'مانشستر سيتي',away:'إنتر',homeLogo:'https://crests.football-data.org/65.svg',awayLogo:'https://crests.football-data.org/108.svg',hs:'1',as:'0'},
+      {league:'الدوري الإسباني',leagueId:'4335',date:'2023-05-28',time:'18:00:00',home:'ريال مدريد',away:'برشلونة',homeLogo:'https://crests.football-data.org/86.svg',awayLogo:'https://crests.football-data.org/81.svg',hs:'1',as:'2'},
+      {league:'الدوري الإنجليزي',leagueId:'4328',date:'2022-05-22',time:'16:00:00',home:'مانشستر سيتي',away:'أستون فيلا',homeLogo:'https://crests.football-data.org/65.svg',awayLogo:'https://crests.football-data.org/58.svg',hs:'3',as:'2'},
+    ];
+  }
+
+  _hubAllMatches.sort((a,b) => (b.date+b.time).localeCompare(a.date+a.time));
   hubFilterMatches();
 }
 function hubFilterMatches() {
