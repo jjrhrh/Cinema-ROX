@@ -3722,20 +3722,25 @@ async function loadSpNews() {
   if (!list) return;
   list.innerHTML = '<div class="sp-neon-spinner-wrap"><div class="sp-neon-spinner"></div></div>';
   const FALLBACK_IMG = 'https://images.unsplash.com/photo-1556056504-5c7696c4c28d?w=200&q=80';
-  const RSS_FEEDS = [
+  const feeds = [
     'https://www.bbc.co.uk/sport/football/rss.xml',
     'https://feeds.skysports.com/skysports/football',
+    'https://www.goal.com/feeds/en/news',
+    'https://www.espn.com/espn/rss/soccer/news',
   ];
   try {
-    const rssUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(RSS_FEEDS[0])}&api_key=public&count=8`;
-    const res = await fetch(rssUrl);
-    const data = await res.json();
-    const items = (data.items || []).slice(0, 6);
-    if (!items.length) throw new Error('empty');
-    list.innerHTML = items.map(a => {
+    const results = await Promise.allSettled(
+      feeds.map(f => fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(f)}&api_key=public&count=15`).then(r=>r.json()))
+    );
+    let allItems = [];
+    results.forEach(r => { if (r.status==='fulfilled') allItems = allItems.concat(r.value.items||[]); });
+    allItems = allItems.filter((v,i,a) => a.findIndex(x=>x.title===v.title)===i);
+    allItems.sort((a,b) => new Date(b.pubDate)-new Date(a.pubDate));
+    if (!allItems.length) throw new Error('empty');
+    list.innerHTML = allItems.slice(0,30).map(a => {
       const ago = getTimeAgo(new Date(a.pubDate));
       const img = (a.thumbnail && a.thumbnail.startsWith('http')) ? a.thumbnail : (a.enclosure?.link || FALLBACK_IMG);
-      return `<div class="sp-news-card">
+      return `<div class="sp-news-card" onclick="window.open('${a.link||'#'}','_blank')">
         <div class="sp-news-text-block">
           <div class="sp-news-time">${ago}</div>
           <div class="sp-news-title">${a.title}</div>
@@ -3747,8 +3752,11 @@ async function loadSpNews() {
   } catch(e) {
     const news = [
       { time:'منذ ساعة', title:'ريال مدريد يتأهل لنهائي دوري الأبطال', sub:'الملكي يتخطى البايرن بثنائية نظيفة', img:'https://upload.wikimedia.org/wikipedia/commons/c/c7/UEFA_Champions_League_trophy.jpg' },
-      { time:'منذ ساعتين', title:'هالاند يسجل هاتريك أمام أرسنال', sub:'الهداف النرويجي يقود السيتي لفوز كبير', img:'https://images.unsplash.com/photo-1556056504-5c7696c4c28d?w=200&q=80' },
-      { time:'منذ 3 ساعات', title:'برشلونة يضم نجم الدوري الفرنسي', sub:'صفقة الصيف الأضخم تقترب من الإعلان', img:'https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=200&q=80' },
+      { time:'منذ ساعتين', title:'هالاند يسجل هاتريك أمام أرسنال', sub:'الهداف النرويجي يقود السيتي لفوز كبير', img:FALLBACK_IMG },
+      { time:'منذ 3 ساعات', title:'برشلونة يضم نجم الدوري الفرنسي', sub:'صفقة الصيف الأضخم تقترب من الإعلان', img:FALLBACK_IMG },
+      { time:'منذ 4 ساعات', title:'مبابي يقود فرنسا بهدفين في التصفيات', sub:'النجم الفرنسي يتألق في الليلة الكبيرة', img:FALLBACK_IMG },
+      { time:'منذ 5 ساعات', title:'يوفنتوس يجدد عقد نجمه حتى 2028', sub:'الملكة تؤمن خدمات المدافع لثلاثة مواسم', img:FALLBACK_IMG },
+      { time:'منذ 6 ساعات', title:'أتلتيكو مدريد يضرب بقوة في الدوري', sub:'سيميوني يستعد لمرحلة ما بعد المنتصف', img:FALLBACK_IMG },
     ];
     list.innerHTML = news.map(n =>
       `<div class="sp-news-card">
