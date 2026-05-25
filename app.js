@@ -3779,12 +3779,55 @@ function getTimeAgo(date) {
   return `منذ ${Math.floor(diff/1440)} يوم`;
 }
 
-function openFootballStream(id) {
-  document.getElementById('fvStreamPanel')?.classList.remove('hidden');
+function openFootballStream(id, matchTitle) {
+  const vault = document.getElementById('liveStreamVault');
+  const title = document.getElementById('lsvMatchTitle');
+  if (title && matchTitle) title.textContent = matchTitle;
+  vault.classList.remove('hidden');
+  setTimeout(() => vault.classList.add('open'), 10);
+  document.getElementById('footballPage').style.filter = 'brightness(0.4)';
+}
+
+function closeLiveStream() {
+  const vault = document.getElementById('liveStreamVault');
+  vault.classList.remove('open');
+  document.getElementById('footballPage').style.filter = '';
+  setTimeout(() => vault.classList.add('hidden'), 500);
+}
+
+function lsvSelect(el) {
+  document.querySelectorAll('.lsv-srv').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
 }
 function spBellAlert(btn, match) {
   btn.innerHTML = '<i class="ri-notification-fill" style="color:#ffd700"></i> <span style="color:#ffd700">تم التفعيل ✓</span>';
   btn.style.borderColor = 'rgba(255,215,0,0.4)';
   btn.style.background = 'rgba(255,215,0,0.08)';
   if (typeof showToast === 'function') showToast('🔔 سيتم تنبيهك قبل بداية ' + match);
+}
+async function spShowAllNews() {
+  const list = document.getElementById('spNewsList');
+  if (!list) return;
+  list.innerHTML = '<div class="sp-loading">⏳ جاري تحميل كل الأخبار...</div>';
+  try {
+    const res = await fetch(
+      `https://corsproxy.io/?${encodeURIComponent(CONFIG.API.NEWS_BASE+'/everything?q=football+soccer&language=ar&pageSize=20&sortBy=publishedAt&apiKey='+CONFIG.KEYS.NEWS)}`
+    );
+    const data = await res.json();
+    const articles = (data.articles || []).filter(a => a.urlToImage);
+    if (!articles.length) throw new Error('empty');
+    list.innerHTML = articles.map(a => {
+      const ago = getTimeAgo(new Date(a.publishedAt));
+      return `<div class="sp-news-card">
+        <div class="sp-news-text-block">
+          <div class="sp-news-time">${ago}</div>
+          <div class="sp-news-title">${a.title}</div>
+          <div class="sp-news-sub">${a.description||''}</div>
+        </div>
+        <img class="sp-news-img" src="${a.urlToImage}" onerror="this.style.background='#1a1a1a';this.style.opacity='0'">
+      </div>`;
+    }).join('');
+  } catch(e) {
+    list.innerHTML = '<div class="sp-loading" style="color:#e50914">تعذر تحميل الأخبار</div>';
+  }
 }
