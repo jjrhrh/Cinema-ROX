@@ -3704,7 +3704,7 @@ async function loadSpMatchesLive() {
           </div>
         </div>
         ${m.date?`<div class="sp-match-date"><i class="ri-calendar-line"></i>${m.date}</div>`:''}
-        ${m.live?`<button class="sp-match-watch-btn"><i class="ri-live-line"></i> شاهد البث الحي</button>`:`<div class="sp-match-date" style="margin-top:2px"><i class="ri-notification-3-line"></i> تنبيه</div>`}
+        ${m.live ? `<button class="sp-match-watch-btn"><i class="ri-live-line"></i> شاهد البث الحي</button>` : `<button class="sp-match-watch-btn" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);color:rgba(255,255,255,0.5)" onclick="spBellAlert(this,'${m.home} vs ${m.away}')"><i class="ri-notification-3-line"></i> تنبيه</button>`}
       </div>`
     ).join('');
   }
@@ -3714,12 +3714,12 @@ function renderSpLeagues() {
   const row = document.getElementById('spLeaguesRow');
   if (!row) return;
   const leagues = [
-    { name: 'دوري أبطال أوروبا', logo: 'https://www.uefa.com/MultimediaFiles/Photo/competitions/Competitionlogos/01/07/64/76/1076476_w300.png' },
+    { name: 'دوري أبطال أوروبا', logo: 'https://upload.wikimedia.org/wikipedia/en/b/bf/UEFA_Champions_League_logo_2.svg' },
     { name: 'الدوري الإنجليزي', logo: 'https://crests.football-data.org/PL.png' },
     { name: 'الدوري الإسباني', logo: 'https://crests.football-data.org/PD.png' },
     { name: 'الدوري الإيطالي', logo: 'https://crests.football-data.org/SA.png' },
     { name: 'الدوري الألماني', logo: 'https://crests.football-data.org/BL1.png' },
-    { name: 'الدوري الفرنسي', logo: 'https://crests.football-data.org/FL1.png' },
+    { name: 'دوري أبطال آسيا', logo: 'https://upload.wikimedia.org/wikipedia/en/a/a0/AFC_Champions_League_logo.svg' },
   ];
   row.innerHTML = leagues.map(l =>
     `<div class="sp-league-card">
@@ -3755,7 +3755,7 @@ async function loadSpNews() {
     const news = [
       { time: 'منذ 30 دقيقة', title: 'ليفربول يقترب من حسم لقب الدوري الإنجليزي', sub: 'فوز مهم على أرسنال يقرّب الريدز من اللقب', img: 'https://upload.wikimedia.org/wikipedia/commons/1/1e/Mohamed_Salah_2018.jpg' },
       { time: 'منذ ساعة', title: 'مبابي يعلن رحيله عن باريس سان جيرمان', sub: 'النجم الفرنسي يبدأ فصلاً جديداً في مسيرته', img: 'https://upload.wikimedia.org/wikipedia/commons/5/57/Kylian_Mbapp%C3%A9_in_2022_%28cropped%29.jpg' },
-      { time: 'منذ ساعتين', title: 'هالاند يكسر رقم الهدافين في تاريخ الدوري الإنجليزي', sub: 'السويدي العملاق يسجل هدفه التاريخي 37 هذا الموسم', img: 'https://upload.wikimedia.org/wikipedia/commons/e/e0/Vinicius_Junior_2023.jpg' },
+      { time: 'منذ ساعتين', title: 'هالاند يكسر رقم الهدافين في الدوري الإنجليزي', sub: 'العملاق النرويجي يسجل هدفه الـ37 هذا الموسم', img: 'https://upload.wikimedia.org/wikipedia/commons/e/e0/Vinicius_Junior_2023.jpg' },
       { time: 'منذ 3 ساعات', title: 'ريال مدريد يتأهل لنهائي دوري الأبطال بثلاثية', sub: 'الملكي يؤكد هيمنته على أوروبا للموسم الثاني', img: 'https://upload.wikimedia.org/wikipedia/commons/c/c7/UEFA_Champions_League_trophy.jpg' },
       { time: 'منذ 4 ساعات', title: 'فينيسيوس يفوز بجائزة أفضل لاعب في العالم', sub: 'النجم البرازيلي يتوّج بالجائزة الكبرى لعام 2025', img: 'https://upload.wikimedia.org/wikipedia/commons/1/1e/Mohamed_Salah_2018.jpg' },
     ];
@@ -3781,4 +3781,10 @@ function getTimeAgo(date) {
 
 function openFootballStream(id) {
   document.getElementById('fvStreamPanel')?.classList.remove('hidden');
+}
+function spBellAlert(btn, match) {
+  btn.innerHTML = '<i class="ri-notification-fill" style="color:#ffd700"></i> <span style="color:#ffd700">تم التفعيل ✓</span>';
+  btn.style.borderColor = 'rgba(255,215,0,0.4)';
+  btn.style.background = 'rgba(255,215,0,0.08)';
+  if (typeof showToast === 'function') showToast('🔔 سيتم تنبيهك قبل بداية ' + match);
 }
