@@ -3693,8 +3693,8 @@ async function loadSpMatchesLive() {
           </div>
           <div class="sp-match-center">
             ${m.live
-              ? `<div class="sp-match-live-badge"><span class="sp-match-live-dot"></span>مباشرة</div><div class="sp-match-score">${m.score}</div><div style="font-size:0.62rem;color:rgba(255,255,255,0.4);font-family:Tajawal">${m.period}</div>`
-              : `<div class="sp-match-score" style="font-size:1rem">${m.time}</div>`
+              ? '<div class="sp-match-live-badge"><span class="sp-match-live-dot"></span>مباشرة</div><div class="sp-match-score">'+(m.score||'')+'</div>'
+              : '<div class="sp-match-score" style="font-size:1rem">'+(m.time||'')+'</div>'
             }
           </div>
           <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
