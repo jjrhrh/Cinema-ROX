@@ -6077,7 +6077,12 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
 .sp-news-list {
   display: flex; flex-direction: column; gap: 2px;
   padding: 0 12px;
+  max-height: 420px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
+.sp-news-list::-webkit-scrollbar { display: none; }
 .sp-news-card {
   display: flex; align-items: center;
   gap: 12px; direction: rtl;
