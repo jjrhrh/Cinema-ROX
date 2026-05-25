@@ -3683,7 +3683,7 @@ async function loadSpMatchesLive() {
       { league: 'دوري أبطال أوروبا', home: 'ريال مدريد', away: 'بايرن', homeLogo: 'https://crests.football-data.org/86.svg', awayLogo: 'https://crests.football-data.org/5.svg', time: '10:00 مساءً', date: 'الأربعاء 8 مايو' },
       { league: 'الدوري الإيطالي', home: 'يوفنتوس', away: 'إنتر', homeLogo: 'https://crests.football-data.org/109.svg', awayLogo: 'https://crests.football-data.org/108.svg', time: '9:45 مساءً', date: 'الجمعة 10 مايو' },
     ];
-    row.innerHTML = fallback.map(m => `
+    row.innerHTML = fallback.map(function(m) { return `
       <div class="sp-match-card ${m.live?'is-live':''}">
         <div class="sp-match-league">${m.league}</div>
         <div class="sp-match-teams-row">
