@@ -1,5 +1,3 @@
-import vm from 'vm';
-
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET');
@@ -81,34 +79,24 @@ async function runProvider(job, tmdbId, type, season, ep) {
   if (!codeRes.ok) throw new Error(`failed to fetch provider: ${codeUrl}`);
   const code = await codeRes.text();
 
-  // بيئة آمنة معزولة للـ provider
-  const sandbox = {
-    module:         { exports: {} },
-    exports:        {},
-    fetch:          fetch,
-    console:        console,
-    setTimeout,
-    clearTimeout,
-    setInterval,
-    clearInterval,
-    AbortSignal,
-    URL,
-    URLSearchParams,
-    Buffer,
-    process:        { env: {} },
-    atob,
-    btoa,
-  };
-  sandbox.module.exports = sandbox.exports;
-
+const mod = { exports: {} };
+  const fn = new Function(
+    'module','exports','fetch','console','setTimeout','clearTimeout',
+    'setInterval','clearInterval','URL','URLSearchParams','Buffer',
+    'process','atob','btoa','AbortSignal',
+    code
+  );
   try {
-    vm.runInNewContext(code, sandbox, { timeout: 15000, filename: job.filename });
+    fn(
+      mod, mod.exports, fetch, console, setTimeout, clearTimeout,
+      setInterval, clearInterval, URL, URLSearchParams, Buffer,
+      { env: {} }, atob, btoa, AbortSignal
+    );
   } catch (e) {
-    throw new Error(`vm error in ${job.name}: ${e.message}`);
+    throw new Error(`exec error in ${job.name}: ${e.message}`);
   }
 
-  const getStreams = sandbox.module.exports?.getStreams
-                 || sandbox.exports?.getStreams;
+  const getStreams = mod.exports?.getStreams || mod.exports?.default?.getStreams;
 
   if (typeof getStreams !== 'function')
     throw new Error(`${job.name} لا يصدّر getStreams`);
