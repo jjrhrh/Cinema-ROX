@@ -3631,69 +3631,47 @@ async function loadSpMatchesLive() {
   row.innerHTML = '<div class="sp-neon-spinner-wrap"><div class="sp-neon-spinner"></div></div>';
   try {
     const today = new Date().toISOString().slice(0,10);
+    const tomorrow = new Date(Date.now()+86400000).toISOString().slice(0,10);
     const res = await fetch(
-      'https://corsproxy.io/?' + encodeURIComponent(CONFIG.FOOTBALL.FD_BASE+'/matches?dateFrom='+today+'&dateTo='+today),
+      `https://api.football-data.org/v4/matches?dateFrom=${today}&dateTo=${tomorrow}&competitions=PL,PD,SA,BL1,FL1,CL,EL`,
       { headers: { 'X-Auth-Token': CONFIG.FOOTBALL.FD_KEY } }
     );
     const data = await res.json();
-    const matches = (data.matches || []).filter(function(m){ return m.status !== 'FINISHED'; }).slice(0, 8);
-    if (!matches.length) throw new Error('no live');
-    row.innerHTML = matches.map(function(m) {
-      var isLive = m.status === 'IN_PLAY' || m.status === 'PAUSED';
-      var score  = isLive ? ((m.score.fullTime.home||0) + ' - ' + (m.score.fullTime.away||0)) : '';
-      var time   = new Date(m.utcDate).toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});
-      var date   = new Date(m.utcDate).toLocaleDateString('ar-SA',{weekday:'long',day:'numeric',month:'long'});
-      var centerHtml = isLive
-        ? '<div class="sp-match-center"><div class="sp-match-live-badge"><span class="sp-match-live-dot"></span>مباشرة</div><div class="sp-match-score">'+score+'</div></div>'
-        : '<div class="sp-match-center"><div class="sp-match-score" style="font-size:1rem">'+time+'</div></div>';
-      var homeName = m.homeTeam.shortName||m.homeTeam.name;
-      var awayName = m.awayTeam.shortName||m.awayTeam.name;
-      return '<div class="sp-match-card '+(isLive?'is-live':'')+'">'+
-        '<div class="sp-match-league">'+m.competition.name+'</div>'+
-        '<div class="sp-match-teams-row">'+
-          '<div style="display:flex;flex-direction:column;align-items:center;gap:3px">'+
-            (m.homeTeam.crest?'<img class="sp-match-team-logo" src="'+m.homeTeam.crest+'" onerror="this.style.display=\'none\'">':'')+
-            '<div class="sp-match-team-name">'+homeName+'</div>'+
-          '</div>'+
-          centerHtml+
-          '<div style="display:flex;flex-direction:column;align-items:center;gap:3px">'+
-            (m.awayTeam.crest?'<img class="sp-match-team-logo" src="'+m.awayTeam.crest+'" onerror="this.style.display=\'none\'">':'')+
-            '<div class="sp-match-team-name">'+awayName+'</div>'+
-          '</div>'+
-        '</div>'+
-        '<div class="sp-match-date"><i class="ri-calendar-line"></i>'+date+'</div>'+
-        (isLive?'<button class="sp-match-watch-btn" onclick="openFootballStream(\'live\',\''+homeName+' vs '+awayName+'\')"><i class="ri-live-line"></i> شاهد البث الحي</button>':'')+
-      '</div>';
+    const matches = (data.matches || [])
+      .filter(m => m.status !== 'FINISHED' && m.status !== 'AWARDED')
+      .slice(0, 10);
+    if (!matches.length) throw new Error('no matches');
+    row.innerHTML = matches.map(m => {
+      const isLive = m.status === 'IN_PLAY' || m.status === 'PAUSED';
+      const matchDate = new Date(m.utcDate);
+      const timeStr = matchDate.toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit',timeZone:'Asia/Riyadh'});
+      const dateStr = matchDate.toLocaleDateString('ar-SA',{weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:'Asia/Riyadh'});
+      const score = isLive ? ((m.score.fullTime.home??0)+' - '+(m.score.fullTime.away??0)) : timeStr;
+      const homeName = m.homeTeam.shortName || m.homeTeam.name;
+      const awayName = m.awayTeam.shortName || m.awayTeam.name;
+      const gender = (m.homeTeam.name||'').toLowerCase().includes('women') || (m.competition.name||'').toLowerCase().includes('women') ? ' 👩' : '';
+      const centerHtml = isLive
+        ? `<div class="sp-match-center"><div class="sp-match-live-badge"><span class="sp-match-live-dot"></span>مباشرة</div><div class="sp-match-score">${score}</div></div>`
+        : `<div class="sp-match-center"><div class="sp-match-score" style="font-size:1rem">${score}</div></div>`;
+      return `<div class="sp-match-card ${isLive?'is-live':''}">
+        <div class="sp-match-league">${m.competition.name}${gender}</div>
+        <div class="sp-match-teams-row">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+            ${m.homeTeam.crest?`<img class="sp-match-team-logo" src="${m.homeTeam.crest}" onerror="this.style.display='none'">`:'' }
+            <div class="sp-match-team-name">${homeName}</div>
+          </div>
+          ${centerHtml}
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+            ${m.awayTeam.crest?`<img class="sp-match-team-logo" src="${m.awayTeam.crest}" onerror="this.style.display='none'">`:'' }
+            <div class="sp-match-team-name">${awayName}</div>
+          </div>
+        </div>
+        <div class="sp-match-date"><i class="ri-calendar-line"></i>${dateStr}</div>
+        ${isLive?`<button class="sp-match-watch-btn" onclick="openFootballStream('live','${homeName} vs ${awayName}')"><i class="ri-live-line"></i> شاهد البث الحي</button>`:`<button class="sp-match-watch-btn" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);color:rgba(255,255,255,0.5)" onclick="spBellAlert(this,'${homeName} vs ${awayName}')"><i class="ri-notification-3-line"></i> تنبيه</button>`}
+      </div>`;
     }).join('');
   } catch(e) {
-    // Fallback ذكي: مباريات مجدولة بناءً على التاريخ الفعلي
-    var now = new Date();
-    var todayStr = now.toLocaleDateString('ar-SA',{weekday:'long',day:'numeric',month:'long'});
-    var tomorrowStr = new Date(now.getTime()+86400000).toLocaleDateString('ar-SA',{weekday:'long',day:'numeric',month:'long'});
-    var fallback = [
-      { league: 'الدوري الإسباني', home: 'برشلونة', away: 'ريال سوسيداد', homeLogo: 'https://crests.football-data.org/81.svg', awayLogo: 'https://crests.football-data.org/92.svg', time: '8:00 مساء', date: tomorrowStr },
-      { league: 'دوري أبطال أوروبا', home: 'ريال مدريد', away: 'بايرن', homeLogo: 'https://crests.football-data.org/86.svg', awayLogo: 'https://crests.football-data.org/5.svg', time: '10:00 مساء', date: tomorrowStr },
-      { league: 'الدوري الإيطالي', home: 'يوفنتوس', away: 'إنتر', homeLogo: 'https://crests.football-data.org/109.svg', awayLogo: 'https://crests.football-data.org/108.svg', time: '9:45 مساء', date: todayStr },
-      { league: 'الدوري الألماني', home: 'بايرن', away: 'دورتموند', homeLogo: 'https://crests.football-data.org/5.svg', awayLogo: 'https://crests.football-data.org/4.svg', time: '7:30 مساء', date: todayStr },
-    ];
-    row.innerHTML = fallback.map(function(m) {
-      return '<div class="sp-match-card">'+
-        '<div class="sp-match-league">'+m.league+'</div>'+
-        '<div class="sp-match-teams-row">'+
-          '<div style="display:flex;flex-direction:column;align-items:center;gap:3px">'+
-            '<img class="sp-match-team-logo" src="'+m.homeLogo+'" onerror="this.style.display=\'none\'">'+
-            '<div class="sp-match-team-name">'+m.home+'</div>'+
-          '</div>'+
-          '<div class="sp-match-center"><div class="sp-match-score" style="font-size:1rem">'+m.time+'</div></div>'+
-          '<div style="display:flex;flex-direction:column;align-items:center;gap:3px">'+
-            '<img class="sp-match-team-logo" src="'+m.awayLogo+'" onerror="this.style.display=\'none\'">'+
-            '<div class="sp-match-team-name">'+m.away+'</div>'+
-          '</div>'+
-        '</div>'+
-        '<div class="sp-match-date"><i class="ri-calendar-line"></i>'+m.date+'</div>'+
-        '<button class="sp-match-watch-btn" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);color:rgba(255,255,255,0.5)" onclick="spBellAlert(this,\''+m.home+' vs '+m.away+'\')"><i class="ri-notification-3-line"></i> تنبيه</button>'+
-      '</div>';
-    }).join('');
+    row.innerHTML = '<div style="color:rgba(255,255,255,0.4);padding:20px;text-align:center;font-family:Tajawal">تعذر تحميل المباريات</div>';
   }
 }
 
@@ -3722,67 +3700,29 @@ async function loadSpNews() {
   if (!list) return;
   list.innerHTML = '<div class="sp-neon-spinner-wrap"><div class="sp-neon-spinner"></div></div>';
   const FALLBACK_IMG = 'https://images.unsplash.com/photo-1556056504-5c7696c4c28d?w=200&q=80';
-  const feeds = [
-    'https://www.bbc.co.uk/sport/football/rss.xml',
-    'https://feeds.skysports.com/skysports/football',
-    'https://www.espn.com/espn/rss/soccer/news',
-    'https://www.goal.com/feeds/en/news',
-    'https://www.90min.com/posts.rss',
-  ];
-  async function tryFeed(url) {
-    const via1 = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}&api_key=public&count=20`;
-    const via2 = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
-    try {
-      const r = await fetch(via1);
-      const d = await r.json();
-      if (d.items && d.items.length) return d.items;
-    } catch(e) {}
-    try {
-      const r = await fetch(via2);
-      const d = await r.json();
-      const parser = new DOMParser();
-      const xml = parser.parseFromString(d.contents, 'text/xml');
-      const items = [...xml.querySelectorAll('item')].map(i => ({
-        title: i.querySelector('title')?.textContent || '',
-        link: i.querySelector('link')?.textContent || '#',
-        pubDate: i.querySelector('pubDate')?.textContent || '',
-        description: i.querySelector('description')?.textContent || '',
-        thumbnail: i.querySelector('enclosure')?.getAttribute('url') || '',
-      }));
-      return items;
-    } catch(e) {}
-    return [];
-  }
-  const results = await Promise.allSettled(feeds.map(f => tryFeed(f)));
-  let allItems = [];
-  results.forEach(r => { if (r.status === 'fulfilled') allItems = allItems.concat(r.value); });
-  allItems = allItems.filter((v, i, a) => a.findIndex(x => x.title === v.title) === i);
-  allItems.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
-  if (!allItems.length) {
+  try {
+    const key = CONFIG.KEYS.GNEWS_KEY;
+    const res = await fetch(`https://gnews.io/api/v4/search?q=football+soccer&lang=en&max=20&sortby=publishedAt&apikey=${key}`);
+    const data = await res.json();
+    if (!data.articles || !data.articles.length) throw new Error('empty');
+    list.innerHTML = data.articles.map(a => {
+      const ago = getTimeAgo(new Date(a.publishedAt));
+      const img = a.image || FALLBACK_IMG;
+      const link = a.url || '#';
+      const title = (a.title || '').replace(/'/g, '&#39;');
+      const sub = (a.description || '').slice(0, 90);
+      return `<div class="sp-news-card" onclick="window.open('${link}','_blank')">
+        <div class="sp-news-text-block">
+          <div class="sp-news-time">${ago}</div>
+          <div class="sp-news-title">${title}</div>
+          <div class="sp-news-sub">${sub}</div>
+        </div>
+        <img class="sp-news-img" src="${img}" onerror="this.src='${FALLBACK_IMG}'" loading="lazy">
+      </div>`;
+    }).join('');
+  } catch(e) {
     list.innerHTML = '<div style="color:rgba(255,255,255,0.4);padding:20px;text-align:center;font-family:Tajawal">تعذر تحميل الأخبار</div>';
-    return;
   }
-  list.innerHTML = allItems.slice(0, 40).map(a => {
-    const ago = getTimeAgo(new Date(a.pubDate));
-    let img = FALLBACK_IMG;
-    if (a.thumbnail && a.thumbnail.startsWith('http')) img = a.thumbnail;
-    else if (a.enclosure?.link && a.enclosure.link.startsWith('http')) img = a.enclosure.link;
-    else {
-      const m = (a.content || a.description || '').match(/<img[^>]+src=["']([^"']+)["']/);
-      if (m) img = m[1];
-    }
-    const link = a.link || '#';
-    const title = (a.title || '').replace(/'/g, '&#39;');
-    const sub = (a.description || '').replace(/<[^>]+>/g, '').slice(0, 90);
-    return `<div class="sp-news-card" onclick="window.open('${link}','_blank')">
-      <div class="sp-news-text-block">
-        <div class="sp-news-time">${ago}</div>
-        <div class="sp-news-title">${title}</div>
-        <div class="sp-news-sub">${sub}</div>
-      </div>
-      <img class="sp-news-img" src="${img}" onerror="this.src='${FALLBACK_IMG}'" loading="lazy">
-    </div>`;
-  }).join('');
 }
 
 function getTimeAgo(date) {
