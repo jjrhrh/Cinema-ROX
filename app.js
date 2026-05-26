@@ -1820,8 +1820,7 @@ const roxTitle = type === 'movie' ? (det.title || det.original_title) : (det.nam
 let roxStreamUrl = null;
 try {
   const streamEp = type === 'tv' ? episode : 1;
-  const repos = JSON.parse(localStorage.getItem('rox_repos') || '[]');
-const streamRes = await fetch(`https://cinema-rox-production.up.railway.app/api/stream?tmdbId=${id}&type=${type}&season=${season}&ep=${streamEp}&repos=${encodeURIComponent(JSON.stringify(repos))}`);
+  const streamRes = await fetch(`https://cinema-rox.vercel.app/api/stream?tmdbId=${id}&type=${type}&season=${season}&ep=${streamEp}`);
   const streamData = await streamRes.json();
   window._roxSources = streamData.sources || [];
 const best = window._roxSources.find(s => s.type === 'hls') || window._roxSources[0];
@@ -2291,14 +2290,6 @@ function loadProfilePage() {
             </div>
           </div>
         </div>
-        <div class="prof-hud">
-  <div class="prof-hud-title">📦 مستودعاتي</div>
-  <div style="display:flex;gap:8px;margin-bottom:10px">
-    <input id="repoInput" type="url" placeholder="https://.../manifest.json" style="flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:10px 12px;color:#fff;font-family:'Tajawal',sans-serif;font-size:0.85rem;outline:none"/>
-    <button onclick="addCustomRepo()" style="background:#e50914;border:none;border-radius:10px;padding:10px 16px;color:#fff;font-family:'Tajawal',sans-serif;cursor:pointer;font-size:0.85rem">إضافة</button>
-  </div>
-  <div id="reposList"></div>
-</div>
         <button class="prof-signout" onclick="roxSignOut()">تسجيل الخروج</button>
       <button class="prof-signout" onclick="roxSignOut()">تسجيل الخروج</button>
         <div id="watchHistoryPanel" style="display:none;padding:0 4px 8px">
@@ -2320,7 +2311,6 @@ function loadProfilePage() {
             })()}
        </div>
       </div>`;
-    renderReposList();
   }
 }
 function clearLibraryConfirm() {
@@ -2334,34 +2324,6 @@ function clearLibraryConfirm() {
 function setLang(lang,btn){ btn.closest('.prof-hud-row').querySelectorAll('.prof-pill').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); localStorage.setItem('rox_lang',lang); }
 function setSubSize(size,btn){ btn.closest('.prof-hud-row').querySelectorAll('.prof-pill').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); localStorage.setItem('rox_sub_size',size); }
 function setSubColor(color,btn){ btn.closest('.prof-hud-row').querySelectorAll('.prof-pill').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); localStorage.setItem('rox_sub_color',color); }
-function addCustomRepo() {
-  const input = document.getElementById('repoInput');
-  const url = input.value.trim();
-  if (!url.startsWith('http')) return showToast('❌ رابط غير صالح');
-  if (!url.endsWith('manifest.json')) return showToast('❌ الرابط لازم ينتهي بـ manifest.json');
-  const repos = JSON.parse(localStorage.getItem('rox_repos') || '[]');
-  if (repos.includes(url)) return showToast('⚠️ مضاف مسبقاً');
-  repos.push(url);
-  localStorage.setItem('rox_repos', JSON.stringify(repos));
-  input.value = '';
-  showToast('✅ تمت الإضافة');
-  renderReposList();
-}
-
-function removeCustomRepo(i) {
-  const repos = JSON.parse(localStorage.getItem('rox_repos') || '[]');
-  repos.splice(i, 1);
-  localStorage.setItem('rox_repos', JSON.stringify(repos));
-  renderReposList();
-}
-
-function renderReposList() {
-  const repos = JSON.parse(localStorage.getItem('rox_repos') || '[]');
-  const el = document.getElementById('reposList');
-  if (!el) return;
-  if (!repos.length) { el.innerHTML = '<p style="opacity:0.4;font-size:0.85rem">لا توجد مستودعات مضافة</p>'; return; }
-  el.innerHTML = repos.map((r, i) => `<div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.05);border-radius:8px;padding:8px 10px;margin-bottom:6px"><span style="font-size:0.75rem;color:rgba(255,255,255,0.6);word-break:break-all">${r}</span><button onclick="removeCustomRepo(${i})" style="background:none;border:none;color:#ff6b6b;cursor:pointer;font-size:1rem;margin-right:8px">🗑️</button></div>`).join('');
-}
 async function loadLibraryPage() {
   const page = document.getElementById('libraryPage');
   if (!page) return;
