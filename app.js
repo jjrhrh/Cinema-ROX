@@ -3532,10 +3532,8 @@ async function loadGenresPage() {
   ];
 
   const CY = new Date().getFullYear();
-  const YEARS_SHORT = [CY, CY-1, CY-2, CY-3, CY-4];
-  const YEARS_ALL   = Array.from({length:25}, (_,i) => CY - i);
 
-  const ALL_COUNTRIES = [
+  window.ALL_COUNTRIES = [
     { code:'US', name:'أمريكا',   flag:'🇺🇸' },
     { code:'GB', name:'بريطانيا', flag:'🇬🇧' },
     { code:'TR', name:'تركيا',    flag:'🇹🇷' },
@@ -3552,7 +3550,13 @@ async function loadGenresPage() {
     { code:'TH', name:'تايلاند',  flag:'🇹🇭' },
     { code:'EG', name:'مصر',      flag:'🇪🇬' },
     { code:'SA', name:'السعودية', flag:'🇸🇦' },
+    { code:'MA', name:'المغرب',   flag:'🇲🇦' },
+    { code:'PK', name:'باكستان',  flag:'🇵🇰' },
+    { code:'NG', name:'نيجيريا',  flag:'🇳🇬' },
+    { code:'AR', name:'الأرجنتين',flag:'🇦🇷' },
   ];
+
+  window.ALL_YEARS_LIST = Array.from({length:30}, (_,i) => CY - i);
 
   const SUB_GENRES = [
     { id:10752, name:'حربي',   img:'https://images.unsplash.com/photo-1547347298-4074fc3086f0?w=400&q=80' },
@@ -3562,30 +3566,11 @@ async function loadGenresPage() {
     { id:99,    name:'وثائقي', img:'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=400&q=80' },
   ];
 
-  function buildYears(all) {
-    const list = all ? YEARS_ALL : YEARS_SHORT;
-    const more = all ? '' : '<button class="year-btn year-more-btn" id="yearMoreBtn"><i class="ri-calendar-line"></i><span class="year-new">المزيد</span></button>';
-    return list.map((y,i) =>
-      '<button class="year-btn' + (!all && i===0 ? ' active' : '') + '" onclick="openBrowseAll(\'movie\',\'/discover/movie?primary_release_year=' + y + '\',\'' + y + '\')">' +
-      '<span class="year-num">' + y + '</span>' +
-      (!all && i===0 ? '<span class="year-new">جديد</span>' : '') +
-      '</button>'
-    ).join('') + more;
-  }
-
-  function buildCountries(all) {
-    const list = all ? ALL_COUNTRIES : ALL_COUNTRIES.slice(0, 6);
-    const more = all ? '' : '<button class="country-btn country-more-btn" id="countryMoreBtn"><span class="country-flag-circle more-dots">•••</span><span class="country-name">المزيد</span></button>';
-    return list.map(c =>
-      '<button class="country-btn" onclick="openBrowseAll(\'movie\',\'/discover/movie?with_origin_country=' + c.code + '\',\'' + c.name + '\')">' +
-      '<span class="country-flag-circle">' + c.flag + '</span>' +
-      '<span class="country-name">' + c.name + '</span>' +
-      '</button>'
-    ).join('') + more;
-  }
+  const YEARS_SHORT = [CY, CY-1, CY-2, CY-3, CY-4];
 
   page.innerHTML =
     '<div class="genres-page">' +
+
     '<div class="section-header"><span class="section-bar"></span><h2 class="section-title">التصنيفات</h2></div>' +
     '<div class="genres-grid">' +
     GENRES.map(g =>
@@ -3598,6 +3583,7 @@ async function loadGenresPage() {
       '</div>'
     ).join('') +
     '</div>' +
+
     '<div class="section-header" style="margin-top:24px"><span class="section-bar"></span><h2 class="section-title">تصفح حسب المزاج</h2></div>' +
     '<div class="moods-row">' +
     MOODS.map(m =>
@@ -3605,10 +3591,28 @@ async function loadGenresPage() {
       '<i class="' + m.icon + '"></i><span>' + m.name + '</span></button>'
     ).join('') +
     '</div>' +
+
     '<div class="section-header" style="margin-top:24px"><span class="section-bar"></span><h2 class="section-title">تصفح حسب السنوات</h2></div>' +
-    '<div class="years-row" id="yearsWrap">' + buildYears(false) + '</div>' +
+    '<div class="years-row">' +
+    YEARS_SHORT.map((y,i) =>
+      '<button class="year-btn' + (i===0 ? ' active' : '') + '" onclick="openBrowseAll(\'movie\',\'/discover/movie?primary_release_year=' + y + '\',\'' + y + '\')">' +
+      '<span class="year-num">' + y + '</span>' +
+      (i===0 ? '<span class="year-new">جديد</span>' : '') +
+      '</button>'
+    ).join('') +
+    '<button class="year-btn year-more-btn" onclick="openAllYearsScreen()"><i class="ri-calendar-line"></i><span class="year-new">المزيد</span></button>' +
+    '</div>' +
+
     '<div class="section-header" style="margin-top:24px"><span class="section-bar"></span><h2 class="section-title">تصفح حسب البلد</h2></div>' +
-    '<div class="countries-row" id="countriesWrap">' + buildCountries(false) + '</div>' +
+    '<div class="countries-row">' +
+    ALL_COUNTRIES.slice(0,6).map(c =>
+      '<button class="country-btn" onclick="openBrowseAll(\'movie\',\'/discover/movie?with_origin_country=' + c.code + '\',\'' + c.name + '\')">' +
+      '<span class="country-flag-circle">' + c.flag + '</span>' +
+      '<span class="country-name">' + c.name + '</span></button>'
+    ).join('') +
+    '<button class="country-btn" onclick="openAllCountriesScreen()"><span class="country-flag-circle more-dots">•••</span><span class="country-name">المزيد</span></button>' +
+    '</div>' +
+
     '<div class="section-header" style="margin-top:24px"><span class="section-bar"></span><h2 class="section-title">تصفح حسب النوع</h2></div>' +
     '<div class="sub-genres-row">' +
     SUB_GENRES.map(g =>
@@ -3619,15 +3623,46 @@ async function loadGenresPage() {
       '</div>'
     ).join('') +
     '</div>' +
+
+    '</div>' +
+
+    '<div class="fullscreen-hub hidden" id="allCountriesScreen">' +
+    '<div class="hub-screen-hdr">' +
+    '<button class="hub-back-btn" onclick="document.getElementById(\'allCountriesScreen\').classList.add(\'hidden\')"><i class="ri-arrow-right-line"></i></button>' +
+    '<div class="hub-screen-title">تصفح حسب البلد</div>' +
+    '</div>' +
+    '<div class="all-countries-grid">' +
+    ALL_COUNTRIES.map(c =>
+      '<button class="country-btn-full" onclick="openBrowseAll(\'movie\',\'/discover/movie?with_origin_country=' + c.code + '\',\'' + c.name + '\')">' +
+      '<span class="country-flag-lg">' + c.flag + '</span>' +
+      '<span class="country-name-lg">' + c.name + '</span></button>'
+    ).join('') +
+    '</div>' +
+    '</div>' +
+
+    '<div class="fullscreen-hub hidden" id="allYearsScreen">' +
+    '<div class="hub-screen-hdr">' +
+    '<button class="hub-back-btn" onclick="document.getElementById(\'allYearsScreen\').classList.add(\'hidden\')"><i class="ri-arrow-right-line"></i></button>' +
+    '<div class="hub-screen-title">تصفح حسب السنوات</div>' +
+    '</div>' +
+    '<div class="all-years-grid">' +
+    ALL_YEARS_LIST.map((y,i) =>
+      '<button class="year-btn-full' + (i===0 ? ' active' : '') + '" onclick="openBrowseAll(\'movie\',\'/discover/movie?primary_release_year=' + y + '\',\'' + y + '\')">' +
+      y + (i===0 ? '<span class="year-new"> جديد</span>' : '') +
+      '</button>'
+    ).join('') +
+    '</div>' +
     '</div>';
+}
 
-  document.getElementById('yearMoreBtn')?.addEventListener('click', function() {
-    document.getElementById('yearsWrap').innerHTML = buildYears(true);
-  });
+function openAllCountriesScreen() {
+  document.getElementById('allCountriesScreen').classList.remove('hidden');
+  window.scrollTo(0,0);
+}
 
-  document.getElementById('countryMoreBtn')?.addEventListener('click', function() {
-    document.getElementById('countriesWrap').innerHTML = buildCountries(true);
-  });
+function openAllYearsScreen() {
+  document.getElementById('allYearsScreen').classList.remove('hidden');
+  window.scrollTo(0,0);
 }
 async function toggleFootballVault() {
   bnavGo('football');
