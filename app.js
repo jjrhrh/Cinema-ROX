@@ -1820,7 +1820,8 @@ const roxTitle = type === 'movie' ? (det.title || det.original_title) : (det.nam
 let roxStreamUrl = null;
 try {
   const streamEp = type === 'tv' ? episode : 1;
-  const streamRes = await fetch(`https://cinema-rox.vercel.app/api/stream?title=${encodeURIComponent(roxTitle)}&ep=${streamEp}`);
+  const repos = JSON.parse(localStorage.getItem('rox_repos') || '[]');
+const streamRes = await fetch(`https://cinema-rox.vercel.app/api/stream?tmdbId=${id}&type=${type}&season=${season}&ep=${streamEp}&repos=${encodeURIComponent(JSON.stringify(repos))}`);
   const streamData = await streamRes.json();
   const best = (streamData.sources || []).find(s => s.type === 'hls') || (streamData.sources || [])[0];
   if (best?.url) roxStreamUrl = best.url;
