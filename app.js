@@ -3633,8 +3633,7 @@ async function loadSpMatchesLive() {
     const today = new Date().toISOString().slice(0,10);
     const tomorrow = new Date(Date.now()+86400000).toISOString().slice(0,10);
     const res = await fetch(
-      `${CONFIG.FOOTBALL.FD_BASE}/matches?dateFrom=${today}&dateTo=${tomorrow}&competitions=PL,PD,SA,BL1,FL1,CL,EL`,
-      { headers: { 'X-Auth-Token': CONFIG.FOOTBALL.FD_KEY } }
+      'https://cinema-rox.vercel.app/api/matches'
     );
     const data = await res.json();
     const matches = (data.matches || [])
@@ -3783,48 +3782,32 @@ function spBellAlert(btn, match) {
   btn.style.background = 'rgba(255,215,0,0.08)';
   if (typeof showToast === 'function') showToast('🔔 سيتم تنبيهك قبل بداية ' + match);
 }
-async function spShowAllNews() {
+async function loadSpNews() {
   const list = document.getElementById('spNewsList');
-  const section = list ? list.closest('.sp-section') : null;
   if (!list) return;
-  let hub = document.getElementById('newsHubHeader');
-  if (!hub) {
-    const hdr = section.querySelector('.sp-section-hdr');
-    hub = document.createElement('div');
-    hub.id = 'newsHubHeader';
-    hub.className = 'news-hub-hdr';
-    hub.innerHTML = '<i class="ri-newspaper-fill"></i> مركز الأخبار الكامل <button class="news-hub-back" onclick="loadSpNews();this.parentElement.remove()"><i class="ri-arrow-go-back-line"></i> رجوع</button>';
-    hdr.after(hub);
-  }
   list.innerHTML = '<div class="sp-neon-spinner-wrap"><div class="sp-neon-spinner"></div></div>';
   const FALLBACK_IMG = 'https://images.unsplash.com/photo-1556056504-5c7696c4c28d?w=200&q=80';
   try {
-    const feeds = [
-      'https://www.bbc.co.uk/sport/football/rss.xml',
-      'https://feeds.skysports.com/skysports/football',
-      'https://www.goal.com/feeds/en/news',
-    ];
-    const results = await Promise.allSettled(feeds.map(f =>
-      fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(f)}&api_key=public&count=12`).then(r=>r.json())
-    ));
-    let allItems = [];
-    results.forEach(r => { if (r.status==='fulfilled') allItems = allItems.concat(r.value.items||[]); });
-    allItems.sort((a,b) => new Date(b.pubDate)-new Date(a.pubDate));
-    if (!allItems.length) throw new Error('empty');
-    list.innerHTML = allItems.slice(0,30).map(a => {
-      const ago = getTimeAgo(new Date(a.pubDate));
-      const img = (a.thumbnail && a.thumbnail.startsWith('http')) ? a.thumbnail : (a.enclosure?.link || FALLBACK_IMG);
-      return `<div class="sp-news-card">
+    const res = await fetch('https://cinema-rox.vercel.app/api/news');
+    const data = await res.json();
+    if (!data.articles || !data.articles.length) throw new Error('empty');
+    list.innerHTML = data.articles.map(a => {
+      const ago = getTimeAgo(new Date(a.publishedAt));
+      const img = a.image || FALLBACK_IMG;
+      const link = a.url || '#';
+      const title = (a.title || '').replace(/'/g, '&#39;');
+      const sub = (a.description || '').slice(0, 90);
+      return `<div class="sp-news-card" onclick="window.open('${link}','_blank')">
         <div class="sp-news-text-block">
           <div class="sp-news-time">${ago}</div>
-          <div class="sp-news-title">${a.title}</div>
-          <div class="sp-news-sub">${(a.description||'').replace(/<[^>]+>/g,'').slice(0,100)}</div>
+          <div class="sp-news-title">${title}</div>
+          <div class="sp-news-sub">${sub}</div>
         </div>
-        <img class="sp-news-img" src="${img}" onerror="this.src='${FALLBACK_IMG}'">
+        <img class="sp-news-img" src="${img}" onerror="this.src='${FALLBACK_IMG}'" loading="lazy">
       </div>`;
     }).join('');
   } catch(e) {
-    list.innerHTML = '<div class="sp-loading" style="color:rgba(255,255,255,0.4)">تعذر تحميل الأخبار — تحقق من الاتصال</div>';
+    list.innerHTML = '<div style="color:rgba(255,255,255,0.4);padding:20px;text-align:center;font-family:Tajawal">تعذر تحميل الأخبار</div>';
   }
 }
 // ===== ARCHIVE MATCHES =====
