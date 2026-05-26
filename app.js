@@ -1643,6 +1643,7 @@ function wsSelectServer(el, url, name, isRox) {
 }
 function wsGoBack() {
   document.body.classList.remove('cinema-mode');
+  if (window._roxSheet) { document.body.removeChild(window._roxSheet); window._roxSheet = null; }
   const wsFrame = document.getElementById('wsFrame');
 if (wsFrame) { wsFrame.src = ''; }
 const roxPlayer = document.getElementById('roxPlayer');
@@ -4286,6 +4287,11 @@ function hubFilterMatches() {
   }).join('');
 }
 function showRoxSources() {
+  if (window._roxSheet) {
+    document.body.removeChild(window._roxSheet);
+    window._roxSheet = null;
+    return;
+  }
   const sources = window._roxSources || [];
   if (!sources.length) return showToast('لا توجد سيرفرات متاحة');
   const sheet = document.createElement('div');
@@ -4299,14 +4305,18 @@ function showRoxSources() {
   document.body.appendChild(sheet);
   window._roxSheet = sheet;
 }
-
 function selectRoxSource(i) {
   const s = (window._roxSources || [])[i];
   if (!s?.url) return;
   if (window._roxSheet) { document.body.removeChild(window._roxSheet); window._roxSheet = null; }
+  if (window._roxHls) { window._roxHls.destroy(); window._roxHls = null; }
+  const wsFrame = document.getElementById('wsFrame');
+  if (wsFrame) wsFrame.src = '';
   const vid = document.getElementById('roxPlayer');
+  if (vid) { vid.pause(); vid.src = ''; }
   if (s.type === 'hls' && window.Hls?.isSupported()) {
     const hls = new Hls();
+    window._roxHls = hls;
     hls.loadSource(s.url);
     hls.attachMedia(vid);
     hls.on(Hls.Events.MANIFEST_PARSED, () => vid.play());
@@ -4315,9 +4325,8 @@ function selectRoxSource(i) {
     vid.play();
   }
   const wrap = document.getElementById('roxPlayerWrap');
-if (wrap) { wrap.style.display = 'block'; wrap.style.visibility = 'visible'; wrap.style.opacity = '1'; }
-document.getElementById('wsOverlay').style.display = 'none';
-document.getElementById('wsFrame').src = '';
-window.scrollTo(0, 0);
+  if (wrap) { wrap.style.display = 'block'; wrap.style.visibility = 'visible'; wrap.style.opacity = '1'; }
+  document.getElementById('wsOverlay').style.display = 'none';
+  window.scrollTo(0, 0);
   showToast('▶ ' + s.name);
 }
