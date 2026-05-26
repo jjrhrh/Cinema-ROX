@@ -3592,11 +3592,11 @@ async function loadGenresPage() {
   window.ALL_YEARS_LIST = Array.from({length:30}, (_,i) => CY - i);
 
   const SUB_GENRES = [
-    { id:10752, name:'حربي',   img:'https://images.unsplash.com/photo-1547347298-4074fc3086f0?w=400&q=80' },
+    { id:10752, name:'حربي',   img:'https://images.unsplash.com/photo-1534361960057-19f4434a6f6e?w=400&q=80' },
     { id:10402, name:'موسيقي', img:'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&q=80' },
     { id:99,    name:'رياضي',  img:'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=400&q=80' },
-    { id:36,    name:'تاريخي', img:'https://images.unsplash.com/photo-1564399580075-5dfe19c205f3?w=400&q=80' },
-    { id:99,    name:'وثائقي', img:'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=400&q=80' },
+    { id:36, name:'تاريخي', img:'https://images.unsplash.com/photo-1599707367072-cd6ada2bc375?w=400&q=80' },
+    { id:99, name:'وثائقي', img:'https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=400&q=80' },
   ];
 
   const YEARS_SHORT = [CY, CY-1, CY-2, CY-3, CY-4];
