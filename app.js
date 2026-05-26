@@ -1728,6 +1728,7 @@ async function openWatchPage(id, type, season = 1, episode = 1, resumeSec = 0, r
   if (!page) return;
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('heroSection').style.display = 'none';
+  document.getElementById('platformsSection').style.display = 'none';
   document.getElementById('newsSection').style.display = 'none';
   page.classList.add('active');
   page.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
