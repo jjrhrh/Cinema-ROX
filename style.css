@@ -4658,11 +4658,12 @@ body.cinema-mode .ws-overlay        { border-radius: 0; }
   min-width: 0;
   cursor: pointer;
   border-radius: 14px;
-  overflow: hidden;
+  overflow: visible;
   background: #111;
-  transition: transform 0.25s ease;
+  transition: transform 0.25s ease, box-shadow 0.3s ease;
   scroll-snap-align: start;
   position: relative;
+  border: none;
 }
 .anime-card:active { transform: scale(0.97); }
 
@@ -4707,14 +4708,7 @@ body.cinema-mode .ws-overlay        { border-radius: 0; }
   flex-wrap: nowrap;
 }
 .anime-badge-type {
-  background: rgba(147,51,234,0.2);
-  border: 1px solid rgba(147,51,234,0.5);
-  border-radius: 6px;
-  padding: 2px 7px;
-  font-size: 0.58rem;
-  font-weight: 700;
-  color: #c084fc;
-  white-space: nowrap;
+  display: none;
 }
 .anime-badge-year {
   color: rgba(255,255,255,0.55);
@@ -4736,8 +4730,8 @@ body.cinema-mode .ws-overlay        { border-radius: 0; }
   transition: transform 0.25s ease, box-shadow 0.3s ease !important;
 }
 .anime-card:hover {
-  box-shadow: 0 0 0 1.5px rgba(147,51,234,0.5),
-              0 0 18px rgba(147,51,234,0.25),
+  box-shadow: 0 0 0 1.5px rgba(229,9,20,0.5),
+              0 0 18px rgba(229,9,20,0.25),
               0 8px 30px rgba(0,0,0,0.7) !important;
   transform: translateY(-3px) !important;
 }
