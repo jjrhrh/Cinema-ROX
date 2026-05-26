@@ -1,319 +1,136 @@
+import vm from 'vm';
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET');
 
-  const { title, ep, scrape } = req.query;
+  const { tmdbId, type, season = '1', ep = '1', repos } = req.query;
 
-  if (scrape) return scrapeVideoUrl(scrape, res);
-  if (!title)  return res.status(400).json({ error: 'title required' });
+  if (!tmdbId) return res.status(400).json({ error: 'tmdbId required' });
+  if (!repos)  return res.status(400).json({ error: 'repos required' });
 
-  const epNum = String(ep || 1);
-  console.log(`[stream] ${title} — ح${epNum}`);
+  // repos تيجي كـ JSON string — مصفوفة روابط manifest
+  let manifestUrls = [];
+  try {
+    manifestUrls = JSON.parse(repos);
+  } catch {
+    return res.status(400).json({ error: 'repos must be JSON array' });
+  }
 
-  // جمع السيرفرات من كل المصادر بالتوازي
-  const [aaServers, aniwatchServers, arabicServers, vidsrcServers] = await Promise.allSettled([
-    fetchAllAnime(title, epNum),
-    fetchAniwatch(title, epNum),
-    fetchArabicScrape(title, epNum),
-    fetchVidSrcTMDB(title, epNum),
-  ]);
+  // ═══════════════════════════════════════
+  //  1. اقرأ كل manifest وحدد الـ providers
+  // ═══════════════════════════════════════
+  const providerJobs = [];
 
-  const servers = [
-    ...(aaServers.value       || []),
-    ...(aniwatchServers.value || []),
-    ...(arabicServers.value   || []),
-    ...(vidsrcServers.value   || []),
-  ].filter(s => s?.url);
-
-  console.log(`[stream] ✅ إجمالي: ${servers.length} سيرفر`);
-
-  if (!servers.length)
-    return res.status(404).json({ error: 'no sources found', title });
-
-  return res.status(200).json({ sources: servers, servers });
-}
-
-/* ════════════════════════════════
-   1. AllAnime API
-════════════════════════════════ */
-async function fetchAllAnime(title, epNum) {
-  const servers = [];
-  const H = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/124.0',
-    'Referer':    'https://allmanga.to/',
-    'Content-Type': 'application/json',
-  };
-
-  const sr = await fetch('https://api.allanime.day/api', {
-    method: 'POST', headers: H,
-    body: JSON.stringify({
-      query: `query($s:SearchInput,$l:Int,$p:Int,$t:VaildTranslationTypeEnumType){
-        shows(search:$s,limit:$l,page:$p,translationType:$t){
-          edges{ _id name englishName }
-        }
-      }`,
-      variables: { s:{ allowAdult:false, query:title }, l:5, p:1, t:'sub' },
-    }),
-    signal: AbortSignal.timeout(9000),
-  });
-  const sd     = await sr.json();
-  const showId = (sd?.data?.shows?.edges||[])[0]?._id;
-  if (!showId) return servers;
-
-  for (const lang of ['sub','dub']) {
+  for (const manifestUrl of manifestUrls) {
     try {
-      const er = await fetch('https://api.allanime.day/api', {
-        method: 'POST', headers: H,
-        body: JSON.stringify({
-          query: `query($id:String!,$t:VaildTranslationTypeEnumType!,$e:String!){
-            episode(showId:$id,translationType:$t,episodeString:$e){
-              sourceUrls{ sourceUrl sourceName priority }
-            }
-          }`,
-          variables: { id:showId, t:lang, e:epNum },
-        }),
-        signal: AbortSignal.timeout(9000),
-      });
-      const ed = await er.json();
-      (ed?.data?.episode?.sourceUrls||[]).forEach(s => {
-        const url = decodeAaUrl(s.sourceUrl);
-        if (!url?.startsWith('http')) return;
-        servers.push({
-          name:    `AllAnime ${lang.toUpperCase()} · ${s.sourceName||''}`,
-          url,
-          type:    url.includes('.m3u8') ? 'hls' : 'iframe',
-          quality: s.priority >= 10 ? '1080p' : s.priority >= 5 ? '720p' : 'auto',
-          lang,
+      const mRes = await fetch(manifestUrl, { signal: AbortSignal.timeout(8000) });
+      if (!mRes.ok) continue;
+
+      const manifest = await mRes.json();
+      const baseUrl  = manifestUrl.replace('/manifest.json', '');
+
+      for (const scraper of (manifest.scrapers || [])) {
+        if (!scraper.enabled) continue;
+        if (!scraper.supportedTypes?.includes(type)) continue;
+
+        providerJobs.push({
+          name:     scraper.name,
+          id:       scraper.id,
+          baseUrl,
+          filename: scraper.filename,
         });
-      });
-    } catch(e) { console.log(`[AA] ${lang} فشل:`, e.message); }
-  }
-
-  console.log(`[AA] ${servers.length} سيرفر`);
-  return servers;
-}
-
-/* ════════════════════════════════
-   2. Aniwatch (Zoro mirror)
-════════════════════════════════ */
-async function fetchAniwatch(title, epNum) {
-  const servers = [];
-  const slug    = title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/-$/,'');
-  const epId    = `${slug}-episode-${epNum}`;
-
-  const APIS = [
-    'https://aniwatch-api-one-tau.vercel.app',
-    'https://aniwatch-api-dusky.vercel.app',
-  ];
-
-  for (const api of APIS) {
-    for (const srv of ['vidstreaming','megacloud','streamsb','vidcloud']) {
-      try {
-        const r = await fetch(
-          `${api}/anime/episode-srcs?id=${encodeURIComponent(epId)}&server=${srv}&category=sub`,
-          { signal: AbortSignal.timeout(7000) }
-        );
-        if (!r.ok) continue;
-        const d = await r.json();
-        (d.sources||[]).forEach(s => {
-          servers.push({
-            name:    `Aniwatch · ${srv}`,
-            url:     s.url,
-            type:    s.isM3U8 ? 'hls' : 'mp4',
-            quality: s.quality || 'auto',
-            lang:    'sub',
-          });
-        });
-        if (d.sources?.length) break;
-      } catch {}
+      }
+    } catch (e) {
+      console.log(`[manifest] فشل: ${manifestUrl} —`, e.message);
     }
-    if (servers.length >= 3) break;
   }
 
-  console.log(`[Aniwatch] ${servers.length} سيرفر`);
-  return servers;
-}
+  if (!providerJobs.length)
+    return res.status(404).json({ error: 'no compatible providers found' });
 
-/* ════════════════════════════════
-   3. المواقع العربية عبر Scrape
-════════════════════════════════ */
-async function fetchArabicScrape(title, epNum) {
-  const servers  = [];
-  const slug     = title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/-$/,'');
-
-  const ARABIC_SITES = [
-    { name:'Anime4up',    url:`https://anime4up.cam/episode/${slug}-${epNum}/` },
-    { name:'WitAnime',    url:`https://witanime.cyou/episode/${slug}-${epNum}/` },
-    { name:'Anime3rb',    url:`https://anime3rb.com/episodes/${slug}-${epNum}` },
-    { name:'Shahiid',     url:`https://shahiid-anime.net/episode/${slug}-episode-${epNum}/` },
-    { name:'Ristoanime',  url:`https://ristoanime.co/episode/${slug}-episode-${epNum}/` },
-    { name:'AnimeSlayer', url:`https://www.animeslayer.com/episode/${slug}-episode-${epNum}/` },
-  ];
-
+  // ═══════════════════════════════════════
+  //  2. شغّل كل provider وجمع النتائج
+  // ═══════════════════════════════════════
   const results = await Promise.allSettled(
-    ARABIC_SITES.map(site => scrapeForVideo(site.url, site.name))
+    providerJobs.map(job => runProvider(job, tmdbId, type, season, ep))
   );
 
+  const sources = [];
   results.forEach((r, i) => {
-    if (r.status === 'fulfilled' && r.value) {
-      servers.push({
-        name:    ARABIC_SITES[i].name + ' AR',
-        url:     r.value.url,
-        type:    r.value.type,
-        quality: 'auto',
-        lang:    'ar',
-      });
-    }
-  });
-
-  console.log(`[Arabic] ${servers.length} سيرفر`);
-  return servers;
-}
-
-/* ════════════════════════════════
-   4. VidSrc عبر TMDB ID
-════════════════════════════════ */
-async function fetchVidSrcTMDB(title, epNum) {
-  const servers = [];
-  const ep = String(epNum || 1);
-  const TMDB_KEY = '943bac496146cd6404017535d3c0e8ec';
-
-  // خطوة 1: ابحث عن TMDB ID
-  let tmdbId = null;
-  let mediaType = 'movie';
-  try {
-    const mRes = await fetch(
-      `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_KEY}&query=${encodeURIComponent(title)}&page=1`,
-      { signal: AbortSignal.timeout(6000) }
-    ).then(r => r.json());
-    if (mRes.results?.[0]) {
-      tmdbId = mRes.results[0].id;
-      mediaType = 'movie';
+    if (r.status === 'fulfilled' && Array.isArray(r.value)) {
+      r.value.forEach(s => sources.push(s));
     } else {
-      const tRes = await fetch(
-        `https://api.themoviedb.org/3/search/tv?api_key=${TMDB_KEY}&query=${encodeURIComponent(title)}&page=1`,
-        { signal: AbortSignal.timeout(6000) }
-      ).then(r => r.json());
-      if (tRes.results?.[0]) {
-        tmdbId = tRes.results[0].id;
-        mediaType = 'tv';
-      }
+      console.log(`[${providerJobs[i].name}] فشل:`, r.reason?.message);
     }
-  } catch(e) { console.log('[TMDB search] فشل:', e.message); }
-
-  if (!tmdbId) {
-    console.log('[VidSrc] ما وجدنا TMDB ID');
-    return servers;
-  }
-
-  console.log(`[VidSrc] TMDB ID: ${tmdbId} | type: ${mediaType}`);
-
-  const VIDSRC_API = 'https://vidsrc-api-delta.vercel.app';
-
-const apiUrl = mediaType === 'movie'
-  ? `${VIDSRC_API}/api?tmdb=${tmdbId}&type=movie`
-  : `${VIDSRC_API}/api?tmdb=${tmdbId}&type=tv&season=1&episode=${ep}`;
-
-try {
-  const r = await fetch(apiUrl, { signal: AbortSignal.timeout(8000) });
-  if (r.ok) {
-    const data = await r.json();
-    (data || []).forEach(s => {
-      if (s.stream) servers.push({
-        name:    'ROX · Direct',
-        url:     s.stream,
-        type:    'hls',
-        quality: 'auto',
-        lang:    'multi',
-      });
-    });
-  }
-} catch(e) { console.log('[vidsrc-api] فشل:', e.message); }
-
-  // خطوة 3: Fallback — embed نظيف كـ iframe
-  if (!servers.length) {
-    console.log('[VidSrc] fallback إلى embed');
-    const embeds = mediaType === 'movie' ? [
-      { name:'VidSrc',  url:`https://vidsrc.to/embed/movie/${tmdbId}` },
-      { name:'EmbedSu', url:`https://embed.su/embed/movie/${tmdbId}` },
-      { name:'VidLink', url:`https://vidlink.pro/movie/${tmdbId}` },
-    ] : [
-      { name:'VidSrc',  url:`https://vidsrc.to/embed/tv/${tmdbId}/1/${ep}` },
-      { name:'EmbedSu', url:`https://embed.su/embed/tv/${tmdbId}/1/${ep}` },
-      { name:'VidLink', url:`https://vidlink.pro/tv/${tmdbId}/1/${ep}` },
-    ];
-    embeds.forEach(e => servers.push({ ...e, type:'iframe', quality:'auto', lang:'multi' }));
-  }
-
-  console.log(`[VidSrc+TMDB] ${servers.length} سيرفر`);
-  return servers;
-}
-
-/* ════════════════════════════════
-   Scrape Helper
-════════════════════════════════ */
-const PROXIES = [
-  u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
-  u => `https://corsproxy.io/?${encodeURIComponent(u)}`,
-  u => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`,
-];
-
-async function scrapeForVideo(pageUrl, name) {
-  for (const proxy of PROXIES) {
-    try {
-      const r = await fetch(proxy(pageUrl), {
-        headers: { 'User-Agent': 'Mozilla/5.0 Chrome/124.0' },
-        signal:  AbortSignal.timeout(10000),
-      });
-      if (!r.ok) continue;
-      const html = await r.text();
-      const result = extractVideoUrl(html);
-      if (result) {
-        console.log(`[scrape] ✅ ${name}: ${result.url.slice(0,60)}`);
-        return result;
-      }
-    } catch(e) {
-      console.log(`[scrape] ${name} proxy فشل:`, e.message);
-    }
-  }
-  return null;
-}
-
-function extractVideoUrl(html) {
-  const patterns = [
-    { re: /https?:\/\/[^\s"'<>]+\.m3u8[^\s"'<>]*/,           type: 'hls' },
-    { re: /file\s*:\s*["']([^"']+\.m3u8[^"']*)/,             type: 'hls', g: 1 },
-    { re: /https?:\/\/[^\s"'<>]+\.mp4[^\s"'<>]*/,            type: 'mp4' },
-    { re: /<video[^>]+src=["']([^"']+)["']/i,                 type: 'mp4', g: 1 },
-    { re: /source\s*:\s*["']([^"']+\.mp4[^"']*)/,            type: 'mp4', g: 1 },
-    { re: /iframe[^>]+src=["'](https?:\/\/[^"']+)["']/i,     type: 'iframe', g: 1 },
-  ];
-  for (const p of patterns) {
-    const m = html.match(p.re);
-    if (m) return { url: p.g ? m[p.g] : m[0], type: p.type };
-  }
-  return null;
-}
-
-/* ════════════════════════════════
-   Scrape مخصص
-════════════════════════════════ */
-async function scrapeVideoUrl(pageUrl, res) {
-  const result = await scrapeForVideo(pageUrl, 'custom');
-  if (result) return res.status(200).json(result);
-  return res.status(404).json({ error: 'no video found' });
-}
-
-/* ════════════════════════════════
-   Helpers
-════════════════════════════════ */
-function rot13(str) {
-  return str.replace(/[a-zA-Z]/g, c => {
-    const b = c <= 'Z' ? 65 : 97;
-    return String.fromCharCode(((c.charCodeAt(0) - b + 13) % 26) + b);
   });
+
+  if (!sources.length)
+    return res.status(404).json({ error: 'no sources found', tmdbId });
+
+  return res.status(200).json({ sources });
 }
-function decodeAaUrl(url = '') {
-  if (url.startsWith('--')) return rot13(url.slice(2));
-  return url;
+
+// ═══════════════════════════════════════
+//  تحميل وتشغيل الـ provider في sandbox
+// ═══════════════════════════════════════
+async function runProvider(job, tmdbId, type, season, ep) {
+  const codeUrl = `${job.baseUrl}/${job.filename}`;
+
+  const codeRes = await fetch(codeUrl, { signal: AbortSignal.timeout(10000) });
+  if (!codeRes.ok) throw new Error(`failed to fetch provider: ${codeUrl}`);
+  const code = await codeRes.text();
+
+  // بيئة آمنة معزولة للـ provider
+  const sandbox = {
+    module:         { exports: {} },
+    exports:        {},
+    fetch:          fetch,
+    console:        console,
+    setTimeout,
+    clearTimeout,
+    setInterval,
+    clearInterval,
+    AbortSignal,
+    URL,
+    URLSearchParams,
+    Buffer,
+    process:        { env: {} },
+    atob,
+    btoa,
+  };
+  sandbox.module.exports = sandbox.exports;
+
+  try {
+    vm.runInNewContext(code, sandbox, { timeout: 15000, filename: job.filename });
+  } catch (e) {
+    throw new Error(`vm error in ${job.name}: ${e.message}`);
+  }
+
+  const getStreams = sandbox.module.exports?.getStreams
+                 || sandbox.exports?.getStreams;
+
+  if (typeof getStreams !== 'function')
+    throw new Error(`${job.name} لا يصدّر getStreams`);
+
+  // تشغيل مع timeout
+  const raw = await Promise.race([
+    getStreams(String(tmdbId), type, Number(season), Number(ep)),
+    new Promise((_, rej) =>
+      setTimeout(() => rej(new Error(`${job.name} timeout`)), 20000)
+    ),
+  ]);
+
+  const streams = Array.isArray(raw) ? raw : [];
+
+  return streams
+    .filter(s => s?.url)
+    .map(s => ({
+      name:    `${job.name} · ${s.quality || s.label || 'auto'}`,
+      url:     s.url,
+      type:    s.type || (s.url.includes('.m3u8') ? 'hls' : 'mp4'),
+      quality: s.quality || 'auto',
+      lang:    s.language || s.lang || 'multi',
+      source:  job.name,
+    }));
 }
