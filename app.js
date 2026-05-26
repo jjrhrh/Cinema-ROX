@@ -466,6 +466,11 @@ async function updateHeroInfo(movies, index) {
            onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}';this.classList.add('loaded')">
       <div class="movie-overlay"><span class="play-icon">▶</span></div>
     </div>
+    <div class="movie-title-bar">${title.length>28?title.slice(0,28)+'…':title}</div>
+    <div class="movie-meta-bar">
+      ${rating?`<span class="movie-badge-rating"><svg width="11" height="11" viewBox="0 0 24 24" fill="#f5c518"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> ${rating}</span>`:''}
+      ${year?`<span class="movie-badge-year">${year}</span>`:''}
+    </div>
   </div>`;
 }
 function buildSearchCard(movie, type) {
@@ -740,11 +745,15 @@ async function loadHomePage() {
       <div id="continueList" class="continue-list">
         ${cwItems.map(i => `
           <div class="cw-card" onclick="cwResume(${i.id},'${i.type}',${i.seconds},'${i.server}','${i.serverUrl||''}')">
-            <img class="cw-thumb" src="${i.poster}" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+            <div class="cw-thumb-wrap">
+              <img class="cw-thumb" src="${i.poster}" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+              <div class="cw-play-icon">▶</div>
+            </div>
             <div class="cw-info">
               <div class="cw-title">${i.title}</div>
+              <div class="cw-meta">${i.type==='tv'?'مسلسل':'فيلم'}${i.server?' · '+i.server:''}</div>
               <div class="cw-bar-wrap"><div class="cw-bar" style="width:${Math.min(i.seconds/7200*100,100).toFixed(1)}%"></div></div>
-              <div class="cw-time">${Math.floor(i.seconds/60)} دقيقة ${i.server ? '· '+i.server : ''}</div>
+              <div class="cw-time">${Math.floor(i.seconds/60)} دقيقة</div>
             </div>
             <button class="cw-del" onclick="event.stopPropagation();cwDelete(${i.id})">✕</button>
           </div>`).join('')}
