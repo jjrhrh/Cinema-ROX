@@ -3511,42 +3511,77 @@ async function loadGenresPage() {
   page.classList.add('active');
 
   const GENRES = [
-    { id:28,    name:'أكشن',      icon:'ri-sword-line',        img:'https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=400&q=80', count:'1250' },
-    { id:12,    name:'مغامرة',    icon:'ri-map-2-line',         img:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80', count:'980'  },
-    { id:878,   name:'خيال علمي', icon:'ri-rocket-line',        img:'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=400&q=80', count:'650'  },
-    { id:18,    name:'دراما',     icon:'ri-film-line',          img:'https://images.unsplash.com/photo-1485846234645-a62644f84728?w=400&q=80', count:'1750' },
-    { id:27,    name:'رعب',       icon:'ri-ghost-2-line',       img:'https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?w=400&q=80', count:'560'  },
-    { id:37,    name:'غربي',      icon:'ri-riding-line',        img:'https://images.unsplash.com/photo-1533488765986-dfa2a9939acd?w=400&q=80', count:'320'  },
-    { id:16,    name:'أنيميشن',   icon:'ri-emotion-happy-line', img:'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=400&q=80', count:'910'  },
+    { id:28,    name:'أكشن',      icon:'ri-rocket-2-line',      img:'https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400&q=80', count:'1250' },
+    { id:12,    name:'مغامرة',    icon:'ri-compass-3-line',     img:'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400&q=80', count:'980'  },
+    { id:878,   name:'خيال علمي', icon:'ri-rocket-line',        img:'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&q=80', count:'650'  },
+    { id:18,    name:'دراما',     icon:'ri-heart-line',         img:'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80', count:'1750' },
+    { id:27,    name:'رعب',       icon:'ri-ghost-2-line',       img:'https://images.unsplash.com/photo-1509248961158-e54f6934749c?w=400&q=80', count:'560'  },
+    { id:37,    name:'غربي',      icon:'ri-user-3-line',        img:'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=400&q=80', count:'320'  },
+    { id:16,    name:'أنيميشن',   icon:'ri-emotion-happy-line', img:'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=400&q=80', count:'910'  },
     { id:10749, name:'رومانسي',   icon:'ri-heart-3-line',       img:'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400&q=80', count:'740'  },
   ];
 
   const MOODS = [
-    { name:'خفيف',  icon:'ri-leaf-line',         params:'with_genres=35' },
-    { name:'عائلي', icon:'ri-group-line',         params:'with_genres=10751' },
-    { name:'مضحك',  icon:'ri-emotion-laugh-line', params:'with_genres=35' },
-    { name:'مؤثر',  icon:'ri-drama-line',         params:'with_genres=18' },
-    { name:'ر18+',  icon:'ri-user-forbid-line',   params:'certification_country=US&certification=R' },
-    { name:'ملهم',  icon:'ri-sparkling-2-line',   params:'with_genres=18&sort_by=vote_average.desc' },
+    { name:'خفيف',  icon:'ri-leaf-line',          params:'with_genres=35' },
+    { name:'عائلي', icon:'ri-group-line',          params:'with_genres=10751' },
+    { name:'مضحك',  icon:'ri-emotion-laugh-line',  params:'with_genres=35' },
+    { name:'مؤثر',  icon:'ri-drama-line',          params:'with_genres=18' },
+    { name:'23+ض',  icon:'ri-prohibited-line',     params:'certification_country=US&certification=R' },
+    { name:'ملهم',  icon:'ri-seedling-line',       params:'with_genres=18&sort_by=vote_average.desc' },
   ];
 
-  const YEARS = [new Date().getFullYear(), new Date().getFullYear()-1, new Date().getFullYear()-2, new Date().getFullYear()-3, new Date().getFullYear()-4];
+  const CY = new Date().getFullYear();
+  const YEARS = [CY, CY-1, CY-2, CY-3, CY-4];
 
-  const COUNTRIES = [
-    { code:'US', name:'أمريكا', flag:'🇺🇸' },
-    { code:'KR', name:'كوريا',  flag:'🇰🇷' },
-    { code:'JP', name:'اليابان',flag:'🇯🇵' },
-    { code:'IN', name:'الهند',  flag:'🇮🇳' },
-    { code:'TR', name:'تركيا',  flag:'🇹🇷' },
-    { code:'GB', name:'بريطانيا',flag:'🇬🇧' },
+  const ALL_COUNTRIES = [
+    { code:'US', name:'أمريكا',    flag:'🇺🇸' },
+    { code:'GB', name:'بريطانيا',  flag:'🇬🇧' },
+    { code:'TR', name:'تركيا',     flag:'🇹🇷' },
+    { code:'IN', name:'الهند',     flag:'🇮🇳' },
+    { code:'JP', name:'اليابان',   flag:'🇯🇵' },
+    { code:'KR', name:'كوريا',     flag:'🇰🇷' },
+    { code:'FR', name:'فرنسا',     flag:'🇫🇷' },
+    { code:'DE', name:'ألمانيا',   flag:'🇩🇪' },
+    { code:'IT', name:'إيطاليا',   flag:'🇮🇹' },
+    { code:'ES', name:'إسبانيا',   flag:'🇪🇸' },
+    { code:'MX', name:'المكسيك',   flag:'🇲🇽' },
+    { code:'BR', name:'البرازيل',  flag:'🇧🇷' },
+    { code:'CN', name:'الصين',     flag:'🇨🇳' },
+    { code:'TH', name:'تايلاند',   flag:'🇹🇭' },
+    { code:'EG', name:'مصر',       flag:'🇪🇬' },
+    { code:'SA', name:'السعودية',  flag:'🇸🇦' },
   ];
+
+  const SUB_GENRES = [
+    { id:10752, name:'حربي',   img:'https://images.unsplash.com/photo-1547347298-4074fc3086f0?w=400&q=80' },
+    { id:10402, name:'موسيقي', img:'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&q=80' },
+    { id:99,    name:'رياضي',  img:'https://images.unsplash.com/photo-1540747913346-19212a4b423a?w=400&q=80' },
+    { id:36,    name:'تاريخي', img:'https://images.unsplash.com/photo-1568827999250-f97f3b1c4f69?w=400&q=80' },
+    { id:99,    name:'وثائقي', img:'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=400&q=80' },
+  ];
+
+  const showCountries = (all) => {
+    const list = all ? ALL_COUNTRIES : ALL_COUNTRIES.slice(0,6);
+    const moreBtn = all ? '' : `<button class="country-btn country-more-btn" onclick="(${showCountries.toString()})(true)"><span class="country-flag-circle more-dots">•••</span><span class="country-name">المزيد</span></button>`;
+    document.getElementById('countriesWrap').innerHTML =
+      list.map(c=>`<button class="country-btn" onclick="openBrowseAll('movie','/discover/movie?with_origin_country=${c.code}','${c.name}')"><span class="country-flag-circle">${c.flag}</span><span class="country-name">${c.name}</span></button>`).join('') + moreBtn;
+  };
+
+  const showYears = (all) => {
+    const allY = Array.from({length:25},(_,i)=>CY-i);
+    const list = all ? allY : YEARS;
+    const moreBtn = all ? '' : `<button class="year-btn year-more-btn" onclick="(${showYears.toString()})(true)"><i class="ri-calendar-line"></i><span class="year-new">المزيد</span></button>`;
+    document.getElementById('yearsWrap').innerHTML =
+      list.map((y,i)=>`<button class="year-btn ${!all&&i===0?'active':''}" onclick="openBrowseAll('movie','/discover/movie?primary_release_year=${y}','${y}')"><span class="year-num">${y}</span>${!all&&i===0?'<span class="year-new">جديد</span>':''}</button>`).join('') + moreBtn;
+  };
 
   page.innerHTML = `
     <div class="genres-page">
       <div class="section-header"><span class="section-bar"></span><h2 class="section-title">التصنيفات</h2></div>
       <div class="genres-grid">
-        ${GENRES.map(g => `
-          <div class="genre-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=${g.id}','${g.name}')" style="background-image:url('${g.img}')">
+        ${GENRES.map(g=>`
+          <div class="genre-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=${g.id}','${g.name}')">
+            <div class="genre-bg" style="background-image:url('${g.img}')"></div>
             <div class="genre-overlay"></div>
             <div class="genre-icon-wrap"><i class="${g.icon} genre-icon"></i></div>
             <span class="genre-name">${g.name}</span>
@@ -3554,31 +3589,33 @@ async function loadGenresPage() {
           </div>`).join('')}
       </div>
 
-      <div class="section-header" style="margin-top:20px"><span class="section-bar"></span><h2 class="section-title">تصفح حسب المزاج</h2></div>
+      <div class="section-header" style="margin-top:24px"><span class="section-bar"></span><h2 class="section-title">تصفح حسب المزاج</h2></div>
       <div class="moods-row">
-        ${MOODS.map(m => `
+        ${MOODS.map(m=>`
           <button class="mood-btn" onclick="openBrowseAll('movie','/discover/movie?${m.params}','${m.name}')">
             <i class="${m.icon}"></i><span>${m.name}</span>
           </button>`).join('')}
       </div>
 
-      <div class="section-header" style="margin-top:20px"><span class="section-bar"></span><h2 class="section-title">تصفح حسب السنوات</h2></div>
-      <div class="years-row">
-        ${YEARS.map((y,i) => `
-          <button class="year-btn ${i===0?'active':''}" onclick="openBrowseAll('movie','/discover/movie?primary_release_year=${y}','${y}')">
-            ${y}${i===0?'<br><small>جديد</small>':''}
-          </button>`).join('')}
-      </div>
+      <div class="section-header" style="margin-top:24px"><span class="section-bar"></span><h2 class="section-title">تصفح حسب السنوات</h2></div>
+      <div class="years-row" id="yearsWrap"></div>
 
-      <div class="section-header" style="margin-top:20px"><span class="section-bar"></span><h2 class="section-title">تصفح حسب البلد</h2></div>
-      <div class="countries-row">
-        ${COUNTRIES.map(c => `
-          <button class="country-btn" onclick="openBrowseAll('movie','/discover/movie?with_origin_country=${c.code}','${c.name}')">
-            <span class="country-flag">${c.flag}</span>
-            <span>${c.name}</span>
-          </button>`).join('')}
+      <div class="section-header" style="margin-top:24px"><span class="section-bar"></span><h2 class="section-title">تصفح حسب البلد</h2></div>
+      <div class="countries-row" id="countriesWrap"></div>
+
+      <div class="section-header" style="margin-top:24px"><span class="section-bar"></span><h2 class="section-title">تصفح حسب النوع</h2></div>
+      <div class="sub-genres-row">
+        ${SUB_GENRES.map(g=>`
+          <div class="sub-genre-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=${g.id}','${g.name}')">
+            <div class="sub-genre-bg" style="background-image:url('${g.img}')"></div>
+            <div class="sub-genre-overlay"></div>
+            <span class="sub-genre-name">${g.name}</span>
+          </div>`).join('')}
       </div>
     </div>`;
+
+  showCountries(false);
+  showYears(false);
 }
 async function toggleFootballVault() {
   bnavGo('football');
