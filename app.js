@@ -1821,7 +1821,7 @@ let roxStreamUrl = null;
 try {
   const streamEp = type === 'tv' ? episode : 1;
   const repos = JSON.parse(localStorage.getItem('rox_repos') || '[]');
-const streamRes = await fetch(`https://cinema-rox.vercel.app/api/stream?tmdbId=${id}&type=${type}&season=${season}&ep=${streamEp}&repos=${encodeURIComponent(JSON.stringify(repos))}`);
+const streamRes = await fetch(`https://cinema-rox-production.up.railway.app/api/stream?tmdbId=${id}&type=${type}&season=${season}&ep=${streamEp}&repos=${encodeURIComponent(JSON.stringify(repos))}`);
   const streamData = await streamRes.json();
   window._roxSources = streamData.sources || [];
 const best = window._roxSources.find(s => s.type === 'hls') || window._roxSources[0];
