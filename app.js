@@ -3506,116 +3506,128 @@ async function loadGenresPage() {
   document.getElementById('filterBar')?.style.setProperty('display','none');
   document.getElementById('platformsSection')?.style.setProperty('display','none');
   document.getElementById('heroSection').style.display = 'none';
+  document.getElementById('newsSection').style.display = 'none';
   const page = document.getElementById('homePage');
   if (!page) return;
   page.classList.add('active');
 
   const GENRES = [
-    { id:28,    name:'أكشن',      icon:'ri-rocket-2-line',      img:'https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400&q=80', count:'1250' },
-    { id:12,    name:'مغامرة',    icon:'ri-compass-3-line',     img:'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400&q=80', count:'980'  },
-    { id:878,   name:'خيال علمي', icon:'ri-rocket-line',        img:'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&q=80', count:'650'  },
-    { id:18,    name:'دراما',     icon:'ri-heart-line',         img:'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80', count:'1750' },
-    { id:27,    name:'رعب',       icon:'ri-ghost-2-line',       img:'https://images.unsplash.com/photo-1509248961158-e54f6934749c?w=400&q=80', count:'560'  },
-    { id:37,    name:'غربي',      icon:'ri-user-3-line',        img:'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=400&q=80', count:'320'  },
-    { id:16,    name:'أنيميشن',   icon:'ri-emotion-happy-line', img:'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=400&q=80', count:'910'  },
-    { id:10749, name:'رومانسي',   icon:'ri-heart-3-line',       img:'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400&q=80', count:'740'  },
+    { id:28,    name:'أكشن',      icon:'ri-rocket-2-line',      img:'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=400&q=80', count:'1250' },
+    { id:12,    name:'مغامرة',    icon:'ri-compass-3-line',     img:'https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=400&q=80', count:'980'  },
+    { id:878,   name:'خيال علمي', icon:'ri-rocket-line',        img:'https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=400&q=80', count:'650'  },
+    { id:18,    name:'دراما',     icon:'ri-heart-line',         img:'https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=400&q=80', count:'1750' },
+    { id:27,    name:'رعب',       icon:'ri-ghost-2-line',       img:'https://images.unsplash.com/photo-1531686215168-76f81db7d50e?w=400&q=80', count:'560'  },
+    { id:37,    name:'غربي',      icon:'ri-user-3-line',        img:'https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=400&q=80', count:'320'  },
+    { id:16,    name:'أنيميشن',   icon:'ri-emotion-happy-line', img:'https://images.unsplash.com/photo-1543512214-318c7553f230?w=400&q=80', count:'910'  },
+    { id:10749, name:'رومانسي',   icon:'ri-heart-3-line',       img:'https://images.unsplash.com/photo-1474552226712-ac0f0961a954?w=400&q=80', count:'740'  },
   ];
 
   const MOODS = [
-    { name:'خفيف',  icon:'ri-leaf-line',          params:'with_genres=35' },
-    { name:'عائلي', icon:'ri-group-line',          params:'with_genres=10751' },
-    { name:'مضحك',  icon:'ri-emotion-laugh-line',  params:'with_genres=35' },
-    { name:'مؤثر',  icon:'ri-drama-line',          params:'with_genres=18' },
-    { name:'23+ض',  icon:'ri-prohibited-line',     params:'certification_country=US&certification=R' },
-    { name:'ملهم',  icon:'ri-seedling-line',       params:'with_genres=18&sort_by=vote_average.desc' },
+    { name:'خفيف',  icon:'ri-leaf-line',         params:'with_genres=35' },
+    { name:'عائلي', icon:'ri-group-line',         params:'with_genres=10751' },
+    { name:'مضحك',  icon:'ri-emotion-laugh-line', params:'with_genres=35' },
+    { name:'مؤثر',  icon:'ri-drama-line',         params:'with_genres=18' },
+    { name:'23+ض',  icon:'ri-prohibited-line',    params:'certification_country=US&certification=R' },
+    { name:'ملهم',  icon:'ri-seedling-line',      params:'with_genres=18&sort_by=vote_average.desc' },
   ];
 
   const CY = new Date().getFullYear();
-  const YEARS = [CY, CY-1, CY-2, CY-3, CY-4];
+  const YEARS_SHORT = [CY, CY-1, CY-2, CY-3, CY-4];
+  const YEARS_ALL   = Array.from({length:25}, (_,i) => CY - i);
 
   const ALL_COUNTRIES = [
-    { code:'US', name:'أمريكا',    flag:'🇺🇸' },
-    { code:'GB', name:'بريطانيا',  flag:'🇬🇧' },
-    { code:'TR', name:'تركيا',     flag:'🇹🇷' },
-    { code:'IN', name:'الهند',     flag:'🇮🇳' },
-    { code:'JP', name:'اليابان',   flag:'🇯🇵' },
-    { code:'KR', name:'كوريا',     flag:'🇰🇷' },
-    { code:'FR', name:'فرنسا',     flag:'🇫🇷' },
-    { code:'DE', name:'ألمانيا',   flag:'🇩🇪' },
-    { code:'IT', name:'إيطاليا',   flag:'🇮🇹' },
-    { code:'ES', name:'إسبانيا',   flag:'🇪🇸' },
-    { code:'MX', name:'المكسيك',   flag:'🇲🇽' },
-    { code:'BR', name:'البرازيل',  flag:'🇧🇷' },
-    { code:'CN', name:'الصين',     flag:'🇨🇳' },
-    { code:'TH', name:'تايلاند',   flag:'🇹🇭' },
-    { code:'EG', name:'مصر',       flag:'🇪🇬' },
-    { code:'SA', name:'السعودية',  flag:'🇸🇦' },
+    { code:'US', name:'أمريكا',   flag:'🇺🇸' },
+    { code:'GB', name:'بريطانيا', flag:'🇬🇧' },
+    { code:'TR', name:'تركيا',    flag:'🇹🇷' },
+    { code:'IN', name:'الهند',    flag:'🇮🇳' },
+    { code:'JP', name:'اليابان',  flag:'🇯🇵' },
+    { code:'KR', name:'كوريا',    flag:'🇰🇷' },
+    { code:'FR', name:'فرنسا',    flag:'🇫🇷' },
+    { code:'DE', name:'ألمانيا',  flag:'🇩🇪' },
+    { code:'IT', name:'إيطاليا',  flag:'🇮🇹' },
+    { code:'ES', name:'إسبانيا',  flag:'🇪🇸' },
+    { code:'MX', name:'المكسيك',  flag:'🇲🇽' },
+    { code:'BR', name:'البرازيل', flag:'🇧🇷' },
+    { code:'CN', name:'الصين',    flag:'🇨🇳' },
+    { code:'TH', name:'تايلاند',  flag:'🇹🇭' },
+    { code:'EG', name:'مصر',      flag:'🇪🇬' },
+    { code:'SA', name:'السعودية', flag:'🇸🇦' },
   ];
 
   const SUB_GENRES = [
     { id:10752, name:'حربي',   img:'https://images.unsplash.com/photo-1547347298-4074fc3086f0?w=400&q=80' },
-    { id:10402, name:'موسيقي', img:'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&q=80' },
-    { id:99,    name:'رياضي',  img:'https://images.unsplash.com/photo-1540747913346-19212a4b423a?w=400&q=80' },
-    { id:36,    name:'تاريخي', img:'https://images.unsplash.com/photo-1568827999250-f97f3b1c4f69?w=400&q=80' },
+    { id:10402, name:'موسيقي', img:'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&q=80' },
+    { id:99,    name:'رياضي',  img:'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=400&q=80' },
+    { id:36,    name:'تاريخي', img:'https://images.unsplash.com/photo-1564399580075-5dfe19c205f3?w=400&q=80' },
     { id:99,    name:'وثائقي', img:'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=400&q=80' },
   ];
 
-  const showCountries = (all) => {
-    const list = all ? ALL_COUNTRIES : ALL_COUNTRIES.slice(0,6);
-    const moreBtn = all ? '' : `<button class="country-btn country-more-btn" onclick="(${showCountries.toString()})(true)"><span class="country-flag-circle more-dots">•••</span><span class="country-name">المزيد</span></button>`;
-    document.getElementById('countriesWrap').innerHTML =
-      list.map(c=>`<button class="country-btn" onclick="openBrowseAll('movie','/discover/movie?with_origin_country=${c.code}','${c.name}')"><span class="country-flag-circle">${c.flag}</span><span class="country-name">${c.name}</span></button>`).join('') + moreBtn;
-  };
+  function buildYears(all) {
+    const list = all ? YEARS_ALL : YEARS_SHORT;
+    const more = all ? '' : '<button class="year-btn year-more-btn" id="yearMoreBtn"><i class="ri-calendar-line"></i><span class="year-new">المزيد</span></button>';
+    return list.map((y,i) =>
+      '<button class="year-btn' + (!all && i===0 ? ' active' : '') + '" onclick="openBrowseAll(\'movie\',\'/discover/movie?primary_release_year=' + y + '\',\'' + y + '\')">' +
+      '<span class="year-num">' + y + '</span>' +
+      (!all && i===0 ? '<span class="year-new">جديد</span>' : '') +
+      '</button>'
+    ).join('') + more;
+  }
 
-  const showYears = (all) => {
-    const allY = Array.from({length:25},(_,i)=>CY-i);
-    const list = all ? allY : YEARS;
-    const moreBtn = all ? '' : `<button class="year-btn year-more-btn" onclick="(${showYears.toString()})(true)"><i class="ri-calendar-line"></i><span class="year-new">المزيد</span></button>`;
-    document.getElementById('yearsWrap').innerHTML =
-      list.map((y,i)=>`<button class="year-btn ${!all&&i===0?'active':''}" onclick="openBrowseAll('movie','/discover/movie?primary_release_year=${y}','${y}')"><span class="year-num">${y}</span>${!all&&i===0?'<span class="year-new">جديد</span>':''}</button>`).join('') + moreBtn;
-  };
+  function buildCountries(all) {
+    const list = all ? ALL_COUNTRIES : ALL_COUNTRIES.slice(0, 6);
+    const more = all ? '' : '<button class="country-btn country-more-btn" id="countryMoreBtn"><span class="country-flag-circle more-dots">•••</span><span class="country-name">المزيد</span></button>';
+    return list.map(c =>
+      '<button class="country-btn" onclick="openBrowseAll(\'movie\',\'/discover/movie?with_origin_country=' + c.code + '\',\'' + c.name + '\')">' +
+      '<span class="country-flag-circle">' + c.flag + '</span>' +
+      '<span class="country-name">' + c.name + '</span>' +
+      '</button>'
+    ).join('') + more;
+  }
 
-  page.innerHTML = `
-    <div class="genres-page">
-      <div class="section-header"><span class="section-bar"></span><h2 class="section-title">التصنيفات</h2></div>
-      <div class="genres-grid">
-        ${GENRES.map(g=>`
-          <div class="genre-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=${g.id}','${g.name}')">
-            <div class="genre-bg" style="background-image:url('${g.img}')"></div>
-            <div class="genre-overlay"></div>
-            <div class="genre-icon-wrap"><i class="${g.icon} genre-icon"></i></div>
-            <span class="genre-name">${g.name}</span>
-            <span class="genre-count">${g.count} عنوان</span>
-          </div>`).join('')}
-      </div>
+  page.innerHTML =
+    '<div class="genres-page">' +
+    '<div class="section-header"><span class="section-bar"></span><h2 class="section-title">التصنيفات</h2></div>' +
+    '<div class="genres-grid">' +
+    GENRES.map(g =>
+      '<div class="genre-card" onclick="openBrowseAll(\'movie\',\'/discover/movie?with_genres=' + g.id + '\',\'' + g.name + '\')">' +
+      '<div class="genre-bg" style="background-image:url(\'' + g.img + '\')"></div>' +
+      '<div class="genre-overlay"></div>' +
+      '<div class="genre-icon-wrap"><i class="' + g.icon + ' genre-icon"></i></div>' +
+      '<span class="genre-name">' + g.name + '</span>' +
+      '<span class="genre-count">' + g.count + ' عنوان</span>' +
+      '</div>'
+    ).join('') +
+    '</div>' +
+    '<div class="section-header" style="margin-top:24px"><span class="section-bar"></span><h2 class="section-title">تصفح حسب المزاج</h2></div>' +
+    '<div class="moods-row">' +
+    MOODS.map(m =>
+      '<button class="mood-btn" onclick="openBrowseAll(\'movie\',\'/discover/movie?' + m.params + '\',\'' + m.name + '\')">' +
+      '<i class="' + m.icon + '"></i><span>' + m.name + '</span></button>'
+    ).join('') +
+    '</div>' +
+    '<div class="section-header" style="margin-top:24px"><span class="section-bar"></span><h2 class="section-title">تصفح حسب السنوات</h2></div>' +
+    '<div class="years-row" id="yearsWrap">' + buildYears(false) + '</div>' +
+    '<div class="section-header" style="margin-top:24px"><span class="section-bar"></span><h2 class="section-title">تصفح حسب البلد</h2></div>' +
+    '<div class="countries-row" id="countriesWrap">' + buildCountries(false) + '</div>' +
+    '<div class="section-header" style="margin-top:24px"><span class="section-bar"></span><h2 class="section-title">تصفح حسب النوع</h2></div>' +
+    '<div class="sub-genres-row">' +
+    SUB_GENRES.map(g =>
+      '<div class="sub-genre-card" onclick="openBrowseAll(\'movie\',\'/discover/movie?with_genres=' + g.id + '\',\'' + g.name + '\')">' +
+      '<div class="sub-genre-bg" style="background-image:url(\'' + g.img + '\')"></div>' +
+      '<div class="sub-genre-overlay"></div>' +
+      '<span class="sub-genre-name">' + g.name + '</span>' +
+      '</div>'
+    ).join('') +
+    '</div>' +
+    '</div>';
 
-      <div class="section-header" style="margin-top:24px"><span class="section-bar"></span><h2 class="section-title">تصفح حسب المزاج</h2></div>
-      <div class="moods-row">
-        ${MOODS.map(m=>`
-          <button class="mood-btn" onclick="openBrowseAll('movie','/discover/movie?${m.params}','${m.name}')">
-            <i class="${m.icon}"></i><span>${m.name}</span>
-          </button>`).join('')}
-      </div>
+  document.getElementById('yearMoreBtn')?.addEventListener('click', function() {
+    document.getElementById('yearsWrap').innerHTML = buildYears(true);
+  });
 
-      <div class="section-header" style="margin-top:24px"><span class="section-bar"></span><h2 class="section-title">تصفح حسب السنوات</h2></div>
-      <div class="years-row" id="yearsWrap"></div>
-
-      <div class="section-header" style="margin-top:24px"><span class="section-bar"></span><h2 class="section-title">تصفح حسب البلد</h2></div>
-      <div class="countries-row" id="countriesWrap"></div>
-
-      <div class="section-header" style="margin-top:24px"><span class="section-bar"></span><h2 class="section-title">تصفح حسب النوع</h2></div>
-      <div class="sub-genres-row">
-        ${SUB_GENRES.map(g=>`
-          <div class="sub-genre-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=${g.id}','${g.name}')">
-            <div class="sub-genre-bg" style="background-image:url('${g.img}')"></div>
-            <div class="sub-genre-overlay"></div>
-            <span class="sub-genre-name">${g.name}</span>
-          </div>`).join('')}
-      </div>
-    </div>`;
-
-  showCountries(false);
-  showYears(false);
+  document.getElementById('countryMoreBtn')?.addEventListener('click', function() {
+    document.getElementById('countriesWrap').innerHTML = buildCountries(true);
+  });
 }
 async function toggleFootballVault() {
   bnavGo('football');
