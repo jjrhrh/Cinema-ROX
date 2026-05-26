@@ -3392,6 +3392,8 @@ function roxSnapshot() {
   }) : navigator.clipboard.writeText(window.location.href)
     .then(() => alert('تم نسخ الرابط ✅'));
 }
+document.getElementById('filterBar')?.style.removeProperty('display');
+  document.getElementById('platformsSection')?.style.removeProperty('display');
 function filterBarGo(tab, el) {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   if (el) el.classList.add('active');
@@ -3500,22 +3502,22 @@ async function loadFilteredLibrary() {
     </div>`;
 }
 
-async function loadGenresPage() {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+document.getElementById('filterBar')?.style.setProperty('display','none');
+  document.getElementById('platformsSection')?.style.setProperty('display','none');
   document.getElementById('heroSection').style.display = 'none';
   const page = document.getElementById('homePage');
   if (!page) return;
   page.classList.add('active');
 
   const GENRES = [
-    { id:28,   name:'أكشن',      icon:'ri-sword-line',        img:'https://image.tmdb.org/t/p/w500/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg' },
-    { id:12,   name:'مغامرة',    icon:'ri-map-2-line',         img:'https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg' },
-    { id:878,  name:'خيال علمي', icon:'ri-rocket-line',        img:'https://image.tmdb.org/t/p/w500/d5NXSklpcuveqHmyIkbmIaDWVFo.jpg' },
-    { id:18,   name:'دراما',     icon:'ri-film-line',          img:'https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsLLeHjmIDKm.jpg' },
-    { id:27,   name:'رعب',       icon:'ri-ghost-2-line',       img:'https://image.tmdb.org/t/p/w500/xfNHRI2f5kHGvogxld27BoKqFhJ.jpg' },
-    { id:37,   name:'غربي',      icon:'ri-riding-line',        img:'https://image.tmdb.org/t/p/w500/oVDLBMOgEIWvJk45OYWq5nHMMtc.jpg' },
-    { id:16,   name:'أنيميشن',   icon:'ri-emotion-happy-line', img:'https://image.tmdb.org/t/p/w500/mY7SeH4HFFxW1hiI6cWuwCRKptN.jpg' },
-    { id:10749,name:'رومانسي',   icon:'ri-heart-3-line',       img:'https://image.tmdb.org/t/p/w500/fi67TkFvMvqkIqrpCHOJwuM6zPG.jpg' },
+    { id:28,    name:'أكشن',      icon:'ri-sword-line',        img:'https://image.tmdb.org/t/p/w500/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg',  count:'1250' },
+    { id:12,    name:'مغامرة',    icon:'ri-map-2-line',         img:'https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg',   count:'980'  },
+    { id:878,   name:'خيال علمي', icon:'ri-rocket-line',        img:'https://image.tmdb.org/t/p/w500/d5NXSklpcuveqHmyIkbmIaDWVFo.jpg',   count:'650'  },
+    { id:18,    name:'دراما',     icon:'ri-film-line',          img:'https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsLLeHjmIDKm.jpg',    count:'1750' },
+    { id:27,    name:'رعب',       icon:'ri-ghost-2-line',       img:'https://image.tmdb.org/t/p/w500/xfNHRI2f5kHGvogxld27BoKqFhJ.jpg',   count:'560'  },
+    { id:37,    name:'غربي',      icon:'ri-riding-line',        img:'https://image.tmdb.org/t/p/w500/oVDLBMOgEIWvJk45OYWq5nHMMtc.jpg',   count:'320'  },
+    { id:16,    name:'أنيميشن',   icon:'ri-emotion-happy-line', img:'https://image.tmdb.org/t/p/w500/mY7SeH4HFFxW1hiI6cWuwCRKptN.jpg',   count:'910'  },
+    { id:10749, name:'رومانسي',   icon:'ri-heart-3-line',       img:'https://image.tmdb.org/t/p/w500/fi67TkFvMvqkIqrpCHOJwuM6zPG.jpg',   count:'740'  },
   ];
 
   const MOODS = [
@@ -3545,8 +3547,9 @@ async function loadGenresPage() {
         ${GENRES.map(g => `
           <div class="genre-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=${g.id}','${g.name}')" style="background-image:url('${g.img}')">
             <div class="genre-overlay"></div>
-            <i class="${g.icon} genre-icon"></i>
+            <div class="genre-icon-wrap"><i class="${g.icon} genre-icon"></i></div>
             <span class="genre-name">${g.name}</span>
+            <span class="genre-count">${g.count} عنوان</span>
           </div>`).join('')}
       </div>
 
