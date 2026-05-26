@@ -5695,8 +5695,8 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
 }
 .genre-card {
   position: relative;
-  height: 110px;
-  border-radius: 14px;
+  height: 130px;
+  border-radius: 16px;
   overflow: hidden;
   background-size: cover;
   background-position: center;
@@ -5707,23 +5707,40 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
 .genre-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(0,0,0,0.7), rgba(0,0,0,0.3));
+  background: linear-gradient(170deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.75) 100%);
+}
+.genre-icon-wrap {
+  position: absolute;
+  bottom: 36px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  background: rgba(229,9,20,0.85);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .genre-icon {
-  position: absolute;
-  bottom: 28px;
-  right: 12px;
-  font-size: 1.4rem;
-  color: var(--accent, #e50914);
+  font-size: 1rem;
+  color: #fff;
 }
 .genre-name {
   position: absolute;
-  bottom: 8px;
-  right: 12px;
+  bottom: 18px;
+  right: 10px;
   font-family: 'Tajawal', sans-serif;
   font-size: 0.85rem;
   font-weight: 700;
   color: #fff;
+}
+.genre-count {
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.68rem;
+  color: rgba(255,255,255,0.55);
 }
 .moods-row {
   display: flex;
