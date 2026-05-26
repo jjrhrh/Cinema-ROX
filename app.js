@@ -154,6 +154,7 @@ function roxSignOut() {
 if (window.ROX_AUTH) {
   ROX_AUTH.onAuthStateChanged(user => {
   window.ROX_USER = user || null;
+    if (user) syncLibFromCloud();
   if (document.getElementById('profilePage')?.classList.contains('active')) loadProfilePage();
   if (document.getElementById('libraryPage')?.classList.contains('active')) loadLibraryPage();
 });
@@ -2111,6 +2112,28 @@ function getLib(key) {
 }
 function saveLib(key, arr) {
   localStorage.setItem(libKey(key), JSON.stringify(arr));
+  const uid = window.ROX_USER?.uid;
+  if (uid && window.ROX_DB) {
+    window.ROX_DB.collection('users').doc(uid).set(
+      { [key]: arr },
+      { merge: true }
+    ).catch(e => console.warn('Firestore save error:', e));
+  }
+}
+async function syncLibFromCloud() {
+  const uid = window.ROX_USER?.uid;
+  if (!uid || !window.ROX_DB) return;
+  try {
+    const doc = await window.ROX_DB.collection('users').doc(uid).get();
+    if (!doc.exists) return;
+    const data = doc.data();
+    ['rox_watchlist','rox_watchlater','rox_alerts'].forEach(key => {
+      if (data[key]) {
+        localStorage.setItem(libKey(key), JSON.stringify(data[key]));
+      }
+    });
+    console.log('✅ تم مزامنة المكتبة من السحابة');
+  } catch(e) { console.warn('Firestore sync error:', e); }
 }
 function addToWatchlist(id, type) {
   if (!window.ROX_USER) { showToast('🔐 سجّل دخولك أولاً'); bnavGo('profile'); return; }
