@@ -3502,7 +3502,9 @@ async function loadFilteredLibrary() {
     </div>`;
 }
 
-document.getElementById('filterBar')?.style.setProperty('display','none');
+async function loadGenresPage() {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('filterBar')?.style.setProperty('display','none');
   document.getElementById('platformsSection')?.style.setProperty('display','none');
   document.getElementById('heroSection').style.display = 'none';
   const page = document.getElementById('homePage');
