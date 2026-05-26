@@ -6613,3 +6613,13 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
 .section-header{display:flex;align-items:center;gap:10px;margin-bottom:4px}
 .section-bar{width:4px;height:20px;background:#e50914;border-radius:4px;display:block}
 .section-title{font-size:1rem;font-weight:800;color:#fff;font-family:'Tajawal',sans-serif;margin:0} 
+.fullscreen-hub{position:fixed;inset:0;background:#0a0a0a;z-index:999;overflow-y:auto;direction:rtl}
+.all-countries-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding:16px}
+.country-btn-full{display:flex;flex-direction:column;align-items:center;gap:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:16px 8px;cursor:pointer;transition:all 0.3s ease;width:100%}
+.country-btn-full:hover{background:rgba(229,9,20,0.12);border-color:rgba(229,9,20,0.4);transform:translateY(-3px)}
+.country-flag-lg{font-size:2.2rem}
+.country-name-lg{font-size:0.75rem;color:#fff;font-family:'Tajawal',sans-serif;font-weight:600;text-align:center}
+.all-years-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:16px}
+.year-btn-full{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:16px 8px;color:#fff;font-family:'Tajawal',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:all 0.3s ease;text-align:center}
+.year-btn-full:hover{background:rgba(229,9,20,0.15);border-color:rgba(229,9,20,0.5);transform:translateY(-3px)}
+.year-btn-full.active{background:rgba(229,9,20,0.2);border-color:#e50914;box-shadow:0 0 16px rgba(229,9,20,0.4)} 
