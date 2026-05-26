@@ -4350,7 +4350,10 @@ function selectRoxSource(i) {
     vid.src = s.url;
     vid.play();
   }
-  document.getElementById('roxPlayerWrap').style.display = 'block';
-  document.getElementById('wsFrame').src = '';
+  const wrap = document.getElementById('roxPlayerWrap');
+if (wrap) { wrap.style.display = 'block'; wrap.style.visibility = 'visible'; wrap.style.opacity = '1'; }
+document.getElementById('wsOverlay').style.display = 'none';
+document.getElementById('wsFrame').src = '';
+window.scrollTo(0, 0);
   showToast('▶ ' + s.name);
 }
