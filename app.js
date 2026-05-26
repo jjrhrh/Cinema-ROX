@@ -127,6 +127,7 @@ function goBack() {
     document.getElementById('bnavHome').classList.add('active');
     if (hero) { hero.style.display = ''; hero.style.visibility = ''; }
   }
+  document.getElementById('platformsSection').style.display = '';
   window.scrollTo(0, 0);
 }
 
