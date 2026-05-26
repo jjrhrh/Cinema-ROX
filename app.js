@@ -1823,8 +1823,9 @@ try {
   const repos = JSON.parse(localStorage.getItem('rox_repos') || '[]');
 const streamRes = await fetch(`https://cinema-rox.vercel.app/api/stream?tmdbId=${id}&type=${type}&season=${season}&ep=${streamEp}&repos=${encodeURIComponent(JSON.stringify(repos))}`);
   const streamData = await streamRes.json();
-  const best = (streamData.sources || []).find(s => s.type === 'hls') || (streamData.sources || [])[0];
-  if (best?.url) roxStreamUrl = best.url;
+  window._roxSources = streamData.sources || [];
+const best = window._roxSources.find(s => s.type === 'hls') || window._roxSources[0];
+if (best?.url) roxStreamUrl = best.url;
 } catch(e) { console.warn('[ROX stream] فشل:', e.message); }
 // تحديث رابط ROX في vipSrvs
 const roxCard = vipSrvs.find(s => s.stream);
@@ -1917,6 +1918,9 @@ page.innerHTML = `
     <button class="ws-back" onclick="wsGoBack()">→ رجوع</button>
   </div>
   <div class="ws-action-row">
+  <button class="rox-theater-btn" onclick="showRoxSources()" style="gap:6px">
+  <i class="ri-server-line"></i> السيرفرات
+</button>
     <button class="rox-theater-btn" id="cinemaModeBtn" onclick="toggleCinemaMode()"><i class="ri-film-fill" style="color:#ff2a2a;margin-left:5px"></i> وضع السينما</button>
     <button class="rox-snapshot-btn" onclick="roxSnapshot()"><i class="ri-share-forward-box-fill" style="color:#00f2fe;margin-left:5px"></i> مشاركة</button>
   </div>
@@ -4316,4 +4320,37 @@ function hubFilterMatches() {
       '<div class="arch-date"><i class="ri-time-line"></i> '+timeLabel+' | <i class="ri-calendar-check-line"></i> '+dateLabel+'</div>'+
     '</div>';
   }).join('');
+}
+function showRoxSources() {
+  const sources = window._roxSources || [];
+  if (!sources.length) return showToast('لا توجد سيرفرات متاحة');
+  const sheet = document.createElement('div');
+  sheet.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#1a1a2e;border-radius:20px 20px 0 0;padding:20px;z-index:9999;max-height:60vh;overflow-y:auto';
+  sheet.innerHTML = `<h3 style="color:#fff;margin:0 0 14px;font-family:Tajawal">📡 اختر السيرفر</h3>` +
+    sources.map((s, i) => `
+      <div onclick="selectRoxSource(${i})" style="background:rgba(255,255,255,0.07);border-radius:10px;padding:12px;margin-bottom:8px;cursor:pointer;font-family:Tajawal;color:#fff">
+        <div style="font-weight:700">${s.name}</div>
+        <div style="font-size:0.75rem;opacity:0.5">${s.quality || 'auto'} · ${s.lang || ''}</div>
+      </div>`).join('');
+  document.body.appendChild(sheet);
+  window._roxSheet = sheet;
+}
+
+function selectRoxSource(i) {
+  const s = (window._roxSources || [])[i];
+  if (!s?.url) return;
+  if (window._roxSheet) { document.body.removeChild(window._roxSheet); window._roxSheet = null; }
+  const vid = document.getElementById('roxPlayer');
+  if (s.type === 'hls' && window.Hls?.isSupported()) {
+    const hls = new Hls();
+    hls.loadSource(s.url);
+    hls.attachMedia(vid);
+    hls.on(Hls.Events.MANIFEST_PARSED, () => vid.play());
+  } else {
+    vid.src = s.url;
+    vid.play();
+  }
+  document.getElementById('roxPlayerWrap').style.display = 'block';
+  document.getElementById('wsFrame').src = '';
+  showToast('▶ ' + s.name);
 }
