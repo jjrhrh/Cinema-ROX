@@ -1875,7 +1875,7 @@ page.innerHTML = `
     </div>
     <iframe id="wsFrame" class="ws-frame" src=""
   allowfullscreen
-  sandbox="allow-scripts allow-same-origin allow-forms allow-presentation allow-popups-to-escape-sandbox"
+  sandbox="allow-scripts allow-same-origin allow-forms allow-presentation allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation"
   allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
   referrerpolicy="no-referrer-when-downgrade"
   onload="if(this.src)cwTrackTime(${id},'${type}','${cwPoster}','${cwTitle}')">
