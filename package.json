@@ -1,0 +1,12 @@
+{
+  "name": "cinema-rox",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "api/stream.js",
+  "scripts": {
+    "start": "node api/stream.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
