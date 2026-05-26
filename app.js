@@ -387,7 +387,6 @@ async function updateHeroInfo(movies, index) {
   if (overviewEl) overviewEl.textContent = m.overview || '';
   if (titleEl) {
     titleEl.innerHTML = '';
-    titleEl.textContent = m.title || m.name || m.original_title || '';
   }
   if (genresEl) {
     const names = (m.genre_ids||[]).slice(0,3).map(id=>GENRES[id]).filter(Boolean);
@@ -3512,14 +3511,14 @@ async function loadGenresPage() {
   page.classList.add('active');
 
   const GENRES = [
-    { id:28,    name:'أكشن',      icon:'ri-sword-line',        img:'https://image.tmdb.org/t/p/w500/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg',  count:'1250' },
-    { id:12,    name:'مغامرة',    icon:'ri-map-2-line',         img:'https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg',   count:'980'  },
-    { id:878,   name:'خيال علمي', icon:'ri-rocket-line',        img:'https://image.tmdb.org/t/p/w500/d5NXSklpcuveqHmyIkbmIaDWVFo.jpg',   count:'650'  },
-    { id:18,    name:'دراما',     icon:'ri-film-line',          img:'https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsLLeHjmIDKm.jpg',    count:'1750' },
-    { id:27,    name:'رعب',       icon:'ri-ghost-2-line',       img:'https://image.tmdb.org/t/p/w500/xfNHRI2f5kHGvogxld27BoKqFhJ.jpg',   count:'560'  },
-    { id:37,    name:'غربي',      icon:'ri-riding-line',        img:'https://image.tmdb.org/t/p/w500/oVDLBMOgEIWvJk45OYWq5nHMMtc.jpg',   count:'320'  },
-    { id:16,    name:'أنيميشن',   icon:'ri-emotion-happy-line', img:'https://image.tmdb.org/t/p/w500/mY7SeH4HFFxW1hiI6cWuwCRKptN.jpg',   count:'910'  },
-    { id:10749, name:'رومانسي',   icon:'ri-heart-3-line',       img:'https://image.tmdb.org/t/p/w500/fi67TkFvMvqkIqrpCHOJwuM6zPG.jpg',   count:'740'  },
+    { id:28,    name:'أكشن',      icon:'ri-sword-line',        img:'https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=400&q=80', count:'1250' },
+    { id:12,    name:'مغامرة',    icon:'ri-map-2-line',         img:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80', count:'980'  },
+    { id:878,   name:'خيال علمي', icon:'ri-rocket-line',        img:'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=400&q=80', count:'650'  },
+    { id:18,    name:'دراما',     icon:'ri-film-line',          img:'https://images.unsplash.com/photo-1485846234645-a62644f84728?w=400&q=80', count:'1750' },
+    { id:27,    name:'رعب',       icon:'ri-ghost-2-line',       img:'https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?w=400&q=80', count:'560'  },
+    { id:37,    name:'غربي',      icon:'ri-riding-line',        img:'https://images.unsplash.com/photo-1533488765986-dfa2a9939acd?w=400&q=80', count:'320'  },
+    { id:16,    name:'أنيميشن',   icon:'ri-emotion-happy-line', img:'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=400&q=80', count:'910'  },
+    { id:10749, name:'رومانسي',   icon:'ri-heart-3-line',       img:'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400&q=80', count:'740'  },
   ];
 
   const MOODS = [
