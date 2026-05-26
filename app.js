@@ -3633,7 +3633,7 @@ async function loadSpMatchesLive() {
     const today = new Date().toISOString().slice(0,10);
     const tomorrow = new Date(Date.now()+86400000).toISOString().slice(0,10);
     const res = await fetch(
-      `https://api.football-data.org/v4/matches?dateFrom=${today}&dateTo=${tomorrow}&competitions=PL,PD,SA,BL1,FL1,CL,EL`,
+      `${CONFIG.FOOTBALL.FD_BASE}/matches?dateFrom=${today}&dateTo=${tomorrow}&competitions=PL,PD,SA,BL1,FL1,CL,EL`,
       { headers: { 'X-Auth-Token': CONFIG.FOOTBALL.FD_KEY } }
     );
     const data = await res.json();
