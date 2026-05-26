@@ -882,6 +882,7 @@ async function openDetail(id, type = 'movie') {
   document.getElementById('newsSection').style.display = 'none';
   document.getElementById('studioBar').style.display = 'none';
   document.getElementById('filterBar')?.style.setProperty('display','none');
+  document.getElementById('platformsSection').style.display = 'none';
   const page = document.getElementById('detailPage');
   if (!page) return;
 
