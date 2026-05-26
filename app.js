@@ -40,6 +40,7 @@ document.querySelectorAll('.dock-btn').forEach(b => {
     document.getElementById('bnavOtaku').classList.remove('active');
     document.getElementById('homePage').classList.add('active');
     document.getElementById('bnavHome').classList.add('active');
+    document.getElementById('filterBar')?.style.removeProperty('display');
     if (hero) { hero.style.display = ''; hero.style.visibility = ''; }
     loadHeroSwiper();
     loadHomePage();
