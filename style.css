@@ -4744,7 +4744,6 @@ body.cinema-mode .ws-overlay        { border-radius: 0; }
 .mc-new-badge {
   position: absolute;
   top: 7px;
-  top: 7px;
   left: 7px;
   background: linear-gradient(135deg, #e50914, #b00000);
   color: #fff;
