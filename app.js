@@ -2,13 +2,42 @@ const _auth = firebase.auth();
 const _gProvider = new firebase.auth.GoogleAuthProvider();
 
 function checkAuthOnLoad() {
-  showAuthModal();
+  const loader = document.createElement('div');
+  loader.id = 'authLoader';
+  loader.style.cssText = 'position:fixed;inset:0;background:#0a0a0f;z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;';
+  loader.innerHTML = `
+    <div style="font-size:36px;font-weight:900;letter-spacing:4px;background:linear-gradient(135deg,#fff 0%,#e50914 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">ROX</div>
+    <div style="width:40px;height:3px;background:#1c1c1e;border-radius:10px;overflow:hidden;">
+      <div id="loaderBar" style="height:100%;width:0%;background:linear-gradient(90deg,#e50914,#ff6b6b);border-radius:10px;transition:width 0.1s;"></div>
+    </div>`;
+  document.body.appendChild(loader);
+  document.body.style.overflow = 'hidden';
+  document.documentElement.style.overflow = 'hidden';
+  let p = 0;
+  const bar = setInterval(() => {
+    p = Math.min(p + Math.random() * 15, 85);
+    const el = document.getElementById('loaderBar');
+    if (el) el.style.width = p + '%';
+  }, 200);
   _auth.onAuthStateChanged(user => {
-    if (user) {
-      closeAuthModal();
-    }
+    clearInterval(bar);
+    const el = document.getElementById('loaderBar');
+    if (el) el.style.width = '100%';
+    setTimeout(() => {
+      loader.style.opacity = '0';
+      loader.style.transition = 'opacity 0.3s';
+      setTimeout(() => {
+        loader.remove();
+        if (!user) {
+          showAuthModal();
+        } else {
+          document.body.style.overflow = '';
+          document.documentElement.style.overflow = '';
+        }
+      }, 300);
+    }, 150);
   });
-}
+} 
 
 function showAuthModal() {
   if (document.getElementById('authModal')) return;
@@ -3409,8 +3438,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   bnavGo('home');
   setTimeout(checkAllAlerts, 4000);
   checkAuthOnLoad();
-  document.body.style.overflow = 'hidden';
-  document.documentElement.style.overflow = 'hidden';
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js', { scope: '/' })
       .then(() => console.log('SW registered'))
