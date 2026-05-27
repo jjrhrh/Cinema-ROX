@@ -4735,3 +4735,259 @@ function updateTopAvatar() {
     svg.style.display = 'block';
   }
 }
+// ─────────────────────────────────────────
+//  🎨  THEME SYSTEM — Cinema ROX
+// ─────────────────────────────────────────
+
+const ROX_THEMES = [
+  {
+    id: 'red',
+    name: 'الكلاسيكي الأحمر',
+    desc: 'أحمر نيتفلكسي',
+    accent: '#e50914',
+    bg: '#080000',
+    bg2: '#180000',
+    card: '#1a0000',
+  },
+  {
+    id: 'blue',
+    name: 'الأزرق الكوني',
+    desc: 'أزرق سايبربانك',
+    accent: '#00e5ff',
+    bg: '#021024',
+    bg2: '#052659',
+    card: '#031840',
+  },
+  {
+    id: 'green',
+    name: 'الأخضر النيون',
+    desc: 'أخضر ماتريكس',
+    accent: '#5DD62C',
+    bg: '#0F0F0F',
+    bg2: '#1a1a1a',
+    card: '#161616',
+  },
+  {
+    id: 'gold',
+    name: 'الذهبي الملكي',
+    desc: 'ذهبي IMDB',
+    accent: '#f5c518',
+    bg: '#0a0800',
+    bg2: '#1a1400',
+    card: '#151000',
+  },
+  {
+    id: 'purple',
+    name: 'الأرجواني الغامض',
+    desc: 'بنفسجي سحري',
+    accent: '#a855f7',
+    bg: '#08000f',
+    bg2: '#14002a',
+    card: '#0f0018',
+  },
+  {
+    id: 'light',
+    name: 'الأبيض الفاخر',
+    desc: 'وضع النهار',
+    accent: '#e50914',
+    bg: '#f2f2f7',
+    bg2: '#e5e5ea',
+    card: '#ffffff',
+  },
+  {
+    id: 'rose',
+    name: 'Rose Noir',
+    desc: 'وردي داكن',
+    accent: '#ff2d78',
+    bg: '#0d0008',
+    bg2: '#1f0014',
+    card: '#180010',
+  },
+];
+
+const ROX_FONTS = [
+  { id: 'Tajawal',  name: 'Tajawal',  sample: 'سينما روكس الأفلام', preview: 'T' },
+  { id: 'Cairo',    name: 'Cairo',    sample: 'سينما روكس الأفلام', preview: 'C' },
+  { id: 'Amiri',    name: 'Amiri',    sample: 'سينما روكس الأفلام', preview: 'أ' },
+  { id: 'Almarai',  name: 'Almarai',  sample: 'سينما روكس الأفلام', preview: 'M' },
+];
+
+let roxCurrentTheme = localStorage.getItem('rox_theme') || 'red';
+let roxCurrentFont  = localStorage.getItem('rox_font')  || 'Tajawal';
+let roxFontSize     = parseInt(localStorage.getItem('rox_font_size') || '100');
+
+function initThemeSystem() {
+  applyTheme(roxCurrentTheme, false);
+  applyFont(roxCurrentFont, false);
+  applyFontSize(roxFontSize, false);
+
+  const blur = localStorage.getItem('rox_blur') !== 'false';
+  const glow = localStorage.getItem('rox_glow') !== 'false';
+  const anim = localStorage.getItem('rox_anim') !== 'false';
+  const hq   = localStorage.getItem('rox_hq')   !== 'false';
+
+  const tb = document.getElementById('toggleBlur');
+  const tg = document.getElementById('toggleGlow');
+  const ta = document.getElementById('toggleAnim');
+  const th = document.getElementById('toggleHQ');
+  if (tb) tb.checked = blur;
+  if (tg) tg.checked = glow;
+  if (ta) ta.checked = anim;
+  if (th) th.checked = hq;
+
+  applyBlur(blur, false);
+  applyGlow(glow, false);
+  applyAnimations(anim, false);
+
+  const slider = document.getElementById('fontSizeSlider');
+  if (slider) slider.value = roxFontSize;
+}
+
+function applyTheme(themeId, save = true) {
+  roxCurrentTheme = themeId;
+  const html = document.getElementById('htmlRoot') || document.documentElement;
+  if (themeId === 'red') {
+    html.removeAttribute('data-theme');
+  } else {
+    html.setAttribute('data-theme', themeId);
+  }
+  const t = ROX_THEMES.find(x => x.id === themeId);
+  if (t) {
+    const label = document.getElementById('activeThemeLabel');
+    const badge = document.getElementById('currentThemeName');
+    if (label) label.textContent = `${t.name} — ${t.desc}`;
+    if (badge) badge.textContent = t.name;
+  }
+  if (save) {
+    localStorage.setItem('rox_theme', themeId);
+    renderThemeGrid();
+  }
+}
+
+function applyFont(fontId, save = true) {
+  roxCurrentFont = fontId;
+  document.body.style.fontFamily = `'${fontId}', sans-serif`;
+  const label = document.getElementById('activeFontLabel');
+  if (label) label.textContent = fontId;
+  if (save) {
+    localStorage.setItem('rox_font', fontId);
+    renderThemeGrid();
+  }
+  if (!document.querySelector(`link[data-rox-font="${fontId}"]`)) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.setAttribute('data-rox-font', fontId);
+    link.href = `https://fonts.googleapis.com/css2?family=${fontId.replace(/ /g,'+')}:wght@400;500;700;800;900&display=swap`;
+    document.head.appendChild(link);
+  }
+}
+
+function applyFontSize(val, save = true) {
+  roxFontSize = parseInt(val);
+  document.documentElement.style.fontSize = `${roxFontSize}%`;
+  const label = document.getElementById('fontSizeLabel');
+  if (label) label.textContent = `${roxFontSize}%`;
+  const slider = document.getElementById('fontSizeSlider');
+  if (slider) slider.value = roxFontSize;
+  if (save) localStorage.setItem('rox_font_size', roxFontSize);
+}
+
+function applyBlur(on, save = true) {
+  document.documentElement.style.setProperty(
+    '--backdrop-filter-val', on ? 'blur(36px) saturate(2)' : 'none'
+  );
+  const nav = document.querySelector('.cyber-dock, .bottom-nav');
+  if (nav) nav.style.backdropFilter = on ? 'blur(36px) saturate(2)' : 'none';
+  if (save) localStorage.setItem('rox_blur', on);
+}
+
+function applyGlow(on, save = true) {
+  document.documentElement.style.setProperty('--glow-intensity', on ? '1' : '0');
+  document.querySelectorAll('.dock-btn.active, .bnav-btn.active').forEach(el => {
+    el.style.filter = on ? '' : 'none';
+  });
+  if (save) localStorage.setItem('rox_glow', on);
+}
+
+function applyAnimations(on, save = true) {
+  document.documentElement.style.setProperty('--anim-speed', on ? '1' : '0');
+  const style = document.getElementById('rox-no-anim-style');
+  if (!on) {
+    if (!style) {
+      const s = document.createElement('style');
+      s.id = 'rox-no-anim-style';
+      s.textContent = '*, *::before, *::after { animation-duration: 0s !important; transition-duration: 0s !important; }';
+      document.head.appendChild(s);
+    }
+  } else {
+    if (style) style.remove();
+  }
+  if (save) localStorage.setItem('rox_anim', on);
+}
+
+function applyHQ(on, save = true) {
+  if (save) localStorage.setItem('rox_hq', on);
+}
+
+function openThemePanel() {
+  renderThemeGrid();
+  document.getElementById('themePanel').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeThemePanel() {
+  document.getElementById('themePanel').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function openFontPanel() { openThemePanel(); }
+
+function renderThemeGrid() {
+  const grid = document.getElementById('themeGrid');
+  if (!grid) return;
+  grid.innerHTML = ROX_THEMES.map(t => `
+    <div class="theme-card ${roxCurrentTheme === t.id ? 'selected' : ''}"
+         style="--theme-card-accent:${t.accent}"
+         onclick="applyTheme('${t.id}')">
+      <div class="theme-card-preview" style="background:${t.bg}">
+        <div class="theme-card-bar"  style="background:${t.accent}"></div>
+        <div class="theme-card-bar2" style="background:${t.accent}"></div>
+        <div class="theme-card-dots">
+          <div class="theme-card-dot" style="background:${t.bg2}"></div>
+          <div class="theme-card-dot" style="background:${t.accent}"></div>
+          <div class="theme-card-dot" style="background:${t.card}"></div>
+        </div>
+        <div class="theme-card-check">✓</div>
+      </div>
+      <div class="theme-card-foot" style="background:${t.bg2}">
+        <div class="theme-card-name">${t.name}</div>
+        <div class="theme-card-desc">${t.desc}</div>
+      </div>
+    </div>
+  `).join('');
+
+  const fontGrid = document.getElementById('fontGrid');
+  if (!fontGrid) return;
+  fontGrid.innerHTML = ROX_FONTS.map(f => `
+    <div class="font-option ${roxCurrentFont === f.id ? 'selected' : ''}"
+         onclick="applyFont('${f.id}')">
+      <div class="font-option-preview" style="font-family:'${f.id}',sans-serif">${f.preview}</div>
+      <div class="font-option-body">
+        <div class="font-option-name">${f.name}</div>
+        <div class="font-option-sample" style="font-family:'${f.id}',sans-serif">${f.sample}</div>
+      </div>
+      <div class="font-option-radio"></div>
+    </div>
+  `).join('');
+}
+
+function clearCache() {
+  if (confirm('هل تريد مسح الكاش؟')) {
+    Object.keys(localStorage).filter(k => k.startsWith('rox_cache')).forEach(k => localStorage.removeItem(k));
+    alert('✅ تم مسح الكاش بنجاح');
+  }
+}
+
+// تشغيل النظام عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', initThemeSystem);
+if (document.readyState !== 'loading') initThemeSystem();
