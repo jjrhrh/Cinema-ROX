@@ -44,40 +44,57 @@ function showAuthModal() {
   const m = document.createElement('div');
   m.id = 'authModal';
   m.innerHTML = `
-    <div class="auth-backdrop"></div>
-    <div class="auth-box">
-      <div class="auth-curl"></div>
-      <div class="auth-avatar-wrap">
-        <div class="auth-avatar-circle">
-          <i class="ri-user-3-line"></i>
-        </div>
-      </div>
-      <h2 class="auth-title">Welcome Back</h2>
-      <p class="auth-sub">سجّل دخولك للاستمتاع بـ Cinema ROX</p>
-      <div class="auth-social-row">
-        <button class="auth-social-btn" onclick="signInGoogle()">
+    <div class="splash-bg">
+      <div class="splash-overlay"></div>
+      <div class="splash-particles" id="splashParticles"></div>
+    </div>
+    <div class="splash-content">
+      <div class="splash-logo">Cinema<span>ROX</span></div>
+      <div class="splash-tagline">عالم الأفلام في مكان واحد</div>
+      <div class="splash-card">
+        <div class="splash-card-title">مرحباً بك</div>
+        <div class="splash-card-sub">سجّل دخولك للاستمتاع بكامل المحتوى</div>
+        <button class="splash-google-btn" onclick="signInGoogle()">
           <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20">
+          تسجيل الدخول بـ Google
         </button>
-      </div>
-      <div class="auth-divider"><span>أو</span></div>
-      <div class="auth-field-group">
-        <label class="auth-label">البريد الإلكتروني</label>
-        <input class="auth-input" id="authEmail" type="email" placeholder="أدخل بريدك..." dir="ltr">
-      </div>
-      <div class="auth-field-group">
-        <div class="auth-label-row">
-          <label class="auth-label">كلمة المرور</label>
-          <span class="auth-forgot">نسيت كلمة المرور؟</span>
+        <div class="splash-divider"><span>أو</span></div>
+        <div class="splash-field">
+          <input class="splash-input" id="authEmail" type="email" placeholder="البريد الإلكتروني" dir="ltr">
         </div>
-        <input class="auth-input" id="authPass" type="password" placeholder="••••••••••" dir="ltr">
+        <div class="splash-field">
+          <input class="splash-input" id="authPass" type="password" placeholder="كلمة المرور" dir="ltr">
+          <span class="splash-forgot" onclick="sendPasswordReset()">نسيت كلمة المرور؟</span>
+        </div>
+        <button class="splash-btn-login" onclick="signInEmail()">تسجيل الدخول</button>
+        <button class="splash-btn-register" onclick="signUpEmail()">إنشاء حساب جديد</button>
+        <p id="authError" class="splash-error"></p>
       </div>
-      <button class="auth-btn-main" onclick="signInEmail()">تسجيل الدخول</button>
-      <p class="auth-signup-row">
-        ليس لديك حساب؟ <span class="auth-signup-link" onclick="signUpEmail()">إنشاء حساب</span>
-      </p>
-      <p id="authError" class="auth-error"></p>
     </div>`;
   document.body.appendChild(m);
+  initSplashParticles();
+}
+
+function initSplashParticles() {
+  const c = document.getElementById('splashParticles');
+  if (!c) return;
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement('div');
+    p.className = 'splash-particle';
+    p.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*4}s;animation-duration:${4+Math.random()*4}s;width:${2+Math.random()*3}px;height:${2+Math.random()*3}px;opacity:${0.2+Math.random()*0.4};`;
+    c.appendChild(p);
+  }
+}
+
+function sendPasswordReset() {
+  const email = document.getElementById('authEmail').value;
+  if (!email) { document.getElementById('authError').textContent = 'أدخل بريدك الإلكتروني أولاً'; return; }
+  _auth.sendPasswordResetEmail(email).then(() => {
+    document.getElementById('authError').style.color = '#46d369';
+    document.getElementById('authError').textContent = 'تم إرسال رابط الاستعادة لبريدك ✓';
+  }).catch(() => {
+    document.getElementById('authError').textContent = 'البريد غير مسجل';
+  });
 }
 
 function closeAuthModal() {
