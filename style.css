@@ -1929,6 +1929,9 @@ justify-content: flex-start;
 
 .otaku-mode .anime-card {
   transition: transform 0.4s cubic-bezier(0.23,1,0.32,1);
+  flex: 0 0 calc(31% - 8px);
+  min-width: 0;
+  scroll-snap-align: start;
 }
 .otaku-mode .anime-card:hover {
   transform: translateY(-4px) scale(1.012);
