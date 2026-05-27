@@ -7067,3 +7067,7 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
 .splash-btn-guest:hover {
   color: rgba(255,255,255,0.6);
 } 
+@keyframes fadeSlideUp {
+  from { opacity:0; transform:translateY(30px); }
+  to   { opacity:1; transform:translateY(0); }
+}
