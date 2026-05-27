@@ -460,16 +460,10 @@ async function updateHeroInfo(movies, index) {
     data-poster="${img}">
     <div class="movie-poster-wrap">
       ${isNew ? `<span class="mc-new-badge">✦ جديد</span>` : ''}
-      ${rank > 0 ? `<span class="rank-number rank-number--red">${rank}</span>` : ''}
       <img class="movie-poster fade-img" src="${img}" alt="${title}" loading="lazy"
            onload="this.classList.add('loaded')"
            onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}';this.classList.add('loaded')">
       <div class="movie-overlay"><span class="play-icon">▶</span></div>
-    </div>
-    <div class="movie-title-bar">${title.length>28?title.slice(0,28)+'…':title}</div>
-    <div class="movie-meta-bar">
-      ${year?`<span class="movie-badge-year">${year}</span>`:''}
-      ${rating?`<span class="movie-badge-rating"><svg width="11" height="11" viewBox="0 0 24 24" fill="#f5c518"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> ${rating}</span>`:''}
     </div>
   </div>`;
 }
@@ -508,12 +502,6 @@ function buildAnimeCard(movie, rank = 0, type = 'tv') {
              onload="this.classList.add('loaded')"
              onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}';this.classList.add('loaded')">
         <div class="anime-overlay"><span class="play-icon">▶</span></div>
-        ${rank > 0 ? `<span class="rank-number rank-number--red">${rank}</span>` : ''}
-      </div>
-      <div class="anime-title-bar">${title.length > 28 ? title.slice(0,28)+'…' : title}</div>
-      <div class="anime-meta-bar">
-        <span class="anime-badge-year">${year}</span>
-        ${rating ? `<span class="anime-badge-rating"><svg width="11" height="11" viewBox="0 0 24 24" fill="#f5c518"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> ${rating}</span>` : ''}
       </div>
       </div>`;
 }
