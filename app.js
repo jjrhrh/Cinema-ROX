@@ -2243,7 +2243,7 @@ window.wsStartStream = function() {
 };
 // ===== CONTINUE WATCHING =====
 let _cwTimer = null;
-function cwTrackTime(id, type, poster, title) {
+function cwTrackTime(id, type, poster, title, season, episode) {
   clearInterval(_cwTimer);
   let sec = 0;
   _cwTimer = setInterval(() => {
@@ -2251,16 +2251,16 @@ function cwTrackTime(id, type, poster, title) {
     const activeCard = document.querySelector('.ws-card.active');
     const srv = activeCard ? (activeCard.dataset.name || '') : '';
     const url = activeCard ? (activeCard.dataset.url || '') : '';
-    cwSave(id, type, poster, title, sec, srv, url);
+    cwSave(id, type, poster, title, sec, srv, url, season, episode);
   }, 10000);
 }
 const CW_KEY = 'rox_continue';
 const CW_TTL = 604800000; // 7 أيام
 
-function cwSave(id, type, poster, title, seconds, server, serverUrl) {
+function cwSave(id, type, poster, title, seconds, server, serverUrl, season, episode) {
   const list = cwGetAll();
   const idx  = list.findIndex(i => i.id === id);
-  const item = { id, type, poster, title, seconds, server, serverUrl, savedAt: Date.now() };
+  const item = { id, type, poster, title, seconds, server, serverUrl, season: season||1, episode: episode||1, savedAt: Date.now() };
   if (idx > -1) list[idx] = item; else list.unshift(item);
   localStorage.setItem(CW_KEY, JSON.stringify(list.slice(0, 20)));
 }
