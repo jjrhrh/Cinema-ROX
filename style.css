@@ -7052,3 +7052,18 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
   text-align: center;
   color: #ff4d4d;
 }
+.splash-btn-guest {
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.3);
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: color 0.2s;
+}
+
+.splash-btn-guest:hover {
+  color: rgba(255,255,255,0.6);
+} 
