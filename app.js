@@ -883,6 +883,9 @@ async function loadOtakuHero() {
   loopedSlides: movies.length,
   autoplay: { delay: CONFIG.HERO?.AUTOPLAY_MS || 6500, disableOnInteraction: false },
   speed: 600,
+  cssMode: false,
+  touchRatio: 1,
+  touchAngle: 45,
   on: {
     init: function() {
       updateHeroInfo(movies, 0);
@@ -965,7 +968,7 @@ async function loadHomePage() {
         return;
       }
       row.innerHTML = movies.map((m, i) => buildMovieCard(m, s.type, s.cardClass || '', i + 1)).join('');
-      setTimeout(applyCardGlow, 800);
+      requestIdleCallback(() => applyCardGlow(), { timeout: 2000 });
     } catch (e) {
       const container = document.getElementById(s.id);
       if (container) container.remove();
