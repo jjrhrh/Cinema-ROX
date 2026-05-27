@@ -4697,30 +4697,14 @@ function toggleProfileDropdown() {
 }
 function openThemePanel() {
   document.getElementById('profileDropdown').style.display = 'none';
-  if (document.getElementById('themePanelOverlay')) return;
-  const overlay = document.createElement('div');
-  overlay.id = 'themePanelOverlay';
-  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:999998;backdrop-filter:blur(4px);';
-  const panel = document.createElement('div');
-  panel.id = 'themePanel';
-  panel.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#1a1a2e;border-radius:24px 24px 0 0;z-index:999999;padding:20px;min-height:300px;animation:slideUp 0.3s ease;';
-  panel.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
-      <div style="font-size:17px;font-weight:800;color:#fff;font-family:Tajawal;">🎨 الثيمات</div>
-      <button onclick="closeThemePanel()" style="background:rgba(255,255,255,0.1);border:none;color:#fff;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:16px;">✕</button>
-    </div>
-    <div id="themePanelContent" style="color:rgba(255,255,255,0.4);font-family:Tajawal;text-align:center;margin-top:60px;">
-      <!-- هنا تضيف محتوى الثيمات لاحقاً -->
-      قريباً...
-    </div>`;
-  overlay.onclick = closeThemePanel;
-  document.body.appendChild(overlay);
-  document.body.appendChild(panel);
+  renderThemeGrid();
+  document.getElementById('themePanel').classList.add('open');
+  document.body.style.overflow = 'hidden';
 }
 
 function closeThemePanel() {
-  document.getElementById('themePanelOverlay')?.remove();
-  document.getElementById('themePanel')?.remove();
+  document.getElementById('themePanel').classList.remove('open');
+  document.body.style.overflow = '';
 }
 function updateTopAvatar() {
   const user = window.ROX_USER;
