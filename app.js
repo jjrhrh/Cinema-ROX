@@ -587,10 +587,15 @@ async function loadOtakuPage() {
     </div>`).join('');
   for (const s of SECTIONS) {
     try {
-      const animes = await fetchMovies('/discover/tv', { type:'tv', limit:10, params: s.params });
+      const animes = await fetchMovies('/discover/tv', { type:'tv', limit:20, params: { ...s.params, include_adult: false, without_genres: '10749' } });
+      const BLOCKED_KEYWORDS = ['overflow','ishuzoku','to love','high school dxd','monster musume','keijo','prison school','interspecies','yuragi'];
+      const filtered = animes.filter(m => {
+        const name = (m.name || m.original_name || '').toLowerCase();
+        return !BLOCKED_KEYWORDS.some(k => name.includes(k));
+      }).slice(0, 10);
       const row = document.getElementById(`${s.id}_row`);
       if (!row) return;
-      row.innerHTML = animes.map((m, idx) => buildAnimeCard(m, idx+1, 'tv')).join('');
+      row.innerHTML = filtered.map((m, idx) => buildAnimeCard(m, idx+1, 'tv')).join('');
     } catch { document.getElementById(s.id)?.remove(); }
   }
 }
