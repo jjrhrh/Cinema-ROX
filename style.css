@@ -5490,7 +5490,7 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
   gap: 8px;
   padding: 8px 12px;
   background: rgba(8,0,0,0.75);
-  backdrop-filter: blur(30px);
+  backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(30px);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 999px;
@@ -7070,4 +7070,10 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
 @keyframes fadeSlideUp {
   from { opacity:0; transform:translateY(30px); }
   to   { opacity:1; transform:translateY(0); }
+}
+@media (max-width: 768px) {
+  * {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
 }
