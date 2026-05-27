@@ -270,9 +270,9 @@ function roxSignIn() {
   ROX_AUTH.signInWithPopup(ROX_PROVIDER).catch(e => console.error(e));
 }
 function roxSignOut() {
-  ROX_AUTH.signOut();
-  showToast('👋 تم تسجيل الخروج');
-  setTimeout(() => loadProfilePage(), 500);
+  ROX_AUTH.signOut().then(() => {
+    showAuthModal();
+  });
 }
 if (window.ROX_AUTH) {
   ROX_AUTH.onAuthStateChanged(user => {
@@ -3435,9 +3435,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   window.addEventListener('scroll', () => {
     _topBtn.classList.toggle('show', window.scrollY > 320);
   }, { passive: true });
-  bnavGo('home');
-  setTimeout(checkAllAlerts, 4000);
   checkAuthOnLoad();
+  setTimeout(checkAllAlerts, 4000);
+  bnavGo('home');
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js', { scope: '/' })
       .then(() => console.log('SW registered'))
