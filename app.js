@@ -497,13 +497,21 @@ function buildAnimeCard(movie, rank = 0, type = 'tv') {
   const year = (movie.first_air_date || movie.release_date || '').slice(0,4);
   const rating = movie.vote_average ? movie.vote_average.toFixed(1) : '';
   return `
-    <div class="anime-card" onclick="openDetail(${movie.id},'${type}')">
+    <<div class="anime-card" onclick="openDetail(${movie.id},'${type}')">
       <div class="anime-poster-wrap">
-        ${rating ? `<span class="mc-new-badge" style="left:7px;right:auto">⭐ ${rating}</span>` : ''}
         <img class="anime-poster fade-img" src="${img}" loading="lazy"
              onload="this.classList.add('loaded')"
              onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}';this.classList.add('loaded')">
         <div class="anime-overlay"><span class="play-icon">▶</span></div>
+        ${rating ? `<div class="mc-rating"><span>⭐</span>${rating}</div>` : ''}
+      </div>
+    <div class="anime-card" onclick="openDetail(${movie.id},'${type}')">
+      <div class="anime-poster-wrap">
+        <img class="anime-poster fade-img" src="${img}" loading="lazy"
+             onload="this.classList.add('loaded')"
+             onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}';this.classList.add('loaded')">
+        <div class="anime-overlay"><span class="play-icon">▶</span></div>
+        ${rating ? `<div class="mc-rating"><span>⭐</span>${rating}</div>` : ''}
       </div>
     </div>`;
 }
