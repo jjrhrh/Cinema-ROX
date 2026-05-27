@@ -464,7 +464,7 @@ async function updateHeroInfo(movies, index) {
            onload="this.classList.add('loaded')"
            onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}';this.classList.add('loaded')">
       <div class="movie-overlay"><span class="play-icon">▶</span></div>
-      ${movie.vote_average ? `<div class="mc-rating"><span>⭐</span>${movie.vote_average.toFixed(1)}</div>` : ''}
+      ${movie.vote_average ? `<div class="mc-rating">⭐ ${movie.vote_average.toFixed(1)}</div>` : ''}
     </div>
   </div>`;
 }
