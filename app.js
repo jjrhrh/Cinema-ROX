@@ -1,3 +1,75 @@
+firebase.initializeApp(CONFIG.FIREBASE);
+const _auth = firebase.auth();
+const _gProvider = new firebase.auth.GoogleAuthProvider();
+
+function checkAuthOnLoad() {
+  _auth.onAuthStateChanged(user => {
+    if (!user) showAuthModal();
+  });
+}
+
+function showAuthModal() {
+  if (document.getElementById('authModal')) return;
+  const m = document.createElement('div');
+  m.id = 'authModal';
+  m.innerHTML = `
+    <div class="auth-backdrop"></div>
+    <div class="auth-box">
+      <div class="auth-avatar"><i class="ri-user-3-line"></i></div>
+      <h2 class="auth-title">مرحباً بك في Cinema ROX</h2>
+      <p class="auth-sub">سجّل دخولك للاستمتاع بكامل المحتوى</p>
+      <button class="auth-google-btn" onclick="signInGoogle()">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20">
+        تسجيل الدخول بـ Google
+      </button>
+      <div class="auth-divider"><span>أو</span></div>
+      <input class="auth-input" id="authEmail" type="email" placeholder="البريد الإلكتروني" dir="ltr">
+      <input class="auth-input" id="authPass" type="password" placeholder="كلمة المرور" dir="ltr">
+      <button class="auth-btn" onclick="signInEmail()">تسجيل الدخول</button>
+      <button class="auth-btn auth-btn-outline" onclick="signUpEmail()">إنشاء حساب جديد</button>
+      <p id="authError" class="auth-error"></p>
+    </div>`;
+  document.body.appendChild(m);
+}
+
+function closeAuthModal() {
+  document.getElementById('authModal')?.remove();
+}
+
+async function signInGoogle() {
+  try {
+    await _auth.signInWithPopup(_gProvider);
+    closeAuthModal();
+  } catch(e) {
+    document.getElementById('authError').textContent = 'فشل تسجيل الدخول بـ Google';
+  }
+}
+
+async function signInEmail() {
+  const email = document.getElementById('authEmail').value;
+  const pass = document.getElementById('authPass').value;
+  try {
+    await _auth.signInWithEmailAndPassword(email, pass);
+    closeAuthModal();
+  } catch(e) {
+    document.getElementById('authError').textContent = 'بيانات خاطئة، حاول مجدداً';
+  }
+}
+
+async function signUpEmail() {
+  const email = document.getElementById('authEmail').value;
+  const pass = document.getElementById('authPass').value;
+  try {
+    await _auth.createUserWithEmailAndPassword(email, pass);
+    closeAuthModal();
+  } catch(e) {
+    document.getElementById('authError').textContent = e.message;
+  }
+}
+
+function signOut() {
+  _auth.signOut();
+}
 const S = CONFIG.SERVERS;
 window._detailHistory = [];
 // ===== SIDEBAR =====
