@@ -459,11 +459,12 @@ async function updateHeroInfo(movies, index) {
     onclick="openDetail(this.dataset.id,this.dataset.type)"
     data-poster="${img}">
     <div class="movie-poster-wrap">
-      ${isNew ? `<span class="mc-new-badge">✦ جديد</span>` : ''}
+      ${isNew ? `<span class="mc-new-badge">جديد</span>` : ''}
       <img class="movie-poster fade-img" src="${img}" alt="${title}" loading="lazy"
            onload="this.classList.add('loaded')"
            onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}';this.classList.add('loaded')">
       <div class="movie-overlay"><span class="play-icon">▶</span></div>
+      ${movie.vote_average ? `<div class="mc-rating"><span>⭐</span>${movie.vote_average.toFixed(1)}</div>` : ''}
     </div>
   </div>`;
 }
@@ -498,12 +499,13 @@ function buildAnimeCard(movie, rank = 0, type = 'tv') {
   return `
     <div class="anime-card" onclick="openDetail(${movie.id},'${type}')">
       <div class="anime-poster-wrap">
+        ${rating ? `<span class="mc-new-badge" style="left:7px;right:auto">⭐ ${rating}</span>` : ''}
         <img class="anime-poster fade-img" src="${img}" loading="lazy"
              onload="this.classList.add('loaded')"
              onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}';this.classList.add('loaded')">
         <div class="anime-overlay"><span class="play-icon">▶</span></div>
       </div>
-      </div>`;
+    </div>`;
 }
 function toArabicNums(str) {
   return String(str).replace(/[0-9]/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
