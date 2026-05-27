@@ -2356,6 +2356,10 @@ function addToWatchlist(id, type) {
   }
 }
 function toggleAlertSubscription(id, title, type) {
+  if (!window.ROX_USER) {
+    showToast('🔔 سجّل دخولك بـ Google لتفعيل التنبيهات');
+    return;
+  }
   const list = getLib('rox_alerts');
   const exists = list.find(i => String(i.id) === String(id));
   const btn = document.getElementById(`alertBtn_${id}`);
