@@ -1,4 +1,3 @@
-firebase.initializeApp(CONFIG.FIREBASE);
 const _auth = firebase.auth();
 const _gProvider = new firebase.auth.GoogleAuthProvider();
 
