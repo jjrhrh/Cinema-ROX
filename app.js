@@ -225,8 +225,8 @@ document.querySelectorAll('.dock-btn').forEach(b => {
     window.scrollTo(0, 0);
     return;
   }
-  const pageMap = { home:'homePage', search:'searchPage', library:'libraryPage', settings:'settingsPage' };
-const btnMap = { home:'bnavHome', search:'bnavSearch', library:'bnavLibrary', settings:'bnavSettings' };
+  const pageMap = { home:'homePage', search:'searchPage', library:'libraryPage', settings:'settingsPage', football:'footballPage', profile:'profilePage', otaku:'homePage' };
+const btnMap = { home:'bnavHome', search:'bnavSearch', library:'bnavLibrary', settings:'bnavSettings', football:'bnavFootball', otaku:'bnavOtaku' };
   
   document.getElementById(pageMap[tab])?.classList.add('active');
   const _ab = document.getElementById(btnMap[tab]);
