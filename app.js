@@ -515,6 +515,7 @@ function buildAnimeCard(movie, rank = 0, type = 'tv') {
         <span class="anime-badge-year">${year}</span>
         ${rating ? `<span class="anime-badge-rating"><svg width="11" height="11" viewBox="0 0 24 24" fill="#f5c518"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> ${rating}</span>` : ''}
       </div>
+      </div>`;
 }
 function toArabicNums(str) {
   return String(str).replace(/[0-9]/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
