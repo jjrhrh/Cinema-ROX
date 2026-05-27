@@ -15,18 +15,35 @@ function showAuthModal() {
   m.innerHTML = `
     <div class="auth-backdrop"></div>
     <div class="auth-box">
-      <div class="auth-avatar"><i class="ri-user-3-line"></i></div>
-      <h2 class="auth-title">مرحباً بك في Cinema ROX</h2>
-      <p class="auth-sub">سجّل دخولك للاستمتاع بكامل المحتوى</p>
-      <button class="auth-google-btn" onclick="signInGoogle()">
-        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20">
-        تسجيل الدخول بـ Google
-      </button>
+      <div class="auth-curl"></div>
+      <div class="auth-avatar-wrap">
+        <div class="auth-avatar-circle">
+          <i class="ri-user-3-line"></i>
+        </div>
+      </div>
+      <h2 class="auth-title">Welcome Back</h2>
+      <p class="auth-sub">سجّل دخولك للاستمتاع بـ Cinema ROX</p>
+      <div class="auth-social-row">
+        <button class="auth-social-btn" onclick="signInGoogle()">
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20">
+        </button>
+      </div>
       <div class="auth-divider"><span>أو</span></div>
-      <input class="auth-input" id="authEmail" type="email" placeholder="البريد الإلكتروني" dir="ltr">
-      <input class="auth-input" id="authPass" type="password" placeholder="كلمة المرور" dir="ltr">
-      <button class="auth-btn" onclick="signInEmail()">تسجيل الدخول</button>
-      <button class="auth-btn auth-btn-outline" onclick="signUpEmail()">إنشاء حساب جديد</button>
+      <div class="auth-field-group">
+        <label class="auth-label">البريد الإلكتروني</label>
+        <input class="auth-input" id="authEmail" type="email" placeholder="أدخل بريدك..." dir="ltr">
+      </div>
+      <div class="auth-field-group">
+        <div class="auth-label-row">
+          <label class="auth-label">كلمة المرور</label>
+          <span class="auth-forgot">نسيت كلمة المرور؟</span>
+        </div>
+        <input class="auth-input" id="authPass" type="password" placeholder="••••••••••" dir="ltr">
+      </div>
+      <button class="auth-btn-main" onclick="signInEmail()">تسجيل الدخول</button>
+      <p class="auth-signup-row">
+        ليس لديك حساب؟ <span class="auth-signup-link" onclick="signUpEmail()">إنشاء حساب</span>
+      </p>
       <p id="authError" class="auth-error"></p>
     </div>`;
   document.body.appendChild(m);
@@ -34,6 +51,7 @@ function showAuthModal() {
 
 function closeAuthModal() {
   document.getElementById('authModal')?.remove();
+  document.body.style.overflow = '';
 }
 
 async function signInGoogle() {
@@ -3387,6 +3405,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   bnavGo('home');
   setTimeout(checkAllAlerts, 4000);
   checkAuthOnLoad();
+  document.body.style.overflow = 'hidden';
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js', { scope: '/' })
       .then(() => console.log('SW registered'))
