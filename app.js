@@ -2,8 +2,11 @@ const _auth = firebase.auth();
 const _gProvider = new firebase.auth.GoogleAuthProvider();
 
 function checkAuthOnLoad() {
+  showAuthModal();
   _auth.onAuthStateChanged(user => {
-    if (!user) showAuthModal();
+    if (user) {
+      closeAuthModal();
+    }
   });
 }
 
@@ -49,8 +52,10 @@ function showAuthModal() {
 }
 
 function closeAuthModal() {
-  document.getElementById('authModal')?.remove();
+  const modal = document.getElementById('authModal');
+  if (modal) modal.remove();
   document.body.style.overflow = '';
+  document.documentElement.style.overflow = '';
 }
 
 async function signInGoogle() {
@@ -3405,6 +3410,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   setTimeout(checkAllAlerts, 4000);
   checkAuthOnLoad();
   document.body.style.overflow = 'hidden';
+  document.documentElement.style.overflow = 'hidden';
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js', { scope: '/' })
       .then(() => console.log('SW registered'))
