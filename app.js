@@ -225,8 +225,8 @@ document.querySelectorAll('.dock-btn').forEach(b => {
     window.scrollTo(0, 0);
     return;
   }
-  const pageMap = { home:'homePage', search:'searchPage', library:'libraryPage', profile:'profilePage', otaku:'homePage', football:'footballPage', settings:'settingsPage' };
-const btnMap = { home:'bnavHome', search:'bnavSearch', library:'bnavLibrary', profile:'bnavProfile', otaku:'bnavOtaku', football:'bnavFootball', settings:'bnavSettings' };
+  const pageMap = { home:'homePage', search:'searchPage', library:'libraryPage', settings:'settingsPage' };
+const btnMap = { home:'bnavHome', search:'bnavSearch', library:'bnavLibrary', settings:'bnavSettings' };
   
   document.getElementById(pageMap[tab])?.classList.add('active');
   const _ab = document.getElementById(btnMap[tab]);
@@ -240,6 +240,7 @@ const btnMap = { home:'bnavHome', search:'bnavSearch', library:'bnavLibrary', pr
   if (tab === 'search') { initSearchDiscovery(); const inp = document.getElementById('searchInput2'); if(inp) { inp.value=''; setTimeout(()=>inp.focus(),200); } }
   if (tab === 'profile') loadProfilePage();
   if (tab === 'football') loadSportsUI();
+  if (tab === 'settings') { initThemeSystem(); }
   document.getElementById('platformsSection').style.display = (tab === 'home') ? '' : 'none';
   if (tab === 'otaku') { if(hero){hero.style.display='';hero.style.visibility='';} _otakuOn=true; document.getElementById('htmlRoot').classList.add('otaku-mode'); document.getElementById('bnavOtaku').classList.add('active'); loadOtakuPage(); loadNewsSection('newsFeed',CONFIG.NEWS.ANIME,'purple'); document.getElementById('newsSectionTitle').textContent='📰 أخبار الأنمي'; document.getElementById('newsSection').style.display='block'; document.getElementById('studioBar').style.display='block'; }
   window.scrollTo(0,0);
