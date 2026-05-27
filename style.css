@@ -646,11 +646,9 @@ justify-content: flex-start;
 .movie-poster-wrap::after {
   content: '';
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 50%;
-  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%);
+  bottom: 0; left: 0; right: 0;
+  height: 35%;
+  background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
   pointer-events: none;
   border-radius: 0 0 12px 12px;
   z-index: 1;
