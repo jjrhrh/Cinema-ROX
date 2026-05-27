@@ -133,6 +133,151 @@
   </div>
   </div>
 <div id="homePage" class="page"></div>
+  <!-- السطر 136 — صفحة الإعدادات -->
+<div id="settingsPage" class="page">
+  <div class="settings-topbar">
+    <div class="settings-topbar-icon">⚙️</div>
+    <div class="settings-topbar-title">الإعدادات</div>
+    <div class="settings-value-badge" id="currentThemeName">الكلاسيكي الأحمر</div>
+  </div>
+
+  <!-- ثيم الألوان -->
+  <div class="settings-section">
+    <div class="settings-section-label">🎨 ثيم الألوان</div>
+    <div class="settings-card">
+      <div class="settings-row" onclick="openThemePanel()">
+        <div class="settings-row-icon" style="background:var(--theme-accent-soft)">🎨</div>
+        <div class="settings-row-body">
+          <div class="settings-row-title">اختر ثيمك</div>
+          <div class="settings-row-sub" id="activeThemeLabel">الكلاسيكي الأحمر — أحمر نيتفلكسي</div>
+        </div>
+        <div class="settings-row-arrow">›</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- الخطوط -->
+  <div class="settings-section">
+    <div class="settings-section-label">🔤 الخطوط</div>
+    <div class="settings-card">
+      <div class="settings-row" onclick="openFontPanel()">
+        <div class="settings-row-icon" style="background:rgba(100,100,255,0.12)">🔤</div>
+        <div class="settings-row-body">
+          <div class="settings-row-title">نوع الخط</div>
+          <div class="settings-row-sub" id="activeFontLabel">Tajawal</div>
+        </div>
+        <div class="settings-row-arrow">›</div>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-icon" style="background:rgba(100,100,255,0.12)">🔡</div>
+        <div class="settings-row-body">
+          <div class="settings-row-title">حجم الخط</div>
+          <div class="settings-row-sub">اسحب لتعديل الحجم</div>
+        </div>
+        <div class="settings-value-badge" id="fontSizeLabel">100%</div>
+      </div>
+      <div style="padding:4px 16px 14px">
+        <input type="range" class="rox-slider" id="fontSizeSlider"
+          min="80" max="130" value="100"
+          oninput="applyFontSize(this.value)">
+      </div>
+    </div>
+  </div>
+
+  <!-- المظهر والتأثيرات -->
+  <div class="settings-section">
+    <div class="settings-section-label">✨ المظهر والتأثيرات</div>
+    <div class="settings-card">
+      <div class="settings-row">
+        <div class="settings-row-icon" style="background:rgba(0,200,255,0.12)">🌫️</div>
+        <div class="settings-row-body">
+          <div class="settings-row-title">تأثير الضبابية (Blur)</div>
+          <div class="settings-row-sub">تأثير الزجاج على النافبار</div>
+        </div>
+        <label class="settings-toggle">
+          <input type="checkbox" id="toggleBlur" checked onchange="applyBlur(this.checked)">
+          <div class="settings-toggle-track"></div>
+        </label>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-icon" style="background:rgba(255,200,0,0.12)">✨</div>
+        <div class="settings-row-body">
+          <div class="settings-row-title">توهج النيون</div>
+          <div class="settings-row-sub">إضاءة على الأزرار والعناصر</div>
+        </div>
+        <label class="settings-toggle">
+          <input type="checkbox" id="toggleGlow" checked onchange="applyGlow(this.checked)">
+          <div class="settings-toggle-track"></div>
+        </label>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-icon" style="background:rgba(255,100,100,0.12)">🌊</div>
+        <div class="settings-row-body">
+          <div class="settings-row-title">الأنيميشن</div>
+          <div class="settings-row-sub">حركات الانتقال والتأثيرات</div>
+        </div>
+        <label class="settings-toggle">
+          <input type="checkbox" id="toggleAnim" checked onchange="applyAnimations(this.checked)">
+          <div class="settings-toggle-track"></div>
+        </label>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-icon" style="background:rgba(100,255,150,0.12)">🔢</div>
+        <div class="settings-row-body">
+          <div class="settings-row-title">جودة الصور</div>
+          <div class="settings-row-sub">دقة الملصقات والخلفيات</div>
+        </div>
+        <label class="settings-toggle">
+          <input type="checkbox" id="toggleHQ" checked onchange="applyHQ(this.checked)">
+          <div class="settings-toggle-track"></div>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- عن التطبيق -->
+  <div class="settings-section">
+    <div class="settings-section-label">ℹ️ عن التطبيق</div>
+    <div class="settings-card">
+      <div class="settings-row">
+        <div class="settings-row-icon" style="background:rgba(229,9,20,0.15)">🎬</div>
+        <div class="settings-row-body">
+          <div class="settings-row-title">Cinema ROX</div>
+          <div class="settings-row-sub">الإصدار 2.0.0 — 2025</div>
+        </div>
+      </div>
+      <div class="settings-row" onclick="clearCache()">
+        <div class="settings-row-icon" style="background:rgba(255,150,0,0.12)">🗑️</div>
+        <div class="settings-row-body">
+          <div class="settings-row-title">مسح الكاش</div>
+          <div class="settings-row-sub">تحرير مساحة التخزين المؤقت</div>
+        </div>
+        <div class="settings-row-arrow">›</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- THEME PANEL SHEET -->
+<div class="theme-panel" id="themePanel">
+  <div class="theme-panel-backdrop" onclick="closeThemePanel()"></div>
+  <div class="theme-panel-sheet">
+    <div class="theme-sheet-handle"></div>
+    <div class="theme-sheet-head">
+      <div class="theme-sheet-title">🎨 اختر الثيم</div>
+      <button class="theme-sheet-close" onclick="closeThemePanel()">✕</button>
+    </div>
+    <div class="theme-grid" id="themeGrid"></div>
+
+    <div class="theme-divider"></div>
+
+    <!-- اختيار الخط داخل لوحة الثيمات أيضاً -->
+    <div style="padding:0 16px 8px">
+      <div class="settings-section-label">🔤 الخط</div>
+    </div>
+    <div class="font-grid" id="fontGrid"></div>
+  </div>
+</div>
 <div id="newsSection" class="news-section" style="display:none; order:99">
   <div class="section-header">
     <span class="section-bar"></span>
