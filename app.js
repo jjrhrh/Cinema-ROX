@@ -2008,6 +2008,11 @@ const freeSrvs = [
   { icon:'<i class="ri-vidicon-fill style-icon" style="color:#fdcb6e"></i>', name:'VIDSRC-X', desc:'#35', url:srvUrl(S.SRV36,type,id,season,episode) },
   { icon:'<i class="ri-tv-fill style-icon" style="color:#a29bfe"></i>', name:'SUPERFLIX', desc:'#36', url:superflixUrl },
   { icon:'<i class="ri-clapperboard-fill style-icon" style="color:#ff9f43"></i>', name:'SMASHY', desc:'#37', url:srvUrl(S.SRV7,type,id,season,episode) },
+  { icon:'<i class="ri-signal-wifi-fill style-icon" style="color:#00b894"></i>', name:'VIDSRC-ME', desc:'جديد', url:srvUrl(S.SRV36,type,id,season,episode) },
+  { icon:'<i class="ri-database-2-fill style-icon" style="color:#6c5ce7"></i>', name:'VSRC', desc:'جديد', url:srvUrl(S.SRV37,type,id,season,episode) },
+  { icon:'<i class="ri-earth-fill style-icon" style="color:#00cec9"></i>', name:'VIDSRC-IN', desc:'جديد', url:srvUrl(S.SRV38,type,id,season,episode) },
+  { icon:'<i class="ri-broadcast-fill style-icon" style="color:#fdcb6e"></i>', name:'VIDSRC-PM', desc:'جديد', url:srvUrl(S.SRV39,type,id,season,episode) },
+  { icon:'<i class="ri-wifi-fill style-icon" style="color:#74b9ff"></i>', name:'VIDSRC-NET', desc:'جديد', url:srvUrl(S.SRV40,type,id,season,episode) },
 ];
 const allSrvs = [...vipSrvs, ...proSrvs, ...freeSrvs];
 window._vipSrvs = vipSrvs; window._proSrvs = proSrvs; window._freeSrvs = freeSrvs;
