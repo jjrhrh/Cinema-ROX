@@ -106,7 +106,11 @@ HERO: Object.freeze({
     SRV33: { mov: 'https://embed.smashystream.com/playere.php?tmdb=', tv: 'https://embed.smashystream.com/playere.php?tmdb=' },
     SRV34: { mov: 'https://vidrock.ru/movie/',                        tv: 'https://vidrock.ru/tv/'                         },
     SRV35: { mov: 'https://player.videasy.net/movie/',                tv: 'https://player.videasy.net/tv/'                 },
-    SRV36: { mov: 'https://vidsrc.xyz/embed/movie/',                  tv: 'https://vidsrc.xyz/embed/tv/'                   },
+    SRV36: { mov: 'https://vidsrcme.ru/embed/movie/',                  tv: 'https://vidsrcme.ru/embed/tv/'                  },
+    SRV37: { mov: 'https://vsrc.su/embed/movie/',                      tv: 'https://vsrc.su/embed/tv/'                      },
+    SRV38: { mov: 'https://vidsrc.in/embed/movie/',                    tv: 'https://vidsrc.in/embed/tv/'                    },
+    SRV39: { mov: 'https://vidsrc.pm/embed/movie/',                    tv: 'https://vidsrc.pm/embed/tv/'                    },
+    SRV40: { mov: 'https://vidsrc.net/embed/movie/',                   tv: 'https://vidsrc.net/embed/tv/'                   },
   }),
   
   // ─────────────────────────────────────────
