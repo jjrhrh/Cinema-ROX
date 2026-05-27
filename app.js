@@ -2113,7 +2113,6 @@ page.innerHTML = `
   <button class="rox-theater-btn" onclick="showRoxSources()" style="gap:6px">
   <i class="ri-server-line"></i> السيرفرات
 </button>
-    <button class="rox-theater-btn" id="cinemaModeBtn" onclick="toggleCinemaMode()"><i class="ri-film-fill" style="color:#ff2a2a;margin-left:5px"></i> وضع السينما</button>
     <button class="rox-snapshot-btn" onclick="roxSnapshot()"><i class="ri-share-forward-box-fill" style="color:#00f2fe;margin-left:5px"></i> مشاركة</button>
   </div>
   ${epInfo}
