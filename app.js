@@ -1834,6 +1834,7 @@ function wsSelectServer(el, url, name, isRox) {
   }
 }
 function wsGoBack() {
+  document.getElementById('cyberDock').style.display = '';
   document.body.classList.remove('cinema-mode');
   if (window._roxSheet) { document.body.removeChild(window._roxSheet); window._roxSheet = null; }
   const wsFrame = document.getElementById('wsFrame');
@@ -1844,11 +1845,17 @@ if (window._roxHls) { window._roxHls.destroy(); window._roxHls = null; }
 if (window._cwTimer) { clearInterval(window._cwTimer); window._cwTimer = null; }
   const dp = document.getElementById('detailPage');
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  if (dp && dp.innerHTML.trim().length > 50) {
+  const fromPage = window._watchFromPage || '';
+  if (fromPage === 'libraryPage') {
+    loadLibraryPage();
+  } else if (dp && dp.innerHTML.trim().length > 50) {
     dp.classList.add('active');
     const hero = document.getElementById('heroSection');
     if (hero) hero.style.display = 'none';
-  } else { goBack(); }
+  } else {
+    goBack();
+  }
+  window._watchFromPage = null;
   window.scrollTo(0, 0);
 }
 // ===== ROX PLAYER CONTROLS =====
@@ -1921,6 +1928,8 @@ async function openWatchPage(id, type, season = 1, episode = 1, resumeSec = 0, r
   document.getElementById('heroSection').style.display = 'none';
   document.getElementById('platformsSection').style.display = 'none';
   document.getElementById('newsSection').style.display = 'none';
+  document.getElementById('cyberDock').style.display = 'none';
+  window._watchFromPage = document.querySelector('.page.active')?.id || 'home';
   page.classList.add('active');
   page.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
   window.scrollTo(0, 0);
@@ -2114,7 +2123,7 @@ page.innerHTML = `
       <div class="ws-switch-spinner"></div>
       <span class="ws-switch-txt">يتم الاتصال بسيرفرات Cinema-ROX...</span>
     </div>
-    <button class="ws-back" onclick="wsGoBack()">→ رجوع</button>
+    <button class="ws-back" onclick="wsGoBack()" style="position:fixed;top:14px;right:14px;z-index:9999;background:rgba(0,0,0,0.7);color:#fff;border:none;border-radius:50px;padding:8px 18px;font-size:14px;font-family:Tajawal;cursor:pointer;backdrop-filter:blur(6px);">← رجوع</button>
   </div>
   <div class="ws-action-row">
   <button class="rox-theater-btn" onclick="showRoxSources()" style="gap:6px">
