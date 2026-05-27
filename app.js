@@ -109,19 +109,36 @@ function closeAuthModal() {
   document.documentElement.style.overflow = '';
   const user = _auth.currentUser;
   if (user) {
-    const name = user.displayName?.split(' ')[0] || 'بك';
-    const toast = document.createElement('div');
-    toast.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:linear-gradient(135deg,#1c1c1e,#2c2c2e);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:28px 36px;text-align:center;z-index:999999;box-shadow:0 20px 60px rgba(0,0,0,0.8);';
-    toast.innerHTML = `
-      <div style="font-size:40px;margin-bottom:8px;">👋</div>
-      <div style="font-size:20px;font-weight:800;color:#fff;margin-bottom:4px;">أهلاً ${name}</div>
-      <div style="font-size:13px;color:rgba(255,255,255,0.4);">استمتع بأفضل تجربة مشاهدة</div>`;
-    document.body.appendChild(toast);
+    const name = user.displayName || 'مرحباً';
+    const email = user.email || '';
+    const photo = user.photoURL || '';
+    const card = document.createElement('div');
+    card.id = 'welcomeCard';
+    card.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:999999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(10px);';
+    card.innerHTML = `
+      <div style="background:linear-gradient(145deg,#1a1a2e,#16213e);border:1px solid rgba(255,255,255,0.12);border-radius:28px;padding:40px 36px;text-align:center;width:300px;box-shadow:0 30px 80px rgba(0,0,0,0.9);animation:fadeSlideUp 0.5s ease;">
+        ${photo ? `<img src="${photo}" style="width:80px;height:80px;border-radius:50%;border:3px solid #e50914;margin-bottom:16px;object-fit:cover;">` : `<div style="width:80px;height:80px;border-radius:50%;background:#e50914;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 16px;">👤</div>`}
+        <div style="font-size:22px;font-weight:900;color:#fff;margin-bottom:6px;font-family:Tajawal;">أهلاً ${name}</div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.45);margin-bottom:20px;direction:ltr;">${email}</div>
+        <div style="width:100%;height:3px;background:rgba(255,255,255,0.1);border-radius:10px;overflow:hidden;">
+          <div id="welcomeBar" style="height:100%;width:100%;background:linear-gradient(90deg,#e50914,#ff6b6b);border-radius:10px;transition:width 5s linear;"></div>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:8px;" id="welcomeCountdown">يدخلك خلال 5 ثواني...</div>
+      </div>`;
+    document.body.appendChild(card);
+    setTimeout(() => { const bar = document.getElementById('welcomeBar'); if(bar) bar.style.width='0%'; }, 50);
+    let sec = 5;
+    const timer = setInterval(() => {
+      sec--;
+      const cd = document.getElementById('welcomeCountdown');
+      if(cd) cd.textContent = `يدخلك خلال ${sec} ثواني...`;
+      if(sec <= 0) clearInterval(timer);
+    }, 1000);
     setTimeout(() => {
-      toast.style.transition = 'opacity 0.4s';
-      toast.style.opacity = '0';
-      setTimeout(() => toast.remove(), 400);
-    }, 2000);
+      card.style.transition = 'opacity 0.5s';
+      card.style.opacity = '0';
+      setTimeout(() => card.remove(), 500);
+    }, 5000);
   }
 }
 
