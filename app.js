@@ -727,23 +727,27 @@ async function loadHomePage() {
     <div id="continueSection" class="continue-section">
       <div class="section-header">
         <span class="section-bar"></span>
-        <h2 class="section-title">▶️ أكمل المشاهدة</h2>
+        <h2 class="section-title">مواصلة المشاهدة</h2>
+        <button class="browse-all-btn" onclick="openContinueAll()">عرض الكل ‹</button>
       </div>
       <div id="continueList" class="continue-list">
-        ${cwItems.map(i => `
-          <div class="cw-card" onclick="cwResume(${i.id},'${i.type}',${i.seconds},'${i.server}','${i.serverUrl||''}')">
+        ${cwItems.map(i => {
+          const pct = Math.min(Math.round(i.seconds/7200*100),100);
+          const barColor = pct < 40 ? '#00e5ff' : pct < 70 ? '#ffd600' : '#e50914';
+          return `<div class="cw-card" onclick="cwResume(${i.id},'${i.type}',${i.seconds},'${i.server||''}','${i.serverUrl||''}')">
             <div class="cw-thumb-wrap">
               <img class="cw-thumb" src="${i.poster}" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
-              <div class="cw-play-icon">▶</div>
+              <div class="cw-play-icon"><div class="cw-play-circle"><i class="ri-play-fill"></i></div></div>
+              <div class="cw-bar-wrap"><div class="cw-bar" style="width:${pct}%;background:${barColor}"></div></div>
             </div>
             <div class="cw-info">
               <div class="cw-title">${i.title}</div>
-              <div class="cw-meta">${i.type==='tv'?'مسلسل':'فيلم'}${i.server?' · '+i.server:''}</div>
-              <div class="cw-bar-wrap"><div class="cw-bar" style="width:${Math.min(i.seconds/7200*100,100).toFixed(1)}%"></div></div>
-              <div class="cw-time">${Math.floor(i.seconds/60)} دقيقة</div>
+              <div class="cw-meta">${i.type==='tv'?(i.season?`الموسم ${i.season} الحلقة ${i.episode||1}`:'مسلسل'):'فيلم'}</div>
+              <div class="cw-pct">${pct}%</div>
             </div>
             <button class="cw-del" onclick="event.stopPropagation();cwDelete(${i.id})">✕</button>
-          </div>`).join('')}
+          </div>`;
+        }).join('')}
       </div>
     </div>` : '';
 
@@ -2093,7 +2097,38 @@ function cwDelete(id) {
 function cwRender() {
   loadHomePage();
 }
-
+function openContinueAll() {
+  const items = cwGetAll();
+  const page = document.getElementById('homePage');
+  if (!page) return;
+  page.innerHTML = `
+    <div style="padding:16px 12px 80px">
+      <div class="section-header" style="margin-bottom:16px">
+        <span class="section-bar"></span>
+        <h2 class="section-title">مواصلة المشاهدة</h2>
+        <button class="browse-all-btn" onclick="loadHomePage()">‹ رجوع</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        ${items.map(i => {
+          const pct = Math.min(Math.round(i.seconds/7200*100),100);
+          const barColor = pct < 40 ? '#00e5ff' : pct < 70 ? '#ffd600' : '#e50914';
+          return `<div class="cw-card" onclick="cwResume(${i.id},'${i.type}',${i.seconds},'${i.server||''}','${i.serverUrl||''}')">
+            <div class="cw-thumb-wrap">
+              <img class="cw-thumb" src="${i.poster}" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+              <div class="cw-play-icon"><div class="cw-play-circle"><i class="ri-play-fill"></i></div></div>
+              <div class="cw-bar-wrap"><div class="cw-bar" style="width:${pct}%;background:${barColor}"></div></div>
+            </div>
+            <div class="cw-info">
+              <div class="cw-title">${i.title}</div>
+              <div class="cw-meta">${i.type==='tv'?(i.season?`الموسم ${i.season} الحلقة ${i.episode||1}`:'مسلسل'):'فيلم'}</div>
+              <div class="cw-pct">${pct}%</div>
+            </div>
+            <button class="cw-del" onclick="event.stopPropagation();cwDelete(${i.id})">✕</button>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+}
 function cwResume(id, type, seconds, server, serverUrl) {
   openWatchPage(id, type, 1, 1, seconds, serverUrl);
 }
