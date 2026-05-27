@@ -64,7 +64,7 @@ html, body {
   width: 100% !important;
   height: var(--nav-height) !important;
   background: rgba(5,0,0,0.78) !important;
-  backdrop-filter: blur(36px) saturate(2) !important;
+  backdrop-filter: blur(12px) !important;
   -webkit-backdrop-filter: blur(36px) saturate(2) !important;
   border-top: 1px solid rgba(255,255,255,0.055) !important;
   box-shadow: 0 -12px 40px rgba(0,0,0,0.65),
@@ -2917,7 +2917,7 @@ justify-content: flex-start;
   inset: 0;
   background-size: cover;
   background-position: center top;
-  filter: blur(45px) brightness(0.25) saturate(1.8);
+  filter: blur(20px) brightness(0.25);
   transform: scale(1.12);
   z-index: 0;
   pointer-events: none;
@@ -3963,7 +3963,7 @@ button.dp-btn-alert.active {
 .ws-ambient {
   position: absolute; inset: -40px;
   background-size: cover; background-position: center;
-  filter: blur(70px) saturate(4) brightness(0.55);
+  filter: blur(30px) brightness(0.55);
   opacity: 0; z-index: 0; pointer-events: none;
   transition: opacity 1s ease;
 }
