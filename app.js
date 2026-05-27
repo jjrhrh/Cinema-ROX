@@ -3386,6 +3386,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }, { passive: true });
   bnavGo('home');
   setTimeout(checkAllAlerts, 4000);
+  checkAuthOnLoad();
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js', { scope: '/' })
       .then(() => console.log('SW registered'))
