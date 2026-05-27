@@ -2066,7 +2066,7 @@ page.innerHTML = `
   allowfullscreen
   allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
   referrerpolicy="no-referrer-when-downgrade"
-  onload="if(this.src)cwTrackTime(${id},'${type}','${cwPoster}','${cwTitle}')">
+  onload="if(this.src)cwTrackTime(${id},'${type}','${cwPoster}','${cwTitle}',${season},${episode})">
 </iframe>
     <div id="roxPlayerWrap" class="rox-player-wrap" style="display:none">
       <video id="roxPlayer" class="rox-player-video" playsinline></video>
@@ -2279,7 +2279,66 @@ function cwDelete(id) {
   localStorage.setItem(CW_KEY, JSON.stringify(list));
   loadHomePage();
 }
+async function checkNewEpisodes() {
+  const alerts = getLib('rox_alerts');
+  if (!alerts.length) return;
+  const cwList = cwGetAll();
+  const updates = [];
+  await Promise.all(alerts.map(async item => {
+    try {
+      const data = await fetch(buildTMDBUrl(`/tv/${item.id}`)).then(r => r.json());
+      const ep = data.last_episode_to_air;
+      if (!ep) return;
+      const cw = cwList.find(i => String(i.id) === String(item.id));
+      const lastSeen = cw ? { s: cw.season||1, e: cw.episode||1 } : { s:0, e:0 };
+      const isNew = ep.season_number > lastSeen.s || (ep.season_number === lastSeen.s && ep.episode_number > lastSeen.e);
+      if (!isNew) return;
+      updates.push({
+        id: item.id,
+        title: data.name || item.title,
+        poster: data.poster_path ? CONFIG.IMAGES.POSTER_MD + data.poster_path : CONFIG.IMAGES.PLACEHOLDER,
+        season: ep.season_number,
+        episode: ep.episode_number,
+        epName: ep.name || ''
+      });
+    } catch {}
+  }));
+  if (!updates.length) return;
+  showNewEpisodesCard(updates);
+}
 
+function showNewEpisodesCard(updates) {
+  if (document.getElementById('newEpsCard')) return;
+  let idx = 0;
+  const render = () => {
+    const u = updates[idx];
+    const card = document.getElementById('newEpsCard');
+    card.innerHTML = `
+      <div style="background:linear-gradient(145deg,#1a1a2e,#16213e);border:1px solid rgba(255,255,255,0.12);border-radius:28px;overflow:hidden;width:320px;box-shadow:0 30px 80px rgba(0,0,0,0.9);animation:fadeSlideUp 0.4s ease;">
+        <div style="position:relative;">
+          <img src="${u.poster}" style="width:100%;height:180px;object-fit:cover;display:block;">
+          <div style="position:absolute;inset:0;background:linear-gradient(to top,#1a1a2e 20%,transparent);"></div>
+          <div style="position:absolute;top:12px;right:12px;background:#e50914;color:#fff;font-size:11px;font-family:Tajawal;font-weight:700;padding:4px 10px;border-radius:20px;">🔔 حلقة جديدة</div>
+          ${updates.length > 1 ? `<div style="position:absolute;top:12px;left:12px;background:rgba(0,0,0,0.6);color:#fff;font-size:11px;font-family:Tajawal;padding:4px 10px;border-radius:20px;">${idx+1}/${updates.length}</div>` : ''}
+        </div>
+        <div style="padding:18px 20px 22px;">
+          <div style="font-size:17px;font-weight:900;color:#fff;font-family:Tajawal;margin-bottom:6px;">${u.title}</div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.5);font-family:Tajawal;margin-bottom:16px;">الموسم ${u.season} · الحلقة ${u.episode}${u.epName ? ' — '+u.epName : ''}</div>
+          <div style="display:flex;gap:10px;">
+            <button onclick="document.getElementById('newEpsCard').remove();openDetailPage(${u.id},'tv')" style="flex:1;background:#e50914;color:#fff;border:none;border-radius:14px;padding:12px;font-size:14px;font-weight:700;font-family:Tajawal;cursor:pointer;">تفاصيل</button>
+            ${updates.length > 1 && idx < updates.length-1 ? `<button onclick="window._newEpsNext()" style="background:rgba(255,255,255,0.1);color:#fff;border:none;border-radius:14px;padding:12px 16px;font-size:14px;cursor:pointer;">›</button>` : ''}
+            <button onclick="document.getElementById('newEpsCard').remove()" style="background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.4);border:none;border-radius:14px;padding:12px 16px;font-size:14px;cursor:pointer;">✕</button>
+          </div>
+        </div>
+      </div>`;
+  };
+  const overlay = document.createElement('div');
+  overlay.id = 'newEpsCard';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:99999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);';
+  document.body.appendChild(overlay);
+  window._newEpsNext = () => { idx = Math.min(idx+1, updates.length-1); render(); };
+  render();
+}
 function cwRender() {
   loadHomePage();
 }
