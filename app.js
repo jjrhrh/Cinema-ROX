@@ -68,6 +68,7 @@ function showAuthModal() {
         </div>
         <button class="splash-btn-login" onclick="signInEmail()">تسجيل الدخول</button>
         <button class="splash-btn-register" onclick="signUpEmail()">إنشاء حساب جديد</button>
+        <button class="splash-btn-guest" onclick="enterAsGuest()">تصفح كزائر</button>
         <p id="authError" class="splash-error"></p>
       </div>
     </div>`;
@@ -96,7 +97,11 @@ function sendPasswordReset() {
     document.getElementById('authError').textContent = 'البريد غير مسجل';
   });
 }
-
+function enterAsGuest() {
+  window.ROX_GUEST = true;
+  window.ROX_USER = null;
+  closeAuthModal();
+}
 function closeAuthModal() {
   const modal = document.getElementById('authModal');
   if (modal) modal.remove();
@@ -2329,7 +2334,7 @@ async function syncLibFromCloud() {
   } catch(e) { console.warn('Firestore sync error:', e); }
 }
 function addToWatchlist(id, type) {
-  if (!window.ROX_USER) { showToast('🔐 سجّل دخولك أولاً'); bnavGo('profile'); return; }
+  if (!window.ROX_USER) { showToast('🔐 سجّل دخولك لاستخدام هذه الميزة'); return; }
   const list = getLib('rox_watchlist');
   const exists = list.find(i => i.id === id);
   const favBtn = document.querySelector(`.dp-btn-fav[data-id="${id}"]`);
