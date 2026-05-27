@@ -85,6 +85,22 @@ function closeAuthModal() {
   if (modal) modal.remove();
   document.body.style.overflow = '';
   document.documentElement.style.overflow = '';
+  const user = _auth.currentUser;
+  if (user) {
+    const name = user.displayName?.split(' ')[0] || 'بك';
+    const toast = document.createElement('div');
+    toast.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:linear-gradient(135deg,#1c1c1e,#2c2c2e);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:28px 36px;text-align:center;z-index:999999;box-shadow:0 20px 60px rgba(0,0,0,0.8);';
+    toast.innerHTML = `
+      <div style="font-size:40px;margin-bottom:8px;">👋</div>
+      <div style="font-size:20px;font-weight:800;color:#fff;margin-bottom:4px;">أهلاً ${name}</div>
+      <div style="font-size:13px;color:rgba(255,255,255,0.4);">استمتع بأفضل تجربة مشاهدة</div>`;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+      toast.style.transition = 'opacity 0.4s';
+      toast.style.opacity = '0';
+      setTimeout(() => toast.remove(), 400);
+    }, 2000);
+  }
 }
 
 async function signInGoogle() {
