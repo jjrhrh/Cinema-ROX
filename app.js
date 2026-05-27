@@ -4666,11 +4666,7 @@ function toggleProfileDropdown() {
         <div onclick="bnavGo('library');document.getElementById('profileDropdown').style.display='none'" style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;cursor:pointer;color:#fff;font-family:Tajawal;font-size:13px;" onmouseover="this.style.background='rgba(255,255,255,0.07)'" onmouseout="this.style.background=''">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> مكتبتي
         </div>
-        <div style="height:1px;background:rgba(255,255,255,0.07);margin:6px 0;"></div>
-        <div onclick="signOut();document.getElementById('profileDropdown').style.display='none'" style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;cursor:pointer;color:#ff6b6b;font-family:Tajawal;font-size:13px;" onmouseover="this.style.background='rgba(255,107,107,0.1)'" onmouseout="this.style.background=''">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> تسجيل الخروج
-        </div>
-      </div>`;
+        <div onclick="openThemePanel()" style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;cursor:pointer;color:#fff;font-family:Tajawal;font-size:13px;justify-content:space-between;" onmouseover="this.style.background='rgba(255,255,255,0.07)'" onmouseout="this.style.background=''"><div style="display:flex;align-items:center;gap:10px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20"/><path d="M12 2C6.5 2 2 6.5 2 12"/></svg> الثيمات</div><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div>
   }
   drop.style.display = 'block';
   setTimeout(() => document.addEventListener('click', function h(e) {
@@ -4680,7 +4676,33 @@ function toggleProfileDropdown() {
     }
   }), 100);
 }
+function openThemePanel() {
+  document.getElementById('profileDropdown').style.display = 'none';
+  if (document.getElementById('themePanelOverlay')) return;
+  const overlay = document.createElement('div');
+  overlay.id = 'themePanelOverlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:999998;backdrop-filter:blur(4px);';
+  const panel = document.createElement('div');
+  panel.id = 'themePanel';
+  panel.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#1a1a2e;border-radius:24px 24px 0 0;z-index:999999;padding:20px;min-height:300px;animation:slideUp 0.3s ease;';
+  panel.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <div style="font-size:17px;font-weight:800;color:#fff;font-family:Tajawal;">🎨 الثيمات</div>
+      <button onclick="closeThemePanel()" style="background:rgba(255,255,255,0.1);border:none;color:#fff;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:16px;">✕</button>
+    </div>
+    <div id="themePanelContent" style="color:rgba(255,255,255,0.4);font-family:Tajawal;text-align:center;margin-top:60px;">
+      <!-- هنا تضيف محتوى الثيمات لاحقاً -->
+      قريباً...
+    </div>`;
+  overlay.onclick = closeThemePanel;
+  document.body.appendChild(overlay);
+  document.body.appendChild(panel);
+}
 
+function closeThemePanel() {
+  document.getElementById('themePanelOverlay')?.remove();
+  document.getElementById('themePanel')?.remove();
+}
 function updateTopAvatar() {
   const user = window.ROX_USER;
   const img = document.getElementById('topAvatarImg');
