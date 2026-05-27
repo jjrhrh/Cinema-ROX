@@ -209,3 +209,9 @@ url.searchParams.set('include_image_language', 'en,null');
   }
   return url.toString();
   } 
+FIREBASE: Object.freeze({
+  apiKey: "AIzaSyDD3v9wb5TJ-3KQfsEr__D5QnmbWow-4g0",
+  authDomain: "cinema-rox.firebaseapp.com",
+  projectId: "cinema-rox",
+  appId: "1:515687717633:web:90d596dde5a3a533f5d900",
+}),
