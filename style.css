@@ -6718,30 +6718,33 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
   font-family: Tajawal; text-align: center;
   min-height: 16px;
 } 
-/* ===== AUTH MODAL ===== */
 #authModal {
   position: fixed;
   inset: 0;
-  z-index: 99999;
+  z-index: 999999;
   display: flex;
   align-items: center;
   justify-content: center;
+  touch-action: none;
+  overflow: hidden;
 }
 
 .auth-backdrop {
-  position: absolute;
+  position: fixed;
   inset: 0;
-  background: radial-gradient(ellipse at center, #1a1a2e 0%, #0d0d0d 100%);
+  background: radial-gradient(ellipse at 60% 40%, #1a1a2e 0%, #0a0a0f 100%);
+  z-index: 0;
 }
 
 .auth-box {
   position: relative;
+  z-index: 1;
   background: #1c1c1e;
   border-radius: 20px;
   padding: 36px 28px 28px;
   width: 340px;
-  max-width: 90vw;
-  box-shadow: 0 24px 80px rgba(0,0,0,0.7);
+  max-width: 88vw;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.8);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -6749,35 +6752,28 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
   overflow: hidden;
 }
 
-/* الطي في الزاوية مثل الصورة */
 .auth-curl {
   position: absolute;
   top: 0;
-  left: 0;
-  width: 36px;
-  height: 36px;
-  background: linear-gradient(135deg, #2c2c2e 50%, transparent 50%);
-  border-radius: 0 0 12px 0;
-}
-.auth-curl::after {
-  content: '✕';
-  position: absolute;
-  top: -1px;
-  right: -34px;
-  width: 34px;
-  height: 34px;
+  right: 0;
+  width: 42px;
+  height: 42px;
   background: #2c2c2e;
-  border-radius: 50%;
+  border-radius: 0 20px 0 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 13px;
-  color: rgba(255,255,255,0.5);
   cursor: pointer;
+  color: rgba(255,255,255,0.5);
+  font-size: 14px;
+}
+
+.auth-curl::after {
+  content: '✕';
 }
 
 .auth-avatar-wrap {
-  margin-top: 4px;
+  margin-top: 8px;
 }
 
 .auth-avatar-circle {
@@ -6817,7 +6813,7 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
 .auth-social-btn {
   flex: 1;
   max-width: 80px;
-  height: 42px;
+  height: 44px;
   background: #2c2c2e;
   border: none;
   border-radius: 10px;
@@ -6825,7 +6821,6 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.2s;
 }
 
 .auth-social-btn:hover {
@@ -6874,10 +6869,6 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
   cursor: pointer;
 }
 
-.auth-forgot:hover {
-  color: rgba(255,255,255,0.6);
-}
-
 .auth-input {
   width: 100%;
   background: #2c2c2e;
@@ -6888,7 +6879,7 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
   font-size: 14px;
   outline: none;
   box-sizing: border-box;
-  transition: border 0.2s;
+  font-family: inherit;
 }
 
 .auth-input:focus {
@@ -6905,7 +6896,7 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
+  font-family: inherit;
 }
 
 .auth-btn-main:hover {
@@ -6923,10 +6914,6 @@ background:rgba(180,0,0,0.5); border:2px solid rgba(255,255,255,0.8); box-shadow
   color: #fff;
   font-weight: 700;
   cursor: pointer;
-}
-
-.auth-signup-link:hover {
-  text-decoration: underline;
 }
 
 .auth-error {
