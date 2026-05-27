@@ -333,6 +333,7 @@ if (window.ROX_AUTH) {
   ROX_AUTH.onAuthStateChanged(user => {
   window.ROX_USER = user || null;
     if (user) syncLibFromCloud();
+    updateTopAvatar();
   if (document.getElementById('profilePage')?.classList.contains('active')) loadProfilePage();
   if (document.getElementById('libraryPage')?.classList.contains('active')) loadLibraryPage();
 });
@@ -4636,4 +4637,60 @@ function selectRoxSource(i) {
   document.getElementById('wsOverlay').style.display = 'none';
   window.scrollTo(0, 0);
   showToast('▶ ' + s.name);
+}
+function toggleProfileDropdown() {
+  const drop = document.getElementById('profileDropdown');
+  if (!drop) return;
+  if (drop.style.display !== 'none') { drop.style.display = 'none'; return; }
+  const user = window.ROX_USER;
+  if (!user) {
+    drop.innerHTML = `
+      <div style="padding:18px;text-align:center;">
+        <div style="font-size:13px;color:rgba(255,255,255,0.5);font-family:Tajawal;margin-bottom:12px;">سجّل دخولك للوصول لحسابك</div>
+        <button onclick="roxSignIn();document.getElementById('profileDropdown').style.display='none'" style="width:100%;background:#e50914;color:#fff;border:none;border-radius:12px;padding:10px;font-size:13px;font-weight:700;font-family:Tajawal;cursor:pointer;">تسجيل الدخول بـ Google</button>
+      </div>`;
+  } else {
+    drop.innerHTML = `
+      <div style="padding:16px;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;gap:12px;">
+        <img src="${user.photoURL||''}" style="width:46px;height:46px;border-radius:50%;object-fit:cover;border:2px solid #e50914;" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+        <div>
+          <div style="font-size:14px;font-weight:800;color:#fff;font-family:Tajawal;">${user.displayName||''}</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.4);direction:ltr;">${user.email||''}</div>
+        </div>
+      </div>
+      <div style="padding:8px;">
+        <div onclick="bnavGo('profile');document.getElementById('profileDropdown').style.display='none'" style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;cursor:pointer;color:#fff;font-family:Tajawal;font-size:13px;" onmouseover="this.style.background='rgba(255,255,255,0.07)'" onmouseout="this.style.background=''">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="4"/><path d="M4 21v-2a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v2"/></svg> حسابي
+        </div>
+        <div onclick="bnavGo('library');document.getElementById('profileDropdown').style.display='none'" style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;cursor:pointer;color:#fff;font-family:Tajawal;font-size:13px;" onmouseover="this.style.background='rgba(255,255,255,0.07)'" onmouseout="this.style.background=''">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> مكتبتي
+        </div>
+        <div style="height:1px;background:rgba(255,255,255,0.07);margin:6px 0;"></div>
+        <div onclick="signOut();document.getElementById('profileDropdown').style.display='none'" style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;cursor:pointer;color:#ff6b6b;font-family:Tajawal;font-size:13px;" onmouseover="this.style.background='rgba(255,107,107,0.1)'" onmouseout="this.style.background=''">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> تسجيل الخروج
+        </div>
+      </div>`;
+  }
+  drop.style.display = 'block';
+  setTimeout(() => document.addEventListener('click', function h(e) {
+    if (!document.getElementById('profileDropdown')?.contains(e.target) && e.target.id !== 'topAvatarBtn') {
+      document.getElementById('profileDropdown').style.display = 'none';
+      document.removeEventListener('click', h);
+    }
+  }), 100);
+}
+
+function updateTopAvatar() {
+  const user = window.ROX_USER;
+  const img = document.getElementById('topAvatarImg');
+  const svg = document.getElementById('topAvatarSvg');
+  if (!img || !svg) return;
+  if (user?.photoURL) {
+    img.src = user.photoURL;
+    img.style.display = 'block';
+    svg.style.display = 'none';
+  } else {
+    img.style.display = 'none';
+    svg.style.display = 'block';
+  }
 }
