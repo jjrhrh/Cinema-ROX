@@ -5351,6 +5351,18 @@ function initPremSettings() {
       if (sec) sec.classList.remove('hidden');
     });
   });
+  const user = _auth.currentUser;
+  if (user) {
+    const n = document.getElementById('psecName');
+    const e = document.getElementById('psecEmail');
+    const ec = document.getElementById('psecEmailCell');
+    const img = document.getElementById('psecAvatarImg');
+    const ico = document.getElementById('psecAvatarIcon');
+    if (n) n.textContent = user.displayName || 'مستخدم ROX';
+    if (e) e.textContent = user.email || '—';
+    if (ec) ec.textContent = user.email || '—';
+    if (user.photoURL && img) { img.src = user.photoURL; img.style.display = 'block'; if (ico) ico.style.display = 'none'; }
+  }
   document.querySelectorAll('.prem-mode-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.prem-mode-btn').forEach(b => b.classList.remove('active'));
