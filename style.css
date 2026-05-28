@@ -55,7 +55,6 @@ html, body {
   z-index: 1;
   isolation: auto;
 }
-
 .bottom-nav, .page, #heroSection, .rox-menu {
   position: relative;
   z-index: 1;
