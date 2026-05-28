@@ -111,6 +111,7 @@ HERO: Object.freeze({
     SRV38: { mov: 'https://vidsrc.in/embed/movie/',                    tv: 'https://vidsrc.in/embed/tv/'                    },
     SRV39: { mov: 'https://vidsrc.pm/embed/movie/',                    tv: 'https://vidsrc.pm/embed/tv/'                    },
     SRV40: { mov: 'https://vidsrc.net/embed/movie/',                   tv: 'https://vidsrc.net/embed/tv/'                   },
+    SRV_NHD: { mov: 'https://nhdapi.com/embed/movie/',                 tv: 'https://nhdapi.com/embed/tv/'                   },
   }),
   
   // ─────────────────────────────────────────
