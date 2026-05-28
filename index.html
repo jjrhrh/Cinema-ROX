@@ -39,12 +39,12 @@
       </div>
     </div>
     <div class="hero-topbar-left">
-      <button class="topbar-btn bell-btn" id="bellBtn" onclick="openThemePanel()">
+      <button class="topbar-btn bell-btn" id="bellBtn" onclick="toggleNotifSidebar()">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
         <span class="notif-badge" id="notifBadge" style="display:none">0</span>
       </button>
       <div style="position:relative;">
-        <button class="topbar-btn avatar-btn" id="topAvatarBtn" onclick="toggleProfileDropdown()"
+        <button class="topbar-btn avatar-btn" id="topAvatarBtn" onclick="toggleProfileDropdown()">
           <img id="topAvatarImg" src="" style="width:28px;height:28px;border-radius:50%;object-fit:cover;display:none;border:2px solid #e50914;">
           <svg id="topAvatarSvg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="7" r="4"/><path d="M4 21v-2a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v2"/></svg>
         </button>
