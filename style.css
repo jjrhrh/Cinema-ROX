@@ -7904,8 +7904,8 @@ input[type=range].rox-slider::-webkit-slider-thumb {
 .plat-card-new {
   position: relative;
   flex-shrink: 0;
-  width: 130px;
-  height: 80px;
+  width: 160px;
+  height: 100px;
   border-radius: 14px;
   overflow: hidden;
   cursor: pointer;
@@ -7929,7 +7929,7 @@ input[type=range].rox-slider::-webkit-slider-thumb {
   left: 0;
   right: 0;
   text-align: center;
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   font-weight: 800;
   color: #fff;
   text-shadow: 0 1px 6px #000;
@@ -7949,13 +7949,13 @@ input[type=range].rox-slider::-webkit-slider-thumb {
   flex-direction: column;
   gap: 20px;
 }
-.plat-cust-item { display: flex; flex-direction: column; gap: 10px; }
-.plat-cust-name { font-size: 0.85rem; font-weight: 800; font-family: 'Tajawal', sans-serif; }
+.plat-cust-item { display: flex; flex-direction: column; gap: 12px; padding: 12px; background: rgba(255,255,255,0.04); border-radius: 14px; border: 1px solid rgba(255,255,255,0.08); }
+.plat-cust-name { font-size: 1rem; font-weight: 900; font-family: 'Tajawal', sans-serif; text-align: right; padding-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,0.08); }
 .plat-cust-gifs { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; }
 .plat-cust-gif {
   flex-shrink: 0;
-  width: 110px;
-  height: 65px;
+  width: 140px;
+  height: 85px;
   object-fit: cover;
   border-radius: 10px;
   border: 2px solid transparent;
