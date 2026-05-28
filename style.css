@@ -53,11 +53,13 @@ html, body {
 #heroSection, .page, #platformsSection, #newsSection {
   position: relative;
   z-index: 1;
+  isolation: auto;
 }
 
 .bottom-nav, .page, #heroSection, .rox-menu {
   position: relative;
   z-index: 1;
+  contain: none;
 }
 .page { display: none; background: transparent; }
 /* === BG CANVAS VISIBILITY === */
@@ -340,7 +342,7 @@ transition: background 0.5s cubic-bezier(0.25,1,0.5,1);
   top: 0;
   left: 0;
   right: 0;
-  z-index: 10000;
+  z-index: 99998;
   display: flex;
   align-items: center;
   justify-content: space-between;
