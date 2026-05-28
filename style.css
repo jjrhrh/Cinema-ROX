@@ -574,7 +574,7 @@ justify-content: flex-start;
   box-shadow: 0 0 6px rgba(229,9,20,0.7);
 }
 /* ===== SECTIONS ===== */
-.home-section { padding: 20px 0 8px; background: #080000; position: relative; z-index: 5; transform: translateZ(0); }
+.home-section { padding: 20px 0 8px; background: transparent; position: relative; z-index: 5; }
 #homePage > .home-section:first-child { margin-top: -30px; }
 .section-header {
   display: flex; align-items: center;
