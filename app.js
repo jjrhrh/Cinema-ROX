@@ -117,7 +117,7 @@ function closeAuthModal() {
     card.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:999999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(10px);';
     card.innerHTML = `
       <div style="background:linear-gradient(145deg,#1a1a2e,#16213e);border:1px solid rgba(255,255,255,0.12);border-radius:28px;padding:40px 36px;text-align:center;width:300px;box-shadow:0 30px 80px rgba(0,0,0,0.9);animation:fadeSlideUp 0.5s ease;">
-        ${photo ? `<img src="${photo}" referrerpolicy="no-referrer"` style="width:80px;height:80px;border-radius:50%;border:3px solid #e50914;margin-bottom:16px;object-fit:cover;">` : `<div style="width:80px;height:80px;border-radius:50%;background:#e50914;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 16px;">👤</div>`}
+        ${photo ? `<img src="${photo}" referrerpolicy="no-referrer" style="width:80px;height:80px;border-radius:50%;border:3px solid #e50914;margin-bottom:16px;object-fit:cover;">` : `<div style="width:80px;height:80px;border-radius:50%;background:#e50914;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 16px;">👤</div>`}
         <div style="font-size:22px;font-weight:900;color:#fff;margin-bottom:6px;font-family:Tajawal;">أهلاً ${name}</div>
         <div style="font-size:13px;color:rgba(255,255,255,0.45);margin-bottom:20px;direction:ltr;">${email}</div>
         <div style="width:100%;height:3px;background:rgba(255,255,255,0.1);border-radius:10px;overflow:hidden;">
