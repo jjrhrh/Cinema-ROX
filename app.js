@@ -5397,4 +5397,100 @@ if (grid) {
       </div>
     </div>`).join('');
 }
+  // ===== SECURITY =====
+const tog2FA = document.getElementById('tog2FA');
+if (tog2FA) {
+  tog2FA.checked = localStorage.getItem('rox_2fa') === 'true';
+  tog2FA.addEventListener('change', () => {
+    localStorage.setItem('rox_2fa', tog2FA.checked);
+    const dot = document.getElementById('dot2FA');
+    if (dot) dot.style.background = tog2FA.checked ? '#a855f7' : '';
+  });
+}
+const saveSecBtn = document.getElementById('saveSecBtn');
+if (saveSecBtn) {
+  saveSecBtn.addEventListener('click', () => {
+    const cur = document.getElementById('curPass')?.value;
+    const nw = document.getElementById('newPass')?.value;
+    if (!cur || !nw) { roxToast('أدخل كلمة المرور الحالية والجديدة', '#ef4444'); return; }
+    if (nw.length < 6) { roxToast('كلمة المرور يجب أن تكون 6 أحرف على الأقل', '#ef4444'); return; }
+    const user = _auth.currentUser;
+    if (!user) return;
+    const cred = firebase.auth.EmailAuthProvider.credential(user.email, cur);
+    user.reauthenticateWithCredential(cred).then(() => user.updatePassword(nw)).then(() => {
+      roxToast('تم تغيير كلمة المرور بنجاح', '#a855f7');
+    }).catch(() => roxToast('كلمة المرور الحالية غير صحيحة', '#ef4444'));
+  });
+}
+
+// ===== NOTIFICATIONS TOGGLES =====
+['togEpisodes','togMatches','togNew'].forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.checked = localStorage.getItem('rox_' + id) !== 'false';
+  el.addEventListener('change', () => localStorage.setItem('rox_' + id, el.checked));
+});
+
+// ===== ANIMATIONS TOGGLE =====
+const togAnim = document.getElementById('togAnim');
+if (togAnim) {
+  togAnim.checked = localStorage.getItem('rox_anim') !== 'false';
+  document.documentElement.classList.toggle('no-anim', !togAnim.checked);
+  togAnim.addEventListener('change', () => {
+    localStorage.setItem('rox_anim', togAnim.checked);
+    document.documentElement.classList.toggle('no-anim', !togAnim.checked);
+  });
+}
+
+// ===== RADIUS SLIDER SAVE =====
+if (slider) {
+  const savedRadius = localStorage.getItem('rox_radius');
+  if (savedRadius) { slider.value = savedRadius; document.documentElement.style.setProperty('--radius-md', savedRadius + 'px'); }
+  slider.addEventListener('change', () => localStorage.setItem('rox_radius', slider.value));
+}
+
+// ===== COLOR ORB SAVE =====
+const savedColor = localStorage.getItem('rox_accent');
+if (savedColor) {
+  document.documentElement.style.setProperty('--accent', savedColor);
+  document.querySelectorAll('.prem-color-orb').forEach(o => {
+    if (o.dataset.color === savedColor) o.classList.add('active');
+    else o.classList.remove('active');
+  });
+}
+document.querySelectorAll('.prem-color-orb').forEach(orb => {
+  orb.addEventListener('click', () => localStorage.setItem('rox_accent', orb.dataset.color));
+});
+
+// ===== PING TEST =====
+const pingBtn = document.getElementById('pingBtn');
+const pingResult = document.getElementById('pingResult');
+if (pingBtn && pingResult) {
+  pingBtn.addEventListener('click', async () => {
+    pingResult.textContent = 'جاري القياس...';
+    const t0 = performance.now();
+    try {
+      await fetch('https://vidsrc-embed.ru/embed/movie/385687', { mode: 'no-cors', cache: 'no-store' });
+    } catch(e) {}
+    const ms = Math.round(performance.now() - t0);
+    const color = ms < 200 ? '#22c55e' : ms < 500 ? '#eab308' : '#ef4444';
+    pingResult.innerHTML = `<span style="color:${color};font-weight:900;font-size:18px;text-shadow:0 0 10px ${color}">${ms}ms</span>`;
+  });
+}
+
+// ===== SIDEBAR FADE TRANSITIONS =====
+document.querySelectorAll('.prem-section').forEach(s => {
+  s.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+});
+document.querySelectorAll('.prem-nav-item').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.prem-section').forEach(s => {
+      s.style.opacity = '0'; s.style.transform = 'translateY(8px)';
+    });
+    setTimeout(() => {
+      const sec = document.getElementById('psec-' + btn.dataset.sec);
+      if (sec) { sec.style.opacity = '1'; sec.style.transform = 'translateY(0)'; }
+    }, 200);
+  });
+});
 }
