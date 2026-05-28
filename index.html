@@ -127,32 +127,85 @@
 <div id="homePage" class="page"></div>
   <!-- السطر 136 — صفحة الإعدادات -->
 <div id="settingsPage" class="page">
-  <div class="settings-topbar">
-    <div class="settings-topbar-icon">⚙️</div>
-    <div class="settings-topbar-title">الإعدادات</div>
-  </div>
-  <div class="settings-section">
-    <div class="settings-section-label">ℹ️ عن التطبيق</div>
-    <div class="settings-card">
-      <div class="settings-row">
-        <div class="settings-row-icon" style="background:rgba(229,9,20,0.15)">🎬</div>
-        <div class="settings-row-body">
-          <div class="settings-row-title">Cinema ROX</div>
-          <div class="settings-row-sub">الإصدار 2.0.0 — 2025</div>
+  <div class="prem-settings-wrap">
+    <div class="prem-sidebar">
+      <div class="prem-sidebar-logo"><i class="ri-film-line"></i> Cinema <span>ROX</span></div>
+      <div class="prem-nav-item" data-sec="profile"><i class="ri-user-3-line"></i><span>الحساب</span><em>1</em></div>
+      <div class="prem-nav-item" data-sec="team"><i class="ri-group-line"></i><span>الفريق</span><em>5</em></div>
+      <div class="prem-nav-item" data-sec="alerts"><i class="ri-notification-3-line"></i><span>التنبيهات</span><em>3</em></div>
+      <div class="prem-nav-item" data-sec="security"><i class="ri-shield-check-line"></i><span>الحماية</span></div>
+      <div class="prem-nav-item active" data-sec="themes"><i class="ri-palette-line"></i><span>المظهر</span></div>
+      <div class="prem-nav-item" data-sec="subscription"><i class="ri-vip-crown-line"></i><span>الاشتراكات</span></div>
+      <div class="prem-nav-item" data-sec="devtools"><i class="ri-code-s-slash-line"></i><span>أدوات المطور</span></div>
+    </div>
+    <div class="prem-main">
+      <div class="prem-section" id="psec-themes">
+        <div class="prem-section-title">المظهر</div>
+        <div class="prem-section-sub">خصّص المظهر البصري للتطبيق.</div>
+        <div class="prem-mode-row">
+          <button class="prem-mode-btn" data-mode="auto">تلقائي</button>
+          <button class="prem-mode-btn" data-mode="light">فاتح</button>
+          <button class="prem-mode-btn active" data-mode="dark">داكن</button>
+        </div>
+        <div class="prem-label">لون النيون</div>
+        <div class="prem-colors-row">
+          <div class="prem-color-orb" data-color="#3b82f6" style="--c:#3b82f6"></div>
+          <div class="prem-color-orb" data-color="#22c55e" style="--c:#22c55e"></div>
+          <div class="prem-color-orb" data-color="#eab308" style="--c:#eab308"></div>
+          <div class="prem-color-orb" data-color="#f97316" style="--c:#f97316"></div>
+          <div class="prem-color-orb" data-color="#ef4444" style="--c:#ef4444"></div>
+          <div class="prem-color-orb" data-color="#a855f7" style="--c:#a855f7"></div>
+          <div class="prem-color-orb" data-color="#ec4899" style="--c:#ec4899"></div>
+          <div class="prem-color-orb" data-color="#06b6d4" style="--c:#06b6d4"></div>
+          <div class="prem-color-orb active" data-color="#ff6b6b" style="--c:#ff6b6b"><span>Coral</span></div>
+        </div>
+        <div class="prem-label">زوايا الحواف</div>
+        <div class="prem-slider-wrap">
+          <span>4</span>
+          <input type="range" class="prem-slider" id="radiusSlider" min="4" max="16" value="12">
+          <span>16</span>
+        </div>
+        <div class="prem-slider-ticks"><span>4</span><span>8</span><span>12</span><span>16</span></div>
+        <div class="prem-toggle-row">
+          <label class="prem-toggle-wrap">
+            <input type="checkbox" checked id="togAnim">
+            <span class="prem-toggle-track"></span>
+          </label>
+          <div class="prem-toggle-body">
+            <div class="prem-toggle-title">حركة انسيابية سلسة</div>
+            <div class="prem-toggle-sub">تفعيل انتقالات سلسة لعناصر التصميم.</div>
+          </div>
+        </div>
+        <div class="prem-toggle-row">
+          <label class="prem-toggle-wrap">
+            <input type="checkbox" id="togRings">
+            <span class="prem-toggle-track"></span>
+          </label>
+          <div class="prem-toggle-body">
+            <div class="prem-toggle-title">الحلقات المضيئة</div>
+            <div class="prem-toggle-sub">إبراز العناصر المحددة بحلقة نيون.</div>
+          </div>
+        </div>
+        <div class="prem-toggle-row">
+          <label class="prem-toggle-wrap">
+            <input type="checkbox" id="togGrid">
+            <span class="prem-toggle-track"></span>
+          </label>
+          <div class="prem-toggle-body">
+            <div class="prem-toggle-title">خطوط الشبكة</div>
+            <div class="prem-toggle-sub">عرض شبكة تخطيط للمحاذاة الدقيقة.</div>
+          </div>
         </div>
       </div>
-      <div class="settings-row" onclick="clearCache()">
-        <div class="settings-row-icon" style="background:rgba(255,150,0,0.12)">🗑️</div>
-        <div class="settings-row-body">
-          <div class="settings-row-title">مسح الكاش</div>
-          <div class="settings-row-sub">تحرير مساحة التخزين المؤقت</div>
-        </div>
-        <div class="settings-row-arrow">›</div>
-      </div>
+      <div class="prem-section hidden" id="psec-profile"><div class="prem-section-title">الحساب</div></div>
+      <div class="prem-section hidden" id="psec-team"><div class="prem-section-title">الفريق</div></div>
+      <div class="prem-section hidden" id="psec-alerts"><div class="prem-section-title">التنبيهات</div></div>
+      <div class="prem-section hidden" id="psec-security"><div class="prem-section-title">الحماية</div></div>
+      <div class="prem-section hidden" id="psec-subscription"><div class="prem-section-title">الاشتراكات</div></div>
+      <div class="prem-section hidden" id="psec-devtools"><div class="prem-section-title">أدوات المطور</div></div>
     </div>
   </div>
 </div>
-
 <!-- THEME PANEL SHEET -->
 <div class="theme-panel" id="themePanel">
   <div class="theme-panel-backdrop" onclick="closeThemePanel()"></div>
