@@ -5226,8 +5226,9 @@ function roxBgGradient(ctx, canvas, accent) {
   draw();
   }
 function openThemePanel() {
-  renderThemeGrid();
-  renderPlatformCustomizer();
+  showThemeHome();
+  const saved = localStorage.getItem('rox_custom_color');
+  if (saved) applyCustomColor(saved);
   document.getElementById('themePanel').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
