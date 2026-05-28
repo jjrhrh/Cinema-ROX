@@ -7901,3 +7901,68 @@ input[type=range].rox-slider::-webkit-slider-thumb {
   0%   { top: -50%; }
   100% { top: 100%;  }
 }
+.plat-card-new {
+  position: relative;
+  flex-shrink: 0;
+  width: 130px;
+  height: 80px;
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.3s;
+  background: #111;
+}
+.plat-card-new:hover {
+  border-color: var(--plat-color);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--plat-color) 40%, transparent);
+}
+.plat-gif {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.plat-name-new {
+  position: absolute;
+  bottom: 6px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 1px 6px #000;
+  font-family: 'Tajawal', sans-serif;
+}
+.plat-glow {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.3s;
+  mix-blend-mode: overlay;
+}
+.plat-card-new:hover .plat-glow { opacity: 0.3; }
+.plat-customizer {
+  padding: 0 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.plat-cust-item { display: flex; flex-direction: column; gap: 10px; }
+.plat-cust-name { font-size: 0.85rem; font-weight: 800; font-family: 'Tajawal', sans-serif; }
+.plat-cust-gifs { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; }
+.plat-cust-gif {
+  flex-shrink: 0;
+  width: 110px;
+  height: 65px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s;
+  opacity: 0.6;
+}
+.plat-cust-gif.selected { border-color: var(--accent); opacity: 1; box-shadow: 0 0 12px var(--accent); }
+.plat-cust-gif:hover { opacity: 1; }
+.plat-cust-desc { font-size: 0.75rem; color: rgba(255,255,255,0.4); font-family: 'Tajawal', sans-serif; margin-top: 4px; } 
