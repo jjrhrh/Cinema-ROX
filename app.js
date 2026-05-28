@@ -4788,7 +4788,7 @@ const ROX_THEMES = [
     bg2: '#1f0014',
     card: '#180010',
   },
-    {
+  {
     id: 'nebula',
     name: 'Deep Nebula',
     desc: 'أزرق بنفسجي كوني',
