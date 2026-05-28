@@ -1975,6 +1975,7 @@ const superflixUrl = type === 'movie'
   : `https://superflixapi.best/serie/${id}/${season}/${episode}`;
 
 const vipSrvs = [
+  { icon:'<i class="ri-crown-fill style-icon" style="color:#ffd700"></i>', name:'NHD', desc:'VIP • متعدد الأصوات', url:srvUrl(S.SRV_NHD,type,id,season,episode) + '?subtitle=ar&audio=ar&autonext=true&primarycolor=e50914&secondarycolor=ff2a2a&glasscolor=000000&glassopacity=80&glassblur=20&icons=sharp' },
   { icon:'<i class="ri-focus-3-line style-icon" style="color:#ff2a2a"></i>', name:'ROX', desc:'مشغلي 🔥', url:null, rox:true, active:true, stream:true },
   { icon:'<i class="ri-movie-2-line style-icon" style="color:#ff9f43"></i>', name:'ANIME', desc:'أنمي', url:`https://2anime.xyz/embed/${id}/${season}/${episode}` },
   { icon:'<i class="ri-planet-line style-icon" style="color:#a29bfe"></i>', name:'COSMOS', desc:'#05', url:srvUrl(S.SRV5,type,id,season,episode) },
