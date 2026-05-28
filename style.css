@@ -44,7 +44,7 @@
 * { scrollbar-width: thin; scrollbar-color: #ff2a2a rgba(0,0,0,0.2); }
 * { scrollbar-width: thin; scrollbar-color: #e50914 transparent; }
 html, body {
-  background: #0a0000;
+  background: transparent;
   color: var(--text);
   #heroSection, .page, #platformsSection, #newsSection {
   position: relative;
