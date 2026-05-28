@@ -7989,3 +7989,45 @@ input[type=range].rox-slider::-webkit-slider-thumb {
 .bg-option.selected { border-color: var(--accent); background: rgba(255,255,255,0.08); box-shadow: 0 0 14px var(--accent-glow); }
 .bg-option-icon { font-size: 1.6rem; }
 .bg-option-name { font-size: 0.72rem; font-weight: 700; color: rgba(255,255,255,0.8); font-family: 'Tajawal', sans-serif; text-align: center; } 
+.theme-panel-home {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 16px 24px;
+}
+.tph-btn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+.tph-btn:hover { background: rgba(255,255,255,0.1); border-color: var(--accent); transform: translateX(-3px); }
+.tph-icon { font-size: 1.6rem; width: 42px; text-align: center; }
+.tph-body { flex: 1; }
+.tph-name { font-size: 1rem; font-weight: 800; color: #fff; font-family: 'Tajawal', sans-serif; }
+.tph-desc { font-size: 0.75rem; color: rgba(255,255,255,0.45); font-family: 'Tajawal', sans-serif; margin-top: 2px; }
+.tph-arrow { font-size: 1.4rem; color: rgba(255,255,255,0.3); }
+.theme-panel-section { padding-bottom: 24px; }
+.theme-back-btn {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+.tpc-wrap { padding: 16px; display: flex; flex-direction: column; gap: 20px; }
+.tpc-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; background: rgba(255,255,255,0.05); border-radius: 14px; border: 1px solid rgba(255,255,255,0.08); }
+.tpc-label { font-size: 0.95rem; font-weight: 700; color: #fff; font-family: 'Tajawal', sans-serif; }
+.tpc-picker { width: 44px; height: 44px; border-radius: 50%; border: none; cursor: pointer; background: none; padding: 0; }
+.tpc-presets { display: flex; flex-wrap: wrap; gap: 10px; }
+.tpc-preset { width: 38px; height: 38px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+.tpc-preset:hover { transform: scale(1.2); border-color: rgba(255,255,255,0.5); }
+.tpc-hint { font-size: 0.72rem; color: rgba(255,255,255,0.35); font-family: 'Tajawal', sans-serif; text-align: center; } 
