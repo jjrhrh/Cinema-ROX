@@ -157,57 +157,62 @@
 <div class="theme-panel" id="themePanel">
   <div class="theme-panel-backdrop" onclick="closeThemePanel()"></div>
   <div class="theme-panel-sheet">
-    <div class="tps-layout">
-      <div class="tps-sidebar">
-        <div class="tps-logo">⚙️ التخصيص</div>
-        <div class="tps-nav-item active" onclick="showThemeSection('themes',this)"><span>🎨</span> الثيمات</div>
-        <div class="tps-nav-item" onclick="showThemeSection('colors',this)"><span>🌈</span> الألوان</div>
-        <div class="tps-nav-item" onclick="showThemeSection('fonts',this)"><span>🔤</span> الخط</div>
-        <div class="tps-nav-item" onclick="showThemeSection('platforms',this)"><span>🎬</span> المنصات</div>
-        <div class="tps-nav-item" onclick="showThemeSection('backgrounds',this)"><span>🌌</span> الخلفية</div>
-        <button class="tps-close" onclick="closeThemePanel()">✕ إغلاق</button>
+    <!-- SIDEBAR على اليمين -->
+    <div id="themePanelHome" class="theme-panel-home">
+      <div style="padding:18px 16px 12px;border-bottom:1px solid rgba(255,255,255,0.06);">
+        <div style="font-size:15px;font-weight:900;color:#fff;">⚙️ التخصيص</div>
       </div>
-      <div class="tps-content">
-        <div id="themeSectionThemes" class="tps-section active">
-          <div class="tps-section-title">🎨 الثيمات</div>
+      <div class="tph-btn" id="tphBtnThemes" onclick="showThemeSection('themes')">
+        <div class="tph-icon">🎨</div>
+        <div class="tph-body"><div class="tph-name">الثيمات</div><div class="tph-desc">لون الموقع الكامل</div></div>
+      </div>
+      <div class="tph-btn" id="tphBtnColors" onclick="showThemeSection('colors')">
+        <div class="tph-icon">🌈</div>
+        <div class="tph-body"><div class="tph-name">الألوان</div><div class="tph-desc">خصص كل لون</div></div>
+      </div>
+      <div class="tph-btn" id="tphBtnFonts" onclick="showThemeSection('fonts')">
+        <div class="tph-icon">🔤</div>
+        <div class="tph-body"><div class="tph-name">الخط</div><div class="tph-desc">خط الموقع</div></div>
+      </div>
+      <div class="tph-btn" id="tphBtnPlatforms" onclick="showThemeSection('platforms')">
+        <div class="tph-icon">🎬</div>
+        <div class="tph-body"><div class="tph-name">المنصات</div><div class="tph-desc">GIF لكل منصة</div></div>
+      </div>
+      <div class="tph-btn" id="tphBtnBackgrounds" onclick="showThemeSection('backgrounds')">
+        <div class="tph-icon">🌌</div>
+        <div class="tph-body"><div class="tph-name">الخلفية</div><div class="tph-desc">خلفية متحركة</div></div>
+      </div>
+      <div style="flex:1"></div>
+      <div style="padding:14px 16px;border-top:1px solid rgba(255,255,255,0.06);">
+        <button onclick="closeThemePanel()" style="width:100%;background:rgba(255,255,255,0.06);border:none;color:rgba(255,255,255,0.5);border-radius:10px;padding:10px;font-size:13px;font-family:Tajawal;cursor:pointer;">✕ إغلاق</button>
+      </div>
+    </div>
+    <!-- CONTENT على اليسار -->
+    <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
+      <div style="padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between;">
+        <div style="font-size:15px;font-weight:900;color:#fff;" id="themePanelTitle">🎨 الثيمات</div>
+        <button id="themePanelBackBtn" onclick="showThemeSection('themes')" style="display:none"></button>
+      </div>
+      <div style="flex:1;overflow-y:auto;">
+        <div id="themeSectionThemes" class="theme-panel-section active-section">
           <div class="theme-grid" id="themeGrid"></div>
         </div>
-        <div id="themeSectionColors" class="tps-section" style="display:none">
-          <div class="tps-section-title">🌈 الألوان المخصصة</div>
-          <div id="colorCustomizer"></div>
+        <div id="themeSectionColors" class="theme-panel-section">
+          <div class="tpc-wrap" id="colorCustomizer"></div>
         </div>
-        <div id="themeSectionFonts" class="tps-section" style="display:none">
-          <div class="tps-section-title">🔤 الخط</div>
+        <div id="themeSectionFonts" class="theme-panel-section">
           <div class="font-grid" id="fontGrid"></div>
         </div>
-        <div id="themeSectionPlatforms" class="tps-section" style="display:none">
-          <div class="tps-section-title">🎬 تخصيص المنصات</div>
+        <div id="themeSectionPlatforms" class="theme-panel-section">
           <div id="platformCustomizer" class="plat-customizer"></div>
         </div>
-        <div id="themeSectionBackgrounds" class="tps-section" style="display:none">
-          <div class="tps-section-title">🌌 خلفية الموقع</div>
+        <div id="themeSectionBackgrounds" class="theme-panel-section">
           <div id="bgGrid" class="bg-grid"></div>
         </div>
       </div>
     </div>
   </div>
-    <div id="themeSectionThemes" class="theme-panel-section" style="display:none">
-      <div class="theme-grid" id="themeGrid"></div>
-    </div>
-    <div id="themeSectionColors" class="theme-panel-section" style="display:none">
-      <div class="tpc-wrap" id="colorCustomizer"></div>
-    </div>
-    <div id="themeSectionFonts" class="theme-panel-section" style="display:none">
-      <div class="font-grid" id="fontGrid"></div>
-    </div>
-    <div id="themeSectionPlatforms" class="theme-panel-section" style="display:none">
-      <div id="platformCustomizer" class="plat-customizer"></div>
-    </div>
-    <div id="themeSectionBackgrounds" class="theme-panel-section" style="display:none">
-      <div style="padding:12px 16px 4px"><div class="plat-cust-desc">اختر خلفية متحركة للموقع</div></div>
-      <div id="bgGrid" class="bg-grid" style="padding:0 16px 16px"></div>
-    </div>
-  </div>
+</div>
 </div>
 </div>
 <div id="newsSection" class="news-section" style="display:none; order:99">
