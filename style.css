@@ -8136,3 +8136,35 @@ input[type=range].rox-slider::-webkit-slider-thumb {
 .prem-theme-foot { padding:6px 8px; display:flex; flex-direction:column; gap:1px; }
 .prem-theme-name { font-size:11px; font-weight:800; color:#fff; }
 .prem-theme-desc { font-size:10px; color:rgba(255,255,255,0.45); } 
+.prem-glass-card{background:rgba(10,10,15,0.75);backdrop-filter:blur(25px);-webkit-backdrop-filter:blur(25px);border:1px solid rgba(255,255,255,0.07);border-radius:18px;padding:20px;margin-top:16px;}
+.profile-id-card{display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
+.profile-avatar-ring{width:80px;height:80px;border-radius:50%;border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.04);flex-shrink:0;}
+.profile-id-info{display:flex;flex-direction:column;gap:6px;}
+.profile-id-name{font-size:18px;font-weight:900;color:#fff;font-family:Tajawal;}
+.profile-id-email{font-size:12px;color:rgba(255,255,255,0.4);direction:ltr;}
+.profile-vip-badge{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,rgba(245,197,24,0.15),rgba(245,197,24,0.05));border:1px solid rgba(245,197,24,0.3);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;color:#f5c518;width:fit-content;}
+.prem-glass-cells-row{display:flex;flex-direction:column;gap:8px;margin-top:14px;}
+.prem-glass-cell{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:12px 14px;font-size:13px;color:rgba(255,255,255,0.75);font-family:Tajawal;}
+.prem-glass-cell i{font-size:16px;color:var(--accent);}
+.prem-btns-row{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;}
+.prem-action-btn{display:flex;align-items:center;gap:7px;padding:11px 18px;border-radius:12px;border:none;font-family:Tajawal;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;}
+.prem-action-btn.save-btn{background:linear-gradient(135deg,var(--accent),rgba(229,9,20,0.6));color:#fff;}
+.prem-action-btn.logout-btn{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);}
+.prem-team-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
+.prem-team-card{position:relative;display:flex;align-items:center;gap:12px;background:rgba(10,10,15,0.75);backdrop-filter:blur(25px);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:14px;}
+.prem-team-icon{width:38px;height:38px;border-radius:50%;background:rgba(229,9,20,0.12);border:1px solid rgba(229,9,20,0.3);display:flex;align-items:center;justify-content:center;font-size:18px;color:#e50914;flex-shrink:0;}
+.prem-team-name{font-size:13px;font-weight:800;color:#fff;font-family:Tajawal;}
+.prem-team-role{font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;font-family:Tajawal;}
+.prem-active-dot{position:absolute;top:10px;left:10px;width:8px;height:8px;border-radius:50%;background:#46d369;box-shadow:0 0 6px #46d369;animation:dotBlink 1.5s infinite;}
+.prem-active-dot.offline{background:rgba(255,255,255,0.2);box-shadow:none;animation:none;}
+@keyframes dotBlink{0%,100%{opacity:1}50%{opacity:0.3}}
+.alerts-card .prem-toggle-row{padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.05);}
+.alerts-card .prem-toggle-row:last-child{border-bottom:none;}
+.prem-glass-input{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:12px 14px;color:#fff;font-family:Tajawal;font-size:13px;outline:none;margin-top:6px;box-sizing:border-box;}
+.prem-glass-input:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(229,9,20,0.15);}
+.prem-input-group{margin-bottom:12px;}
+.prem-input-group label{font-size:12px;color:rgba(255,255,255,0.5);font-family:Tajawal;display:flex;align-items:center;gap:6px;}
+.sub-plan-header{display:flex;align-items:center;gap:14px;}
+.sub-plan-name{font-size:16px;font-weight:900;color:#fff;font-family:Tajawal;}
+.sub-plan-renewal{font-size:12px;color:rgba(255,255,255,0.4);margin-top:3px;font-family:Tajawal;}
+.dev-card .prem-glass-cell{cursor:default;} 
