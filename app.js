@@ -4689,13 +4689,7 @@ function toggleProfileDropdown() {
         <div onclick="openThemePanel()" style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;cursor:pointer;color:#fff;font-family:Tajawal;font-size:13px;justify-content:space-between;" onmouseover="this.style.background='rgba(255,255,255,0.07)'" onmouseout="this.style.background=''"><div style="display:flex;align-items:center;gap:10px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20"/><path d="M12 2C6.5 2 2 6.5 2 12"/></svg> الثيمات</div><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div>
         </div>`;
   }
-  drop.style.display = 'block';
-  setTimeout(() => document.addEventListener('click', function h(e) {
-    if (!document.getElementById('profileDropdown')?.contains(e.target) && e.target.id !== 'topAvatarBtn') {
-      document.getElementById('profileDropdown').style.display = 'none';
-      document.removeEventListener('click', h);
-    }
-  }), 100);
+  return;
 }
 function openThemePanel() {
   document.getElementById('profileDropdown').style.display = 'none';
