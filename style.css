@@ -46,6 +46,10 @@
 html, body {
   background: #0a0000;
   color: var(--text);
+  #heroSection, .page, #platformsSection, #newsSection {
+  position: relative;
+  z-index: 1;
+  }
   font-family: 'Tajawal', sans-serif;
   min-height: 100vh;
   overflow-x: clip;
