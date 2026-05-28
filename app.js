@@ -5236,7 +5236,56 @@ function closeThemePanel() {
   document.getElementById('themePanel').classList.remove('open');
   document.body.style.overflow = '';
 }
+function showThemeHome() {
+  document.querySelectorAll('.theme-panel-section').forEach(s => s.style.display = 'none');
+  document.getElementById('themePanelHome').style.display = 'flex';
+  document.getElementById('themePanelTitle').textContent = '⚙️ التخصيص';
+  document.getElementById('themePanelBackBtn').style.display = 'none';
+}
 
+function showThemeSection(section) {
+  document.getElementById('themePanelHome').style.display = 'none';
+  document.querySelectorAll('.theme-panel-section').forEach(s => s.style.display = 'none');
+  const titles = { themes:'🎨 الثيمات', colors:'🌈 الألوان المخصصة', fonts:'🔤 الخط', platforms:'🎬 تخصيص المنصات', backgrounds:'🌌 خلفية الموقع' };
+  document.getElementById('themePanelTitle').textContent = titles[section] || '';
+  document.getElementById('themePanelBackBtn').style.display = 'flex';
+  const el = document.getElementById('themeSection' + section.charAt(0).toUpperCase() + section.slice(1));
+  if (el) el.style.display = 'block';
+  if (section === 'themes') renderThemeGrid();
+  if (section === 'fonts') renderThemeGrid();
+  if (section === 'platforms') renderPlatformCustomizer();
+  if (section === 'backgrounds') renderBgGrid();
+  if (section === 'colors') renderColorCustomizer();
+}
+
+function renderColorCustomizer() {
+  const wrap = document.getElementById('colorCustomizer');
+  if (!wrap) return;
+  const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#e50914';
+  wrap.innerHTML = `
+    <div class="tpc-row">
+      <div class="tpc-label">🎨 اللون الرئيسي</div>
+      <input type="color" class="tpc-picker" value="${accent}" oninput="applyCustomColor(this.value)">
+    </div>
+    <div class="tpc-presets">
+      ${['#e50914','#00e5ff','#a855f7','#5DD62C','#f5c518','#ff2d78','#ff6b00','#00b4b4','#3b82f6','#ec4899','#14b8a6','#f97316'].map(c => `
+        <div class="tpc-preset" style="background:${c}" onclick="applyCustomColor('${c}')"></div>
+      `).join('')}
+    </div>
+    <div class="tpc-hint">اختر لوناً من الألوان الجاهزة أو استخدم منتقي الألوان</div>
+  `;
+}
+
+function applyCustomColor(color) {
+  document.documentElement.style.setProperty('--accent', color);
+  const r = parseInt(color.slice(1,3),16), g = parseInt(color.slice(3,5),16), b = parseInt(color.slice(5,7),16);
+  document.documentElement.style.setProperty('--accent-glow', `rgba(${r},${g},${b},0.4)`);
+  document.documentElement.style.setProperty('--accent-soft', `rgba(${r},${g},${b},0.1)`);
+  document.documentElement.style.setProperty('--accent2', color);
+  localStorage.setItem('rox_custom_color', color);
+  const picker = document.querySelector('.tpc-picker');
+  if (picker) picker.value = color;
+}
 function openFontPanel() { openThemePanel(); }
 
 function renderThemeGrid() {
