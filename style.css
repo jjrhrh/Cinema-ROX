@@ -7416,15 +7416,10 @@ body, html {
 }
 
 /* ── شبكة الثيمات ── */
-.theme-panel {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 99998;
-  align-items: flex-end;
-  justify-content: center;
-}
-.theme-panel.open { display: flex; }
+.theme-panel { display:none; position:fixed; inset:0; z-index:99998; align-items:center; justify-content:center; }
+.theme-panel.open { display:flex; }
+.theme-panel-backdrop { position:absolute; inset:0; background:rgba(0,0,0,0.75); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
+.theme-panel-sheet { position:relative; z-index:1; width:92%; max-width:680px; height:85vh; background:var(--bg2,#1a1a2e); border:1px solid rgba(255,255,255,0.1); border-radius:24px; display:flex; flex-direction:column; overflow:hidden; animation:sheetUp 0.35s cubic-bezier(0.34,1.56,0.64,1); }
 .theme-panel-backdrop {
   position: absolute;
   inset: 0;
