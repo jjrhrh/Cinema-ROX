@@ -581,7 +581,7 @@ async function updateHeroInfo(movies, index) {
     ratingEl.innerHTML = rating ? `<span class="hero-cap hero-cap-rating"><svg width="11" height="11" viewBox="0 0 24 24" fill="var(--gold)" style="vertical-align:middle;margin-left:3px"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>${rating}</span>` : '';
   }
   if (durEl) durEl.innerHTML = m.media_type === 'movie'
-    ? '<i class="ri-film-line" style="margin-left:5px;vertical-align:middle"></i> فيلم'
+    ? '<i class="ri-movie-2-line" style="color:#ffd700;margin-left:5px;vertical-align:middle;filter:drop-shadow(0 0 4px #ffd700)"></i> فيلم'
     : '<i class="ri-tv-2-line" style="margin-left:5px;vertical-align:middle"></i> مسلسل';
 
   const backdrop = document.getElementById('heroBackdrop');
