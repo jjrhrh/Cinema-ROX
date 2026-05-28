@@ -4987,9 +4987,71 @@ function applyAnimations(on, save = true) {
 function applyHQ(on, save = true) {
   if (save) localStorage.setItem('rox_hq', on);
 }
+const ROX_PLATFORMS = [
+  { id: 'netflix', name: 'Netflix', type: 'movie', endpoint: '/movie/popular', color: '#e50914', gifs: ['https://i.postimg.cc/5JrQJYTw/GIF-20260412-181509-853.gif?dl=1','https://files.catbox.moe/wem3vn.gif','https://i.postimg.cc/BQfGF3jV/IMG-8003.gif','https://media1.tenor.com/m/Hh5lO8fCAAIAAAAC/netflix.gif','https://nuvioapp.space/uploads/covers/0696cf9a-3612-4d9b-bb65-72c6c5a060ba.gif'] },
+  { id: 'disney', name: 'Disney+', type: 'movie', endpoint: '/movie/popular', color: '#0063e5', gifs: ['https://media1.tenor.com/m/qYlalc1KzQUAAAAC/disney-disney-plus.gif','https://image2url.com/r2/default/gifs/1775910668473-8e07b96b-4739-43d4-9475-f2aaeac8e259.gif','https://lumiere-a.akamaihd.net/v1/images/disney_logo_animation_march_2024_27a0dafe.gif'] },
+  { id: 'prime', name: 'Prime Video', type: 'movie', endpoint: '/movie/popular', color: '#00a8e1', gifs: ['https://media1.tenor.com/m/T7L_NCdPIvAAAAAC/prime-video.gif','https://i.pinimg.com/originals/cc/09/b8/cc09b8fdbcd724acd97e027a0f2b9d57.gif'] },
+  { id: 'hbo', name: 'HBO Max', type: 'tv', endpoint: '/tv/popular', color: '#8000ff', gifs: ['https://nuvioapp.space/uploads/covers/1b0ddda8-649e-41f2-af27-70550964f03d.gif','https://i.postimg.cc/6Q8HzHqH/IMG-8007.gif','https://media1.tenor.com/m/pjHZN-n1kvkAAAAC/hbo-max.gif'] },
+  { id: 'apple', name: 'Apple TV+', type: 'tv', endpoint: '/tv/popular', color: '#ffffff', gifs: ['https://media1.tenor.com/m/1FiEEnGTgUcAAAAC/apple-appletv.gif','https://media1.tenor.com/m/Oxl9xEn7kTEAAAAC/applo-tv.gif'] },
+  { id: 'paramount', name: 'Paramount+', type: 'movie', endpoint: '/movie/popular', color: '#0064ff', gifs: ['https://media1.tenor.com/m/5kb_E-h0LmYAAAAC/paramount-plus-paramount-global.gif','https://nuvioapp.space/uploads/covers/5216ae5d-c685-4782-ab77-dbff7a1e071c.gif','https://ingeniousguru.com/wp-content/uploads/2022/10/Paramount.gif'] },
+  { id: 'peacock', name: 'Peacock', type: 'tv', endpoint: '/tv/popular', color: '#f5a623', gifs: ['https://i.ibb.co/JjQMjVnd/b921ca21-fbc8-4d43-885b-62b07f814c58.gif','https://i.postimg.cc/1zYpYTmp/Peacock.gif','https://www.image2url.com/r2/default/gifs/1776587799558-25a2f895-cff7-4ece-8d1e-08162d362b3d.gif'] },
+  { id: 'crunchyroll', name: 'Crunchyroll', type: 'tv', endpoint: '/tv/popular', color: '#f47521', gifs: ['https://media0.giphy.com/media/S7uxh9ken9NwaU5E1m/giphy.gif','https://ingeniousguru.com/wp-content/uploads/2022/10/creeky-roll.gif','https://i.postimg.cc/fyNY8wvC/original-3c24d9649543096949cc4262451501b7.gif'] },
+  { id: 'mubi', name: 'MUBI', type: 'movie', endpoint: '/movie/popular', color: '#00b4b4', gifs: ['https://i.postimg.cc/s2g7F0zy/mubi-opt.gif'] },
+  { id: 'starz', name: 'Starz', type: 'tv', endpoint: '/tv/popular', color: '#000000', gifs: ['https://i.postimg.cc/3rGgnnPG/1000390458_(1).gif','https://ingeniousguru.com/wp-content/uploads/2022/10/starz-logo.gif','https://nuvioapp.space/uploads/covers/7ae791e0-5329-4c3f-8a95-d6b289b10007.gif'] },
+  { id: 'bbc', name: 'BBC iPlayer', type: 'tv', endpoint: '/tv/popular', color: '#ff4444', gifs: ['https://i.postimg.cc/0yYGqsp2/IMG-1294.gif','https://i.postimg.cc/76HfLpRG/BBCiplayer-Animation.gif','https://image2url.com/r2/default/gifs/1775934598106-a84d6c03-563d-4fe3-b506-5ae44e99a5c7.gif'] },
+  { id: 'itv', name: 'ITV', type: 'tv', endpoint: '/tv/popular', color: '#e4003b', gifs: ['https://i.postimg.cc/5NPngJJH/ITVXStartup-Animation.gif','https://image2url.com/r2/default/gifs/1775918576257-e5a35335-5967-4242-8052-a96d58b877a2.gif'] },
+  { id: 'dc', name: 'DC Studios', type: 'movie', endpoint: '/movie/popular', color: '#0476d0', gifs: ['https://i.postimg.cc/50GVmBDm/DCStudios-Optimized.gif','https://i.ibb.co/chw2zR64/dc-superhero-films-opening-introduction-t9kpwalz3ep57s9i.gif','https://i.pinimg.com/originals/cd/4e/19/cd4e195405cbaed5a3e5b95708a41105.gif'] },
+  { id: 'universal', name: 'Universal', type: 'movie', endpoint: '/movie/popular', color: '#1a1aff', gifs: ['https://i.postimg.cc/8ChLYL58/universal-(1).gif','https://i.postimg.cc/NjgLsZ68/Universal.gif'] },
+  { id: 'sony', name: 'Sony', type: 'movie', endpoint: '/movie/popular', color: '#003087', gifs: ['https://media1.tenor.com/m/R9g8h8RTQrMAAAAd/sony-pictures-television-logos.gif','https://i.postimg.cc/8z2h0w3k/YTDown-com-You-Tube-Sony-Liv-Originals-2020-Media-xv9rd3Xqvo4-001-720p-ezgif-com-video-to-gif-conver.gif'] },
+  { id: 'sky', name: 'Sky', type: 'tv', endpoint: '/tv/popular', color: '#0072c9', gifs: ['https://i.postimg.cc/4N7nnvWt/skygoanimation.gif','https://i.postimg.cc/nLZLdypR/skyoriginals-Animation.gif','https://image2url.com/r2/default/gifs/1775910314934-43c3e1ff-5d57-4bdc-8ced-129343e9f5b4.gif'] },
+  { id: 'marvel', name: 'Marvel', type: 'movie', endpoint: '/movie/popular', color: '#ec1d24', gifs: ['https://giffiles.alphacoders.com/127/12700.gif','https://i.ibb.co/zHbdGxHT/marvel-studios.gif','https://www.image2url.com/r2/default/gifs/1778308091232-13285f01-0499-4ea7-9a66-1fa645f5e526.gif'] },
+  { id: 'natgeo', name: 'Nat Geo', type: 'tv', endpoint: '/tv/popular', color: '#ffcc00', gifs: ['https://cdn.dribbble.com/userupload/28768734/file/original-ef8fb082e33363bacbbf73da8c08a2f2.gif','https://cdn.dribbble.com/userupload/20547595/file/original-5ca9de6b778dbba32e64596e0acf2e82.gif'] },
+  { id: 'hulu', name: 'Hulu', type: 'tv', endpoint: '/tv/popular', color: '#1ce783', gifs: ['https://nuvioapp.space/uploads/covers/c237c4b2-875e-4d54-802a-42a4316ff7ab.gif'] },
+];
+function getPlatformGif(id) {
+  const saved = localStorage.getItem('rox_plat_gif_' + id);
+  const plat = ROX_PLATFORMS.find(p => p.id === id);
+  return saved || (plat ? plat.gifs[0] : '');
+}
 
+function renderPlatformsGrid() {
+  const grid = document.getElementById('platformsGrid');
+  if (!grid) return;
+  grid.innerHTML = ROX_PLATFORMS.map(p => `
+    <div class="plat-card-new" onclick="openBrowseAll('${p.type}','${p.endpoint}','${p.name}')" style="--plat-color:${p.color}">
+      <img class="plat-gif" src="${getPlatformGif(p.id)}" alt="${p.name}" loading="lazy">
+      <div class="plat-name-new">${p.name}</div>
+      <div class="plat-glow" style="background:${p.color}"></div>
+    </div>
+  `).join('');
+}
+function renderPlatformCustomizer() {
+  const wrap = document.getElementById('platformCustomizer');
+  if (!wrap) return;
+  wrap.innerHTML = ROX_PLATFORMS.map(p => `
+    <div class="plat-cust-item">
+      <div class="plat-cust-name" style="color:${p.color}">${p.name}</div>
+      <div class="plat-cust-gifs">
+        ${p.gifs.map((g, i) => `
+          <img src="${g}" class="plat-cust-gif ${getPlatformGif(p.id) === g ? 'selected' : ''}"
+            onclick="selectPlatformGif('${p.id}','${g}',this)"
+            loading="lazy">
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function selectPlatformGif(id, gif, el) {
+  localStorage.setItem('rox_plat_gif_' + id, gif);
+  el.closest('.plat-cust-gifs').querySelectorAll('.plat-cust-gif').forEach(i => i.classList.remove('selected'));
+  el.classList.add('selected');
+  renderPlatformsGrid();
+  showToast('✅ تم تغيير GIF المنصة');
+}
 function openThemePanel() {
   renderThemeGrid();
+  renderPlatformCustomizer();
   document.getElementById('themePanel').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -5048,5 +5110,5 @@ function clearCache() {
 }
 
 // تشغيل النظام عند تحميل الصفحة
-document.addEventListener('DOMContentLoaded', initThemeSystem);
+document.addEventListener('DOMContentLoaded', () => { initThemeSystem(); renderPlatformsGrid(); });
 if (document.readyState !== 'loading') initThemeSystem();
