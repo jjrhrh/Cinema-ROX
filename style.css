@@ -60,6 +60,16 @@ html, body {
   z-index: 1;
 }
 .page { display: none; background: transparent; }
+/* === BG CANVAS VISIBILITY === */
+#roxBgCanvas { opacity: 0.55; }
+
+.section-row,
+.news-section,
+#newsSection,
+#homePage,
+#platformsSection {
+  background: transparent !important;
+}
 .page.active { display: block; } 
 /* ===== BOTTOM NAV ===== */
 .bottom-nav {
