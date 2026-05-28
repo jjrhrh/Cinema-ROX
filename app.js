@@ -5226,11 +5226,12 @@ function roxBgGradient(ctx, canvas, accent) {
   draw();
   }
 function openThemePanel() {
-  showThemeHome();
+  document.getElementById('profileDropdown').style.display = 'none';
   const saved = localStorage.getItem('rox_custom_color');
   if (saved) applyCustomColor(saved);
   document.getElementById('themePanel').classList.add('open');
   document.body.style.overflow = 'hidden';
+  showThemeSection('themes');
 }
 
 function closeThemePanel() {
@@ -5245,13 +5246,15 @@ function showThemeHome() {
 }
 
 function showThemeSection(section) {
-  document.getElementById('themePanelHome').style.display = 'none';
-  document.querySelectorAll('.theme-panel-section').forEach(s => s.style.display = 'none');
+  document.querySelectorAll('.theme-panel-section').forEach(s => s.classList.remove('active-section'));
+  document.querySelectorAll('.tph-btn').forEach(b => b.classList.remove('active'));
   const titles = { themes:'🎨 الثيمات', colors:'🌈 الألوان المخصصة', fonts:'🔤 الخط', platforms:'🎬 تخصيص المنصات', backgrounds:'🌌 خلفية الموقع' };
-  document.getElementById('themePanelTitle').textContent = titles[section] || '';
-  document.getElementById('themePanelBackBtn').style.display = 'flex';
+  const titleEl = document.getElementById('themePanelTitle');
+  if (titleEl) titleEl.textContent = titles[section] || '';
   const el = document.getElementById('themeSection' + section.charAt(0).toUpperCase() + section.slice(1));
-  if (el) el.style.display = 'block';
+  if (el) el.classList.add('active-section');
+  const btn = document.getElementById('tphBtn' + section.charAt(0).toUpperCase() + section.slice(1));
+  if (btn) btn.classList.add('active');
   if (section === 'themes') renderThemeGrid();
   if (section === 'fonts') renderThemeGrid();
   if (section === 'platforms') renderPlatformCustomizer();
