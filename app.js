@@ -5371,4 +5371,18 @@ function initPremSettings() {
       document.documentElement.style.setProperty('--radius-md', slider.value + 'px');
     });
   }
+  const grid = document.getElementById('premThemeGrid');
+if (grid) {
+  grid.innerHTML = ROX_THEMES.map(t => `
+    <div class="prem-theme-card ${roxCurrentTheme === t.id ? 'selected' : ''}" onclick="applyTheme('${t.id}');document.querySelectorAll('.prem-theme-card').forEach(c=>c.classList.remove('selected'));this.classList.add('selected')">
+      <div class="prem-theme-preview" style="background:${t.bg}">
+        <div class="prem-theme-bar" style="background:${t.accent}"></div>
+        <div class="prem-theme-bar2" style="background:${t.accent}"></div>
+      </div>
+      <div class="prem-theme-foot" style="background:${t.bg2}">
+        <div class="prem-theme-name">${t.name}</div>
+        <div class="prem-theme-desc">${t.desc}</div>
+      </div>
+    </div>`).join('');
+}
 }
