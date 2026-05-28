@@ -1975,6 +1975,7 @@ const superflixUrl = type === 'movie'
   : `https://superflixapi.best/serie/${id}/${season}/${episode}`;
 
 const vipSrvs = [
+  { icon:'<i class="ri-flashlight-2-fill style-icon" style="color:#00e5ff"></i>', name:'EZVID', desc:'VIP • 8 مصادر HLS', url: type==='movie' ? `https://ezvidapi.com/embed/movie/${id}` : `https://ezvidapi.com/embed/tv/${id}/${season}/${episode}` },
   { icon:'<i class="ri-global-fill style-icon" style="color:#00cec9"></i>', name:'SUPER', desc:'VIP • HLS سريع', url: type==='movie' ? `https://multiembed.mov/directstream.php?video_id=${id}&tmdb=1` : `https://multiembed.mov/directstream.php?video_id=${id}&tmdb=1&s=${season}&e=${episode}` },
   { icon:'<i class="ri-vip-diamond-fill style-icon" style="color:#a855f7"></i>', name:'VIDLUX', desc:'VIP • 9 سيرفرات', url:srvUrl(S.SRV_VIDLUX,type,id,season,episode) + '?color=e50914' },
   { icon:'<i class="ri-crown-fill style-icon" style="color:#ffd700"></i>', name:'NHD', desc:'VIP • متعدد الأصوات', url:srvUrl(S.SRV_NHD,type,id,season,episode) + '?subtitle=ar&audio=ar&autonext=true&primarycolor=e50914&secondarycolor=ff2a2a&glasscolor=000000&glassopacity=80&glassblur=20&icons=sharp' },
