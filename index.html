@@ -159,31 +159,55 @@
   <div class="theme-panel-sheet">
     <div class="theme-sheet-handle"></div>
     <div class="theme-sheet-head">
-      <div class="theme-sheet-title">🎨 اختر الثيم</div>
+      <button class="theme-back-btn" id="themePanelBackBtn" onclick="showThemeHome()" style="display:none">‹</button>
+      <div class="theme-sheet-title" id="themePanelTitle">⚙️ التخصيص</div>
       <button class="theme-sheet-close" onclick="closeThemePanel()">✕</button>
     </div>
-    <div class="theme-grid" id="themeGrid"></div>
-
-    <div class="theme-divider"></div>
-
-    <!-- اختيار الخط داخل لوحة الثيمات أيضاً -->
-    <div style="padding:0 16px 8px">
-      <div class="settings-section-label">🔤 الخط</div>
+    <div id="themePanelHome" class="theme-panel-home">
+      <div class="tph-btn" onclick="showThemeSection('themes')">
+        <div class="tph-icon">🎨</div>
+        <div class="tph-body"><div class="tph-name">الثيمات</div><div class="tph-desc">اختر لون الموقع الكامل</div></div>
+        <div class="tph-arrow">›</div>
+      </div>
+      <div class="tph-btn" onclick="showThemeSection('colors')">
+        <div class="tph-icon">🌈</div>
+        <div class="tph-body"><div class="tph-name">الألوان المخصصة</div><div class="tph-desc">خصص كل لون لوحده</div></div>
+        <div class="tph-arrow">›</div>
+      </div>
+      <div class="tph-btn" onclick="showThemeSection('fonts')">
+        <div class="tph-icon">🔤</div>
+        <div class="tph-body"><div class="tph-name">الخط</div><div class="tph-desc">اختر خط الموقع</div></div>
+        <div class="tph-arrow">›</div>
+      </div>
+      <div class="tph-btn" onclick="showThemeSection('platforms')">
+        <div class="tph-icon">🎬</div>
+        <div class="tph-body"><div class="tph-name">تخصيص المنصات</div><div class="tph-desc">اختر GIF لكل منصة</div></div>
+        <div class="tph-arrow">›</div>
+      </div>
+      <div class="tph-btn" onclick="showThemeSection('backgrounds')">
+        <div class="tph-icon">🌌</div>
+        <div class="tph-body"><div class="tph-name">خلفية الموقع</div><div class="tph-desc">خلفية متحركة</div></div>
+        <div class="tph-arrow">›</div>
+      </div>
     </div>
-    <div class="font-grid" id="fontGrid"></div>
-    <div class="theme-divider"></div>
-<div style="padding:0 16px 8px">
-  <div class="settings-section-label">🎬 تخصيص المنصات</div>
-  <div class="plat-cust-desc">اختر الـ GIF المناسب لكل منصة</div>
-</div>
-<div id="platformCustomizer" class="plat-customizer"></div>
-    <div class="theme-divider"></div>
-<div style="padding:0 16px 12px">
-  <div class="settings-section-label">🌌 خلفية الموقع</div>
-  <div class="plat-cust-desc">اختر خلفية متحركة للموقع</div>
-  <div id="bgGrid" class="bg-grid"></div>
-</div>
+    <div id="themeSectionThemes" class="theme-panel-section" style="display:none">
+      <div class="theme-grid" id="themeGrid"></div>
+    </div>
+    <div id="themeSectionColors" class="theme-panel-section" style="display:none">
+      <div class="tpc-wrap" id="colorCustomizer"></div>
+    </div>
+    <div id="themeSectionFonts" class="theme-panel-section" style="display:none">
+      <div class="font-grid" id="fontGrid"></div>
+    </div>
+    <div id="themeSectionPlatforms" class="theme-panel-section" style="display:none">
+      <div id="platformCustomizer" class="plat-customizer"></div>
+    </div>
+    <div id="themeSectionBackgrounds" class="theme-panel-section" style="display:none">
+      <div style="padding:12px 16px 4px"><div class="plat-cust-desc">اختر خلفية متحركة للموقع</div></div>
+      <div id="bgGrid" class="bg-grid" style="padding:0 16px 16px"></div>
+    </div>
   </div>
+</div>
 </div>
 <div id="newsSection" class="news-section" style="display:none; order:99">
   <div class="section-header">
