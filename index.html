@@ -199,12 +199,81 @@
           </div>
         </div>
       </div>
-      <div class="prem-section hidden" id="psec-profile"><div class="prem-section-title">الحساب</div></div>
-      <div class="prem-section hidden" id="psec-team"><div class="prem-section-title">الفريق</div></div>
-      <div class="prem-section hidden" id="psec-alerts"><div class="prem-section-title">التنبيهات</div></div>
-      <div class="prem-section hidden" id="psec-security"><div class="prem-section-title">الحماية</div></div>
-      <div class="prem-section hidden" id="psec-subscription"><div class="prem-section-title">الاشتراكات</div></div>
-      <div class="prem-section hidden" id="psec-devtools"><div class="prem-section-title">أدوات المطور</div></div>
+      <div class="prem-section hidden" id="psec-profile">
+        <div class="prem-section-title">الحساب</div>
+        <div class="prem-glass-card profile-id-card">
+          <div class="profile-avatar-ring" id="psecAvatarRing">
+            <img id="psecAvatarImg" src="" style="width:72px;height:72px;border-radius:50%;object-fit:cover;display:none;">
+            <i class="ri-user-3-line" id="psecAvatarIcon" style="font-size:32px;color:var(--accent)"></i>
+          </div>
+          <div class="profile-id-info">
+            <div class="profile-id-name" id="psecName">مستخدم ROX</div>
+            <div class="profile-id-email" id="psecEmail">user@cinema.rox</div>
+            <div class="profile-vip-badge"><i class="ri-vip-crown-fill"></i> العضوية الفاخرة VIP</div>
+          </div>
+        </div>
+        <div class="prem-glass-cells-row">
+          <div class="prem-glass-cell"><i class="ri-mail-line"></i><span id="psecEmailCell">—</span></div>
+          <div class="prem-glass-cell"><i class="ri-calendar-check-line"></i><span>عضو منذ 2024</span></div>
+          <div class="prem-glass-cell"><i class="ri-film-line"></i><span>مشاهدات: 142 فيلم</span></div>
+        </div>
+        <div class="prem-btns-row">
+          <button class="prem-action-btn save-btn" onclick="showToast('تم حفظ التغييرات')"><i class="ri-save-3-line"></i> حفظ التغييرات</button>
+          <button class="prem-action-btn logout-btn" onclick="roxSignOut()"><i class="ri-logout-box-r-line"></i> تسجيل الخروج</button>
+        </div>
+      </div>
+      <div class="prem-section hidden" id="psec-team">
+        <div class="prem-section-title">الفريق</div>
+        <div class="prem-team-grid">
+          <div class="prem-team-card"><div class="prem-team-icon"><i class="ri-admin-line"></i></div><div class="prem-team-body"><div class="prem-team-name">ROX Admin</div><div class="prem-team-role">المؤسس والمطور</div></div><span class="prem-active-dot"></span></div>
+          <div class="prem-team-card"><div class="prem-team-icon"><i class="ri-shield-user-line"></i></div><div class="prem-team-body"><div class="prem-team-name">ROX Dev</div><div class="prem-team-role">مطور واجهات</div></div><span class="prem-active-dot"></span></div>
+          <div class="prem-team-card"><div class="prem-team-icon"><i class="ri-shield-user-line"></i></div><div class="prem-team-body"><div class="prem-team-name">ROX Editor</div><div class="prem-team-role">محرر المحتوى</div></div><span class="prem-active-dot offline"></span></div>
+          <div class="prem-team-card"><div class="prem-team-icon"><i class="ri-admin-line"></i></div><div class="prem-team-body"><div class="prem-team-name">ROX Design</div><div class="prem-team-role">مصمم الهوية</div></div><span class="prem-active-dot"></span></div>
+          <div class="prem-team-card"><div class="prem-team-icon"><i class="ri-shield-user-line"></i></div><div class="prem-team-body"><div class="prem-team-name">ROX Support</div><div class="prem-team-role">دعم المستخدمين</div></div><span class="prem-active-dot offline"></span></div>
+        </div>
+      </div>
+      <div class="prem-section hidden" id="psec-alerts">
+        <div class="prem-section-title">التنبيهات</div>
+        <div class="prem-glass-card alerts-card">
+          <div class="prem-toggle-row"><label class="prem-toggle-wrap"><input type="checkbox" checked id="togEpisodes"><span class="prem-toggle-track"></span></label><div class="prem-toggle-body"><div class="prem-toggle-title"><i class="ri-notification-3-line" style="color:var(--accent)"></i> تنبيهات الحلقات الجديدة</div><div class="prem-toggle-sub">يصلك إشعار فور نزول حلقة جديدة من مسلسلاتك.</div></div></div>
+          <div class="prem-toggle-row"><label class="prem-toggle-wrap"><input type="checkbox" checked id="togMatches"><span class="prem-toggle-track"></span></label><div class="prem-toggle-body"><div class="prem-toggle-title"><i class="ri-football-line" style="color:#46d369"></i> منبه المباريات المباشرة</div><div class="prem-toggle-sub">تنبيه قبل انطلاق المباريات المشتعلة مباشرة.</div></div></div>
+          <div class="prem-toggle-row"><label class="prem-toggle-wrap"><input type="checkbox" id="togCinema"><span class="prem-toggle-track"></span></label><div class="prem-toggle-body"><div class="prem-toggle-title"><i class="ri-film-line" style="color:#e50914"></i> إشعارات تحديثات السينما</div><div class="prem-toggle-sub">أفلام جديدة وعروض حصرية تصلك أولاً.</div></div></div>
+        </div>
+      </div>
+      <div class="prem-section hidden" id="psec-security">
+        <div class="prem-section-title">الحماية</div>
+        <div class="prem-glass-card security-card">
+          <div class="prem-input-group"><label><i class="ri-lock-password-line"></i> كلمة المرور الحالية</label><input type="password" class="prem-glass-input" placeholder="••••••••" dir="ltr"></div>
+          <div class="prem-input-group"><label><i class="ri-lock-password-line"></i> كلمة المرور الجديدة</label><input type="password" class="prem-glass-input" placeholder="••••••••" dir="ltr"></div>
+          <div class="prem-toggle-row" style="margin-top:16px"><label class="prem-toggle-wrap"><input type="checkbox" id="tog2FA"><span class="prem-toggle-track"></span></label><div class="prem-toggle-body"><div class="prem-toggle-title"><i class="ri-fingerprint-line" style="color:var(--accent)"></i> التحقق الثنائي 2FA</div><div class="prem-toggle-sub">حماية إضافية لحسابك عبر رمز التحقق.</div></div></div>
+          <div class="prem-label" style="margin-top:16px"><i class="ri-device-line"></i> الأجهزة النشطة</div>
+          <div class="prem-glass-cell" style="margin-top:8px"><i class="ri-smartphone-line" style="color:#46d369"></i><span>iPhone 15 Pro — متصل الآن</span></div>
+          <div class="prem-glass-cell" style="margin-top:6px"><i class="ri-computer-line" style="color:rgba(255,255,255,0.4)"></i><span>MacBook Pro — آخر دخول أمس</span></div>
+          <button class="prem-action-btn save-btn" style="margin-top:16px" onclick="showToast('تم تحديث كلمة المرور')"><i class="ri-save-3-line"></i> حفظ التغييرات</button>
+        </div>
+      </div>
+      <div class="prem-section hidden" id="psec-subscription">
+        <div class="prem-section-title">الاشتراكات</div>
+        <div class="prem-glass-card sub-card">
+          <div class="sub-plan-header"><i class="ri-vip-crown-fill" style="font-size:28px;color:#f5c518"></i><div><div class="sub-plan-name">باقة ROX Premium</div><div class="sub-plan-renewal">تجديد تلقائي: 15 يناير 2027</div></div></div>
+          <div class="prem-glass-cells-row" style="margin-top:14px">
+            <div class="prem-glass-cell"><i class="ri-hd-line" style="color:#46d369"></i><span>جودة 4K UHD</span></div>
+            <div class="prem-glass-cell"><i class="ri-film-line" style="color:var(--accent)"></i><span>محتوى غير محدود</span></div>
+            <div class="prem-glass-cell"><i class="ri-device-line" style="color:#a855f7"></i><span>5 أجهزة</span></div>
+          </div>
+          <button class="prem-action-btn save-btn" style="margin-top:16px;width:100%"><i class="ri-bank-card-line"></i> إدارة الدفع والفواتير</button>
+        </div>
+      </div>
+      <div class="prem-section hidden" id="psec-devtools">
+        <div class="prem-section-title">أدوات المطور</div>
+        <div class="prem-glass-card dev-card">
+          <div class="prem-toggle-row"><label class="prem-toggle-wrap"><input type="checkbox" id="togDevMode"><span class="prem-toggle-track"></span></label><div class="prem-toggle-body"><div class="prem-toggle-title"><i class="ri-code-s-slash-line" style="color:var(--accent)"></i> وضع المطور</div><div class="prem-toggle-sub">يكشف لوحة تصحيح الأخطاء وسجل الطلبات.</div></div></div>
+          <div class="prem-label" style="margin-top:16px"><i class="ri-server-line"></i> فحص سرعة السيرفرات</div>
+          <div class="prem-glass-cell" style="margin-top:8px;cursor:pointer" onclick="this.querySelector('span').textContent='⏳ جاري الفحص...';setTimeout(()=>this.querySelector('span').textContent='ROX Server: 42ms',1500)"><i class="ri-wifi-line" style="color:#46d369"></i><span>ROX Server: اضغط للفحص</span></div>
+          <div class="prem-glass-cell" style="margin-top:6px;cursor:pointer" onclick="this.querySelector('span').textContent='⏳ جاري الفحص...';setTimeout(()=>this.querySelector('span').textContent='Backup Server: 88ms',1500)"><i class="ri-wifi-line" style="color:#eab308"></i><span>Backup Server: اضغط للفحص</span></div>
+          <button class="prem-action-btn" style="margin-top:16px;background:rgba(229,9,20,0.15);border:1px solid rgba(229,9,20,0.3);color:#ff6b6b" onclick="clearCache()"><i class="ri-delete-bin-line"></i> مسح الكاش</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
