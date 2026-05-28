@@ -5086,7 +5086,7 @@ function applyBackground(id) {
   if (id === 'none') { renderBgGrid(); return; }
   const canvas = document.createElement('canvas');
   canvas.id = 'roxBgCanvas';
-  canvas.style.cssText = 'position:fixed;inset:0;z-index:0;pointer-events:none;width:100%;height:100%;';
+  canvas.style.cssText = 'position:fixed;inset:0;z-index:0;pointer-events:none;width:100vw;height:100vh;opacity:0.55;';
   document.body.prepend(canvas);
   const ctx = canvas.getContext('2d');
   canvas.width = window.innerWidth;
@@ -5129,7 +5129,7 @@ function roxBgGrid(ctx, canvas, accent) {
   function draw() {
     if (!document.getElementById('roxBgCanvas')) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.strokeStyle = accent + '22';
+    ctx.strokeStyle = accent + '44';
     ctx.lineWidth = 1;
     const size = 40;
     for (let x = (offset % size) - size; x < canvas.width; x += size) {
