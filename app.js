@@ -240,7 +240,7 @@ const btnMap = { home:'bnavHome', search:'bnavSearch', library:'bnavLibrary', se
   if (tab === 'search') { initSearchDiscovery(); const inp = document.getElementById('searchInput2'); if(inp) { inp.value=''; setTimeout(()=>inp.focus(),200); } }
   if (tab === 'profile') loadProfilePage();
   if (tab === 'football') loadSportsUI();
-  if (tab === 'settings') { initThemeSystem(); }
+  if (tab === 'settings') { initThemeSystem(); initPremSettings(); }
   document.getElementById('platformsSection').style.display = (tab === 'home') ? '' : 'none';
   if (tab === 'otaku') { if(hero){hero.style.display='';hero.style.visibility='';} _otakuOn=true; document.getElementById('htmlRoot').classList.add('otaku-mode'); document.getElementById('bnavOtaku').classList.add('active'); loadOtakuPage(); loadNewsSection('newsFeed',CONFIG.NEWS.ANIME,'purple'); document.getElementById('newsSectionTitle').textContent='📰 أخبار الأنمي'; document.getElementById('newsSection').style.display='block'; document.getElementById('studioBar').style.display='block'; }
   window.scrollTo(0,0);
@@ -5341,3 +5341,34 @@ function clearCache() {
 // تشغيل النظام عند تحميل الصفحة
 document.addEventListener('DOMContentLoaded', () => { initThemeSystem(); renderPlatformsGrid(); renderBgGrid(); const savedBg = localStorage.getItem('rox_bg'); if (savedBg && savedBg !== 'none') applyBackground(savedBg); });
 if (document.readyState !== 'loading') initThemeSystem();
+function initPremSettings() {
+  document.querySelectorAll('.prem-nav-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.prem-nav-item').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.prem-section').forEach(s => s.classList.add('hidden'));
+      btn.classList.add('active');
+      const sec = document.getElementById('psec-' + btn.dataset.sec);
+      if (sec) sec.classList.remove('hidden');
+    });
+  });
+  document.querySelectorAll('.prem-mode-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.prem-mode-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+  document.querySelectorAll('.prem-color-orb').forEach(orb => {
+    orb.addEventListener('click', () => {
+      document.querySelectorAll('.prem-color-orb').forEach(o => o.classList.remove('active'));
+      orb.classList.add('active');
+      document.documentElement.style.setProperty('--accent', orb.dataset.color);
+      document.documentElement.style.setProperty('--accent-glow', orb.dataset.color + '66');
+    });
+  });
+  const slider = document.getElementById('radiusSlider');
+  if (slider) {
+    slider.addEventListener('input', () => {
+      document.documentElement.style.setProperty('--radius-md', slider.value + 'px');
+    });
+  }
+}
