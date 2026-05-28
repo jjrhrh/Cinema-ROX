@@ -4912,6 +4912,15 @@ function applyTheme(themeId, save = true) {
   }
   const t = ROX_THEMES.find(x => x.id === themeId);
   if (t) {
+    document.documentElement.style.setProperty('--accent', t.accent);
+    document.documentElement.style.setProperty('--accent-glow', t.accent + '66');
+    document.documentElement.style.setProperty('--accent-soft', t.accent + '1a');
+    document.documentElement.style.setProperty('--accent2', t.accent2 || t.accent);
+    document.documentElement.style.setProperty('--bg', t.bg);
+    document.documentElement.style.setProperty('--bg2', t.bg2);
+    document.documentElement.style.setProperty('--card-bg', t.card);
+  }
+  if (t) {
     const label = document.getElementById('activeThemeLabel');
     const badge = document.getElementById('currentThemeName');
     if (label) label.textContent = `${t.name} — ${t.desc}`;
@@ -5049,6 +5058,173 @@ function selectPlatformGif(id, gif, el) {
   renderPlatformsGrid();
   showToast('✅ تم تغيير GIF المنصة');
 }
+const ROX_BACKGROUNDS = [
+  { id: 'none', name: 'بلا خلفية', icon: '⬛' },
+  { id: 'stars', name: 'نجوم', icon: '✨' },
+  { id: 'grid', name: 'شبكة', icon: '🔲' },
+  { id: 'waves', name: 'موجات', icon: '🌊' },
+  { id: 'particles', name: 'جزيئات', icon: '🔮' },
+  { id: 'gradient', name: 'تدرج متحرك', icon: '🎨' },
+];
+
+function renderBgGrid() {
+  const grid = document.getElementById('bgGrid');
+  if (!grid) return;
+  const current = localStorage.getItem('rox_bg') || 'none';
+  grid.innerHTML = ROX_BACKGROUNDS.map(b => `
+    <div class="bg-option ${current === b.id ? 'selected' : ''}" onclick="applyBackground('${b.id}')">
+      <div class="bg-option-icon">${b.icon}</div>
+      <div class="bg-option-name">${b.name}</div>
+    </div>
+  `).join('');
+}
+
+function applyBackground(id) {
+  localStorage.setItem('rox_bg', id);
+  const el = document.getElementById('roxBgCanvas');
+  if (el) el.remove();
+  if (id === 'none') { renderBgGrid(); return; }
+  const canvas = document.createElement('canvas');
+  canvas.id = 'roxBgCanvas';
+  canvas.style.cssText = 'position:fixed;inset:0;z-index:0;pointer-events:none;width:100%;height:100%;';
+  document.body.prepend(canvas);
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#e50914';
+  if (id === 'stars') roxBgStars(ctx, canvas, accent);
+  else if (id === 'grid') roxBgGrid(ctx, canvas, accent);
+  else if (id === 'waves') roxBgWaves(ctx, canvas, accent);
+  else if (id === 'particles') roxBgParticles(ctx, canvas, accent);
+  else if (id === 'gradient') roxBgGradient(ctx, canvas, accent);
+  renderBgGrid();
+}
+
+function roxBgStars(ctx, canvas, accent) {
+  const stars = Array.from({length: 120}, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 1.5 + 0.3,
+    speed: Math.random() * 0.3 + 0.1,
+    opacity: Math.random()
+  }));
+  function draw() {
+    if (!document.getElementById('roxBgCanvas')) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    stars.forEach(s => {
+      s.opacity += s.speed * 0.02;
+      if (s.opacity > 1) s.opacity = 0;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${s.opacity * 0.8})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+function roxBgGrid(ctx, canvas, accent) {
+  let offset = 0;
+  function draw() {
+    if (!document.getElementById('roxBgCanvas')) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = accent + '22';
+    ctx.lineWidth = 1;
+    const size = 40;
+    for (let x = (offset % size) - size; x < canvas.width; x += size) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+    }
+    for (let y = (offset % size) - size; y < canvas.height; y += size) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+    }
+    offset += 0.3;
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+function roxBgWaves(ctx, canvas, accent) {
+  let t = 0;
+  function draw() {
+    if (!document.getElementById('roxBgCanvas')) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let i = 0; i < 3; i++) {
+      ctx.beginPath();
+      ctx.moveTo(0, canvas.height / 2);
+      for (let x = 0; x < canvas.width; x++) {
+        const y = canvas.height / 2 + Math.sin(x * 0.008 + t + i * 1.5) * (30 + i * 15);
+        ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = accent + (i === 0 ? '33' : i === 1 ? '22' : '11');
+      ctx.lineWidth = 2 - i * 0.5;
+      ctx.stroke();
+    }
+    t += 0.02;
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+function roxBgParticles(ctx, canvas, accent) {
+  const pts = Array.from({length: 60}, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    vx: (Math.random() - 0.5) * 0.5,
+    vy: (Math.random() - 0.5) * 0.5,
+    r: Math.random() * 2 + 1
+  }));
+  function draw() {
+    if (!document.getElementById('roxBgCanvas')) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pts.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+      if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = accent + '66';
+      ctx.fill();
+    });
+    pts.forEach((a, i) => pts.slice(i+1).forEach(b => {
+      const d = Math.hypot(a.x-b.x, a.y-b.y);
+      if (d < 100) {
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+        ctx.strokeStyle = accent + Math.floor((1 - d/100) * 40).toString(16).padStart(2,'0');
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    }));
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+function roxBgGradient(ctx, canvas, accent) {
+  let t = 0;
+  function hexToRgb(hex) {
+    const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+    return [r,g,b];
+  }
+  const [r,g,b] = hexToRgb(accent.length === 7 ? accent : '#e50914');
+  function draw() {
+    if (!document.getElementById('roxBgCanvas')) return;
+    const grad = ctx.createRadialGradient(
+      canvas.width/2 + Math.sin(t)*100, canvas.height/2 + Math.cos(t)*80, 0,
+      canvas.width/2, canvas.height/2, canvas.width * 0.8
+    );
+    grad.addColorStop(0, `rgba(${r},${g},${b},0.15)`);
+    grad.addColorStop(0.5, `rgba(${r},${g},${b},0.05)`);
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    t += 0.008;
+    requestAnimationFrame(draw);
+  }
+  draw();
+  }
 function openThemePanel() {
   renderThemeGrid();
   renderPlatformCustomizer();
@@ -5110,5 +5286,5 @@ function clearCache() {
 }
 
 // تشغيل النظام عند تحميل الصفحة
-document.addEventListener('DOMContentLoaded', () => { initThemeSystem(); renderPlatformsGrid(); });
+document.addEventListener('DOMContentLoaded', () => { initThemeSystem(); renderPlatformsGrid(); renderBgGrid(); const savedBg = localStorage.getItem('rox_bg'); if (savedBg && savedBg !== 'none') applyBackground(savedBg); });
 if (document.readyState !== 'loading') initThemeSystem();
