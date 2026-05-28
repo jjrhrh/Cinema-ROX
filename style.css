@@ -46,13 +46,13 @@
 html, body {
   background: transparent;
   color: var(--text);
-  #heroSection, .page, #platformsSection, #newsSection {
-  position: relative;
-  z-index: 1;
-  }
   font-family: 'Tajawal', sans-serif;
   min-height: 100vh;
   overflow-x: clip;
+}
+#heroSection, .page, #platformsSection, #newsSection {
+  position: relative;
+  z-index: 1;
 }
 
 .bottom-nav, .page, #heroSection, .rox-menu {
