@@ -54,6 +54,10 @@ html, body {
   position: relative;
   z-index: 1;
 }
+html.no-anim * {
+  transition: none !important;
+  animation: none !important;
+}
 .bottom-nav, .page, #heroSection, .rox-menu {
   position: relative;
   z-index: 1;
