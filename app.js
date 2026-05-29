@@ -910,7 +910,6 @@ async function loadHomePage() {
 { id: 'sec_popular',  title: 'الأفلام الرائجة',   endpoint: '/movie/popular',   type: 'movie' },
 { id: 'sec_toprated', title: 'الأعلى تقييماً',    endpoint: '/movie/top_rated', type: 'movie' },
 { id: 'sec_tvseries', title: 'أحدث المسلسلات',    endpoint: '/tv/popular',      type: 'tv'    },
-{ id: 'sec_arabic', title: '🌍 المحتوى العربي', endpoint: '/discover/movie', type: 'movie', params: { with_original_language: 'ar', sort_by: 'popularity.desc' }, isArabicSection: true },
 { id: 'sec_anime',    title: 'أحدث الأنمي',        endpoint: '/tv/popular',      type: 'tv', params: { with_genres: '16', with_origin_country: 'JP' } },
   ];
 
@@ -945,20 +944,6 @@ async function loadHomePage() {
     </div>` : '';
 
   page.innerHTML = cwHTML + genresSection + SECTIONS.map(s => `
-    <div class="home-section" id="${s.id}">
-      <div class="section-header">
-        <span class="section-bar"></span>
-        <h2 class="section-title">${s.title}</h2>
-        ${s.isArabicSection ? `<button class="browse-all-btn" onclick="openArabicContent()">عرض الكل ›</button>` : `<button class="browse-all-btn" onclick="openBrowseAll('${s.type}','${s.endpoint}','${s.title}')">عرض الكل ›</button>`}
-      </div>
-      <div class="otaku-slider-wrap">
-        <button class="otaku-arrow otaku-arrow-left" onclick="otakuSlide('${s.id}_row',-1)">‹</button>
-        <div class="movies-row" id="${s.id}_row">
-          ${Array(4).fill('<div class="movie-card skeleton-card"></div>').join('')}
-        </div>
-        <button class="otaku-arrow otaku-arrow-right" onclick="otakuSlide('${s.id}_row',1)">›</button>
-      </div>
-    </div>`).join('');
     <div class="home-section" id="${s.id}">
       <div class="section-header">
         <span class="section-bar"></span>
@@ -5032,170 +5017,60 @@ function applyAnimations(on, save = true) {
 function applyHQ(on, save = true) {
   if (save) localStorage.setItem('rox_hq', on);
 }
-const ANIM_CHANNELS = [
-  { name: 'Disney Channel',   color: '#0063e5', networkId: 54  },
-  { name: 'Cartoon Network',  color: '#01a996', networkId: 56  },
-  { name: 'Nickelodeon',      color: '#ff6b00', networkId: 13  },
-  { name: 'Disney Junior',    color: '#e91e8c', networkId: 307 },
-  { name: 'Disney XD',        color: '#2979ff', networkId: 302 },
-  { name: 'Adult Swim',       color: '#212121', networkId: 80  },
-  { name: 'Boomerang',        color: '#ff5722', networkId: 1267},
-  { name: 'Nick Jr',          color: '#ff8c00', searchQuery: 'Nick Jr animation kids' },
-  { name: 'Cartoonito',       color: '#f9c800', searchQuery: 'Cartoonito kids animation' },
-  { name: 'CBeebies',         color: '#e91e63', searchQuery: 'CBeebies children BBC' },
-  { name: 'Discovery Family', color: '#00897b', searchQuery: 'Discovery Family channel' },
-  { name: 'Toonami',          color: '#c62828', searchQuery: 'Toonami action animation' },
-  { name: 'MeTV Toons',       color: '#607d8b', searchQuery: 'classic cartoon animation' },
-  { name: 'Ajyal',            color: '#00b4b4', searchQuery: 'Ajyal kids arabic animation' },
-  { name: 'Jeem TV',          color: '#43a047', searchQuery: 'Jeem arabic kids cartoon' },
-  { name: 'Baraem',           color: '#fb8c00', searchQuery: 'Baraem arabic children' },
-  { name: 'Majid',            color: '#8e24aa', searchQuery: 'Majid kids arabic cartoon' },
-  { name: 'MBC 3',            color: '#e53935', searchQuery: 'MBC 3 kids arabic animation' },
-  { name: 'Spacetoon',        color: '#1e88e5', searchQuery: 'Spacetoon arabic animation cartoon' },
-  { name: 'Max',              color: '#0064ff', networkId: 3186 },
-];
-
 function openAnimationChannels() {
+  const channels = [
+    { name: 'Disney Channel',   color: '#0063e5', query: 'Disney Channel' },
+    { name: 'Cartoon Network',  color: '#01a996', query: 'Cartoon Network' },
+    { name: 'Nickelodeon',      color: '#ff6b00', query: 'Nickelodeon' },
+    { name: 'Disney Junior',    color: '#e91e8c', query: 'Disney Junior' },
+    { name: 'Disney XD',        color: '#2979ff', query: 'Disney XD' },
+    { name: 'Cartoonito',       color: '#f9c800', query: 'Cartoonito' },
+    { name: 'Nick Jr',          color: '#ff8c00', query: 'Nick Jr' },
+    { name: 'Ajyal',            color: '#00b4b4', query: 'Ajyal' },
+    { name: 'CBeebies',         color: '#e91e63', query: 'CBeebies' },
+    { name: 'MeTV Toons',       color: '#607d8b', query: 'MeTV Toons' },
+    { name: 'Discovery Family', color: '#00897b', query: 'Discovery Family' },
+    { name: 'Toonami',          color: '#c62828', query: 'Toonami' },
+    { name: 'Jeem TV',          color: '#43a047', query: 'Jeem TV' },
+    { name: 'Baraem',           color: '#fb8c00', query: 'Baraem' },
+    { name: 'Majid',            color: '#8e24aa', query: 'Majid' },
+    { name: 'MBC 3',            color: '#e53935', query: 'MBC 3' },
+    { name: 'Spacetoon',        color: '#1e88e5', query: 'Spacetoon' },
+    { name: 'Adult Swim',       color: '#212121', query: 'Adult Swim' },
+    { name: 'Max',              color: '#0064ff', query: 'Max' },
+    { name: 'Boomerang',        color: '#ff5722', query: 'Boomerang' },
+  ];
   const page = document.getElementById('homePage');
   if (!page) return;
   page.innerHTML = `
     <div style="padding:16px 12px 80px">
-      <div class="section-header" style="margin-bottom:20px">
+      <div class="section-header" style="margin-bottom:16px">
         <span class="section-bar"></span>
         <h2 class="section-title">🎨 رسوم متحركة</h2>
         <button class="browse-all-btn" onclick="loadHomePage()">‹ رجوع</button>
       </div>
       <div style="display:flex;flex-direction:column;gap:10px">
-        ${ANIM_CHANNELS.map(c => `
-          <div style="background:#111827;border:1px solid ${c.color}44;border-radius:16px;overflow:hidden">
-            <div style="padding:14px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid ${c.color}33">
-              <div style="width:12px;height:12px;border-radius:50%;background:${c.color};flex-shrink:0;box-shadow:0 0 8px ${c.color}"></div>
-              <span style="color:#fff;font-weight:700;font-size:1rem;font-family:Tajawal,sans-serif;flex:1">${c.name}</span>
+        ${channels.map(c => `
+          <div style="background:${c.color}18;border:1px solid ${c.color}55;border-radius:16px;overflow:hidden;cursor:pointer">
+            <div style="display:flex;border-bottom:1px solid ${c.color}33">
+              <button onclick="openAnimChannel('tv','/discover/tv?with_keywords=cartoon|animation','${c.name}','all')"
+                style="flex:1;padding:12px;background:transparent;border:none;color:#fff;font-size:0.85rem;font-family:Tajawal,sans-serif;border-left:1px solid ${c.color}33;cursor:pointer">الكل</button>
+              <button onclick="openAnimChannel('tv','/discover/tv?with_keywords=cartoon|animation','${c.name}','series')"
+                style="flex:1;padding:12px;background:transparent;border:none;color:#fff;font-size:0.85rem;font-family:Tajawal,sans-serif;border-left:1px solid ${c.color}33;cursor:pointer">مسلسلات</button>
+              <button onclick="openAnimChannel('movie','/discover/movie?with_genres=16','${c.name}','movies')"
+                style="flex:1;padding:12px;background:transparent;border:none;color:#fff;font-size:0.85rem;font-family:Tajawal,sans-serif;cursor:pointer">أفلام</button>
             </div>
-            <div style="display:flex">
-              <button onclick="openAnimChannelPage('${c.name}','${c.color}','all',${c.networkId||'null'},'${c.searchQuery||''}')"
-                style="flex:1;padding:11px 4px;background:transparent;border:none;border-left:1px solid ${c.color}22;color:rgba(255,255,255,0.75);font-size:0.82rem;font-family:Tajawal,sans-serif;cursor:pointer">الكل</button>
-              <button onclick="openAnimChannelPage('${c.name}','${c.color}','tv',${c.networkId||'null'},'${c.searchQuery||''}')"
-                style="flex:1;padding:11px 4px;background:transparent;border:none;border-left:1px solid ${c.color}22;color:rgba(255,255,255,0.75);font-size:0.82rem;font-family:Tajawal,sans-serif;cursor:pointer">${c.name} (مسلسلات)</button>
-              <button onclick="openAnimChannelPage('${c.name}','${c.color}','movie',${c.networkId||'null'},'${c.searchQuery||''}')"
-                style="flex:1;padding:11px 4px;background:transparent;border:none;color:rgba(255,255,255,0.75);font-size:0.82rem;font-family:Tajawal,sans-serif;cursor:pointer">${c.name} (أفلام)</button>
+            <div style="padding:14px 16px;display:flex;align-items:center;gap:10px">
+              <div style="width:10px;height:10px;border-radius:50%;background:${c.color};flex-shrink:0"></div>
+              <span style="color:#fff;font-weight:700;font-size:1rem;font-family:Tajawal,sans-serif">${c.name}</span>
             </div>
           </div>`).join('')}
       </div>
     </div>`;
 }
 
-async function openAnimChannelPage(name, color, tab, networkId, searchQuery) {
-  const detailPage = document.getElementById('detailPage');
-  if (!detailPage) return;
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('heroSection').style.display = 'none';
-  document.getElementById('newsSection').style.display = 'none';
-  document.getElementById('studioBar').style.display = 'none';
-  detailPage.classList.add('active');
-  detailPage.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
-  window.scrollTo(0, 0);
-
-  let moviesData = [], tvData = [];
-
-  if (networkId) {
-    if (tab === 'all' || tab === 'tv') {
-      tvData = await fetchMovies('/discover/tv', { type: 'tv', limit: 30, params: { with_networks: String(networkId), sort_by: 'popularity.desc' } });
-    }
-    if (tab === 'all' || tab === 'movie') {
-      moviesData = await fetchMovies('/discover/movie', { type: 'movie', limit: 30, params: { with_genres: '16', sort_by: 'popularity.desc' } });
-    }
-  } else if (searchQuery) {
-    if (tab === 'all' || tab === 'tv') {
-      tvData = await fetchMovies('/search/tv', { type: 'tv', limit: 30, params: { query: searchQuery } });
-    }
-    if (tab === 'all' || tab === 'movie') {
-      moviesData = await fetchMovies('/search/movie', { type: 'movie', limit: 30, params: { query: searchQuery } });
-    }
-  }
-
-  const combined = tab === 'tv' ? tvData : tab === 'movie' ? moviesData : [...tvData, ...moviesData];
-
-  const tabs = ['all','tv','movie'];
-  const tabLabels = ['الكل', `${name} (مسلسلات)`, `${name} (أفلام)`];
-
-  detailPage.innerHTML = `
-    <div style="padding:16px 12px 80px">
-      <button class="detail-btn" onclick="openAnimationChannels()" style="margin-bottom:16px">← رجوع</button>
-      <h2 style="color:#fff;margin-bottom:12px;font-size:1.1rem;font-family:Tajawal,sans-serif;display:flex;align-items:center;gap:8px">
-        <span style="width:12px;height:12px;border-radius:50%;background:${color};display:inline-block;box-shadow:0 0 8px ${color}"></span>
-        ${name}
-      </h2>
-      <div style="display:flex;gap:0;margin-bottom:16px;border-bottom:2px solid rgba(255,255,255,0.1);overflow-x:auto">
-        ${tabs.map((t, i) => `
-          <button onclick="openAnimChannelPage('${name}','${color}','${t}',${networkId||'null'},'${searchQuery}')"
-            style="padding:10px 16px;background:transparent;border:none;border-bottom:${tab===t?`2px solid ${color}`:'2px solid transparent'};color:${tab===t?'#fff':'rgba(255,255,255,0.5)'};font-family:Tajawal,sans-serif;font-size:0.85rem;cursor:pointer;white-space:nowrap;margin-bottom:-2px;font-weight:${tab===t?'700':'400'}">${tabLabels[i]}</button>
-        `).join('')}
-      </div>
-      <div class="otaku-all-grid">
-        ${combined.length ? combined.map((m, i) => buildMovieCard(m, m.media_type || (m.title ? 'movie' : 'tv'), '', i+1)).join('') : '<div style="color:rgba(255,255,255,0.4);text-align:center;padding:40px;font-family:Tajawal,sans-serif">لا توجد نتائج</div>'}
-      </div>
-    </div>`;
-}
-async function openArabicContent(tab = 'all') {
-  const detailPage = document.getElementById('detailPage');
-  if (!detailPage) return;
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('heroSection').style.display = 'none';
-  document.getElementById('newsSection').style.display = 'none';
-  document.getElementById('studioBar').style.display = 'none';
-  detailPage.classList.add('active');
-  detailPage.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
-  window.scrollTo(0, 0);
-
-  const arabicCountries = 'SA|EG|AE|KW|QA|BH|OM|JO|LB|SY|IQ|MA|DZ|TN|LY|YE';
-
-  let results = [];
-  if (tab === 'all' || tab === 'movies_ar') {
-    const d = await fetchMovies('/discover/movie', { type: 'movie', limit: 30, params: { with_original_language: 'ar', sort_by: 'popularity.desc' } });
-    results.push(...d.map(i => ({ ...i, media_type: 'movie' })));
-  }
-  if (tab === 'all' || tab === 'series_ar') {
-    const d = await fetchMovies('/discover/tv', { type: 'tv', limit: 30, params: { with_original_language: 'ar', sort_by: 'popularity.desc' } });
-    results.push(...d.map(i => ({ ...i, media_type: 'tv' })));
-  }
-  if (tab === 'all' || tab === 'movies_gulf') {
-    const d = await fetchMovies('/discover/movie', { type: 'movie', limit: 30, params: { with_original_language: 'ar', with_origin_country: 'SA|AE|KW|QA|BH|OM', sort_by: 'popularity.desc' } });
-    results.push(...d.map(i => ({ ...i, media_type: 'movie' })));
-  }
-  if (tab === 'all' || tab === 'series_gulf') {
-    const d = await fetchMovies('/discover/tv', { type: 'tv', limit: 30, params: { with_original_language: 'ar', with_origin_country: 'SA|AE|KW|QA|BH|OM', sort_by: 'popularity.desc' } });
-    results.push(...d.map(i => ({ ...i, media_type: 'tv' })));
-  }
-
-  // إزالة المكررات
-  const seen = new Set();
-  results = results.filter(i => { if (seen.has(i.id)) return false; seen.add(i.id); return true; });
-
-  const tabs = [
-    { id: 'all',         label: 'الكل' },
-    { id: 'movies_ar',   label: '🎬 أفلام عربية' },
-    { id: 'series_ar',   label: '📺 مسلسلات عربية' },
-    { id: 'movies_gulf', label: '🌴 أفلام خليجية' },
-    { id: 'series_gulf', label: '🏙️ مسلسلات خليجية' },
-  ];
-
-  detailPage.innerHTML = `
-    <div style="padding:16px 12px 80px">
-      <button class="detail-btn" onclick="goBack()" style="margin-bottom:16px">← رجوع</button>
-      <h2 style="color:#fff;margin-bottom:12px;font-size:1.1rem;font-family:Tajawal,sans-serif">🌍 المحتوى العربي</h2>
-      <div style="display:flex;gap:0;margin-bottom:16px;border-bottom:2px solid rgba(255,255,255,0.1);overflow-x:auto;-webkit-overflow-scrolling:touch">
-        ${tabs.map(t => `
-          <button onclick="openArabicContent('${t.id}')"
-            style="padding:10px 14px;background:transparent;border:none;border-bottom:${tab===t.id?'2px solid #e50914':'2px solid transparent'};color:${tab===t.id?'#fff':'rgba(255,255,255,0.5)'};font-family:Tajawal,sans-serif;font-size:0.82rem;cursor:pointer;white-space:nowrap;margin-bottom:-2px;font-weight:${tab===t.id?'700':'400'}">${t.label}</button>
-        `).join('')}
-      </div>
-      <div class="otaku-all-grid">
-        ${results.length
-          ? results.map((m, i) => buildMovieCard(m, m.media_type, '', i+1)).join('')
-          : '<div style="color:rgba(255,255,255,0.4);text-align:center;padding:40px;font-family:Tajawal,sans-serif">لا توجد نتائج</div>'}
-      </div>
-    </div>`;
+async function openAnimChannel(type, endpoint, title, tab) {
+  await openBrowseAll(type, endpoint, title);
 }
 const ROX_PLATFORMS = [
   { id: 'netflix', name: 'Netflix', type: 'movie', endpoint: '/movie/popular', color: '#e50914', gifs: ['https://i.postimg.cc/5JrQJYTw/GIF-20260412-181509-853.gif?dl=1','https://files.catbox.moe/wem3vn.gif','https://i.postimg.cc/BQfGF3jV/IMG-8003.gif','https://media1.tenor.com/m/Hh5lO8fCAAIAAAAC/netflix.gif','https://nuvioapp.space/uploads/covers/0696cf9a-3612-4d9b-bb65-72c6c5a060ba.gif'] },
