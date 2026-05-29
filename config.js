@@ -128,7 +128,13 @@ SRV_EMBEDPLAYER: { movie: 'https://embed-player.com/video/?source=https://autoem
     SRV_RIVE_AGG: { movie: 'https://www.rivestream.app/embed/agg?type=movie&id=', tv: 'https://www.rivestream.app/embed/agg?type=tv&id='                                        },
     SRV_RIVE_TORRENT: { movie: 'https://www.rivestream.app/embed/torrent?type=movie&id=', tv: 'https://www.rivestream.app/embed/torrent?type=tv&id='                            },
     SRV_EMBEDAPI: { movie: 'https://player.embed-api.stream/?id=',     tv: 'https://player.embed-api.stream/?id='                                                               },
-    SRV_VIDBINGE: { movie: 'https://www.vidbinge.to/movie/', tv: 'https://www.vidbinge.to/tv/' },
+    SRV_VIDBINGE: { movie: 'https://www.vidbinge.to/movie/', tv: 'https://www.vidbinge.to/tv/'                                                                                  },
+    SRV_RIVESTREAM:  { mov: 'https://www.rivestream.app/embed?type=movie&id=',          tv: 'https://www.rivestream.app/embed?type=tv&id='                                      },
+    SRV_RIVE_TORRENT:{ mov: 'https://www.rivestream.app/embed/torrent?type=movie&id=',  tv: 'https://www.rivestream.app/embed/torrent?type=tv&id='                              },
+    SRV_RIVE_AGG:    { mov: 'https://www.rivestream.app/embed/agg?type=movie&id=',      tv: 'https://www.rivestream.app/embed/agg?type=tv&id='                                  },
+    SRV_RIVE_DL:     { mov: 'https://www.rivestream.app/download?type=movie&id=',       tv: 'https://www.rivestream.app/download?type=tv&id='                                   },
+    SRV_EMBEDAPI:    { mov: 'https://player.embed-api.stream/?id=',                     tv: 'https://player.embed-api.stream/?id='                                              },
+    SRV_VIDAPI:      { mov: 'https://vidapi.xyz/embed/movie/',                          tv: 'https://vidapi.xyz/embed/tv/'                                                      },
   }),
   
   // ─────────────────────────────────────────
