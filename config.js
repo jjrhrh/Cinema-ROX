@@ -119,6 +119,7 @@ HERO: Object.freeze({
     SRV_AUTOEMBED: { movie: 'https://autoembed.co/movie/tmdb/',        tv: 'https://autoembed.co/tv/tmdb/'                  },
 SRV_EMBEDMASTER: { movie: 'https://embedmaster.com/embed/movie/',      tv: 'https://embedmaster.com/embed/tv/'              },
 SRV_EMBEDPLAYER: { movie: 'https://embed-player.com/video/?source=https://autoembed.co/movie/tmdb/', tv: 'https://embed-player.com/video/?source=https://autoembed.co/tv/tmdb/' },
+    SRV_APIPLAYER: { movie: 'https://apiplayer.ru/embed/movie/',       tv: 'https://apiplayer.ru/embed/tv/'                 },
   }),
   
   // ─────────────────────────────────────────
