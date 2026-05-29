@@ -121,6 +121,8 @@ SRV_EMBEDMASTER: { movie: 'https://embedmaster.com/embed/movie/',      tv: 'http
 SRV_EMBEDPLAYER: { movie: 'https://embed-player.com/video/?source=https://autoembed.co/movie/tmdb/', tv: 'https://embed-player.com/video/?source=https://autoembed.co/tv/tmdb/' },
     SRV_APIPLAYER: { movie: 'https://apiplayer.ru/embed/movie/',       tv: 'https://apiplayer.ru/embed/tv/'                 },
     SRV_CINESRC: { movie: 'https://cinesrc.st/embed/movie/',           tv: 'https://cinesrc.st/embed/tv/'                   },
+    SRV_VIDLUX: { movie: 'https://vidlux.xyz/embed/movie/',            tv: 'https://vidlux.xyz/embed/tv/'                   },
+    SRV_BRAFLIX: { movie: 'https://braflix.win/watch/',                tv: 'https://braflix.win/watch/'                     },
   }),
   
   // ─────────────────────────────────────────
