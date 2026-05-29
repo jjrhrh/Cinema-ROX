@@ -944,6 +944,20 @@ async function loadHomePage() {
       </div>
     </div>` : '';
 
+  const genresSection = `
+    <div class="home-section" id="sec_genres">
+      <div class="section-header">
+        <span class="section-bar"></span>
+        <h2 class="section-title">🎭 أنواع</h2>
+      </div>
+      <div class="genres-cats-row">
+        <div class="genre-cat-card" onclick="openAnimationChannels()" style="--gc:linear-gradient(135deg,#7c3aed,#e50914)">
+          <div class="genre-cat-icon">🎨</div>
+          <div class="genre-cat-name">رسوم متحركة</div>
+        </div>
+      </div>
+    </div>`;
+
   page.innerHTML = cwHTML + genresSection + SECTIONS.map(s => `
     <div class="home-section" id="${s.id}">
       <div class="section-header">
@@ -959,35 +973,6 @@ async function loadHomePage() {
         <button class="otaku-arrow otaku-arrow-right" onclick="otakuSlide('${s.id}_row',1)">›</button>
       </div>
     </div>`).join('');
-    <div class="home-section" id="${s.id}">
-      <div class="section-header">
-        <span class="section-bar"></span>
-        <h2 class="section-title">${s.title}</h2>
-        <button class="browse-all-btn" onclick="openBrowseAll('${s.type}','${s.endpoint}','${s.title}')">عرض الكل ›</button>
-      </div>
-      <div class="otaku-slider-wrap">
-        <button class="otaku-arrow otaku-arrow-left" onclick="otakuSlide('${s.id}_row',-1)">‹</button>
-        <div class="movies-row" id="${s.id}_row">
-          ${Array(4).fill('<div class="movie-card skeleton-card"></div>').join('')}
-        </div>
-        <button class="otaku-arrow otaku-arrow-right" onclick="otakuSlide('${s.id}_row',1)">›</button>
-      </div>
-    </div>`).join('');
-// قسم الأنواع
-  const genresSection = `
-    <div class="home-section" id="sec_genres">
-      <div class="section-header">
-        <span class="section-bar"></span>
-        <h2 class="section-title">🎭 أنواع</h2>
-      </div>
-      <div class="genres-cats-row">
-        <div class="genre-cat-card" onclick="openAnimationChannels()" style="--gc:linear-gradient(135deg,#7c3aed,#e50914)">
-          <div class="genre-cat-icon">🎨</div>
-          <div class="genre-cat-name">رسوم متحركة</div>
-        </div>
-      </div>
-    </div>`;
-  page.innerHTML = cwHTML + genresSection + SECTIONS.map(s => `
   // كل قسم يتحمل بشكل مستقل
   SECTIONS.forEach(async s => {
     try {
