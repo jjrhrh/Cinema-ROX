@@ -3746,8 +3746,6 @@ function roxSnapshot() {
   }) : navigator.clipboard.writeText(window.location.href)
     .then(() => alert('تم نسخ الرابط ✅'));
 }
-document.getElementById('filterBar')?.style.removeProperty('display');
-  document.getElementById('platformsSection')?.style.removeProperty('display');
 function filterBarGo(tab, el) {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   if (el) el.classList.add('active');
