@@ -1975,6 +1975,8 @@ const superflixUrl = type === 'movie'
   : `https://superflixapi.best/serie/${id}/${season}/${episode}`;
 
 const vipSrvs = [
+  { icon:'<i class="ri-4k-line style-icon" style="color:#3b82f6"></i>', name:'VIDLUX', desc:'7 سيرفرات • 4K', url: type==='movie' ? `${CONFIG.SERVERS.SRV_VIDLUX.movie}${id}?color=e50914&autoplay=true` : `${CONFIG.SERVERS.SRV_VIDLUX.tv}${id}/${season}/${episode}?color=e50914&autoplay=true` },
+  { icon:'<i class="ri-movie-line style-icon" style="color:#f9ca24"></i>', name:'BRAFLIX', desc:'سيرفرات متعددة', url: type==='movie' ? `${CONFIG.SERVERS.SRV_BRAFLIX.movie}${id}` : `${CONFIG.SERVERS.SRV_BRAFLIX.tv}${id}?season=${season}&episode=${episode}` },
   { icon:'<i class="ri-skip-forward-line style-icon" style="color:#00cec9"></i>', name:'CINESRC', desc:'Skip Intro • أوتونيكست', url: type==='movie' ? `${CONFIG.SERVERS.SRV_CINESRC.movie}${id}?autoplay=true&autonext=true&autoskip=true&color=%23e50914` : `${CONFIG.SERVERS.SRV_CINESRC.tv}${id}/${season}/${episode}?autoplay=true&autonext=true&autoskip=true&color=%23e50914` },
   { icon:'<i class="ri-server-line style-icon" style="color:#00b894"></i>', name:'APIPLAYER', desc:'ترجمات • أوتونيكست', url: type==='movie' ? `${CONFIG.SERVERS.SRV_APIPLAYER.movie}${id}?autoplay=1&autonext=1&lang=ar&chapters=1` : `${CONFIG.SERVERS.SRV_APIPLAYER.tv}${id}/${season}/${episode}?autoplay=1&autonext=1&lang=ar&chapters=1` },
   { icon:'<i class="ri-play-circle-line style-icon" style="color:#e50914"></i>', name:'AUTOEMBED', desc:'IMDB • تلقائي', url: type==='movie' ? `${CONFIG.SERVERS.SRV_AUTOEMBED.movie}${id}` : `${CONFIG.SERVERS.SRV_AUTOEMBED.tv}${id}-${season}-${episode}` },
