@@ -5018,30 +5018,30 @@ function applyHQ(on, save = true) {
   if (save) localStorage.setItem('rox_hq', on);
 }
 function openAnimationChannels() {
-  const channels = [
-    { name: 'Disney Channel',   color: '#0063e5', query: 'Disney Channel' },
-    { name: 'Cartoon Network',  color: '#01a996', query: 'Cartoon Network' },
-    { name: 'Nickelodeon',      color: '#ff6b00', query: 'Nickelodeon' },
-    { name: 'Disney Junior',    color: '#e91e8c', query: 'Disney Junior' },
-    { name: 'Disney XD',        color: '#2979ff', query: 'Disney XD' },
-    { name: 'Cartoonito',       color: '#f9c800', query: 'Cartoonito' },
-    { name: 'Nick Jr',          color: '#ff8c00', query: 'Nick Jr' },
-    { name: 'Ajyal',            color: '#00b4b4', query: 'Ajyal' },
-    { name: 'CBeebies',         color: '#e91e63', query: 'CBeebies' },
-    { name: 'MeTV Toons',       color: '#607d8b', query: 'MeTV Toons' },
-    { name: 'Discovery Family', color: '#00897b', query: 'Discovery Family' },
-    { name: 'Toonami',          color: '#c62828', query: 'Toonami' },
-    { name: 'Jeem TV',          color: '#43a047', query: 'Jeem TV' },
-    { name: 'Baraem',           color: '#fb8c00', query: 'Baraem' },
-    { name: 'Majid',            color: '#8e24aa', query: 'Majid' },
-    { name: 'MBC 3',            color: '#e53935', query: 'MBC 3' },
-    { name: 'Spacetoon',        color: '#1e88e5', query: 'Spacetoon' },
-    { name: 'Adult Swim',       color: '#212121', query: 'Adult Swim' },
-    { name: 'Max',              color: '#0064ff', query: 'Max' },
-    { name: 'Boomerang',        color: '#ff5722', query: 'Boomerang' },
-  ];
   const page = document.getElementById('homePage');
   if (!page) return;
+  const channels = [
+    { name: 'Disney Channel',    color: '#0063e5' },
+    { name: 'Cartoon Network',   color: '#01a996' },
+    { name: 'Nickelodeon',       color: '#ff6b00' },
+    { name: 'Disney Junior',     color: '#e91e8c' },
+    { name: 'Disney XD',         color: '#2979ff' },
+    { name: 'Cartoonito',        color: '#f9c800' },
+    { name: 'Nick Jr',           color: '#ff8c00' },
+    { name: 'Ajyal',             color: '#00b4b4' },
+    { name: 'CBeebies',          color: '#e91e63' },
+    { name: 'MeTV Toons',        color: '#607d8b' },
+    { name: 'Discovery Family',  color: '#00897b' },
+    { name: 'Toonami',           color: '#c62828' },
+    { name: 'Jeem TV',           color: '#43a047' },
+    { name: 'Baraem',            color: '#fb8c00' },
+    { name: 'Majid',             color: '#8e24aa' },
+    { name: 'MBC 3',             color: '#e53935' },
+    { name: 'Spacetoon',         color: '#1e88e5' },
+    { name: 'Adult Swim',        color: '#212121' },
+    { name: 'Max',               color: '#0064ff' },
+    { name: 'Boomerang',         color: '#ff5722' },
+  ];
   page.innerHTML = `
     <div style="padding:16px 12px 80px">
       <div class="section-header" style="margin-bottom:16px">
@@ -5049,28 +5049,15 @@ function openAnimationChannels() {
         <h2 class="section-title">🎨 رسوم متحركة</h2>
         <button class="browse-all-btn" onclick="loadHomePage()">‹ رجوع</button>
       </div>
-      <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
         ${channels.map(c => `
-          <div style="background:${c.color}18;border:1px solid ${c.color}55;border-radius:16px;overflow:hidden;cursor:pointer">
-            <div style="display:flex;border-bottom:1px solid ${c.color}33">
-              <button onclick="openAnimChannel('tv','/discover/tv?with_keywords=cartoon|animation','${c.name}','all')"
-                style="flex:1;padding:12px;background:transparent;border:none;color:#fff;font-size:0.85rem;font-family:Tajawal,sans-serif;border-left:1px solid ${c.color}33;cursor:pointer">الكل</button>
-              <button onclick="openAnimChannel('tv','/discover/tv?with_keywords=cartoon|animation','${c.name}','series')"
-                style="flex:1;padding:12px;background:transparent;border:none;color:#fff;font-size:0.85rem;font-family:Tajawal,sans-serif;border-left:1px solid ${c.color}33;cursor:pointer">مسلسلات</button>
-              <button onclick="openAnimChannel('movie','/discover/movie?with_genres=16','${c.name}','movies')"
-                style="flex:1;padding:12px;background:transparent;border:none;color:#fff;font-size:0.85rem;font-family:Tajawal,sans-serif;cursor:pointer">أفلام</button>
-            </div>
-            <div style="padding:14px 16px;display:flex;align-items:center;gap:10px">
-              <div style="width:10px;height:10px;border-radius:50%;background:${c.color};flex-shrink:0"></div>
-              <span style="color:#fff;font-weight:700;font-size:1rem;font-family:Tajawal,sans-serif">${c.name}</span>
-            </div>
+          <div onclick="openBrowseAll('tv','/tv/popular','${c.name}')"
+            style="background:${c.color}22;border:1px solid ${c.color}55;border-radius:14px;padding:18px 12px;text-align:center;cursor:pointer;transition:transform .2s"
+            onclick="openBrowseAll('tv','/tv/popular','${c.name}')">
+            <div style="font-size:1rem;font-weight:700;color:#fff">${c.name}</div>
           </div>`).join('')}
       </div>
     </div>`;
-}
-
-async function openAnimChannel(type, endpoint, title, tab) {
-  await openBrowseAll(type, endpoint, title);
 }
 const ROX_PLATFORMS = [
   { id: 'netflix', name: 'Netflix', type: 'movie', endpoint: '/movie/popular', color: '#e50914', gifs: ['https://i.postimg.cc/5JrQJYTw/GIF-20260412-181509-853.gif?dl=1','https://files.catbox.moe/wem3vn.gif','https://i.postimg.cc/BQfGF3jV/IMG-8003.gif','https://media1.tenor.com/m/Hh5lO8fCAAIAAAAC/netflix.gif','https://nuvioapp.space/uploads/covers/0696cf9a-3612-4d9b-bb65-72c6c5a060ba.gif'] },
