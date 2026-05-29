@@ -8201,9 +8201,6 @@ input[type=range].rox-slider::-webkit-slider-thumb {
   height: 80px;
   border-radius: 16px;
   background: var(--gc);
-  background-image: url('https://media2.giphy.com/media/TKQmWCSaTg7RNIb8ZI/giphy.gif');
-background-size: cover;
-background-position: center;
   display: flex;
   flex-direction: column;
   align-items: center;
