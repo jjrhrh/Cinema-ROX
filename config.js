@@ -124,6 +124,10 @@ SRV_EMBEDPLAYER: { movie: 'https://embed-player.com/video/?source=https://autoem
     SRV_VIDLUX: { movie: 'https://vidlux.xyz/embed/movie/',            tv: 'https://vidlux.xyz/embed/tv/'                   },
     SRV_BRAFLIX: { movie: 'https://braflix.win/watch/',                tv: 'https://braflix.win/watch/'                     },
     SRV_VIDSRCRU: { movie: 'https://vidsrc.ru/movie/',                 tv: 'https://vidsrc.ru/tv/'                          },
+    SRV_RIVE: { movie: 'https://www.rivestream.app/embed?type=movie&id=', tv: 'https://www.rivestream.app/embed?type=tv&id='                                                    },
+    SRV_RIVE_AGG: { movie: 'https://www.rivestream.app/embed/agg?type=movie&id=', tv: 'https://www.rivestream.app/embed/agg?type=tv&id='                                        },
+    SRV_RIVE_TORRENT: { movie: 'https://www.rivestream.app/embed/torrent?type=movie&id=', tv: 'https://www.rivestream.app/embed/torrent?type=tv&id='                            },
+    SRV_EMBEDAPI: { movie: 'https://player.embed-api.stream/?id=',     tv: 'https://player.embed-api.stream/?id='                                                               },
   }),
   
   // ─────────────────────────────────────────
