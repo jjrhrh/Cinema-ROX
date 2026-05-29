@@ -1975,6 +1975,9 @@ const superflixUrl = type === 'movie'
   : `https://superflixapi.best/serie/${id}/${season}/${episode}`;
 
 const vipSrvs = [
+  { icon:'<i class="ri-play-circle-line style-icon" style="color:#e50914"></i>', name:'AUTOEMBED', desc:'IMDB • تلقائي', url: type==='movie' ? `${CONFIG.SERVERS.SRV_AUTOEMBED.movie}${id}` : `${CONFIG.SERVERS.SRV_AUTOEMBED.tv}${id}-${season}-${episode}` },
+  { icon:'<i class="ri-mastercard-line style-icon" style="color:#7c3aed"></i>', name:'EMBEDMASTER', desc:'HLS مباشر', url: type==='movie' ? `${CONFIG.SERVERS.SRV_EMBEDMASTER.movie}${id}` : `${CONFIG.SERVERS.SRV_EMBEDMASTER.tv}${id}/${season}/${episode}` },
+  { icon:'<i class="ri-youtube-line style-icon" style="color:#ff0000"></i>', name:'EMBEDPLAYER', desc:'يوتيوب • فيمو', url: type==='movie' ? `${CONFIG.SERVERS.SRV_EMBEDPLAYER.movie}${id}` : `${CONFIG.SERVERS.SRV_EMBEDPLAYER.tv}${id}-${season}-${episode}` },
   { icon:'<i class="ri-play-circle-fill style-icon" style="color:#e50914"></i>', name:'VIDPLUS', desc:'VIP • 99.9% uptime', url:srvUrl(S.SRV_VP,type,id,season,episode) + '?autoplay=true&primarycolor=e50914&secondarycolor=B20710&iconcolor=FFFFFF&chromecast=true&poster=true' },
   { icon:'<i class="ri-shield-star-fill style-icon" style="color:#7c3aed"></i>', name:'STREAMVAULT', desc:'VIP • 12 مصدر', url:srvUrl(S.SRV_SV,type,id,season,episode) },
   { icon:'<i class="ri-flashlight-2-fill style-icon" style="color:#00e5ff"></i>', name:'EZVID', desc:'VIP • 8 مصادر HLS', url: type==='movie' ? `https://ezvidapi.com/embed/movie/${id}` : `https://ezvidapi.com/embed/tv/${id}/${season}/${episode}` },
