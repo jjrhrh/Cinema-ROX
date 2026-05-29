@@ -5264,7 +5264,7 @@ async function openPlatformPage(platId, tab = 'all') {
   let tvData = [], moviesData = [];
 
   if (tab === 'all' || tab === 'series') {
-    tvData = await fetchMovies('/discover/tv', { type: 'tv', limit: 40, params: { with_networks: String(plat.networkId), sort_by: 'popularity.desc' } });
+    tvData = await fetchMovies('/discover/tv', { type: 'tv', limit: 40, params: { with_watch_providers: String(plat.providerId), watch_region: 'US', sort_by: 'popularity.desc' } });
   }
   if (tab === 'all' || tab === 'movies') {
     moviesData = await fetchMovies('/discover/movie', { type: 'movie', limit: 40, params: { with_networks: String(plat.networkId), sort_by: 'popularity.desc' } });
