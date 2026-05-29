@@ -1975,6 +1975,7 @@ const superflixUrl = type === 'movie'
   : `https://superflixapi.best/serie/${id}/${season}/${episode}`;
 
 const vipSrvs = [
+  { icon:'<i class="ri-film-fill style-icon" style="color:#a855f7"></i>', name:'VIDBINGE', desc:'4K • متعدد المصادر', url: type==='movie' ? `${CONFIG.SERVERS.SRV_VIDBINGE.movie}${id}` : `${CONFIG.SERVERS.SRV_VIDBINGE.tv}${id}/${season}/${episode}` },
   { icon:'<i class="ri-live-line style-icon" style="color:#f9ca24"></i>', name:'RIVE', desc:'متعدد المصادر', url: type==='movie' ? `${CONFIG.SERVERS.SRV_RIVE.movie}${id}` : `${CONFIG.SERVERS.SRV_RIVE.tv}${id}&season=${season}&episode=${episode}` },
   { icon:'<i class="ri-stack-line style-icon" style="color:#a29bfe"></i>', name:'RIVE-AGG', desc:'Aggregator', url: type==='movie' ? `${CONFIG.SERVERS.SRV_RIVE_AGG.movie}${id}` : `${CONFIG.SERVERS.SRV_RIVE_AGG.tv}${id}&season=${season}&episode=${episode}` },
   { icon:'<i class="ri-download-2-line style-icon" style="color:#00b894"></i>', name:'RIVE-TORRENT', desc:'Torrent • جودة عالية', url: type==='movie' ? `${CONFIG.SERVERS.SRV_RIVE_TORRENT.movie}${id}` : `${CONFIG.SERVERS.SRV_RIVE_TORRENT.tv}${id}&season=${season}&episode=${episode}` },
