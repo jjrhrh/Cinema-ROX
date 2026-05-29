@@ -1975,6 +1975,7 @@ const superflixUrl = type === 'movie'
   : `https://superflixapi.best/serie/${id}/${season}/${episode}`;
 
 const vipSrvs = [
+  { icon:'<i class="ri-signal-tower-line style-icon" style="color:#00ff9d"></i>', name:'VIDSRC-RU', desc:'autonext • أوتونيكست', url: type==='movie' ? `${CONFIG.SERVERS.SRV_VIDSRCRU.movie}${id}?autoplay=true&colour=e50914&autonextepisode=true` : `${CONFIG.SERVERS.SRV_VIDSRCRU.tv}${id}/${season}/${episode}?autoplay=true&colour=e50914&autonextepisode=true` },
   { icon:'<i class="ri-4k-line style-icon" style="color:#3b82f6"></i>', name:'VIDLUX', desc:'7 سيرفرات • 4K', url: type==='movie' ? `${CONFIG.SERVERS.SRV_VIDLUX.movie}${id}?color=e50914&autoplay=true` : `${CONFIG.SERVERS.SRV_VIDLUX.tv}${id}/${season}/${episode}?color=e50914&autoplay=true` },
   { icon:'<i class="ri-movie-line style-icon" style="color:#f9ca24"></i>', name:'BRAFLIX', desc:'سيرفرات متعددة', url: type==='movie' ? `${CONFIG.SERVERS.SRV_BRAFLIX.movie}${id}` : `${CONFIG.SERVERS.SRV_BRAFLIX.tv}${id}?season=${season}&episode=${episode}` },
   { icon:'<i class="ri-skip-forward-line style-icon" style="color:#00cec9"></i>', name:'CINESRC', desc:'Skip Intro • أوتونيكست', url: type==='movie' ? `${CONFIG.SERVERS.SRV_CINESRC.movie}${id}?autoplay=true&autonext=true&autoskip=true&color=%23e50914` : `${CONFIG.SERVERS.SRV_CINESRC.tv}${id}/${season}/${episode}?autoplay=true&autonext=true&autoskip=true&color=%23e50914` },
