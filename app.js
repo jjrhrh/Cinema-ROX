@@ -1217,7 +1217,7 @@ if (keywords.length) {
         <h3 class="detail-section-title">🎭 طاقم التمثيل</h3>
         <div class="cast-slider">
           ${cast.map(a => `
-            <div class="cast-card-wide">
+            <div class="cast-card-wide" onclick="openActorPage(${a.id})" style="cursor:pointer">
               <div class="cast-img-wrap">
                 <img data-src="${a.profile_path ? CONFIG.IMAGES.PROFILE+a.profile_path : CONFIG.IMAGES.PLACEHOLDER}"
                      src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
@@ -5657,3 +5657,61 @@ document.querySelectorAll('.prem-nav-item').forEach(btn => {
   });
 });
 }
+async function openActorPage(personId) {
+  const page = document.getElementById('actorPage');
+  page.style.display = 'block';
+  document.body.style.overflow = 'hidden';
+  page.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100vh"><div class="rox-spinner"></div></div>`;
+
+  const [info, credits] = await Promise.all([
+    fetchMovies(`/person/${personId}`, { raw: true }),
+    fetchMovies(`/person/${personId}/combined_credits`, { raw: true })
+  ]);
+
+  const age = info.birthday ? Math.floor((new Date() - new Date(info.birthday)) / 31557600000) : null;
+  const photo = info.profile_path ? CONFIG.IMAGES.PROFILE + info.profile_path : CONFIG.IMAGES.PLACEHOLDER;
+  const movies = (credits.cast || []).filter(x => x.media_type === 'movie').sort((a,b) => (b.popularity||0)-(a.popularity||0));
+  const tvs = (credits.cast || []).filter(x => x.media_type === 'tv').sort((a,b) => (b.popularity||0)-(a.popularity||0));
+
+  page.innerHTML = `
+    <div class="actor-page-inner">
+      <button class="actor-back" onclick="closeActorPage()">← رجوع</button>
+      <div class="actor-hero">
+        <img src="${photo}" class="actor-photo" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+        <div class="actor-info">
+          <div class="actor-name">${info.name || ''}</div>
+          ${age ? `<div class="actor-meta">العمر: ${age} سنة</div>` : ''}
+          ${info.birthday ? `<div class="actor-meta">📅 ${info.birthday}</div>` : ''}
+          ${info.place_of_birth ? `<div class="actor-meta">📍 ${info.place_of_birth}</div>` : ''}
+          <div class="actor-stats">
+            <div class="actor-stat"><span>${movies.length}</span>فيلم</div>
+            <div class="actor-stat"><span>${tvs.length}</span>مسلسل</div>
+          </div>
+        </div>
+      </div>
+      ${info.biography ? `<div class="actor-bio">${info.biography.slice(0,400)}...</div>` : ''}
+      <div class="actor-tabs">
+        <button class="actor-tab active" id="tabMovies" onclick="switchActorTab('movies')">🎬 الأفلام (${movies.length})</button>
+        <button class="actor-tab" id="tabTvs" onclick="switchActorTab('tvs')">📺 المسلسلات (${tvs.length})</button>
+      </div>
+      <div id="actorMoviesGrid" class="actor-grid">
+        ${movies.slice(0,20).map(m => buildMovieCard(m,'movie')).join('')}
+      </div>
+      <div id="actorTvsGrid" class="actor-grid" style="display:none">
+        ${tvs.slice(0,20).map(m => buildMovieCard(m,'tv')).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function switchActorTab(tab) {
+  document.getElementById('actorMoviesGrid').style.display = tab === 'movies' ? 'grid' : 'none';
+  document.getElementById('actorTvsGrid').style.display = tab === 'tvs' ? 'grid' : 'none';
+  document.getElementById('tabMovies').classList.toggle('active', tab === 'movies');
+  document.getElementById('tabTvs').classList.toggle('active', tab === 'tvs');
+}
+
+function closeActorPage() {
+  document.getElementById('actorPage').style.display = 'none';
+  document.body.style.overflow = '';
+    }
