@@ -5244,26 +5244,83 @@ function applyAnimations(on, save = true) {
 function applyHQ(on, save = true) {
   if (save) localStorage.setItem('rox_hq', on);
 }
+async function openPlatformPage(platId, tab = 'all') {
+  const plat = ROX_PLATFORMS.find(p => p.id === platId);
+  if (!plat) return;
+
+  const filterBar = document.getElementById('platformsSection');
+  const detailPage = document.getElementById('detailPage');
+  if (!detailPage) return;
+
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('heroSection').style.display = 'none';
+  document.getElementById('newsSection').style.display = 'none';
+  document.getElementById('studioBar').style.display = 'none';
+  if (filterBar) filterBar.style.display = 'none';
+  detailPage.classList.add('active');
+  detailPage.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
+  window.scrollTo(0, 0);
+
+  let tvData = [], moviesData = [];
+
+  if (tab === 'all' || tab === 'series') {
+    tvData = await fetchMovies('/discover/tv', { type: 'tv', limit: 40, params: { with_networks: String(plat.networkId), sort_by: 'popularity.desc' } });
+  }
+  if (tab === 'all' || tab === 'movies') {
+    moviesData = await fetchMovies('/discover/movie', { type: 'movie', limit: 40, params: { with_networks: String(plat.networkId), sort_by: 'popularity.desc' } });
+  }
+
+  const combined = tab === 'series' ? tvData : tab === 'movies' ? moviesData : [...tvData, ...moviesData];
+  const seen = new Set();
+  const items = combined.filter(i => { if (seen.has(i.id)) return false; seen.add(i.id); return true; });
+
+  detailPage.innerHTML = `
+    <div style="padding-bottom:80px">
+
+      <!-- هيدر المنصة -->
+      <div style="position:relative;height:160px;overflow:hidden">
+        <img src="${getPlatformGif(platId)}" style="width:100%;height:100%;object-fit:cover;opacity:0.5">
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,#0a0a1a 40%,transparent)"></div>
+        <button onclick="goBack()" style="position:absolute;top:14px;right:14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:50%;width:36px;height:36px;color:#fff;font-size:1.1rem;cursor:pointer">←</button>
+        <div style="position:absolute;bottom:14px;left:16px;font-size:1.4rem;font-weight:900;color:#fff;font-family:Tajawal,sans-serif;text-shadow:0 2px 8px rgba(0,0,0,0.8)">${plat.name}</div>
+      </div>
+
+      <!-- تابز -->
+      <div style="display:flex;border-bottom:2px solid rgba(255,255,255,0.1);padding:0 16px;margin-bottom:12px">
+        ${[['all','الكل'],['series','مسلسلات'],['movies','أفلام']].map(([t,label]) => `
+          <button onclick="openPlatformPage('${platId}','${t}')"
+            style="padding:10px 18px;background:transparent;border:none;border-bottom:${tab===t?`2px solid ${plat.color}`:'2px solid transparent'};color:${tab===t?'#fff':'rgba(255,255,255,0.5)'};font-family:Tajawal,sans-serif;font-size:0.9rem;cursor:pointer;margin-bottom:-2px;font-weight:${tab===t?'700':'400'}">${label}</button>
+        `).join('')}
+      </div>
+
+      <!-- الكروت -->
+      <div class="otaku-all-grid" style="padding:0 12px">
+        ${items.length
+          ? items.map((m,i) => buildMovieCard(m, m.media_type||(m.title?'movie':'tv'),'',i+1)).join('')
+          : `<div style="color:rgba(255,255,255,0.4);text-align:center;padding:40px;font-family:Tajawal,sans-serif">لا توجد نتائج</div>`}
+      </div>
+    </div>`;
+}
 const ROX_PLATFORMS = [
-  { id: 'netflix', name: 'Netflix', type: 'movie', endpoint: '/movie/popular', color: '#e50914', gifs: ['https://i.postimg.cc/5JrQJYTw/GIF-20260412-181509-853.gif?dl=1','https://files.catbox.moe/wem3vn.gif','https://i.postimg.cc/BQfGF3jV/IMG-8003.gif','https://media1.tenor.com/m/Hh5lO8fCAAIAAAAC/netflix.gif','https://nuvioapp.space/uploads/covers/0696cf9a-3612-4d9b-bb65-72c6c5a060ba.gif'] },
-  { id: 'disney', name: 'Disney+', type: 'movie', endpoint: '/movie/popular', color: '#0063e5', gifs: ['https://media1.tenor.com/m/qYlalc1KzQUAAAAC/disney-disney-plus.gif','https://image2url.com/r2/default/gifs/1775910668473-8e07b96b-4739-43d4-9475-f2aaeac8e259.gif','https://lumiere-a.akamaihd.net/v1/images/disney_logo_animation_march_2024_27a0dafe.gif'] },
-  { id: 'prime', name: 'Prime Video', type: 'movie', endpoint: '/movie/popular', color: '#00a8e1', gifs: ['https://media1.tenor.com/m/T7L_NCdPIvAAAAAC/prime-video.gif','https://i.pinimg.com/originals/cc/09/b8/cc09b8fdbcd724acd97e027a0f2b9d57.gif'] },
-  { id: 'hbo', name: 'HBO Max', type: 'tv', endpoint: '/tv/popular', color: '#8000ff', gifs: ['https://nuvioapp.space/uploads/covers/1b0ddda8-649e-41f2-af27-70550964f03d.gif','https://i.postimg.cc/6Q8HzHqH/IMG-8007.gif','https://media1.tenor.com/m/pjHZN-n1kvkAAAAC/hbo-max.gif'] },
-  { id: 'apple', name: 'Apple TV+', type: 'tv', endpoint: '/tv/popular', color: '#ffffff', gifs: ['https://media1.tenor.com/m/1FiEEnGTgUcAAAAC/apple-appletv.gif','https://media1.tenor.com/m/Oxl9xEn7kTEAAAAC/applo-tv.gif'] },
-  { id: 'paramount', name: 'Paramount+', type: 'movie', endpoint: '/movie/popular', color: '#0064ff', gifs: ['https://media1.tenor.com/m/5kb_E-h0LmYAAAAC/paramount-plus-paramount-global.gif','https://nuvioapp.space/uploads/covers/5216ae5d-c685-4782-ab77-dbff7a1e071c.gif','https://ingeniousguru.com/wp-content/uploads/2022/10/Paramount.gif'] },
-  { id: 'peacock', name: 'Peacock', type: 'tv', endpoint: '/tv/popular', color: '#f5a623', gifs: ['https://i.ibb.co/JjQMjVnd/b921ca21-fbc8-4d43-885b-62b07f814c58.gif','https://i.postimg.cc/1zYpYTmp/Peacock.gif','https://www.image2url.com/r2/default/gifs/1776587799558-25a2f895-cff7-4ece-8d1e-08162d362b3d.gif'] },
-  { id: 'crunchyroll', name: 'Crunchyroll', type: 'tv', endpoint: '/tv/popular', color: '#f47521', gifs: ['https://media0.giphy.com/media/S7uxh9ken9NwaU5E1m/giphy.gif','https://ingeniousguru.com/wp-content/uploads/2022/10/creeky-roll.gif','https://i.postimg.cc/fyNY8wvC/original-3c24d9649543096949cc4262451501b7.gif'] },
-  { id: 'mubi', name: 'MUBI', type: 'movie', endpoint: '/movie/popular', color: '#00b4b4', gifs: ['https://i.postimg.cc/s2g7F0zy/mubi-opt.gif'] },
-  { id: 'starz', name: 'Starz', type: 'tv', endpoint: '/tv/popular', color: '#000000', gifs: ['https://i.postimg.cc/3rGgnnPG/1000390458_(1).gif','https://ingeniousguru.com/wp-content/uploads/2022/10/starz-logo.gif','https://nuvioapp.space/uploads/covers/7ae791e0-5329-4c3f-8a95-d6b289b10007.gif'] },
-  { id: 'bbc', name: 'BBC iPlayer', type: 'tv', endpoint: '/tv/popular', color: '#ff4444', gifs: ['https://i.postimg.cc/0yYGqsp2/IMG-1294.gif','https://i.postimg.cc/76HfLpRG/BBCiplayer-Animation.gif','https://image2url.com/r2/default/gifs/1775934598106-a84d6c03-563d-4fe3-b506-5ae44e99a5c7.gif'] },
-  { id: 'itv', name: 'ITV', type: 'tv', endpoint: '/tv/popular', color: '#e4003b', gifs: ['https://i.postimg.cc/5NPngJJH/ITVXStartup-Animation.gif','https://image2url.com/r2/default/gifs/1775918576257-e5a35335-5967-4242-8052-a96d58b877a2.gif'] },
-  { id: 'dc', name: 'DC Studios', type: 'movie', endpoint: '/movie/popular', color: '#0476d0', gifs: ['https://i.postimg.cc/50GVmBDm/DCStudios-Optimized.gif','https://i.ibb.co/chw2zR64/dc-superhero-films-opening-introduction-t9kpwalz3ep57s9i.gif','https://i.pinimg.com/originals/cd/4e/19/cd4e195405cbaed5a3e5b95708a41105.gif'] },
-  { id: 'universal', name: 'Universal', type: 'movie', endpoint: '/movie/popular', color: '#1a1aff', gifs: ['https://i.postimg.cc/8ChLYL58/universal-(1).gif','https://i.postimg.cc/NjgLsZ68/Universal.gif'] },
-  { id: 'sony', name: 'Sony', type: 'movie', endpoint: '/movie/popular', color: '#003087', gifs: ['https://media1.tenor.com/m/R9g8h8RTQrMAAAAd/sony-pictures-television-logos.gif','https://i.postimg.cc/8z2h0w3k/YTDown-com-You-Tube-Sony-Liv-Originals-2020-Media-xv9rd3Xqvo4-001-720p-ezgif-com-video-to-gif-conver.gif'] },
-  { id: 'sky', name: 'Sky', type: 'tv', endpoint: '/tv/popular', color: '#0072c9', gifs: ['https://i.postimg.cc/4N7nnvWt/skygoanimation.gif','https://i.postimg.cc/nLZLdypR/skyoriginals-Animation.gif','https://image2url.com/r2/default/gifs/1775910314934-43c3e1ff-5d57-4bdc-8ced-129343e9f5b4.gif'] },
-  { id: 'marvel', name: 'Marvel', type: 'movie', endpoint: '/movie/popular', color: '#ec1d24', gifs: ['https://giffiles.alphacoders.com/127/12700.gif','https://i.ibb.co/zHbdGxHT/marvel-studios.gif','https://www.image2url.com/r2/default/gifs/1778308091232-13285f01-0499-4ea7-9a66-1fa645f5e526.gif'] },
-  { id: 'natgeo', name: 'Nat Geo', type: 'tv', endpoint: '/tv/popular', color: '#ffcc00', gifs: ['https://cdn.dribbble.com/userupload/28768734/file/original-ef8fb082e33363bacbbf73da8c08a2f2.gif','https://cdn.dribbble.com/userupload/20547595/file/original-5ca9de6b778dbba32e64596e0acf2e82.gif'] },
-  { id: 'hulu', name: 'Hulu', type: 'tv', endpoint: '/tv/popular', color: '#1ce783', gifs: ['https://nuvioapp.space/uploads/covers/c237c4b2-875e-4d54-802a-42a4316ff7ab.gif'] },
+  { id: 'netflix',    name: 'Netflix',      color: '#e50914', networkId: 213,  gifs: ['https://i.postimg.cc/5JrQJYTw/GIF-20260412-181509-853.gif?dl=1','https://files.catbox.moe/wem3vn.gif','https://media1.tenor.com/m/Hh5lO8fCAAIAAAAC/netflix.gif'] },
+  { id: 'disney',     name: 'Disney+',      color: '#0063e5', networkId: 2739, gifs: ['https://media1.tenor.com/m/qYlalc1KzQUAAAAC/disney-disney-plus.gif','https://lumiere-a.akamaihd.net/v1/images/disney_logo_animation_march_2024_27a0dafe.gif'] },
+  { id: 'prime',      name: 'Prime Video',  color: '#00a8e1', networkId: 1024, gifs: ['https://media1.tenor.com/m/T7L_NCdPIvAAAAAC/prime-video.gif','https://i.pinimg.com/originals/cc/09/b8/cc09b8fdbcd724acd97e027a0f2b9d57.gif'] },
+  { id: 'hbo',        name: 'HBO Max',      color: '#8000ff', networkId: 49,   gifs: ['https://media1.tenor.com/m/pjHZN-n1kvkAAAAC/hbo-max.gif'] },
+  { id: 'apple',      name: 'Apple TV+',    color: '#ffffff', networkId: 2552, gifs: ['https://media1.tenor.com/m/1FiEEnGTgUcAAAAC/apple-appletv.gif'] },
+  { id: 'paramount',  name: 'Paramount+',   color: '#0064ff', networkId: 4330, gifs: ['https://media1.tenor.com/m/5kb_E-h0LmYAAAAC/paramount-plus-paramount-global.gif'] },
+  { id: 'peacock',    name: 'Peacock',      color: '#f5a623', networkId: 3353, gifs: ['https://i.ibb.co/JjQMjVnd/b921ca21-fbc8-4d43-885b-62b07f814c58.gif'] },
+  { id: 'crunchyroll',name: 'Crunchyroll',  color: '#f47521', networkId: 1112, gifs: ['https://media0.giphy.com/media/S7uxh9ken9NwaU5E1m/giphy.gif'] },
+  { id: 'mubi',       name: 'MUBI',         color: '#00b4b4', networkId: 3756, gifs: ['https://i.postimg.cc/s2g7F0zy/mubi-opt.gif'] },
+  { id: 'starz',      name: 'Starz',        color: '#000000', networkId: 318,  gifs: ['https://i.postimg.cc/3rGgnnPG/1000390458_(1).gif'] },
+  { id: 'bbc',        name: 'BBC iPlayer',  color: '#ff4444', networkId: 332,  gifs: ['https://i.postimg.cc/0yYGqsp2/IMG-1294.gif'] },
+  { id: 'itv',        name: 'ITV',          color: '#e4003b', networkId: 256,  gifs: ['https://i.postimg.cc/5NPngJJH/ITVXStartup-Animation.gif'] },
+  { id: 'dc',         name: 'DC Studios',   color: '#0476d0', networkId: 9317, gifs: ['https://i.postimg.cc/50GVmBDm/DCStudios-Optimized.gif'] },
+  { id: 'universal',  name: 'Universal',    color: '#1a1aff', networkId: 3268, gifs: ['https://i.postimg.cc/8ChLYL58/universal-(1).gif'] },
+  { id: 'sony',       name: 'Sony',         color: '#003087', networkId: 2251, gifs: ['https://media1.tenor.com/m/R9g8h8RTQrMAAAAd/sony-pictures-television-logos.gif'] },
+  { id: 'sky',        name: 'Sky',          color: '#0072c9', networkId: 671,  gifs: ['https://i.postimg.cc/4N7nnvWt/skygoanimation.gif'] },
+  { id: 'marvel',     name: 'Marvel',       color: '#ec1d24', networkId: 7295, gifs: ['https://giffiles.alphacoders.com/127/12700.gif'] },
+  { id: 'natgeo',     name: 'Nat Geo',      color: '#ffcc00', networkId: 337,  gifs: ['https://cdn.dribbble.com/userupload/28768734/file/original-ef8fb082e33363bacbbf73da8c08a2f2.gif'] },
+  { id: 'hulu',       name: 'Hulu',         color: '#1ce783', networkId: 453,  gifs: ['https://nuvioapp.space/uploads/covers/c237c4b2-875e-4d54-802a-42a4316ff7ab.gif'] },
 ];
 function getPlatformGif(id) {
   const saved = localStorage.getItem('rox_plat_gif_' + id);
@@ -5275,7 +5332,7 @@ function renderPlatformsGrid() {
   const grid = document.getElementById('platformsGrid');
   if (!grid) return;
   grid.innerHTML = ROX_PLATFORMS.map(p => `
-    <div class="plat-card-new" onclick="openBrowseAll('${p.type}','${p.endpoint}','${p.name}')" style="--plat-color:${p.color}">
+    <div class="plat-card-new" onclick="openPlatformPage('${p.id}')" style="--plat-color:${p.color}">
       <img class="plat-gif" src="${getPlatformGif(p.id)}" alt="${p.name}" loading="lazy">
       <div class="plat-name-new">${p.name}</div>
       <div class="plat-glow" style="background:${p.color}"></div>
