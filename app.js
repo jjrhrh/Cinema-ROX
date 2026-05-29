@@ -2358,7 +2358,7 @@ function showNewEpisodesCard(updates) {
         <div style="position:relative;">
           <img src="${u.poster}" style="width:100%;height:180px;object-fit:cover;display:block;">
           <div style="position:absolute;inset:0;background:linear-gradient(to top,#1a1a2e 20%,transparent);"></div>
-          <div style="position:absolute;top:12px;right:12px;background:#e50914;color:#fff;font-size:11px;font-family:Tajawal;font-weight:700;padding:4px 10px;border-radius:20px;">🔔 حلقة جديدة</div>
+          <div style="position:absolute;top:12px;right:12px;background:linear-gradient(135deg,#e50914,#ff6b35);color:#fff;font-size:11px;font-family:Tajawal;font-weight:700;padding:6px 12px;border-radius:20px;box-shadow:0 4px 12px rgba(229,9,20,0.5);animation:pulse 1.5s infinite;">🔔 حلقة جديدة</div>
           ${updates.length > 1 ? `<div style="position:absolute;top:12px;left:12px;background:rgba(0,0,0,0.6);color:#fff;font-size:11px;font-family:Tajawal;padding:4px 10px;border-radius:20px;">${idx+1}/${updates.length}</div>` : ''}
         </div>
         <div style="padding:18px 20px 22px;">
@@ -2374,7 +2374,7 @@ function showNewEpisodesCard(updates) {
   };
   const overlay = document.createElement('div');
   overlay.id = 'newEpsCard';
-  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:99999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:99999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);';
   document.body.appendChild(overlay);
   window._newEpsNext = () => { idx = Math.min(idx+1, updates.length-1); render(); };
   render();
@@ -3597,6 +3597,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   checkAuthOnLoad();
   setTimeout(checkAllAlerts, 4000);
   setTimeout(checkNewEpisodes, 3000);
+setInterval(checkNewEpisodes, 30 * 60 * 1000);
   bnavGo('home');
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js', { scope: '/' })
