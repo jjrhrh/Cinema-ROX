@@ -283,6 +283,10 @@ function unmuteTrailer(id) {
 }
 
 function goBack() {
+  window._platInfinite = null;
+  window._genreInfinite = null;
+  window.removeEventListener('scroll', _platScrollHandler);
+  window.removeEventListener('scroll', _genreScrollHandler);
   if (window._trailerTimer) { clearTimeout(window._trailerTimer); window._trailerTimer = null; }
   if (window._detailHistory && window._detailHistory.length > 0) {
   const prev = window._detailHistory.pop();
