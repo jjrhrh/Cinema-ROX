@@ -5095,7 +5095,7 @@ async function openAnimChannelPage(name, color, tab, networkId, searchQuery) {
 
       <!-- الكروت -->
       <div class="otaku-all-grid" style="padding:12px">
-        ${combined.length ? combined.map((m,i) => buildMovieCard(m, m.media_type||(m.title?'movie':'tv'),'',i+1)).join('') : '<div style="color:rgba(255,255,255,0.4);text-align:center;padding:40px;font-family:Tajawal,sans-serif">لا توجد نتائج</div>'}
+        ${combined.length ? combined.map((m,i) => buildMovieCard(m, m.media_type||(m.title?'movie':'tv'),'',i+1)).join('') : `<div style="color:rgba(255,255,255,0.4);text-align:center;padding:40px;font-family:Tajawal,sans-serif">لا توجد نتائج</div>`}
       </div>
     </div>`;
 }
