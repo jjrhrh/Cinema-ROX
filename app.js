@@ -5663,8 +5663,8 @@ async function openActorPage(personId) {
   page.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100vh"><div class="rox-spinner"></div></div>`;
 
   const [info, credits] = await Promise.all([
-    fetchMovies(`/person/${personId}`, { raw: true }),
-    fetchMovies(`/person/${personId}/combined_credits`, { raw: true })
+    fetch(buildTMDBUrl(`/person/${personId}`)).then(r=>r.json()),
+    fetch(buildTMDBUrl(`/person/${personId}/combined_credits`)).then(r=>r.json())
   ]);
 
   const age = info.birthday ? Math.floor((new Date() - new Date(info.birthday)) / 31557600000) : null;
