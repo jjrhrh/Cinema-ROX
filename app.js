@@ -5267,7 +5267,7 @@ async function openPlatformPage(platId, tab = 'all') {
     tvData = await fetchMovies('/discover/tv', { type: 'tv', limit: 40, params: { with_watch_providers: String(plat.providerId), watch_region: 'US', sort_by: 'popularity.desc' } });
   }
   if (tab === 'all' || tab === 'movies') {
-    moviesData = await fetchMovies('/discover/movie', { type: 'movie', limit: 40, params: { with_networks: String(plat.networkId), sort_by: 'popularity.desc' } });
+    moviesData = await fetchMovies('/discover/movie', { type: 'movie', limit: 40, params: { with_watch_providers: String(plat.providerId), watch_region: 'US', sort_by: 'popularity.desc' } });
   }
 
   const combined = tab === 'series' ? tvData : tab === 'movies' ? moviesData : [...tvData, ...moviesData];
@@ -5371,25 +5371,25 @@ async function openGenrePage(name, tab) {
     </div>`;
 }
 const ROX_PLATFORMS = [
-  { id: 'netflix',    name: 'Netflix',      color: '#e50914', networkId: 213,  gifs: ['https://i.postimg.cc/5JrQJYTw/GIF-20260412-181509-853.gif?dl=1','https://files.catbox.moe/wem3vn.gif','https://media1.tenor.com/m/Hh5lO8fCAAIAAAAC/netflix.gif'] },
-  { id: 'disney',     name: 'Disney+',      color: '#0063e5', networkId: 2739, gifs: ['https://media1.tenor.com/m/qYlalc1KzQUAAAAC/disney-disney-plus.gif','https://lumiere-a.akamaihd.net/v1/images/disney_logo_animation_march_2024_27a0dafe.gif'] },
-  { id: 'prime',      name: 'Prime Video',  color: '#00a8e1', networkId: 1024, gifs: ['https://media1.tenor.com/m/T7L_NCdPIvAAAAAC/prime-video.gif','https://i.pinimg.com/originals/cc/09/b8/cc09b8fdbcd724acd97e027a0f2b9d57.gif'] },
-  { id: 'hbo',        name: 'HBO Max',      color: '#8000ff', networkId: 49,   gifs: ['https://media1.tenor.com/m/pjHZN-n1kvkAAAAC/hbo-max.gif'] },
-  { id: 'apple',      name: 'Apple TV+',    color: '#ffffff', networkId: 2552, gifs: ['https://media1.tenor.com/m/1FiEEnGTgUcAAAAC/apple-appletv.gif'] },
-  { id: 'paramount',  name: 'Paramount+',   color: '#0064ff', networkId: 4330, gifs: ['https://media1.tenor.com/m/5kb_E-h0LmYAAAAC/paramount-plus-paramount-global.gif'] },
-  { id: 'peacock',    name: 'Peacock',      color: '#f5a623', networkId: 3353, gifs: ['https://i.ibb.co/JjQMjVnd/b921ca21-fbc8-4d43-885b-62b07f814c58.gif'] },
-  { id: 'crunchyroll',name: 'Crunchyroll',  color: '#f47521', networkId: 1112, gifs: ['https://media0.giphy.com/media/S7uxh9ken9NwaU5E1m/giphy.gif'] },
-  { id: 'mubi',       name: 'MUBI',         color: '#00b4b4', networkId: 3756, gifs: ['https://i.postimg.cc/s2g7F0zy/mubi-opt.gif'] },
-  { id: 'starz',      name: 'Starz',        color: '#000000', networkId: 318,  gifs: ['https://i.postimg.cc/3rGgnnPG/1000390458_(1).gif'] },
-  { id: 'bbc',        name: 'BBC iPlayer',  color: '#ff4444', networkId: 332,  gifs: ['https://i.postimg.cc/0yYGqsp2/IMG-1294.gif'] },
-  { id: 'itv',        name: 'ITV',          color: '#e4003b', networkId: 256,  gifs: ['https://i.postimg.cc/5NPngJJH/ITVXStartup-Animation.gif'] },
-  { id: 'dc',         name: 'DC Studios',   color: '#0476d0', networkId: 9317, gifs: ['https://i.postimg.cc/50GVmBDm/DCStudios-Optimized.gif'] },
-  { id: 'universal',  name: 'Universal',    color: '#1a1aff', networkId: 3268, gifs: ['https://i.postimg.cc/8ChLYL58/universal-(1).gif'] },
-  { id: 'sony',       name: 'Sony',         color: '#003087', networkId: 2251, gifs: ['https://media1.tenor.com/m/R9g8h8RTQrMAAAAd/sony-pictures-television-logos.gif'] },
-  { id: 'sky',        name: 'Sky',          color: '#0072c9', networkId: 671,  gifs: ['https://i.postimg.cc/4N7nnvWt/skygoanimation.gif'] },
-  { id: 'marvel',     name: 'Marvel',       color: '#ec1d24', networkId: 7295, gifs: ['https://giffiles.alphacoders.com/127/12700.gif'] },
-  { id: 'natgeo',     name: 'Nat Geo',      color: '#ffcc00', networkId: 337,  gifs: ['https://cdn.dribbble.com/userupload/28768734/file/original-ef8fb082e33363bacbbf73da8c08a2f2.gif'] },
-  { id: 'hulu',       name: 'Hulu',         color: '#1ce783', networkId: 453,  gifs: ['https://nuvioapp.space/uploads/covers/c237c4b2-875e-4d54-802a-42a4316ff7ab.gif'] },
+  { id: 'netflix',    name: 'Netflix',      color: '#e50914', providerId: 8,    gifs: ['https://i.postimg.cc/5JrQJYTw/GIF-20260412-181509-853.gif?dl=1'] },
+  { id: 'disney',     name: 'Disney+',      color: '#0063e5', providerId: 337,  gifs: ['https://media1.tenor.com/m/qYlalc1KzQUAAAAC/disney-disney-plus.gif'] },
+  { id: 'prime',      name: 'Prime Video',  color: '#00a8e1', providerId: 9,    gifs: ['https://media1.tenor.com/m/T7L_NCdPIvAAAAAC/prime-video.gif'] },
+  { id: 'hbo',        name: 'HBO Max',      color: '#8000ff', providerId: 1899, gifs: ['https://media1.tenor.com/m/pjHZN-n1kvkAAAAC/hbo-max.gif'] },
+  { id: 'apple',      name: 'Apple TV+',    color: '#ffffff', providerId: 350,  gifs: ['https://media1.tenor.com/m/1FiEEnGTgUcAAAAC/apple-appletv.gif'] },
+  { id: 'paramount',  name: 'Paramount+',   color: '#0064ff', providerId: 531,  gifs: ['https://media1.tenor.com/m/5kb_E-h0LmYAAAAC/paramount-plus-paramount-global.gif'] },
+  { id: 'peacock',    name: 'Peacock',      color: '#f5a623', providerId: 386,  gifs: ['https://i.ibb.co/JjQMjVnd/b921ca21-fbc8-4d43-885b-62b07f814c58.gif'] },
+  { id: 'crunchyroll',name: 'Crunchyroll',  color: '#f47521', providerId: 283,  gifs: ['https://media0.giphy.com/media/S7uxh9ken9NwaU5E1m/giphy.gif'] },
+  { id: 'mubi',       name: 'MUBI',         color: '#00b4b4', providerId: 11,   gifs: ['https://i.postimg.cc/s2g7F0zy/mubi-opt.gif'] },
+  { id: 'starz',      name: 'Starz',        color: '#000000', providerId: 43,   gifs: ['https://i.postimg.cc/3rGgnnPG/1000390458_(1).gif'] },
+  { id: 'bbc',        name: 'BBC iPlayer',  color: '#ff4444', providerId: 38,   gifs: ['https://i.postimg.cc/0yYGqsp2/IMG-1294.gif'] },
+  { id: 'itv',        name: 'ITV',          color: '#e4003b', providerId: 584,  gifs: ['https://i.postimg.cc/5NPngJJH/ITVXStartup-Animation.gif'] },
+  { id: 'dc',         name: 'DC Studios',   color: '#0476d0', providerId: 1899, gifs: ['https://i.postimg.cc/50GVmBDm/DCStudios-Optimized.gif'] },
+  { id: 'universal',  name: 'Universal',    color: '#1a1aff', providerId: 9,    gifs: ['https://i.postimg.cc/8ChLYL58/universal-(1).gif'] },
+  { id: 'sony',       name: 'Sony',         color: '#003087', providerId: 1759, gifs: ['https://media1.tenor.com/m/R9g8h8RTQrMAAAAd/sony-pictures-television-logos.gif'] },
+  { id: 'sky',        name: 'Sky',          color: '#0072c9', providerId: 1773, gifs: ['https://i.postimg.cc/4N7nnvWt/skygoanimation.gif'] },
+  { id: 'marvel',     name: 'Marvel',       color: '#ec1d24', providerId: 337,  gifs: ['https://giffiles.alphacoders.com/127/12700.gif'] },
+  { id: 'natgeo',     name: 'Nat Geo',      color: '#ffcc00', providerId: 337,  gifs: ['https://cdn.dribbble.com/userupload/28768734/file/original-ef8fb082e33363bacbbf73da8c08a2f2.gif'] },
+  { id: 'hulu',       name: 'Hulu',         color: '#1ce783', providerId: 15,   gifs: ['https://nuvioapp.space/uploads/covers/c237c4b2-875e-4d54-802a-42a4316ff7ab.gif'] },
 ];
 function getPlatformGif(id) {
   const saved = localStorage.getItem('rox_plat_gif_' + id);
