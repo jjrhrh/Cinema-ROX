@@ -116,6 +116,9 @@ HERO: Object.freeze({
     SRV_EZV: { mov: 'https://ezvidapi.com/embed/movie/',               tv: 'https://ezvidapi.com/embed/tv/'                 },
     SRV_SV: { mov: 'https://streamvaultsrc.click/embed/movie/',        tv: 'https://streamvaultsrc.click/embed/tv/'         },
     SRV_VP: { mov: 'https://player.vidplus.to/embed/movie/',           tv: 'https://player.vidplus.to/embed/tv/'            },
+    SRV_AUTOEMBED: { movie: 'https://autoembed.co/movie/tmdb/',        tv: 'https://autoembed.co/tv/tmdb/'                  },
+SRV_EMBEDMASTER: { movie: 'https://embedmaster.com/embed/movie/',      tv: 'https://embedmaster.com/embed/tv/'              },
+SRV_EMBEDPLAYER: { movie: 'https://embed-player.com/video/?source=https://autoembed.co/movie/tmdb/', tv: 'https://embed-player.com/video/?source=https://autoembed.co/tv/tmdb/' },
   }),
   
   // ─────────────────────────────────────────
