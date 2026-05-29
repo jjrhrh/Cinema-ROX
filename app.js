@@ -1924,6 +1924,30 @@ function srvUrl(srv, type, id, season, episode) {
   if (!season) return `${base}${id}`;
   return `${base}${id}/${season}/${episode}`;
 }
+function srvUrlCustom(srvKey, type, id, season, episode) {
+  const S = CONFIG.SERVERS;
+  if (srvKey === 'EMBEDAPI') {
+    if (type === 'movie') return `https://player.embed-api.stream/?id=${id}`;
+    return `https://player.embed-api.stream/?id=${id}&s=${season}&e=${episode}`;
+  }
+  if (srvKey === 'RIVESTREAM') {
+    if (type === 'movie') return `https://www.rivestream.app/embed?type=movie&id=${id}`;
+    return `https://www.rivestream.app/embed?type=tv&id=${id}&season=${season}&episode=${episode}`;
+  }
+  if (srvKey === 'RIVE_TORRENT') {
+    if (type === 'movie') return `https://www.rivestream.app/embed/torrent?type=movie&id=${id}`;
+    return `https://www.rivestream.app/embed/torrent?type=tv&id=${id}&season=${season}&episode=${episode}`;
+  }
+  if (srvKey === 'RIVE_AGG') {
+    if (type === 'movie') return `https://www.rivestream.app/embed/agg?type=movie&id=${id}`;
+    return `https://www.rivestream.app/embed/agg?type=tv&id=${id}&season=${season}&episode=${episode}`;
+  }
+  if (srvKey === 'VIDAPI') {
+    if (type === 'movie') return `https://vidapi.xyz/embed/movie/${id}`;
+    return `https://vidapi.xyz/embed/tv/${id}/${season}/${episode}`;
+  }
+  return '';
+}
 async function openWatchPage(id, type, season = 1, episode = 1, resumeSec = 0, resumeSrv = '') {
   const page = document.getElementById('watchPage');
   if (!page) return;
@@ -1975,6 +1999,11 @@ const superflixUrl = type === 'movie'
   : `https://superflixapi.best/serie/${id}/${season}/${episode}`;
 
 const vipSrvs = [
+  { icon:'<i class="ri-live-line style-icon" style="color:#ff6b6b"></i>',   name:'RIVE',         desc:'Aggregator • متعدد',   url: srvUrlCustom('RIVESTREAM',  type,id,season,episode) },
+  { icon:'<i class="ri-seedling-line style-icon" style="color:#51cf66"></i>', name:'RIVE TORRENT', desc:'Torrent • جودة عالية', url: srvUrlCustom('RIVE_TORRENT', type,id,season,episode) },
+  { icon:'<i class="ri-stack-line style-icon" style="color:#74c0fc"></i>',   name:'RIVE AGG',     desc:'Multi-Source',         url: srvUrlCustom('RIVE_AGG',     type,id,season,episode) },
+  { icon:'<i class="ri-rocket-line style-icon" style="color:#ffd43b"></i>', name:'EMBED-API',    desc:'Multi-Server • سريع',  url: srvUrlCustom('EMBEDAPI',     type,id,season,episode) },
+  { icon:'<i class="ri-video-line style-icon" style="color:#da77f2"></i>',  name:'VIDAPI',       desc:'TMDB Direct',          url: srvUrlCustom('VIDAPI',       type,id,season,episode) },
   { icon:'<i class="ri-film-fill style-icon" style="color:#a855f7"></i>', name:'VIDBINGE', desc:'4K • متعدد المصادر', url: type==='movie' ? `${CONFIG.SERVERS.SRV_VIDBINGE.movie}${id}` : `${CONFIG.SERVERS.SRV_VIDBINGE.tv}${id}/${season}/${episode}` },
   { icon:'<i class="ri-live-line style-icon" style="color:#f9ca24"></i>', name:'RIVE', desc:'متعدد المصادر', url: type==='movie' ? `${CONFIG.SERVERS.SRV_RIVE.movie}${id}` : `${CONFIG.SERVERS.SRV_RIVE.tv}${id}&season=${season}&episode=${episode}` },
   { icon:'<i class="ri-stack-line style-icon" style="color:#a29bfe"></i>', name:'RIVE-AGG', desc:'Aggregator', url: type==='movie' ? `${CONFIG.SERVERS.SRV_RIVE_AGG.movie}${id}` : `${CONFIG.SERVERS.SRV_RIVE_AGG.tv}${id}&season=${season}&episode=${episode}` },
