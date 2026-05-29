@@ -5244,62 +5244,71 @@ function applyAnimations(on, save = true) {
 function applyHQ(on, save = true) {
   if (save) localStorage.setItem('rox_hq', on);
 }
-async function openPlatformPage(platId, tab = 'all') {
+async function openPlatformPage(platId, tab = 'all', page = 1) {
   const plat = ROX_PLATFORMS.find(p => p.id === platId);
   if (!plat) return;
-
-  const filterBar = document.getElementById('platformsSection');
   const detailPage = document.getElementById('detailPage');
   if (!detailPage) return;
 
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('heroSection').style.display = 'none';
-  document.getElementById('newsSection').style.display = 'none';
-  document.getElementById('studioBar').style.display = 'none';
-  if (filterBar) filterBar.style.display = 'none';
-  detailPage.classList.add('active');
-  detailPage.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
-  window.scrollTo(0, 0);
+  if (page === 1) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('heroSection').style.display = 'none';
+    document.getElementById('newsSection').style.display = 'none';
+    document.getElementById('studioBar').style.display = 'none';
+    document.getElementById('platformsSection').style.display = 'none';
+    detailPage.classList.add('active');
+    detailPage.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
+    window.scrollTo(0, 0);
+  }
 
+  const params = { with_watch_providers: String(plat.providerId), watch_region: 'US', sort_by: 'popularity.desc', page };
   let tvData = [], moviesData = [];
-
-  if (tab === 'all' || tab === 'series') {
-    tvData = await fetchMovies('/discover/tv', { type: 'tv', limit: 40, params: { with_watch_providers: String(plat.providerId), watch_region: 'US', sort_by: 'popularity.desc' } });
-  }
-  if (tab === 'all' || tab === 'movies') {
-    moviesData = await fetchMovies('/discover/movie', { type: 'movie', limit: 40, params: { with_watch_providers: String(plat.providerId), watch_region: 'US', sort_by: 'popularity.desc' } });
-  }
-
-  const combined = tab === 'series' ? tvData : tab === 'movies' ? moviesData : [...tvData, ...moviesData];
+  if (tab === 'all' || tab === 'series') tvData = (await fetchMovies('/discover/tv', { type: 'tv', limit: 20, params })).map(i => ({ ...i, media_type: 'tv' }));
+  if (tab === 'all' || tab === 'movies') moviesData = (await fetchMovies('/discover/movie', { type: 'movie', limit: 20, params })).map(i => ({ ...i, media_type: 'movie' }));
   const seen = new Set();
-  const items = combined.filter(i => { if (seen.has(i.id)) return false; seen.add(i.id); return true; });
+  const items = [...tvData, ...moviesData].filter(i => { if (seen.has(i.id)) return false; seen.add(i.id); return true; });
 
-  detailPage.innerHTML = `
-    <div style="padding-bottom:80px">
+  if (page === 1) {
+    detailPage.innerHTML = `
+      <div style="padding-bottom:80px">
+        <div style="position:relative;height:160px;overflow:hidden">
+          <img src="${getPlatformGif(platId)}" style="width:100%;height:100%;object-fit:cover;opacity:0.5">
+          <div style="position:absolute;inset:0;background:linear-gradient(to top,#0a0a1a 40%,transparent)"></div>
+          <button onclick="goBack()" style="position:absolute;top:14px;right:14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:50%;width:36px;height:36px;color:#fff;font-size:1.1rem;cursor:pointer">←</button>
+          <div style="position:absolute;bottom:14px;left:16px;font-size:1.4rem;font-weight:900;color:#fff;font-family:Tajawal,sans-serif">${plat.name}</div>
+        </div>
+        <div style="display:flex;border-bottom:2px solid rgba(255,255,255,0.1);padding:0 16px;margin-bottom:12px">
+          ${[['all','الكل'],['series','مسلسلات'],['movies','أفلام']].map(([t,label]) => `
+            <button onclick="openPlatformPage('${platId}','${t}',1)"
+              style="padding:10px 18px;background:transparent;border:none;border-bottom:${tab===t?`2px solid ${plat.color}`:'2px solid transparent'};color:${tab===t?'#fff':'rgba(255,255,255,0.5)'};font-family:Tajawal,sans-serif;font-size:0.9rem;cursor:pointer;margin-bottom:-2px;font-weight:${tab===t?'700':'400'}">${label}</button>
+          `).join('')}
+        </div>
+        <div class="otaku-all-grid" id="platGrid_${platId}" style="padding:0 12px">
+          ${items.map((m,i) => buildMovieCard(m, m.media_type, '', i+1)).join('')}
+        </div>
+        <div id="platLoader_${platId}" style="text-align:center;padding:20px;color:rgba(255,255,255,0.4);font-family:Tajawal,sans-serif">⏳ جاري التحميل...</div>
+      </div>`;
 
-      <!-- هيدر المنصة -->
-      <div style="position:relative;height:160px;overflow:hidden">
-        <img src="${getPlatformGif(platId)}" style="width:100%;height:100%;object-fit:cover;opacity:0.5">
-        <div style="position:absolute;inset:0;background:linear-gradient(to top,#0a0a1a 40%,transparent)"></div>
-        <button onclick="goBack()" style="position:absolute;top:14px;right:14px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);border-radius:50%;width:36px;height:36px;color:#fff;font-size:1.1rem;cursor:pointer">←</button>
-        <div style="position:absolute;bottom:14px;left:16px;font-size:1.4rem;font-weight:900;color:#fff;font-family:Tajawal,sans-serif;text-shadow:0 2px 8px rgba(0,0,0,0.8)">${plat.name}</div>
-      </div>
+    window._platInfinite = { platId, tab, page: 1, loading: false };
+    window.addEventListener('scroll', _platScrollHandler);
+  } else {
+    const grid = document.getElementById(`platGrid_${platId}`);
+    if (grid) grid.insertAdjacentHTML('beforeend', items.map((m,i) => buildMovieCard(m, m.media_type, '', i+1)).join(''));
+    const loader = document.getElementById(`platLoader_${platId}`);
+    if (loader) loader.textContent = items.length < 10 ? 'لا يوجد المزيد' : '⏳ جاري التحميل...';
+    if (window._platInfinite) { window._platInfinite.loading = false; }
+  }
+}
 
-      <!-- تابز -->
-      <div style="display:flex;border-bottom:2px solid rgba(255,255,255,0.1);padding:0 16px;margin-bottom:12px">
-        ${[['all','الكل'],['series','مسلسلات'],['movies','أفلام']].map(([t,label]) => `
-          <button onclick="openPlatformPage('${platId}','${t}')"
-            style="padding:10px 18px;background:transparent;border:none;border-bottom:${tab===t?`2px solid ${plat.color}`:'2px solid transparent'};color:${tab===t?'#fff':'rgba(255,255,255,0.5)'};font-family:Tajawal,sans-serif;font-size:0.9rem;cursor:pointer;margin-bottom:-2px;font-weight:${tab===t?'700':'400'}">${label}</button>
-        `).join('')}
-      </div>
-
-      <!-- الكروت -->
-      <div class="otaku-all-grid" style="padding:0 12px">
-        ${items.length
-          ? items.map((m,i) => buildMovieCard(m, m.media_type||(m.title?'movie':'tv'),'',i+1)).join('')
-          : `<div style="color:rgba(255,255,255,0.4);text-align:center;padding:40px;font-family:Tajawal,sans-serif">لا توجد نتائج</div>`}
-      </div>
-    </div>`;
+function _platScrollHandler() {
+  if (!window._platInfinite) return;
+  const { platId, tab, page, loading } = window._platInfinite;
+  if (loading) return;
+  if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 300) {
+    window._platInfinite.loading = true;
+    window._platInfinite.page = page + 1;
+    openPlatformPage(platId, tab, page + 1);
+  }
 }
 const GENRE_IDS = {
   'رعب':              { movie: 27,    tv: 27    },
@@ -5323,52 +5332,79 @@ const GENRE_IDS = {
   'قصص الحرب':        { movie: 10752, tv: 10768 },
 };
 
-async function openGenrePage(name, tab) {
+async function openGenrePage(name, tab, page = 1) {
   const genre = GENRE_IDS[name];
   if (!genre) return;
   if (!tab) tab = genre.movie ? 'movies' : 'series';
   const detailPage = document.getElementById('detailPage');
   if (!detailPage) return;
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('heroSection').style.display = 'none';
-  document.getElementById('newsSection').style.display = 'none';
-  document.getElementById('studioBar').style.display = 'none';
-  document.getElementById('platformsSection').style.display = 'none';
-  detailPage.classList.add('active');
-  detailPage.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
-  window.scrollTo(0, 0);
+
+  if (page === 1) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('heroSection').style.display = 'none';
+    document.getElementById('newsSection').style.display = 'none';
+    document.getElementById('studioBar').style.display = 'none';
+    document.getElementById('platformsSection').style.display = 'none';
+    detailPage.classList.add('active');
+    detailPage.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
+    window.scrollTo(0, 0);
+  }
+
   let items = [];
   if (tab === 'movies' && genre.movie) {
-    items = await fetchMovies('/discover/movie', { type: 'movie', limit: 40, params: { with_genres: String(genre.movie), sort_by: 'popularity.desc' } });
+    items = await fetchMovies('/discover/movie', { type: 'movie', limit: 20, params: { with_genres: String(genre.movie), sort_by: 'popularity.desc', page } });
     items = items.map(i => ({ ...i, media_type: 'movie' }));
   } else if (tab === 'series' && genre.tv) {
-    const params = { with_genres: String(genre.tv), sort_by: 'popularity.desc' };
+    const params = { with_genres: String(genre.tv), sort_by: 'popularity.desc', page };
     if (genre.animeOnly) params.with_origin_country = 'JP';
-    items = await fetchMovies('/discover/tv', { type: 'tv', limit: 40, params });
+    items = await fetchMovies('/discover/tv', { type: 'tv', limit: 20, params });
     items = items.map(i => ({ ...i, media_type: 'tv' }));
   }
+
   const tabs = [
     ...(genre.movie ? [['movies','🎬 أفلام']] : []),
     ...(genre.tv    ? [['series','📺 مسلسلات']] : []),
   ];
-  detailPage.innerHTML = `
-    <div style="padding-bottom:80px">
-      <div style="padding:14px 16px 0;display:flex;align-items:center;gap:10px">
-        <button onclick="goBack()" style="background:rgba(255,255,255,0.08);border:none;border-radius:50%;width:36px;height:36px;color:#fff;font-size:1.1rem;cursor:pointer">←</button>
-        <h2 style="color:#fff;font-size:1.2rem;font-family:Tajawal,sans-serif;margin:0">${name}</h2>
-      </div>
-      <div style="display:flex;border-bottom:2px solid rgba(255,255,255,0.1);padding:0 16px;margin:12px 0 0">
-        ${tabs.map(([t, label]) => `
-          <button onclick="openGenrePage('${name}','${t}')"
-            style="padding:10px 18px;background:transparent;border:none;border-bottom:${tab===t?'2px solid #e50914':'2px solid transparent'};color:${tab===t?'#fff':'rgba(255,255,255,0.5)'};font-family:Tajawal,sans-serif;font-size:0.9rem;cursor:pointer;margin-bottom:-2px;font-weight:${tab===t?'700':'400'}">${label}</button>
-        `).join('')}
-      </div>
-      <div class="otaku-all-grid" style="padding:12px">
-        ${items.length
-          ? items.map((m, i) => buildMovieCard(m, m.media_type, '', i + 1)).join('')
-          : '<div style="color:rgba(255,255,255,0.4);text-align:center;padding:40px;font-family:Tajawal,sans-serif">لا توجد نتائج</div>'}
-      </div>
-    </div>`;
+
+  if (page === 1) {
+    detailPage.innerHTML = `
+      <div style="padding-bottom:80px">
+        <div style="padding:14px 16px 0;display:flex;align-items:center;gap:10px">
+          <button onclick="goBack()" style="background:rgba(255,255,255,0.08);border:none;border-radius:50%;width:36px;height:36px;color:#fff;font-size:1.1rem;cursor:pointer">←</button>
+          <h2 style="color:#fff;font-size:1.2rem;font-family:Tajawal,sans-serif;margin:0">${name}</h2>
+        </div>
+        <div style="display:flex;border-bottom:2px solid rgba(255,255,255,0.1);padding:0 16px;margin:12px 0 0">
+          ${tabs.map(([t, label]) => `
+            <button onclick="openGenrePage('${name}','${t}',1)"
+              style="padding:10px 18px;background:transparent;border:none;border-bottom:${tab===t?'2px solid #e50914':'2px solid transparent'};color:${tab===t?'#fff':'rgba(255,255,255,0.5)'};font-family:Tajawal,sans-serif;font-size:0.9rem;cursor:pointer;margin-bottom:-2px;font-weight:${tab===t?'700':'400'}">${label}</button>
+          `).join('')}
+        </div>
+        <div class="otaku-all-grid" id="genreGrid_${name}" style="padding:12px">
+          ${items.map((m,i) => buildMovieCard(m, m.media_type, '', i+1)).join('')}
+        </div>
+        <div id="genreLoader_${name}" style="text-align:center;padding:20px;color:rgba(255,255,255,0.4);font-family:Tajawal,sans-serif">⏳ جاري التحميل...</div>
+      </div>`;
+
+    window._genreInfinite = { name, tab, page: 1, loading: false };
+    window.addEventListener('scroll', _genreScrollHandler);
+  } else {
+    const grid = document.getElementById(`genreGrid_${name}`);
+    if (grid) grid.insertAdjacentHTML('beforeend', items.map((m,i) => buildMovieCard(m, m.media_type, '', i+1)).join(''));
+    const loader = document.getElementById(`genreLoader_${name}`);
+    if (loader) loader.textContent = items.length < 10 ? 'لا يوجد المزيد' : '⏳ جاري التحميل...';
+    if (window._genreInfinite) window._genreInfinite.loading = false;
+  }
+}
+
+function _genreScrollHandler() {
+  if (!window._genreInfinite) return;
+  const { name, tab, page, loading } = window._genreInfinite;
+  if (loading) return;
+  if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 300) {
+    window._genreInfinite.loading = true;
+    window._genreInfinite.page = page + 1;
+    openGenrePage(name, tab, page + 1);
+  }
 }
 const ROX_PLATFORMS = [
   { id: 'netflix',    name: 'Netflix',      color: '#e50914', providerId: 8,    gifs: ['https://i.postimg.cc/5JrQJYTw/GIF-20260412-181509-853.gif?dl=1'] },
