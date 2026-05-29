@@ -1,3 +1,4 @@
+window.onerror = function(msg, src, line) { alert('خطأ: ' + msg + '\nسطر: ' + line); };
 const _auth = firebase.auth();
 const _gProvider = new firebase.auth.GoogleAuthProvider();
 
