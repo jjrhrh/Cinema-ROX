@@ -8226,3 +8226,77 @@ input[type=range].rox-slider::-webkit-slider-thumb {
 .ap-card-title{font-size:11px;font-weight:700;color:rgba(255,255,255,0.8);font-family:Tajawal;margin-top:5px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
 .ap-card-year{font-size:10px;color:rgba(255,255,255,0.35);font-family:Tajawal;}
 .ap-empty{text-align:center;color:rgba(255,255,255,0.3);font-family:Tajawal;padding:24px;} 
+.sec_arabic_movies .section-bar,
+.sec_arabic_series .section-bar {
+  background: linear-gradient(180deg, #e50914, #ff4444);
+  box-shadow: 0 0 14px rgba(229,9,20,0.9), 0 0 30px rgba(229,9,20,0.4);
+}
+.sec_docs .section-bar,
+.sec_indie .section-bar {
+  background: linear-gradient(180deg, #00c896, #00ffb3);
+  box-shadow: 0 0 14px rgba(0,200,150,0.9), 0 0 30px rgba(0,255,179,0.4);
+}
+#sec_arabic_movies,
+#sec_arabic_series,
+#sec_docs,
+#sec_indie {
+  background: rgba(10,10,18,0.6);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-radius: 14px;
+  margin: 10px 12px;
+  padding: 14px 0 10px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+#sec_arabic_movies .movie-card,
+#sec_arabic_series .movie-card,
+#sec_docs .movie-card,
+#sec_indie .movie-card {
+  transition: transform 0.35s ease-in-out, box-shadow 0.35s ease-in-out;
+}
+#sec_arabic_movies .movie-card:hover,
+#sec_arabic_series .movie-card:hover,
+#sec_docs .movie-card:hover,
+#sec_indie .movie-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 0 0 1.5px rgba(229,9,20,0.7),
+              0 0 28px rgba(229,9,20,0.45),
+              0 20px 50px rgba(0,0,0,0.9);
+}
+.mc-new-badge {
+  box-shadow: 0 0 10px rgba(229,9,20,0.9), 0 0 20px rgba(229,9,20,0.4);
+}
+.mc-rating {
+  box-shadow: 0 0 8px rgba(255,214,0,0.6), 0 0 18px rgba(255,214,0,0.2);
+}
+.matcher-capsule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 16px 12px 24px;
+  padding: 18px 24px;
+  background: rgba(10,10,20,0.75);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(229,9,20,0.35);
+  border-radius: 14px;
+  cursor: pointer;
+  color: #fff;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  box-shadow: 0 0 20px rgba(229,9,20,0.2), inset 0 0 30px rgba(229,9,20,0.05);
+  transition: all 0.35s ease-in-out;
+}
+.matcher-capsule i {
+  font-size: 1.5rem;
+  color: #e50914;
+  filter: drop-shadow(0 0 6px rgba(229,9,20,0.8));
+}
+.matcher-capsule:hover {
+  transform: translateY(-4px);
+  border-color: rgba(229,9,20,0.7);
+  box-shadow: 0 0 35px rgba(229,9,20,0.4), inset 0 0 40px rgba(229,9,20,0.1);
+} 
