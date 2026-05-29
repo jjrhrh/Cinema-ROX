@@ -2101,7 +2101,7 @@ justify-content: flex-start;
 .otaku-arrow-right { margin-right: -4px; } 
 .otaku-all-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 12px;
 } 
 /* ===== PROFILE PAGE ===== */
