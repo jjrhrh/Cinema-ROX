@@ -128,6 +128,7 @@ SRV_EMBEDPLAYER: { movie: 'https://embed-player.com/video/?source=https://autoem
     SRV_RIVE_AGG: { movie: 'https://www.rivestream.app/embed/agg?type=movie&id=', tv: 'https://www.rivestream.app/embed/agg?type=tv&id='                                        },
     SRV_RIVE_TORRENT: { movie: 'https://www.rivestream.app/embed/torrent?type=movie&id=', tv: 'https://www.rivestream.app/embed/torrent?type=tv&id='                            },
     SRV_EMBEDAPI: { movie: 'https://player.embed-api.stream/?id=',     tv: 'https://player.embed-api.stream/?id='                                                               },
+    SRV_VIDBINGE: { movie: 'https://www.vidbinge.to/movie/', tv: 'https://www.vidbinge.to/tv/' },
   }),
   
   // ─────────────────────────────────────────
