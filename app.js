@@ -5043,31 +5043,7 @@ const ANIM_CHANNELS = [
 function openAnimationChannels() {
   const page = document.getElementById('homePage');
   if (!page) return;
-  page.innerHTML = `
-    <div style="padding:16px 12px 80px">
-      <div class="section-header" style="margin-bottom:20px">
-        <span class="section-bar"></span>
-        <h2 class="section-title">🎨 رسوم متحركة</h2>
-        <button class="browse-all-btn" onclick="loadHomePage()">‹ رجوع</button>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:10px">
-        ${ANIM_CHANNELS.map(c => `
-          <div style="background:#111827;border:1px solid ${c.color}44;border-radius:16px;overflow:hidden">
-            <div style="padding:14px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid ${c.color}33">
-              <div style="width:12px;height:12px;border-radius:50%;background:${c.color};flex-shrink:0;box-shadow:0 0 8px ${c.color}"></div>
-              <span style="color:#fff;font-weight:700;font-size:1rem;font-family:Tajawal,sans-serif;flex:1">${c.name}</span>
-            </div>
-            <div style="display:flex">
-              <button onclick="openAnimChannelPage('${c.name}','${c.color}','all',${c.networkId||'null'},'${c.searchQuery||''}')"
-                style="flex:1;padding:11px 4px;background:transparent;border:none;border-left:1px solid ${c.color}22;color:rgba(255,255,255,0.75);font-size:0.82rem;font-family:Tajawal,sans-serif;cursor:pointer">الكل</button>
-              <button onclick="openAnimChannelPage('${c.name}','${c.color}','tv',${c.networkId||'null'},'${c.searchQuery||''}')"
-                style="flex:1;padding:11px 4px;background:transparent;border:none;border-left:1px solid ${c.color}22;color:rgba(255,255,255,0.75);font-size:0.82rem;font-family:Tajawal,sans-serif;cursor:pointer">${c.name} (مسلسلات)</button>
-              <button onclick="openAnimChannelPage('${c.name}','${c.color}','movie',${c.networkId||'null'},'${c.searchQuery||''}')"
-                style="flex:1;padding:11px 4px;background:transparent;border:none;color:rgba(255,255,255,0.75);font-size:0.82rem;font-family:Tajawal,sans-serif;cursor:pointer">${c.name} (أفلام)</button>
-            </div>
-          </div>`).join('')}
-      </div>
-    </div>`;
+  openAnimChannelPage(ANIM_CHANNELS[0].name, ANIM_CHANNELS[0].color, 'all', ANIM_CHANNELS[0].networkId || null, ANIM_CHANNELS[0].searchQuery || '');
 }
 
 async function openAnimChannelPage(name, color, tab, networkId, searchQuery) {
@@ -5082,43 +5058,43 @@ async function openAnimChannelPage(name, color, tab, networkId, searchQuery) {
   window.scrollTo(0, 0);
 
   let moviesData = [], tvData = [];
-
   if (networkId) {
-    if (tab === 'all' || tab === 'tv') {
-      tvData = await fetchMovies('/discover/tv', { type: 'tv', limit: 30, params: { with_networks: String(networkId), sort_by: 'popularity.desc' } });
-    }
-    if (tab === 'all' || tab === 'movie') {
-      moviesData = await fetchMovies('/discover/movie', { type: 'movie', limit: 30, params: { with_genres: '16', sort_by: 'popularity.desc' } });
-    }
+    if (tab === 'all' || tab === 'tv') tvData = await fetchMovies('/discover/tv', { type: 'tv', limit: 30, params: { with_networks: String(networkId), sort_by: 'popularity.desc' } });
+    if (tab === 'all' || tab === 'movie') moviesData = await fetchMovies('/discover/movie', { type: 'movie', limit: 30, params: { with_genres: '16', sort_by: 'popularity.desc' } });
   } else if (searchQuery) {
-    if (tab === 'all' || tab === 'tv') {
-      tvData = await fetchMovies('/search/tv', { type: 'tv', limit: 30, params: { query: searchQuery } });
-    }
-    if (tab === 'all' || tab === 'movie') {
-      moviesData = await fetchMovies('/search/movie', { type: 'movie', limit: 30, params: { query: searchQuery } });
-    }
+    if (tab === 'all' || tab === 'tv') tvData = await fetchMovies('/search/tv', { type: 'tv', limit: 30, params: { query: searchQuery } });
+    if (tab === 'all' || tab === 'movie') moviesData = await fetchMovies('/search/movie', { type: 'movie', limit: 30, params: { query: searchQuery } });
   }
-
   const combined = tab === 'tv' ? tvData : tab === 'movie' ? moviesData : [...tvData, ...moviesData];
 
-  const tabs = ['all','tv','movie'];
-  const tabLabels = ['الكل', `${name} (مسلسلات)`, `${name} (أفلام)`];
-
   detailPage.innerHTML = `
-    <div style="padding:16px 12px 80px">
-      <button class="detail-btn" onclick="openAnimationChannels()" style="margin-bottom:16px">← رجوع</button>
-      <h2 style="color:#fff;margin-bottom:12px;font-size:1.1rem;font-family:Tajawal,sans-serif;display:flex;align-items:center;gap:8px">
+    <div style="padding:0 0 80px">
+      <div style="padding:14px 12px 0;display:flex;align-items:center;gap:10px">
+        <button class="detail-btn" onclick="loadHomePage()" style="margin:0">←</button>
         <span style="width:12px;height:12px;border-radius:50%;background:${color};display:inline-block;box-shadow:0 0 8px ${color}"></span>
-        ${name}
-      </h2>
-      <div style="display:flex;gap:0;margin-bottom:16px;border-bottom:2px solid rgba(255,255,255,0.1);overflow-x:auto">
-        ${tabs.map((t, i) => `
+        <h2 style="color:#fff;font-size:1.1rem;font-family:Tajawal,sans-serif;margin:0;flex:1">${name}</h2>
+      </div>
+
+      <!-- شريط المنصات -->
+      <div style="display:flex;gap:8px;padding:12px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none">
+        ${ANIM_CHANNELS.map(c => `
+          <button onclick="openAnimChannelPage('${c.name}','${c.color}','${tab}',${c.networkId||'null'},'${c.searchQuery||''}')"
+            style="flex-shrink:0;padding:6px 14px;border-radius:20px;border:1.5px solid ${c.name===name?c.color:'rgba(255,255,255,0.15)'};background:${c.name===name?c.color+'22':'transparent'};color:${c.name===name?'#fff':'rgba(255,255,255,0.55)'};font-family:Tajawal,sans-serif;font-size:0.78rem;cursor:pointer;font-weight:${c.name===name?'700':'400'};white-space:nowrap">
+            ${c.name}
+          </button>`).join('')}
+      </div>
+
+      <!-- تابز -->
+      <div style="display:flex;border-bottom:2px solid rgba(255,255,255,0.1);padding:0 12px">
+        ${[['all','الكل'],['tv','مسلسلات'],['movie','أفلام']].map(([t,label]) => `
           <button onclick="openAnimChannelPage('${name}','${color}','${t}',${networkId||'null'},'${searchQuery}')"
-            style="padding:10px 16px;background:transparent;border:none;border-bottom:${tab===t?`2px solid ${color}`:'2px solid transparent'};color:${tab===t?'#fff':'rgba(255,255,255,0.5)'};font-family:Tajawal,sans-serif;font-size:0.85rem;cursor:pointer;white-space:nowrap;margin-bottom:-2px;font-weight:${tab===t?'700':'400'}">${tabLabels[i]}</button>
+            style="padding:10px 16px;background:transparent;border:none;border-bottom:${tab===t?`2px solid ${color}`:'2px solid transparent'};color:${tab===t?'#fff':'rgba(255,255,255,0.5)'};font-family:Tajawal,sans-serif;font-size:0.85rem;cursor:pointer;margin-bottom:-2px;font-weight:${tab===t?'700':'400'}">${label}</button>
         `).join('')}
       </div>
-      <div class="otaku-all-grid">
-        ${combined.length ? combined.map((m, i) => buildMovieCard(m, m.media_type || (m.title ? 'movie' : 'tv'), '', i+1)).join('') : '<div style="color:rgba(255,255,255,0.4);text-align:center;padding:40px;font-family:Tajawal,sans-serif">لا توجد نتائج</div>'}
+
+      <!-- الكروت -->
+      <div class="otaku-all-grid" style="padding:12px">
+        ${combined.length ? combined.map((m,i) => buildMovieCard(m, m.media_type||(m.title?'movie':'tv'),'',i+1)).join('') : '<div style="color:rgba(255,255,255,0.4);text-align:center;padding:40px;font-family:Tajawal,sans-serif">لا توجد نتائج</div>'}
       </div>
     </div>`;
 }
