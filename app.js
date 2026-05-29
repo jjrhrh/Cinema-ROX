@@ -5100,7 +5100,6 @@ async function openAnimChannelPage(name, color, tab, networkId, searchQuery) {
       </div>
     </div>`;
 }
-}
 async function openArabicContent(tab = 'all') {
   const detailPage = document.getElementById('detailPage');
   if (!detailPage) return;
