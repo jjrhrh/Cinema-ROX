@@ -936,7 +936,7 @@ async function loadHomePage() {
               <div class="cw-meta">${i.type==='tv'?(i.season?`الموسم ${i.season} الحلقة ${i.episode||1}`:'مسلسل'):'فيلم'}</div>
               <div class="cw-pct">${pct}%</div>
             </div>
-            <button class="cw-del" onclick="event.stopPropagation();cwDelete(${i.id})">✕</button>
+            <button class=\"cw-del\" onclick=\"event.stopPropagation();cwDelete('${i.id}')\">✕</button>
           </div>`;
         }).join('')}
       </div>
@@ -2300,7 +2300,7 @@ function cwGetAll() {
 }
 
 function cwDelete(id) {
-  const list = cwGetAll().filter(i => i.id !== id);
+  const list = cwGetAll().filter(i => String(i.id) !== String(id));
   localStorage.setItem(CW_KEY, JSON.stringify(list));
   loadHomePage();
 }
@@ -2393,7 +2393,7 @@ function openContinueAll() {
               <div class="cw-meta">${i.type==='tv'?(i.season?`الموسم ${i.season} الحلقة ${i.episode||1}`:'مسلسل'):'فيلم'}</div>
               <div class="cw-pct">${pct}%</div>
             </div>
-            <button class="cw-del" onclick="event.stopPropagation();cwDelete(${i.id})">✕</button>
+            <button class="cw-del" onclick="event.stopPropagation();cwDelete('${i.id}');openContinueAll()">✕</button>
           </div>`;
         }).join('')}
       </div>
