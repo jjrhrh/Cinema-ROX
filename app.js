@@ -1975,6 +1975,10 @@ const superflixUrl = type === 'movie'
   : `https://superflixapi.best/serie/${id}/${season}/${episode}`;
 
 const vipSrvs = [
+  { icon:'<i class="ri-live-line style-icon" style="color:#f9ca24"></i>', name:'RIVE', desc:'متعدد المصادر', url: type==='movie' ? `${CONFIG.SERVERS.SRV_RIVE.movie}${id}` : `${CONFIG.SERVERS.SRV_RIVE.tv}${id}&season=${season}&episode=${episode}` },
+  { icon:'<i class="ri-stack-line style-icon" style="color:#a29bfe"></i>', name:'RIVE-AGG', desc:'Aggregator', url: type==='movie' ? `${CONFIG.SERVERS.SRV_RIVE_AGG.movie}${id}` : `${CONFIG.SERVERS.SRV_RIVE_AGG.tv}${id}&season=${season}&episode=${episode}` },
+  { icon:'<i class="ri-download-2-line style-icon" style="color:#00b894"></i>', name:'RIVE-TORRENT', desc:'Torrent • جودة عالية', url: type==='movie' ? `${CONFIG.SERVERS.SRV_RIVE_TORRENT.movie}${id}` : `${CONFIG.SERVERS.SRV_RIVE_TORRENT.tv}${id}&season=${season}&episode=${episode}` },
+  { icon:'<i class="ri-rocket-2-line style-icon" style="color:#00cec9"></i>', name:'EMBED-API', desc:'10+ مصادر', url: type==='movie' ? `${CONFIG.SERVERS.SRV_EMBEDAPI.movie}${id}` : `${CONFIG.SERVERS.SRV_EMBEDAPI.tv}${id}&s=${season}&e=${episode}` },
   { icon:'<i class="ri-signal-tower-line style-icon" style="color:#00ff9d"></i>', name:'VIDSRC-RU', desc:'autonext • أوتونيكست', url: type==='movie' ? `${CONFIG.SERVERS.SRV_VIDSRCRU.movie}${id}?autoplay=true&colour=e50914&autonextepisode=true` : `${CONFIG.SERVERS.SRV_VIDSRCRU.tv}${id}/${season}/${episode}?autoplay=true&colour=e50914&autonextepisode=true` },
   { icon:'<i class="ri-4k-line style-icon" style="color:#3b82f6"></i>', name:'VIDLUX', desc:'7 سيرفرات • 4K', url: type==='movie' ? `${CONFIG.SERVERS.SRV_VIDLUX.movie}${id}?color=e50914&autoplay=true` : `${CONFIG.SERVERS.SRV_VIDLUX.tv}${id}/${season}/${episode}?color=e50914&autoplay=true` },
   { icon:'<i class="ri-movie-line style-icon" style="color:#f9ca24"></i>', name:'BRAFLIX', desc:'سيرفرات متعددة', url: type==='movie' ? `${CONFIG.SERVERS.SRV_BRAFLIX.movie}${id}` : `${CONFIG.SERVERS.SRV_BRAFLIX.tv}${id}?season=${season}&episode=${episode}` },
