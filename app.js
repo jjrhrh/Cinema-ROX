@@ -5087,7 +5087,7 @@ async function openAnimChannelPage(name, color, tab, networkId, searchQuery) {
       </div>
 
       <!-- تابز -->
-      <div style="display:flex;border-bottom:2px solid rgba(255,255,255,0.1);padding:0 12px">
+      <div style="display:flex;border-bottom:2px solid rgba(255,255,255,0.1);overflow-x:auto;margin-bottom:12px">
         ${[['all','الكل'],['tv','مسلسلات'],['movie','أفلام']].map(([t,label]) => `
           <button onclick="openAnimChannelPage('${name}','${color}','${t}',${networkId||'null'},'${searchQuery}')"
             style="padding:10px 16px;background:transparent;border:none;border-bottom:${tab===t?'2px solid '+color:'2px solid transparent'};color:${tab===t?'#fff':'rgba(255,255,255,0.5)'};font-family:Tajawal,sans-serif;font-size:0.85rem;cursor:pointer;margin-bottom:-2px;font-weight:${tab===t?'700':'400'}">${label}</button>
@@ -5096,9 +5096,10 @@ async function openAnimChannelPage(name, color, tab, networkId, searchQuery) {
 
       <!-- الكروت -->
       <div class="otaku-all-grid" style="padding:12px">
-        ${combined.length ? combined.map((m,i) => buildMovieCard(m, m.media_type||(m.title?'movie':'tv'),'',i+1)).join('') : '<div style="color:rgba(255,255,255,0.4);text-align:center;padding:40px;font-family:Tajawal,sans-serif">لا توجد نتائج</div>'}
+        ${combined.length ? combined.map((m,i) => buildMovieCard(m, m.media_type||(m.title?'movie':'tv'),'',i+1)).join('') : `<div style="color:rgba(255,255,255,0.4);text-align:center;padding:40px;font-family:Tajawal,sans-serif">لا توجد نتائج</div>`}
       </div>
     </div>`;
+}
 }
 async function openArabicContent(tab = 'all') {
   const detailPage = document.getElementById('detailPage');
