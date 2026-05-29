@@ -1202,7 +1202,7 @@ if (keywords.length) {
         <h3 class="detail-section-title">🎭 طاقم التمثيل</h3>
         <div class="cast-slider">
           ${cast.map(a => `
-            <div class="cast-card-wide">
+            <div class="cast-card-wide" onclick="openActorPage(${a.id})" style="cursor:pointer">
               <div class="cast-img-wrap">
                 <img data-src="${a.profile_path ? CONFIG.IMAGES.PROFILE+a.profile_path : CONFIG.IMAGES.PLACEHOLDER}"
                      src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
@@ -5499,4 +5499,97 @@ document.querySelectorAll('.prem-nav-item').forEach(btn => {
     }, 200);
   });
 });
+}
+async function openActorPage(personId) {
+  const page = document.getElementById('actorPage');
+  if (!page) return;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  page.classList.add('active');
+  document.getElementById('heroSection')?.style && (document.getElementById('heroSection').style.display = 'none');
+  page.innerHTML = '<div class="ap-loading"><div class="ap-spinner"></div></div>';
+  window.scrollTo(0, 0);
+  try {
+    const base = `https://api.themoviedb.org/3/person/${personId}`;
+    const key = `?api_key=${CONFIG.TMDB_KEY}&language=ar-SA`;
+    const [info, credits, ext] = await Promise.all([
+      fetch(base + key).then(r => r.json()),
+      fetch(base + `/combined_credits` + key).then(r => r.json()),
+      fetch(base + key.replace('ar-SA','en-US')).then(r => r.json())
+    ]);
+    const img = info.profile_path ? `https://image.tmdb.org/t/p/w500${info.profile_path}` : CONFIG.IMAGES.PLACEHOLDER;
+    const name = info.name || '';
+    const bio = info.biography || ext.biography || 'لا توجد سيرة ذاتية متاحة.';
+    const bday = info.birthday || '';
+    const place = info.place_of_birth || '';
+    const dept = info.known_for_department || '';
+    const now = new Date().toISOString().slice(0,10);
+    const allMovies = (credits.cast||[]).filter(m => m.media_type==='movie' && m.poster_path).sort((a,b)=>(b.release_date||'').localeCompare(a.release_date||''));
+    const pastMovies = allMovies.filter(m => (m.release_date||'9999') <= now);
+    const upMovies  = allMovies.filter(m => (m.release_date||'9999') > now);
+    const allTV     = (credits.cast||[]).filter(m => m.media_type==='tv' && m.poster_path).sort((a,b)=>(b.first_air_date||'').localeCompare(a.first_air_date||''));
+    const pastTV    = allTV.filter(m => (m.first_air_date||'9999') <= now);
+    const upTV      = allTV.filter(m => (m.first_air_date||'9999') > now);
+    const buildCard = (m, type, isUp) => {
+      const poster = `https://image.tmdb.org/t/p/w342${m.poster_path}`;
+      const title = m.title || m.name || '';
+      const year = (m.release_date || m.first_air_date || '').slice(0,4);
+      const rat = m.vote_average ? m.vote_average.toFixed(1) : '';
+      return `<div class="ap-card" onclick="openDetail(${m.id},'${type}')">
+        <div class="ap-card-wrap">
+          <img class="ap-card-img" src="${poster}" loading="lazy" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+          ${isUp ? '<span class="ap-soon-badge">قريباً</span>' : ''}
+          ${rat ? `<span class="ap-rat">${rat}</span>` : ''}
+          <div class="ap-card-hover">▶</div>
+        </div>
+        <div class="ap-card-title">${title}</div>
+        ${year ? `<div class="ap-card-year">${year}</div>` : ''}
+      </div>`;
+    };
+    const buildSection = (title, items, type, isUp) => items.length ? `
+      <div class="ap-sub-section">
+        <div class="ap-sub-title">${title} <span class="ap-count">${items.length}</span></div>
+        <div class="ap-cards-row">${items.slice(0,20).map(m => buildCard(m, type, isUp)).join('')}</div>
+      </div>` : '';
+    const ageStr = bday ? (() => { const y = new Date().getFullYear() - parseInt(bday); return `${y} سنة`; })() : '';
+    page.innerHTML = `
+    <div class="ap-wrap">
+      <div class="ap-bg-blur" style="background-image:url('${img}')"></div>
+      <div class="ap-bg-dim"></div>
+      <button class="ap-back-btn" onclick="goBack()"><i class="ri-arrow-right-line"></i> رجوع</button>
+      <div class="ap-hero">
+        <div class="ap-photo-ring"><img class="ap-photo" src="${img}" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'"></div>
+        <div class="ap-hero-info">
+          <div class="ap-name">${name}</div>
+          ${dept ? `<div class="ap-dept"><i class="ri-movie-2-line"></i> ${dept}</div>` : ''}
+          <div class="ap-meta-row">
+            ${bday ? `<span class="ap-meta-chip"><i class="ri-cake-2-line"></i> ${bday}${ageStr?' · '+ageStr:''}</span>` : ''}
+            ${place ? `<span class="ap-meta-chip"><i class="ri-map-pin-2-line"></i> ${place}</span>` : ''}
+          </div>
+        </div>
+      </div>
+      ${bio ? `<div class="ap-bio-section"><div class="ap-bio-title"><i class="ri-article-line"></i> السيرة الذاتية</div><div class="ap-bio" id="apBio">${bio.slice(0,400)}${bio.length>400?`<span id="apBioMore" style="display:none">${bio.slice(400)}</span> <span class="ap-bio-more-btn" onclick="document.getElementById('apBioMore').style.display='inline';this.style.display='none'">... المزيد</span>`:''}</div></div>` : ''}
+      <div class="ap-tabs-bar">
+        <button class="ap-tab active" onclick="apSwitchTab('movies',this)"><i class="ri-film-line"></i> الأفلام</button>
+        <button class="ap-tab" onclick="apSwitchTab('tv',this)"><i class="ri-tv-2-line"></i> المسلسلات</button>
+      </div>
+      <div class="ap-tab-content" id="apTabMovies">
+        ${buildSection('الأفلام السابقة', pastMovies, 'movie', false)}
+        ${buildSection('قريباً في السينما', upMovies, 'movie', true)}
+        ${!pastMovies.length && !upMovies.length ? '<p class="ap-empty">لا توجد أفلام مسجلة</p>' : ''}
+      </div>
+      <div class="ap-tab-content" id="apTabTv" style="display:none">
+        ${buildSection('المسلسلات السابقة', pastTV, 'tv', false)}
+        ${buildSection('مسلسلات قادمة', upTV, 'tv', true)}
+        ${!pastTV.length && !upTV.length ? '<p class="ap-empty">لا توجد مسلسلات مسجلة</p>' : ''}
+      </div>
+    </div>`;
+  } catch(e) {
+    page.innerHTML = `<button class="ap-back-btn" onclick="goBack()"><i class="ri-arrow-right-line"></i> رجوع</button><p style="color:#fff;text-align:center;padding:40px">حدث خطأ في تحميل البيانات</p>`;
+  }
+}
+function apSwitchTab(tab, btn) {
+  document.querySelectorAll('.ap-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('apTabMovies').style.display = tab === 'movies' ? 'block' : 'none';
+  document.getElementById('apTabTv').style.display     = tab === 'tv'     ? 'block' : 'none';
 }
