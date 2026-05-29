@@ -8463,3 +8463,80 @@ input[type=range].rox-slider::-webkit-slider-thumb {
 .ghub-icon {
   display: none !important;
 } 
+.genres-hub-row {
+  scroll-snap-type: x mandatory !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+.ghub-card {
+  flex: 0 0 180px !important;
+  height: 115px !important;
+  scroll-snap-align: start !important;
+  flex-shrink: 0 !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease !important;
+  will-change: transform !important;
+}
+
+.ghub-gif {
+  transform: scale(1.15) !important;
+  transition: transform 0.6s ease !important;
+  will-change: transform !important;
+}
+
+.ghub-card:hover .ghub-gif {
+  transform: scale(1.0) !important;
+}
+
+.ghub-card:hover {
+  border-color: rgba(229,9,20,0.9) !important;
+  box-shadow: 0 0 0 1.5px rgba(229,9,20,0.5), 0 8px 30px rgba(229,9,20,0.4) !important;
+  transform: translateY(-5px) scale(1.03) !important;
+}
+
+.platforms-grid {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  scroll-snap-type: x mandatory !important;
+  -webkit-overflow-scrolling: touch !important;
+  gap: 12px !important;
+  padding: 8px 16px 16px !important;
+  scrollbar-width: none !important;
+}
+
+.platforms-grid::-webkit-scrollbar {
+  display: none !important;
+}
+
+.platform-card {
+  flex: 0 0 200px !important;
+  height: 120px !important;
+  scroll-snap-align: start !important;
+  flex-shrink: 0 !important;
+  border-radius: 14px !important;
+  overflow: hidden !important;
+  position: relative !important;
+  cursor: pointer !important;
+  border: 1.5px solid rgba(255,255,255,0.08) !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease !important;
+  will-change: transform !important;
+}
+
+.platform-card img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  transform: scale(1.15) !important;
+  transition: transform 0.6s ease !important;
+  will-change: transform !important;
+}
+
+.platform-card:hover img {
+  transform: scale(1.0) !important;
+}
+
+.platform-card:hover {
+  border-color: rgba(229,9,20,0.9) !important;
+  box-shadow: 0 0 0 1.5px rgba(229,9,20,0.5), 0 8px 30px rgba(229,9,20,0.4) !important;
+  transform: translateY(-5px) scale(1.03) !important;
+} 
