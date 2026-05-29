@@ -5090,7 +5090,7 @@ async function openAnimChannelPage(name, color, tab, networkId, searchQuery) {
       <div style="display:flex;border-bottom:2px solid rgba(255,255,255,0.1);padding:0 12px">
         ${[['all','الكل'],['tv','مسلسلات'],['movie','أفلام']].map(([t,label]) => `
           <button onclick="openAnimChannelPage('${name}','${color}','${t}',${networkId||'null'},'${searchQuery}')"
-            style="padding:10px 16px;background:transparent;border:none;border-bottom:${tab===t?`2px solid ${color}`:'2px solid transparent'};color:${tab===t?'#fff':'rgba(255,255,255,0.5)'};font-family:Tajawal,sans-serif;font-size:0.85rem;cursor:pointer;margin-bottom:-2px;font-weight:${tab===t?'700':'400'}">${label}</button>
+            style="padding:10px 16px;background:transparent;border:none;border-bottom:${tab===t?'2px solid '+color:'2px solid transparent'};color:${tab===t?'#fff':'rgba(255,255,255,0.5)'};font-family:Tajawal,sans-serif;font-size:0.85rem;cursor:pointer;margin-bottom:-2px;font-weight:${tab===t?'700':'400'}">${label}</button>
         `).join('')}
       </div>
 
