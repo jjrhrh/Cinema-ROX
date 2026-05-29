@@ -948,42 +948,94 @@ async function loadHomePage() {
     </div>` : '';
 
   const genresHubHTML = `
-  <div class="home-section" id="sec_genres_hub">
-    <div class="section-header">
-      <span class="section-bar"></span>
-      <h2 class="section-title">الأنواع</h2>
+<div class="home-section" id="sec_genres_hub">
+  <div class="section-header">
+    <span class="section-bar"></span>
+    <h2 class="section-title">الأنواع</h2>
+  </div>
+  <div class="genres-hub-row" id="genresHubRow">
+    <div class="ghub-card ghub-animation" onclick="openAnimationHub()">
+      <img class="ghub-gif" src="https://media2.giphy.com/media/TKQmWCSaTg7RNIb8ZI/giphy.gif">
+      <span class="ghub-label">الرسوم المتحركة</span>
     </div>
-    <div class="genres-hub-row" id="genresHubRow">
-      <div class="ghub-card ghub-animation" onclick="openAnimationHub()">
-        <div class="ghub-icon"><i class="ri-tv-2-line"></i></div>
-        <span class="ghub-label">الرسوم المتحركة</span>
-      </div>
-      <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=28','أكشن')">
-        <div class="ghub-icon"><i class="ri-rocket-2-line"></i></div>
-        <span class="ghub-label">أكشن</span>
-      </div>
-      <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=27','رعب')">
-        <div class="ghub-icon"><i class="ri-ghost-2-line"></i></div>
-        <span class="ghub-label">رعب</span>
-      </div>
-      <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=35','كوميديا')">
-        <div class="ghub-icon"><i class="ri-emotion-laugh-line"></i></div>
-        <span class="ghub-label">كوميديا</span>
-      </div>
-      <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=18','دراما')">
-        <div class="ghub-icon"><i class="ri-heart-line"></i></div>
-        <span class="ghub-label">دراما</span>
-      </div>
-      <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=878','خيال علمي')">
-        <div class="ghub-icon"><i class="ri-rocket-line"></i></div>
-        <span class="ghub-label">خيال علمي</span>
-      </div>
-      <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=10749','رومانسي')">
-        <div class="ghub-icon"><i class="ri-heart-3-line"></i></div>
-        <span class="ghub-label">رومانسي</span>
-      </div>
+    <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=27','رعب')">
+      <img class="ghub-gif" src="https://media3.giphy.com/media/YnbZXaqQCUWD0UGztx/giphy.gif">
+      <span class="ghub-label">رعب</span>
     </div>
-  </div>`;
+    <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=28','أكشن')">
+      <img class="ghub-gif" src="https://media2.giphy.com/media/l3q2sGRLPRrLVqqD6/giphy.gif">
+      <span class="ghub-label">أكشن</span>
+    </div>
+    <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=35','كوميديا')">
+      <img class="ghub-gif" src="https://media1.giphy.com/media/2A75RyXVzzSI2bx4Gj/giphy.gif">
+      <span class="ghub-label">كوميديا</span>
+    </div>
+    <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=12','مغامرة')">
+      <img class="ghub-gif" src="https://media4.giphy.com/media/wPyDWwurn8XEWdR9ol/giphy.gif">
+      <span class="ghub-label">مغامرة</span>
+    </div>
+    <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=80','جريمة')">
+      <img class="ghub-gif" src="https://media3.giphy.com/media/hV6rn0naXBLsaFDCQk/giphy.gif">
+      <span class="ghub-label">جريمة</span>
+    </div>
+    <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=36','تاريخ')">
+      <img class="ghub-gif" src="https://media1.giphy.com/media/KbAqIFJxljNtzgJuLV/giphy.gif">
+      <span class="ghub-label">تاريخ</span>
+    </div>
+    <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=16','بيكسر')">
+      <img class="ghub-gif" src="https://media0.giphy.com/media/OpPyw0U5IGZDog5K4U/giphy.gif">
+      <span class="ghub-label">بيكسر</span>
+    </div>
+    <div class="ghub-card" onclick="openBrowseAll('tv','/discover/tv?with_genres=16&with_origin_country=JP','أنمي')">
+      <img class="ghub-gif" src="https://media1.giphy.com/media/3gTmgzy7wYJfyaGRHQ/giphy.gif">
+      <span class="ghub-label">أنمي</span>
+    </div>
+    <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=14','خيال')">
+      <img class="ghub-gif" src="https://media0.giphy.com/media/qWoY5iquwDQ1mer9dV/giphy.gif">
+      <span class="ghub-label">خيال</span>
+    </div>
+    <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=53','إثارة')">
+      <img class="ghub-gif" src="https://media4.giphy.com/media/d20Xhns1NlrejwLGJY/giphy.gif">
+      <span class="ghub-label">إثارة</span>
+    </div>
+    <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=878','خيال علمي')">
+      <img class="ghub-gif" src="https://media4.giphy.com/media/3ov9jN0SiS8DPqGoNi/giphy.gif">
+      <span class="ghub-label">خيال علمي</span>
+    </div>
+    <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=18','دراما')">
+      <img class="ghub-gif" src="https://media1.giphy.com/media/QNQc5qHY4sEOwbMsyh/giphy.gif">
+      <span class="ghub-label">دراما</span>
+    </div>
+    <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=99','وثائقي')">
+      <img class="ghub-gif" src="https://media3.giphy.com/media/bPDzcb6OADZ9m/giphy.gif">
+      <span class="ghub-label">وثائقي</span>
+    </div>
+    <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=10749','رومانسي')">
+      <img class="ghub-gif" src="https://media1.giphy.com/media/3og0IGRNt8B81OkmnS/giphy.gif">
+      <span class="ghub-label">رومانسي</span>
+    </div>
+    <div class="ghub-card" onclick="openBrowseAll('tv','/discover/tv?with_genres=10764','الواقع')">
+      <img class="ghub-gif" src="https://media0.giphy.com/media/UH5wa89mhqxfgOb95v/giphy.gif">
+      <span class="ghub-label">الواقع</span>
+    </div>
+    <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=10751','الأطفال والعائلة')">
+      <img class="ghub-gif" src="https://media3.giphy.com/media/BsFGkUjyPgaOZzGhjP/giphy.gif">
+      <span class="ghub-label">الأطفال والعائلة</span>
+    </div>
+    <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=28,12','إثارة وحركة')">
+      <img class="ghub-gif" src="https://media1.giphy.com/media/7uurRVHK6eb5K/giphy.gif">
+      <span class="ghub-label">إثارة وحركة</span>
+    </div>
+    <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=37','غربي')">
+      <img class="ghub-gif" src="https://media4.giphy.com/media/kd60CY2xrO9NKTLej7/giphy.gif">
+      <span class="ghub-label">غربي</span>
+    </div>
+    <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=10752','قصص الحرب')">
+      <img class="ghub-gif" src="https://media2.giphy.com/media/l1J3Skn2yOcRJ5ib6/giphy.gif">
+      <span class="ghub-label">قصص الحرب</span>
+    </div>
+  </div>
+</div>`;
 
   page.innerHTML = cwHTML + genresHubHTML + SECTIONS.filter(s => !s.isGenresHub).map(s => `
     <div class="home-section" id="${s.id}">
