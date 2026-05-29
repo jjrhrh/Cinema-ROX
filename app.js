@@ -910,7 +910,6 @@ async function loadHomePage() {
 { id: 'sec_popular',  title: 'الأفلام الرائجة',   endpoint: '/movie/popular',   type: 'movie' },
 { id: 'sec_toprated', title: 'الأعلى تقييماً',    endpoint: '/movie/top_rated', type: 'movie' },
 { id: 'sec_tvseries', title: 'أحدث المسلسلات',    endpoint: '/tv/popular',      type: 'tv'    },
-{ id: 'sec_anime',    title: 'أحدث الأنمي',        endpoint: '/tv/popular',      type: 'tv', params: { with_genres: '16', with_origin_country: 'JP' } },
   ];
 
   // عرض الـ Skeleton فوراً بدون انتظار
@@ -943,7 +942,7 @@ async function loadHomePage() {
       </div>
     </div>` : '';
 
-  page.innerHTML = cwHTML + genresSection + SECTIONS.map(s => `
+  page.innerHTML = cwHTML + SECTIONS.map(s => `
     <div class="home-section" id="${s.id}">
       <div class="section-header">
         <span class="section-bar"></span>
@@ -958,21 +957,7 @@ async function loadHomePage() {
         <button class="otaku-arrow otaku-arrow-right" onclick="otakuSlide('${s.id}_row',1)">›</button>
       </div>
     </div>`).join('');
-// قسم الأنواع
-  const genresSection = `
-    <div class="home-section" id="sec_genres">
-      <div class="section-header">
-        <span class="section-bar"></span>
-        <h2 class="section-title">🎭 أنواع</h2>
-      </div>
-      <div class="genres-cats-row">
-        <div class="genre-cat-card" onclick="openAnimationChannels()" style="--gc:linear-gradient(135deg,#7c3aed,#e50914)">
-          <div class="genre-cat-icon">🎨</div>
-          <div class="genre-cat-name">رسوم متحركة</div>
-        </div>
-      </div>
-    </div>`;
-  page.innerHTML = cwHTML + genresSection + SECTIONS.map(s => `
+
   // كل قسم يتحمل بشكل مستقل
   SECTIONS.forEach(async s => {
     try {
@@ -5016,48 +5001,6 @@ function applyAnimations(on, save = true) {
 
 function applyHQ(on, save = true) {
   if (save) localStorage.setItem('rox_hq', on);
-}
-function openAnimationChannels() {
-  const page = document.getElementById('homePage');
-  if (!page) return;
-  const channels = [
-    { name: 'Disney Channel',    color: '#0063e5' },
-    { name: 'Cartoon Network',   color: '#01a996' },
-    { name: 'Nickelodeon',       color: '#ff6b00' },
-    { name: 'Disney Junior',     color: '#e91e8c' },
-    { name: 'Disney XD',         color: '#2979ff' },
-    { name: 'Cartoonito',        color: '#f9c800' },
-    { name: 'Nick Jr',           color: '#ff8c00' },
-    { name: 'Ajyal',             color: '#00b4b4' },
-    { name: 'CBeebies',          color: '#e91e63' },
-    { name: 'MeTV Toons',        color: '#607d8b' },
-    { name: 'Discovery Family',  color: '#00897b' },
-    { name: 'Toonami',           color: '#c62828' },
-    { name: 'Jeem TV',           color: '#43a047' },
-    { name: 'Baraem',            color: '#fb8c00' },
-    { name: 'Majid',             color: '#8e24aa' },
-    { name: 'MBC 3',             color: '#e53935' },
-    { name: 'Spacetoon',         color: '#1e88e5' },
-    { name: 'Adult Swim',        color: '#212121' },
-    { name: 'Max',               color: '#0064ff' },
-    { name: 'Boomerang',         color: '#ff5722' },
-  ];
-  page.innerHTML = `
-    <div style="padding:16px 12px 80px">
-      <div class="section-header" style="margin-bottom:16px">
-        <span class="section-bar"></span>
-        <h2 class="section-title">🎨 رسوم متحركة</h2>
-        <button class="browse-all-btn" onclick="loadHomePage()">‹ رجوع</button>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        ${channels.map(c => `
-          <div onclick="openBrowseAll('tv','/tv/popular','${c.name}')"
-            style="background:${c.color}22;border:1px solid ${c.color}55;border-radius:14px;padding:18px 12px;text-align:center;cursor:pointer;transition:transform .2s"
-            onclick="openBrowseAll('tv','/tv/popular','${c.name}')">
-            <div style="font-size:1rem;font-weight:700;color:#fff">${c.name}</div>
-          </div>`).join('')}
-      </div>
-    </div>`;
 }
 const ROX_PLATFORMS = [
   { id: 'netflix', name: 'Netflix', type: 'movie', endpoint: '/movie/popular', color: '#e50914', gifs: ['https://i.postimg.cc/5JrQJYTw/GIF-20260412-181509-853.gif?dl=1','https://files.catbox.moe/wem3vn.gif','https://i.postimg.cc/BQfGF3jV/IMG-8003.gif','https://media1.tenor.com/m/Hh5lO8fCAAIAAAAC/netflix.gif','https://nuvioapp.space/uploads/covers/0696cf9a-3612-4d9b-bb65-72c6c5a060ba.gif'] },
