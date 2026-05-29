@@ -5835,3 +5835,12 @@ function apSwitchTab(tab, btn) {
   document.getElementById('apTabMovies').style.display = tab === 'movies' ? 'block' : 'none';
   document.getElementById('apTabTv').style.display     = tab === 'tv'     ? 'block' : 'none';
 }
+document.addEventListener('scroll', () => {
+  document.querySelectorAll('.ghub-gif, .platform-card img').forEach(el => {
+    const rect = el.closest('.ghub-card, .platform-card').getBoundingClientRect();
+    const center = rect.left + rect.width / 2;
+    const screenCenter = window.innerWidth / 2;
+    const offset = (center - screenCenter) / screenCenter;
+    el.style.transform = `scale(1.15) translateX(${offset * 12}px)`;
+  });
+}, { passive: true });
