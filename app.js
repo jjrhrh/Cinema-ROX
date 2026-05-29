@@ -1092,7 +1092,7 @@ function openAnimationHub() {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('heroSection').style.display = 'none';
   document.getElementById('newsSection').style.display = 'none';
-  document.getElementById('studioBar').style.display = 'none';
+  document.getElementById('platformsSection').style.display = 'none';
   page.classList.add('active');
   window.scrollTo(0, 0);
 
