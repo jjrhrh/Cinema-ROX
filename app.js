@@ -908,6 +908,7 @@ async function loadHomePage() {
 
   const SECTIONS = [
 { id: 'sec_popular',  title: 'الأفلام الرائجة',   endpoint: '/movie/popular',   type: 'movie' },
+{ id: 'sec_genres_hub', title: 'الأنواع', endpoint: '', type: 'movie', isGenresHub: true },
 { id: 'sec_toprated', title: 'الأعلى تقييماً',    endpoint: '/movie/top_rated', type: 'movie' },
 { id: 'sec_tvseries', title: 'أحدث المسلسلات',    endpoint: '/tv/popular',      type: 'tv'    },
 { id: 'sec_arabic_movies', title: 'الروائع العربية', endpoint: '/discover/movie', type: 'movie', params: { with_original_language: 'ar', sort_by: 'vote_average.desc', 'vote_count.gte': '100' } },
@@ -946,7 +947,45 @@ async function loadHomePage() {
       </div>
     </div>` : '';
 
-  page.innerHTML = cwHTML + SECTIONS.map(s => `
+  const genresHubHTML = `
+  <div class="home-section" id="sec_genres_hub">
+    <div class="section-header">
+      <span class="section-bar"></span>
+      <h2 class="section-title">الأنواع</h2>
+    </div>
+    <div class="genres-hub-row" id="genresHubRow">
+      <div class="ghub-card ghub-animation" onclick="openAnimationHub()">
+        <div class="ghub-icon"><i class="ri-tv-2-line"></i></div>
+        <span class="ghub-label">الرسوم المتحركة</span>
+      </div>
+      <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=28','أكشن')">
+        <div class="ghub-icon"><i class="ri-rocket-2-line"></i></div>
+        <span class="ghub-label">أكشن</span>
+      </div>
+      <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=27','رعب')">
+        <div class="ghub-icon"><i class="ri-ghost-2-line"></i></div>
+        <span class="ghub-label">رعب</span>
+      </div>
+      <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=35','كوميديا')">
+        <div class="ghub-icon"><i class="ri-emotion-laugh-line"></i></div>
+        <span class="ghub-label">كوميديا</span>
+      </div>
+      <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=18','دراما')">
+        <div class="ghub-icon"><i class="ri-heart-line"></i></div>
+        <span class="ghub-label">دراما</span>
+      </div>
+      <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=878','خيال علمي')">
+        <div class="ghub-icon"><i class="ri-rocket-line"></i></div>
+        <span class="ghub-label">خيال علمي</span>
+      </div>
+      <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=10749','رومانسي')">
+        <div class="ghub-icon"><i class="ri-heart-3-line"></i></div>
+        <span class="ghub-label">رومانسي</span>
+      </div>
+    </div>
+  </div>`;
+
+  page.innerHTML = cwHTML + genresHubHTML + SECTIONS.filter(s => !s.isGenresHub).map(s => `
     <div class="home-section" id="${s.id}">
       <div class="section-header">
         <span class="section-bar"></span>
@@ -994,6 +1033,96 @@ async function loadHomePage() {
   card.onclick = () => openSurprise();
   page.appendChild(card);
   }
+}
+function openAnimationHub() {
+  const page = document.getElementById('detailPage');
+  if (!page) return;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('heroSection').style.display = 'none';
+  document.getElementById('newsSection').style.display = 'none';
+  document.getElementById('studioBar').style.display = 'none';
+  page.classList.add('active');
+  window.scrollTo(0, 0);
+
+  const ANIM_CHANNELS = [
+    { id:'semsem',    name:'Semsem',          color:'#ff6b35', icon:'https://i.postimg.cc/wBRwMBdW/semsem.png' },
+    { id:'hodhod',    name:'Hodhod Kids',     color:'#ffd600', icon:'https://i.postimg.cc/d1xhQp7j/hodhod.png' },
+    { id:'hodhodtv',  name:'Hodhod TV',       color:'#ff9800', icon:'https://i.postimg.cc/Y2LCQyzX/hodhodtv.png' },
+    { id:'tahatv',    name:'Taha TV',         color:'#4caf50', icon:'https://i.postimg.cc/rwcBqzBH/taha.png' },
+    { id:'ajyal',     name:'Ajyal',           color:'#e91e63', icon:'https://i.postimg.cc/Dz7VzB7y/ajyal.png' },
+    { id:'cbeebies',  name:'CBeebies',        color:'#ff5722', icon:'https://i.postimg.cc/sxJhJCmk/cbeebies.png' },
+    { id:'metvtoons', name:'MeTV Toons',      color:'#9c27b0', icon:'https://i.postimg.cc/jj6n2W9B/metv.png' },
+    { id:'univkids',  name:'Universal Kids',  color:'#2196f3', icon:'https://i.postimg.cc/y8F09MPg/univkids.png' },
+    { id:'discfam',   name:'Discovery Family',color:'#00bcd4', icon:'https://i.postimg.cc/hjZTT9TH/discfam.png' },
+    { id:'toonami',   name:'Toonami',         color:'#1565c0', icon:'https://i.postimg.cc/zvgk2r1H/toonami.png' },
+    { id:'cartoonito',name:'Cartoonito',      color:'#ff9100', icon:'https://i.postimg.cc/DyybvVjz/cartoonito.png' },
+    { id:'nickjr',    name:'Nick Jr',         color:'#ff6d00', icon:'https://i.postimg.cc/Kj2P5YcK/nickjr.png' },
+    { id:'nicktoons', name:'Nicktoons',       color:'#00e5ff', icon:'https://i.postimg.cc/L5SrFDnh/nicktoons.png' },
+    { id:'disneyxd',  name:'Disney XD',       color:'#0d47a1', icon:'https://i.postimg.cc/j2Dqfm8Y/disneyxd.png' },
+    { id:'disneyjr',  name:'Disney Junior',   color:'#e91e63', icon:'https://i.postimg.cc/kXnvQ7mk/disneyjr.png' },
+  ];
+
+  let activeChannel = null;
+
+  const channelsHTML = ANIM_CHANNELS.map(ch => `
+    <div class="anim-ch-chip ${activeChannel===ch.id?'active':''}" id="animch_${ch.id}"
+         onclick="filterAnimChannel('${ch.id}')" style="--ch-color:${ch.color}">
+      <span>${ch.name}</span>
+    </div>`).join('');
+
+  page.innerHTML = `
+    <div style="background:#0a0a10;min-height:100vh;padding-bottom:80px">
+      <div class="anim-hub-header">
+        <button class="detail-btn anim-back-btn" onclick="goBack()"><i class="ri-arrow-right-s-line"></i> رجوع</button>
+        <h2 class="anim-hub-title"><i class="ri-tv-2-line"></i> الرسوم المتحركة</h2>
+      </div>
+      <div class="anim-tabs-row">
+        <button class="anim-tab active" id="animTabAll" onclick="switchAnimTab('all',this)">الكل</button>
+        <button class="anim-tab" id="animTabMovies" onclick="switchAnimTab('movie',this)">أفلام</button>
+        <button class="anim-tab" id="animTabSeries" onclick="switchAnimTab('tv',this)">مسلسلات</button>
+      </div>
+      <div class="anim-channels-scroll">${channelsHTML}</div>
+      <div id="animResultsGrid" class="anim-results-grid">
+        ${Array(8).fill('<div class="movie-card skeleton-card"></div>').join('')}
+      </div>
+    </div>`;
+
+  window._animTab = 'all';
+  window._animChannel = null;
+  loadAnimResults();
+}
+
+window.switchAnimTab = function(tab, el) {
+  window._animTab = tab;
+  document.querySelectorAll('.anim-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  loadAnimResults();
+};
+
+window.filterAnimChannel = function(chId) {
+  const prev = window._animChannel;
+  window._animChannel = prev === chId ? null : chId;
+  document.querySelectorAll('.anim-ch-chip').forEach(c => c.classList.remove('active'));
+  if (window._animChannel) document.getElementById('animch_' + window._animChannel)?.classList.add('active');
+  loadAnimResults();
+};
+
+async function loadAnimResults() {
+  const grid = document.getElementById('animResultsGrid');
+  if (!grid) return;
+  grid.innerHTML = Array(8).fill('<div class="movie-card skeleton-card"></div>').join('');
+  const tab = window._animTab || 'all';
+  const params = { with_genres: '16', sort_by: 'popularity.desc' };
+  const endpoints = tab === 'movie' ? ['/discover/movie'] :
+                    tab === 'tv'    ? ['/discover/tv'] :
+                    ['/discover/movie', '/discover/tv'];
+  const results = await Promise.all(endpoints.map(ep => fetchMovies(ep, { type: ep.includes('tv')?'tv':'movie', params })));
+  const all = results.flat().sort((a,b) => b.popularity - a.popularity);
+  if (!grid) return;
+  grid.innerHTML = all.length
+    ? all.map((m,i) => buildMovieCard(m, m.media_type || (tab==='tv'?'tv':'movie'), '', i+1)).join('')
+    : '<div style="color:rgba(255,255,255,0.4);padding:40px;text-align:center">لا توجد نتائج</div>';
+  requestIdleCallback(() => applyCardGlow(), { timeout: 1000 });
 }
 async function openBrowseAll(type, endpoint, title) {
   const page = document.getElementById('detailPage');
