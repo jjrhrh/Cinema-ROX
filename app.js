@@ -644,8 +644,8 @@ async function updateHeroInfo(movies, index) {
       <img class="movie-poster fade-img" src="${img}" alt="${title}" loading="lazy"
            onload="this.classList.add('loaded')"
            onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}';this.classList.add('loaded')">
-      <div class="movie-overlay"><span class="play-icon">▶</span></div>
-      ${movie.vote_average ? `<div class="mc-rating">⭐ ${movie.vote_average.toFixed(1)}</div>` : ''}
+      <div class="movie-overlay"><i class="ri-play-circle-fill" style="font-size:2.2rem;color:#fff;filter:drop-shadow(0 0 8px rgba(229,9,20,0.8))"></i></div>
+      ${movie.vote_average ? `<div class="mc-rating"><i class="ri-star-fill" style="color:#ffd600;font-size:0.7rem;vertical-align:middle"></i> ${movie.vote_average.toFixed(1)}</div>` : ''}
     </div>
   </div>`;
 }
@@ -910,6 +910,10 @@ async function loadHomePage() {
 { id: 'sec_popular',  title: 'الأفلام الرائجة',   endpoint: '/movie/popular',   type: 'movie' },
 { id: 'sec_toprated', title: 'الأعلى تقييماً',    endpoint: '/movie/top_rated', type: 'movie' },
 { id: 'sec_tvseries', title: 'أحدث المسلسلات',    endpoint: '/tv/popular',      type: 'tv'    },
+{ id: 'sec_arabic_movies', title: 'الروائع العربية', endpoint: '/discover/movie', type: 'movie', params: { with_original_language: 'ar', sort_by: 'vote_average.desc', 'vote_count.gte': '100' } },
+{ id: 'sec_arabic_series', title: 'الدراما العربية المشتعلة', endpoint: '/discover/tv', type: 'tv', params: { with_original_language: 'ar', sort_by: 'popularity.desc' } },
+{ id: 'sec_docs', title: 'الوثائقيات المذهلة', endpoint: '/discover/movie', type: 'movie', params: { with_genres: '99', sort_by: 'vote_average.desc', 'vote_count.gte': '200' } },
+{ id: 'sec_indie', title: 'مختارات السينما المستقلة', endpoint: '/discover/movie', type: 'movie', params: { with_genres: '18', sort_by: 'vote_average.desc', 'vote_count.gte': '500', with_original_language: 'en' } },
   ];
 
   // عرض الـ Skeleton فوراً بدون انتظار
@@ -972,11 +976,24 @@ async function loadHomePage() {
       }
       row.innerHTML = movies.map((m, i) => buildMovieCard(m, s.type, s.cardClass || '', i + 1)).join('');
       requestIdleCallback(() => applyCardGlow(), { timeout: 2000 });
+      if (document.getElementById('sec_indie') && !document.getElementById('sec_matcher')) injectMovieMatcher();
     } catch (e) {
       const container = document.getElementById(s.id);
       if (container) container.remove();
     }
   });
+  function injectMovieMatcher() {
+  const page = document.getElementById('homePage');
+  if (!page) return;
+  const old = document.getElementById('sec_matcher');
+  if (old) old.remove();
+  const card = document.createElement('div');
+  card.id = 'sec_matcher';
+  card.className = 'matcher-capsule';
+  card.innerHTML = `<i class="ri-dice-line"></i><span>اختر لي فيلم السهرة</span>`;
+  card.onclick = () => openSurprise();
+  page.appendChild(card);
+  }
 }
 async function openBrowseAll(type, endpoint, title) {
   const page = document.getElementById('detailPage');
