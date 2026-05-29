@@ -958,79 +958,79 @@ async function loadHomePage() {
       <img class="ghub-gif" src="https://media2.giphy.com/media/TKQmWCSaTg7RNIb8ZI/giphy.gif">
       <span class="ghub-label">الرسوم المتحركة</span>
     </div>
-    <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=27','رعب')">
+    <div class="ghub-card" onclick="openGenrePage('رعب')">
       <img class="ghub-gif" src="https://media3.giphy.com/media/YnbZXaqQCUWD0UGztx/giphy.gif">
       <span class="ghub-label">رعب</span>
     </div>
-    <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=28','أكشن')">
+    <div class="ghub-card" onclick="openGenrePage('أكشن')">
       <img class="ghub-gif" src="https://media2.giphy.com/media/l3q2sGRLPRrLVqqD6/giphy.gif">
       <span class="ghub-label">أكشن</span>
     </div>
-    <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=35','كوميديا')">
+    <div class="ghub-card" onclick="openGenrePage('كوميديا')">
       <img class="ghub-gif" src="https://media1.giphy.com/media/2A75RyXVzzSI2bx4Gj/giphy.gif">
       <span class="ghub-label">كوميديا</span>
     </div>
-    <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=12','مغامرة')">
+    <div class="ghub-card" onclick="openGenrePage('مغامرة')">
       <img class="ghub-gif" src="https://media4.giphy.com/media/wPyDWwurn8XEWdR9ol/giphy.gif">
       <span class="ghub-label">مغامرة</span>
     </div>
-    <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=80','جريمة')">
+    <div class="ghub-card" onclick="openGenrePage('جريمة')">
       <img class="ghub-gif" src="https://media3.giphy.com/media/hV6rn0naXBLsaFDCQk/giphy.gif">
       <span class="ghub-label">جريمة</span>
     </div>
-    <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=36','تاريخ')">
+    <div class="ghub-card" onclick="openGenrePage('تاريخ')">
       <img class="ghub-gif" src="https://media1.giphy.com/media/KbAqIFJxljNtzgJuLV/giphy.gif">
       <span class="ghub-label">تاريخ</span>
     </div>
-    <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=16','بيكسر')">
+    <div class="ghub-card" onclick="openGenrePage('بيكسر')">
       <img class="ghub-gif" src="https://media0.giphy.com/media/OpPyw0U5IGZDog5K4U/giphy.gif">
       <span class="ghub-label">بيكسر</span>
     </div>
-    <div class="ghub-card" onclick="openBrowseAll('tv','/discover/tv?with_genres=16&with_origin_country=JP','أنمي')">
+    <div class="ghub-card" onclick="openGenrePage('أنمي')">
       <img class="ghub-gif" src="https://media1.giphy.com/media/3gTmgzy7wYJfyaGRHQ/giphy.gif">
       <span class="ghub-label">أنمي</span>
     </div>
-    <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=14','خيال')">
+    <div class="ghub-card" onclick="openGenrePage('خيال')">
       <img class="ghub-gif" src="https://media0.giphy.com/media/qWoY5iquwDQ1mer9dV/giphy.gif">
       <span class="ghub-label">خيال</span>
     </div>
-    <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=53','إثارة')">
+    <div class="ghub-card" onclick="openGenrePage('إثارة')">
       <img class="ghub-gif" src="https://media4.giphy.com/media/d20Xhns1NlrejwLGJY/giphy.gif">
       <span class="ghub-label">إثارة</span>
     </div>
-    <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=878','خيال علمي')">
+    <div class="ghub-card" onclick="openGenrePage('خيال علمي')">
       <img class="ghub-gif" src="https://media4.giphy.com/media/3ov9jN0SiS8DPqGoNi/giphy.gif">
       <span class="ghub-label">خيال علمي</span>
     </div>
-    <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=18','دراما')">
+    <div class="ghub-card" onclick="openGenrePage('دراما')">
       <img class="ghub-gif" src="https://media1.giphy.com/media/QNQc5qHY4sEOwbMsyh/giphy.gif">
       <span class="ghub-label">دراما</span>
     </div>
-    <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=99','وثائقي')">
+    <div class="ghub-card" onclick="openGenrePage('وثائقي')">
       <img class="ghub-gif" src="https://media3.giphy.com/media/bPDzcb6OADZ9m/giphy.gif">
       <span class="ghub-label">وثائقي</span>
     </div>
-    <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=10749','رومانسي')">
+    <div class="ghub-card" onclick="openGenrePage('رومانسي')">
       <img class="ghub-gif" src="https://media1.giphy.com/media/3og0IGRNt8B81OkmnS/giphy.gif">
       <span class="ghub-label">رومانسي</span>
     </div>
-    <div class="ghub-card" onclick="openBrowseAll('tv','/discover/tv?with_genres=10764','الواقع')">
+    <div class="ghub-card" onclick="openGenrePage('الواقع')">
       <img class="ghub-gif" src="https://media0.giphy.com/media/UH5wa89mhqxfgOb95v/giphy.gif">
       <span class="ghub-label">الواقع</span>
     </div>
-    <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=10751','الأطفال والعائلة')">
+    <div class="ghub-card" onclick="openGenrePage('الأطفال والعائلة')">
       <img class="ghub-gif" src="https://media3.giphy.com/media/BsFGkUjyPgaOZzGhjP/giphy.gif">
       <span class="ghub-label">الأطفال والعائلة</span>
     </div>
-    <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=28,12','إثارة وحركة')">
+    <div class="ghub-card" onclick="openGenrePage('إثارة وحركة')">
       <img class="ghub-gif" src="https://media1.giphy.com/media/7uurRVHK6eb5K/giphy.gif">
       <span class="ghub-label">إثارة وحركة</span>
     </div>
-    <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=37','غربي')">
+    <div class="ghub-card" onclick="openGenrePage('غربي')">
       <img class="ghub-gif" src="https://media4.giphy.com/media/kd60CY2xrO9NKTLej7/giphy.gif">
       <span class="ghub-label">غربي</span>
     </div>
-    <div class="ghub-card" onclick="openBrowseAll('movie','/discover/movie?with_genres=10752','قصص الحرب')">
+    <div class="ghub-card" onclick="openGenrePage('قصص الحرب')">
       <img class="ghub-gif" src="https://media2.giphy.com/media/l1J3Skn2yOcRJ5ib6/giphy.gif">
       <span class="ghub-label">قصص الحرب</span>
     </div>
@@ -5298,6 +5298,75 @@ async function openPlatformPage(platId, tab = 'all') {
         ${items.length
           ? items.map((m,i) => buildMovieCard(m, m.media_type||(m.title?'movie':'tv'),'',i+1)).join('')
           : `<div style="color:rgba(255,255,255,0.4);text-align:center;padding:40px;font-family:Tajawal,sans-serif">لا توجد نتائج</div>`}
+      </div>
+    </div>`;
+}
+const GENRE_IDS = {
+  'رعب':              { movie: 27,    tv: 27    },
+  'أكشن':             { movie: 28,    tv: 10759 },
+  'كوميديا':          { movie: 35,    tv: 35    },
+  'مغامرة':           { movie: 12,    tv: 10759 },
+  'جريمة':            { movie: 80,    tv: 80    },
+  'تاريخ':            { movie: 36,    tv: 36    },
+  'بيكسر':            { movie: 16,    tv: 16    },
+  'أنمي':             { movie: null,  tv: 16,   animeOnly: true },
+  'خيال':             { movie: 14,    tv: 14    },
+  'إثارة':            { movie: 53,    tv: 9648  },
+  'خيال علمي':        { movie: 878,   tv: 10765 },
+  'دراما':            { movie: 18,    tv: 18    },
+  'وثائقي':           { movie: 99,    tv: 99    },
+  'رومانسي':          { movie: 10749, tv: 10749 },
+  'الواقع':           { movie: null,  tv: 10764 },
+  'الأطفال والعائلة': { movie: 10751, tv: 10762 },
+  'إثارة وحركة':      { movie: 28,    tv: 10759 },
+  'غربي':             { movie: 37,    tv: 37    },
+  'قصص الحرب':        { movie: 10752, tv: 10768 },
+};
+
+async function openGenrePage(name, tab) {
+  const genre = GENRE_IDS[name];
+  if (!genre) return;
+  if (!tab) tab = genre.movie ? 'movies' : 'series';
+  const detailPage = document.getElementById('detailPage');
+  if (!detailPage) return;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('heroSection').style.display = 'none';
+  document.getElementById('newsSection').style.display = 'none';
+  document.getElementById('studioBar').style.display = 'none';
+  document.getElementById('platformsSection').style.display = 'none';
+  detailPage.classList.add('active');
+  detailPage.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
+  window.scrollTo(0, 0);
+  let items = [];
+  if (tab === 'movies' && genre.movie) {
+    items = await fetchMovies('/discover/movie', { type: 'movie', limit: 40, params: { with_genres: String(genre.movie), sort_by: 'popularity.desc' } });
+    items = items.map(i => ({ ...i, media_type: 'movie' }));
+  } else if (tab === 'series' && genre.tv) {
+    const params = { with_genres: String(genre.tv), sort_by: 'popularity.desc' };
+    if (genre.animeOnly) params.with_origin_country = 'JP';
+    items = await fetchMovies('/discover/tv', { type: 'tv', limit: 40, params });
+    items = items.map(i => ({ ...i, media_type: 'tv' }));
+  }
+  const tabs = [
+    ...(genre.movie ? [['movies','🎬 أفلام']] : []),
+    ...(genre.tv    ? [['series','📺 مسلسلات']] : []),
+  ];
+  detailPage.innerHTML = `
+    <div style="padding-bottom:80px">
+      <div style="padding:14px 16px 0;display:flex;align-items:center;gap:10px">
+        <button onclick="goBack()" style="background:rgba(255,255,255,0.08);border:none;border-radius:50%;width:36px;height:36px;color:#fff;font-size:1.1rem;cursor:pointer">←</button>
+        <h2 style="color:#fff;font-size:1.2rem;font-family:Tajawal,sans-serif;margin:0">${name}</h2>
+      </div>
+      <div style="display:flex;border-bottom:2px solid rgba(255,255,255,0.1);padding:0 16px;margin:12px 0 0">
+        ${tabs.map(([t, label]) => `
+          <button onclick="openGenrePage('${name}','${t}')"
+            style="padding:10px 18px;background:transparent;border:none;border-bottom:${tab===t?'2px solid #e50914':'2px solid transparent'};color:${tab===t?'#fff':'rgba(255,255,255,0.5)'};font-family:Tajawal,sans-serif;font-size:0.9rem;cursor:pointer;margin-bottom:-2px;font-weight:${tab===t?'700':'400'}">${label}</button>
+        `).join('')}
+      </div>
+      <div class="otaku-all-grid" style="padding:12px">
+        ${items.length
+          ? items.map((m, i) => buildMovieCard(m, m.media_type, '', i + 1)).join('')
+          : '<div style="color:rgba(255,255,255,0.4);text-align:center;padding:40px;font-family:Tajawal,sans-serif">لا توجد نتائج</div>'}
       </div>
     </div>`;
 }
