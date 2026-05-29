@@ -5018,26 +5018,26 @@ function applyHQ(on, save = true) {
   if (save) localStorage.setItem('rox_hq', on);
 }
 const ANIM_CHANNELS = [
-  { name: 'Disney Channel',   color: '#0063e5', networkId: 54  },
-  { name: 'Cartoon Network',  color: '#01a996', networkId: 56  },
-  { name: 'Nickelodeon',      color: '#ff6b00', networkId: 13  },
-  { name: 'Disney Junior',    color: '#e91e8c', networkId: 307 },
-  { name: 'Disney XD',        color: '#2979ff', networkId: 302 },
-  { name: 'Adult Swim',       color: '#212121', networkId: 80  },
-  { name: 'Boomerang',        color: '#ff5722', networkId: 1267},
-  { name: 'Nick Jr',          color: '#ff8c00', searchQuery: 'Nick Jr animation kids' },
-  { name: 'Cartoonito',       color: '#f9c800', searchQuery: 'Cartoonito kids animation' },
-  { name: 'CBeebies',         color: '#e91e63', searchQuery: 'CBeebies children BBC' },
-  { name: 'Discovery Family', color: '#00897b', searchQuery: 'Discovery Family channel' },
-  { name: 'Toonami',          color: '#c62828', searchQuery: 'Toonami action animation' },
-  { name: 'MeTV Toons',       color: '#607d8b', searchQuery: 'classic cartoon animation' },
-  { name: 'Ajyal',            color: '#00b4b4', searchQuery: 'Ajyal kids arabic animation' },
-  { name: 'Jeem TV',          color: '#43a047', searchQuery: 'Jeem arabic kids cartoon' },
-  { name: 'Baraem',           color: '#fb8c00', searchQuery: 'Baraem arabic children' },
-  { name: 'Majid',            color: '#8e24aa', searchQuery: 'Majid kids arabic cartoon' },
-  { name: 'MBC 3',            color: '#e53935', searchQuery: 'MBC 3 kids arabic animation' },
-  { name: 'Spacetoon',        color: '#1e88e5', searchQuery: 'Spacetoon arabic animation cartoon' },
-  { name: 'Max',              color: '#0064ff', networkId: 3186 },
+  { name: 'Disney Channel',   color: '#0063e5', networkId: 54,   gif: 'https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif' },
+  { name: 'Cartoon Network',  color: '#01a996', networkId: 56,   gif: 'https://media.giphy.com/media/TKQmWCSaTg7RNIb8ZI/giphy.gif' },
+  { name: 'Nickelodeon',      color: '#ff6b00', networkId: 13,   gif: 'https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif' },
+  { name: 'Disney Junior',    color: '#e91e8c', networkId: 307,  gif: 'https://media.giphy.com/media/26BRBupa6nRXMGBP2/giphy.gif' },
+  { name: 'Disney XD',        color: '#2979ff', networkId: 302,  gif: 'https://media.giphy.com/media/3oEjHWpiVIOGXT5l9u/giphy.gif' },
+  { name: 'Adult Swim',       color: '#212121', networkId: 80,   gif: 'https://media.giphy.com/media/xT9IgG50Lg7russbGB/giphy.gif' },
+  { name: 'Boomerang',        color: '#ff5722', networkId: 1267, gif: 'https://media.giphy.com/media/LmNwrBhejkK9EFP504/giphy.gif' },
+  { name: 'Nick Jr',          color: '#ff8c00', searchQuery: 'Nick Jr animation kids',          gif: 'https://media.giphy.com/media/3oEjHWpiVIOGXT5l9u/giphy.gif' },
+  { name: 'Cartoonito',       color: '#f9c800', searchQuery: 'Cartoonito kids animation',       gif: 'https://media.giphy.com/media/TKQmWCSaTg7RNIb8ZI/giphy.gif' },
+  { name: 'CBeebies',         color: '#e91e63', searchQuery: 'CBeebies children BBC',           gif: 'https://media.giphy.com/media/26BRBupa6nRXMGBP2/giphy.gif' },
+  { name: 'Discovery Family', color: '#00897b', searchQuery: 'Discovery Family channel',        gif: 'https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif' },
+  { name: 'Toonami',          color: '#c62828', searchQuery: 'Toonami action animation',        gif: 'https://media.giphy.com/media/xT9IgG50Lg7russbGB/giphy.gif' },
+  { name: 'MeTV Toons',       color: '#607d8b', searchQuery: 'classic cartoon animation',       gif: 'https://media.giphy.com/media/LmNwrBhejkK9EFP504/giphy.gif' },
+  { name: 'Ajyal',            color: '#00b4b4', searchQuery: 'Ajyal kids arabic animation',     gif: 'https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif' },
+  { name: 'Jeem TV',          color: '#43a047', searchQuery: 'Jeem arabic kids cartoon',        gif: 'https://media.giphy.com/media/26BRBupa6nRXMGBP2/giphy.gif' },
+  { name: 'Baraem',           color: '#fb8c00', searchQuery: 'Baraem arabic children',          gif: 'https://media.giphy.com/media/3oEjHWpiVIOGXT5l9u/giphy.gif' },
+  { name: 'Majid',            color: '#8e24aa', searchQuery: 'Majid kids arabic cartoon',       gif: 'https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif' },
+  { name: 'MBC 3',            color: '#e53935', searchQuery: 'MBC 3 kids arabic animation',     gif: 'https://media.giphy.com/media/TKQmWCSaTg7RNIb8ZI/giphy.gif' },
+  { name: 'Spacetoon',        color: '#1e88e5', searchQuery: 'Spacetoon arabic animation',      gif: 'https://media.giphy.com/media/xT9IgG50Lg7russbGB/giphy.gif' },
+  { name: 'Max',              color: '#0064ff', networkId: 3186, gif: 'https://media.giphy.com/media/LmNwrBhejkK9EFP504/giphy.gif' },
 ];
 
 function openAnimationChannels() {
@@ -5079,9 +5079,10 @@ async function openAnimChannelPage(name, color, tab, networkId, searchQuery) {
       <div style="display:flex;gap:8px;padding:12px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none">
         ${ANIM_CHANNELS.map(c => `
           <button onclick="openAnimChannelPage('${c.name}','${c.color}','${tab}',${c.networkId||'null'},'${c.searchQuery||''}')"
-            style="flex-shrink:0;padding:6px 14px;border-radius:20px;border:1.5px solid ${c.name===name?c.color:'rgba(255,255,255,0.15)'};background:${c.name===name?c.color+'22':'transparent'};color:${c.name===name?'#fff':'rgba(255,255,255,0.55)'};font-family:Tajawal,sans-serif;font-size:0.78rem;cursor:pointer;font-weight:${c.name===name?'700':'400'};white-space:nowrap">
-            ${c.name}
-          </button>`).join('')}
+  style="flex-shrink:0;padding:0;border-radius:20px;border:2px solid ${c.name===name?c.color:'rgba(255,255,255,0.15)'};background:transparent;cursor:pointer;overflow:hidden;position:relative">
+  <img src="${c.gif}" style="width:80px;height:36px;object-fit:cover;display:block;opacity:${c.name===name?'1':'0.5'}">
+  <span style="position:absolute;bottom:2px;left:0;right:0;text-align:center;color:#fff;font-size:0.6rem;font-family:Tajawal,sans-serif;font-weight:700;text-shadow:0 1px 3px #000">${c.name}</span>
+</button>
       </div>
 
       <!-- تابز -->
