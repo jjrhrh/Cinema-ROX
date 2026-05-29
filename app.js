@@ -910,6 +910,7 @@ async function loadHomePage() {
 { id: 'sec_popular',  title: 'الأفلام الرائجة',   endpoint: '/movie/popular',   type: 'movie' },
 { id: 'sec_toprated', title: 'الأعلى تقييماً',    endpoint: '/movie/top_rated', type: 'movie' },
 { id: 'sec_tvseries', title: 'أحدث المسلسلات',    endpoint: '/tv/popular',      type: 'tv'    },
+{ id: 'sec_arabic', title: '🌍 المحتوى العربي', endpoint: '/discover/movie', type: 'movie', params: { with_original_language: 'ar', sort_by: 'popularity.desc' }, isArabicSection: true },
 { id: 'sec_anime',    title: 'أحدث الأنمي',        endpoint: '/tv/popular',      type: 'tv', params: { with_genres: '16', with_origin_country: 'JP' } },
   ];
 
@@ -944,6 +945,20 @@ async function loadHomePage() {
     </div>` : '';
 
   page.innerHTML = cwHTML + genresSection + SECTIONS.map(s => `
+    <div class="home-section" id="${s.id}">
+      <div class="section-header">
+        <span class="section-bar"></span>
+        <h2 class="section-title">${s.title}</h2>
+        ${s.isArabicSection ? `<button class="browse-all-btn" onclick="openArabicContent()">عرض الكل ›</button>` : `<button class="browse-all-btn" onclick="openBrowseAll('${s.type}','${s.endpoint}','${s.title}')">عرض الكل ›</button>`}
+      </div>
+      <div class="otaku-slider-wrap">
+        <button class="otaku-arrow otaku-arrow-left" onclick="otakuSlide('${s.id}_row',-1)">‹</button>
+        <div class="movies-row" id="${s.id}_row">
+          ${Array(4).fill('<div class="movie-card skeleton-card"></div>').join('')}
+        </div>
+        <button class="otaku-arrow otaku-arrow-right" onclick="otakuSlide('${s.id}_row',1)">›</button>
+      </div>
+    </div>`).join('');
     <div class="home-section" id="${s.id}">
       <div class="section-header">
         <span class="section-bar"></span>
@@ -5119,6 +5134,66 @@ async function openAnimChannelPage(name, color, tab, networkId, searchQuery) {
       </div>
       <div class="otaku-all-grid">
         ${combined.length ? combined.map((m, i) => buildMovieCard(m, m.media_type || (m.title ? 'movie' : 'tv'), '', i+1)).join('') : '<div style="color:rgba(255,255,255,0.4);text-align:center;padding:40px;font-family:Tajawal,sans-serif">لا توجد نتائج</div>'}
+      </div>
+    </div>`;
+}
+async function openArabicContent(tab = 'all') {
+  const detailPage = document.getElementById('detailPage');
+  if (!detailPage) return;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('heroSection').style.display = 'none';
+  document.getElementById('newsSection').style.display = 'none';
+  document.getElementById('studioBar').style.display = 'none';
+  detailPage.classList.add('active');
+  detailPage.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
+  window.scrollTo(0, 0);
+
+  const arabicCountries = 'SA|EG|AE|KW|QA|BH|OM|JO|LB|SY|IQ|MA|DZ|TN|LY|YE';
+
+  let results = [];
+  if (tab === 'all' || tab === 'movies_ar') {
+    const d = await fetchMovies('/discover/movie', { type: 'movie', limit: 30, params: { with_original_language: 'ar', sort_by: 'popularity.desc' } });
+    results.push(...d.map(i => ({ ...i, media_type: 'movie' })));
+  }
+  if (tab === 'all' || tab === 'series_ar') {
+    const d = await fetchMovies('/discover/tv', { type: 'tv', limit: 30, params: { with_original_language: 'ar', sort_by: 'popularity.desc' } });
+    results.push(...d.map(i => ({ ...i, media_type: 'tv' })));
+  }
+  if (tab === 'all' || tab === 'movies_gulf') {
+    const d = await fetchMovies('/discover/movie', { type: 'movie', limit: 30, params: { with_original_language: 'ar', with_origin_country: 'SA|AE|KW|QA|BH|OM', sort_by: 'popularity.desc' } });
+    results.push(...d.map(i => ({ ...i, media_type: 'movie' })));
+  }
+  if (tab === 'all' || tab === 'series_gulf') {
+    const d = await fetchMovies('/discover/tv', { type: 'tv', limit: 30, params: { with_original_language: 'ar', with_origin_country: 'SA|AE|KW|QA|BH|OM', sort_by: 'popularity.desc' } });
+    results.push(...d.map(i => ({ ...i, media_type: 'tv' })));
+  }
+
+  // إزالة المكررات
+  const seen = new Set();
+  results = results.filter(i => { if (seen.has(i.id)) return false; seen.add(i.id); return true; });
+
+  const tabs = [
+    { id: 'all',         label: 'الكل' },
+    { id: 'movies_ar',   label: '🎬 أفلام عربية' },
+    { id: 'series_ar',   label: '📺 مسلسلات عربية' },
+    { id: 'movies_gulf', label: '🌴 أفلام خليجية' },
+    { id: 'series_gulf', label: '🏙️ مسلسلات خليجية' },
+  ];
+
+  detailPage.innerHTML = `
+    <div style="padding:16px 12px 80px">
+      <button class="detail-btn" onclick="goBack()" style="margin-bottom:16px">← رجوع</button>
+      <h2 style="color:#fff;margin-bottom:12px;font-size:1.1rem;font-family:Tajawal,sans-serif">🌍 المحتوى العربي</h2>
+      <div style="display:flex;gap:0;margin-bottom:16px;border-bottom:2px solid rgba(255,255,255,0.1);overflow-x:auto;-webkit-overflow-scrolling:touch">
+        ${tabs.map(t => `
+          <button onclick="openArabicContent('${t.id}')"
+            style="padding:10px 14px;background:transparent;border:none;border-bottom:${tab===t.id?'2px solid #e50914':'2px solid transparent'};color:${tab===t.id?'#fff':'rgba(255,255,255,0.5)'};font-family:Tajawal,sans-serif;font-size:0.82rem;cursor:pointer;white-space:nowrap;margin-bottom:-2px;font-weight:${tab===t.id?'700':'400'}">${t.label}</button>
+        `).join('')}
+      </div>
+      <div class="otaku-all-grid">
+        ${results.length
+          ? results.map((m, i) => buildMovieCard(m, m.media_type, '', i+1)).join('')
+          : '<div style="color:rgba(255,255,255,0.4);text-align:center;padding:40px;font-family:Tajawal,sans-serif">لا توجد نتائج</div>'}
       </div>
     </div>`;
 }
