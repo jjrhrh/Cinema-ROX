@@ -2006,6 +2006,8 @@ const proSrvs = [
   { icon:'<i class="ri-star-shine-fill style-icon" style="color:#ffeaa7"></i>', name:'VEGA', desc:'#11', url:srvUrl(S.SRV11,type,id,season,episode)+'?autoplayNextEpisode=true&episodeSelector=true&overlay=true&color=e50914' },
 ];
 const freeSrvs = [
+  { icon:'<i class="ri-play-circle-line style-icon" style="color:#e50914"></i>', name:'AUTOEMBED', desc:'IMDB • تلقائي', url: type==='movie' ? `https://autoembed.co/movie/tmdb/${id}` : `https://autoembed.co/tv/tmdb/${id}-${season}-${episode}` },
+  { icon:'<i class="ri-youtube-line style-icon" style="color:#ff0000"></i>', name:'EMBEDPLAYER', desc:'يوتيوب • فيمو', url: type==='movie' ? `https://embed-player.com/video/?source=https://autoembed.co/movie/tmdb/${id}` : `https://embed-player.com/video/?source=https://autoembed.co/tv/tmdb/${id}-${season}-${episode}` },
   { icon:'<i class="ri-drop-fill style-icon" style="color:#74b9ff"></i>', name:'CRYSTAL', desc:'#12', url:srvUrl(S.SRV12,type,id,season,episode) },
   { icon:'<i class="ri-code-s-slash-line style-icon" style="color:#a29bfe"></i>', name:'CIPHER', desc:'#13', url:srvUrl(S.SRV13,type,id,season,episode) },
   { icon:'<i class="ri-cloud-windy-fill style-icon" style="color:#81ecec"></i>', name:'NEBULA', desc:'#15', url:srvUrl(S.SRV15,type,id,season,episode) },
