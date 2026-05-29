@@ -1815,14 +1815,14 @@ ${type === 'tv' && (() => { const s = calcSeasonEnd(detail); if (!s) return ''; 
     page.querySelectorAll('.lazy-img').forEach(img => lazyObs.observe(img));
     extractDominantColor(poster, applyDynamicColor);
     setTimeout(() => {
-      // استعادة ألوان الأزرار
-      if (localStorage.getItem(`rox_fav_${id}`)) {
-        const fb = document.querySelector(`.dp-btn-fav[data-id="${id}"]`);
+      const sid = String(id);
+      if (localStorage.getItem(`rox_fav_${sid}`) || localStorage.getItem(`rox_fav_${Number(sid)}`)) {
+        const fb = document.querySelector(`.dp-btn-fav[data-id="${sid}"]`);
         if (fb) { fb.style.color='#e50914'; fb.style.borderColor='rgba(229,9,20,0.7)'; fb.style.boxShadow='0 0 14px rgba(229,9,20,0.4)'; const s=fb.querySelector('svg'); if(s){s.style.fill='#e50914';s.style.stroke='none';} }
       }
       const laterList = getLib('rox_watchlater');
-      if (laterList.find(i => i.id === id)) {
-        const lb = document.querySelector(`.dp-btn-later[data-id="${id}"]`);
+      if (laterList.find(i => String(i.id) === sid)) {
+        const lb = document.querySelector(`.dp-btn-later[data-id="${sid}"]`);
         if (lb) { lb.style.color='#f5c518'; lb.style.borderColor='rgba(245,197,24,0.7)'; lb.style.boxShadow='0 0 14px rgba(245,197,24,0.4)'; const s=lb.querySelector('svg'); if(s){s.style.fill='#f5c518';s.style.stroke='none';} }
       }
     }, 300);
