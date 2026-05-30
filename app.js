@@ -5851,6 +5851,27 @@ if (grid) {
       </div>
     </div>`).join('');
 }
+  const premColorPicker = document.getElementById('premColorPicker');
+  if (premColorPicker) {
+    const saved = localStorage.getItem('rox_custom_color');
+    if (saved) premColorPicker.value = saved;
+  }
+  const fontGrid = document.getElementById('premFontGrid');
+  if (fontGrid) {
+    fontGrid.innerHTML = ROX_FONTS.map(f => `
+      <div class="font-option ${roxCurrentFont === f.id ? 'selected' : ''}" onclick="applyFont('${f.id}');document.querySelectorAll('#premFontGrid .font-option').forEach(c=>c.classList.remove('selected'));this.classList.add('selected')">
+        <div class="font-option-preview" style="font-family:'${f.id}',sans-serif">${f.preview}</div>
+        <div class="font-option-body">
+          <div class="font-option-name">${f.name}</div>
+          <div class="font-option-sample" style="font-family:'${f.id}',sans-serif">${f.sample}</div>
+        </div>
+        <div class="font-option-radio"></div>
+      </div>`).join('');
+  }
+  const bgGrid = document.getElementById('premBgGrid');
+  if (bgGrid) renderBgGrid();
+  const platGrid = document.getElementById('premPlatformsGrid');
+  if (platGrid) renderPlatformsGrid('premPlatformsGrid');
   // ===== SECURITY =====
 const tog2FA = document.getElementById('tog2FA');
 if (tog2FA) {
