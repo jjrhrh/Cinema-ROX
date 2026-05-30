@@ -1108,14 +1108,14 @@ function openAnimationHub() {
   window.scrollTo(0, 0);
 
   const ANIM_CHANNELS = [
-    { id:'cartoonnetwork', name:'Cartoon Network', color:'#ff6b00', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Cartoon_Network_2010_logo.svg/200px-Cartoon_Network_2010_logo.svg.png', networkId: 11, tvOnly: true },
-    { id:'nickelodeon',    name:'Nickelodeon',     color:'#ff8c00', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Nickelodeon_2009_logo.svg/200px-Nickelodeon_2009_logo.svg.png', networkId: 13, tvOnly: true },
-    { id:'disney',         name:'Disney Channel',  color:'#0d47a1', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Disney_Channel_2014_logo.svg/200px-Disney_Channel_2014_logo.svg.png', networkId: 54, tvOnly: true },
-    { id:'disneyjr',       name:'Disney Junior',   color:'#e91e63', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Disney_Junior_logo.svg/200px-Disney_Junior_logo.svg.png', networkId: 302, tvOnly: true },
-    { id:'disneyxd',       name:'Disney XD',       color:'#1565c0', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Disney_XD_2015_logo.svg/200px-Disney_XD_2015_logo.svg.png', networkId: 2739, tvOnly: true },
-    { id:'nickjr',         name:'Nick Jr',         color:'#ff6d00', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Nick_Jr._logo_%282009%29.svg/200px-Nick_Jr._logo_%282009%29.svg.png', networkId: 174, tvOnly: true },
-    { id:'cbeebies',       name:'CBeebies',        color:'#ff5722', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/CBeebies_2022_logo.svg/200px-CBeebies_2022_logo.svg.png', networkId: 228, tvOnly: true },
-    { id:'cartoonito',     name:'Cartoonito',      color:'#ff9100', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Cartoonito_logo.svg/200px-Cartoonito_logo.svg.png', networkId: 2552, tvOnly: true },
+    { id:'cartoonnetwork', name:'Cartoon Network', color:'#ff6b00', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Cartoon_Network_2010_logo.svg/200px-Cartoon_Network_2010_logo.svg.png', networkIds:[11,2666], keywords:'16', tvOnly:true },
+    { id:'nickelodeon',    name:'Nickelodeon',     color:'#ff8c00', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Nickelodeon_2009_logo.svg/200px-Nickelodeon_2009_logo.svg.png', networkIds:[13,2297], keywords:'16', tvOnly:true },
+    { id:'disney',         name:'Disney Channel',  color:'#0d47a1', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Disney_Channel_2014_logo.svg/200px-Disney_Channel_2014_logo.svg.png', networkIds:[54,2739,302], keywords:'16', tvOnly:true },
+    { id:'disneyjr',       name:'Disney Junior',   color:'#e91e63', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Disney_Junior_logo.svg/200px-Disney_Junior_logo.svg.png', networkIds:[302,3061], keywords:'16', tvOnly:true },
+    { id:'disneyxd',       name:'Disney XD',       color:'#1565c0', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Disney_XD_2015_logo.svg/200px-Disney_XD_2015_logo.svg.png', networkIds:[2739,1825], keywords:'16', tvOnly:true },
+    { id:'nickjr',         name:'Nick Jr',         color:'#ff6d00', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Nick_Jr._logo_%282009%29.svg/200px-Nick_Jr._logo_%282009%29.svg.png', networkIds:[174,3353], keywords:'16', tvOnly:true },
+    { id:'cbeebies',       name:'CBeebies',        color:'#ff5722', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/CBeebies_2022_logo.svg/200px-CBeebies_2022_logo.svg.png', networkIds:[228,1485], keywords:'16', tvOnly:true },
+    { id:'cartoonito',     name:'Cartoonito',      color:'#ff9100', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Cartoonito_logo.svg/200px-Cartoonito_logo.svg.png', networkIds:[2552,11], keywords:'16', tvOnly:true },
   ];
 
   const channelsHTML = ANIM_CHANNELS.map(ch => `
@@ -1156,45 +1156,62 @@ window.switchAnimTab = function(tab, el) {
 };
 
 window.filterAnimChannel = function(chId) {
-  const prev = window._animChannel;
-  window._animChannel = prev === chId ? null : chId;
+  window._animChannel = window._animChannel === chId ? window._animChannel : chId;
   document.querySelectorAll('.anim-ch-card').forEach(c => c.classList.remove('active'));
-  if (window._animChannel) document.getElementById('animch_' + window._animChannel)?.classList.add('active');
+  document.getElementById('animch_' + window._animChannel)?.classList.add('active');
   loadAnimResults();
 };
 
 async function loadAnimResults() {
   const grid = document.getElementById('animResultsGrid');
   if (!grid) return;
-  grid.innerHTML = Array(8).fill('<div class="movie-card skeleton-card"></div>').join('');
+  grid.innerHTML = Array(12).fill('<div class="movie-card skeleton-card"></div>').join('');
   const tab = window._animTab || 'all';
   const chId = window._animChannel;
   const channels = window._animChannelsList || [];
   const ch = channels.find(c => c.id === chId);
-  const tvParams = { with_genres: '16', sort_by: 'popularity.desc' };
-  const movParams = { with_genres: '16', sort_by: 'popularity.desc' };
-  if (ch?.networkId) tvParams.with_networks = ch.networkId;
-  let endpoints = [];
-  if (ch?.tvOnly) {
-    endpoints = tab === 'movie' ? [] : ['/discover/tv'];
+
+  const pages = [1,2,3,4,5];
+
+  const fetchPage = async (ep, params, page) => {
+    try {
+      const r = await fetch(buildTMDBUrl(ep, {...params, page}));
+      const d = await r.json();
+      return (d.results||[]).filter(i=>i.poster_path).map(i=>({...i, media_type: ep.includes('tv')?'tv':'movie'}));
+    } catch { return []; }
+  };
+
+  let allResults = [];
+
+  if (ch) {
+    const networkIds = ch.networkIds || [ch.networkId];
+    const fetchTasks = [];
+    for (const nid of networkIds) {
+      for (const pg of pages) {
+        if (tab !== 'movie') fetchTasks.push(fetchPage('/discover/tv', {with_genres:'16', with_networks: nid, sort_by:'popularity.desc'}, pg));
+        if (tab !== 'tv') fetchTasks.push(fetchPage('/discover/movie', {with_genres:'16', sort_by:'popularity.desc'}, pg));
+      }
+    }
+    const res = await Promise.all(fetchTasks);
+    allResults = res.flat();
   } else {
-    endpoints = tab === 'movie' ? ['/discover/movie'] :
-                tab === 'tv'   ? ['/discover/tv'] :
-                ['/discover/movie', '/discover/tv'];
+    const fetchTasks = [];
+    for (const pg of pages) {
+      if (tab !== 'movie') fetchTasks.push(fetchPage('/discover/tv', {with_genres:'16', sort_by:'popularity.desc'}, pg));
+      if (tab !== 'tv') fetchTasks.push(fetchPage('/discover/movie', {with_genres:'16', sort_by:'popularity.desc'}, pg));
+    }
+    const res = await Promise.all(fetchTasks);
+    allResults = res.flat();
   }
-  if (!endpoints.length) {
-    grid.innerHTML = '<div style="color:rgba(255,255,255,0.4);padding:40px;text-align:center">هذه القناة مسلسلات فقط</div>';
-    return;
-  }
-  const results = await Promise.all(endpoints.map(ep => {
-    const p = ep.includes('tv') ? tvParams : movParams;
-    return fetchMovies(ep, { type: ep.includes('tv')?'tv':'movie', params: p });
-  }));
-  const all = results.flat().sort((a,b) => b.popularity - a.popularity);
-  if (!grid) return;
-  grid.innerHTML = all.length
-    ? all.map((m,i) => buildMovieCard(m, m.media_type || (tab==='tv'?'tv':'movie'), '', i+1)).join('')
-    : '<div style="color:rgba(255,255,255,0.4);padding:40px;text-align:center">لا توجد نتائج</div>';
+
+  const seen = new Set();
+  const unique = allResults.filter(i => { if (seen.has(i.id)) return false; seen.add(i.id); return true; });
+  unique.sort((a,b) => b.popularity - a.popularity);
+
+  if (!document.getElementById('animResultsGrid')) return;
+  grid.innerHTML = unique.length
+    ? unique.map((m,i) => buildMovieCard(m, m.media_type, '', i+1)).join('')
+    : '<div style="color:rgba(255,255,255,0.4);padding:40px;text-align:center;font-family:Tajawal">لا توجد نتائج</div>';
 }
 async function openBrowseAll(type, endpoint, title) {
   const page = document.getElementById('detailPage');
