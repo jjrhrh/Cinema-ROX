@@ -3935,30 +3935,107 @@ button.dp-btn-alert.active {
   display: flex; flex-direction: column; gap: 12px;
 }
 .trailer-item {
-  display: flex; align-items: center; gap: 12px;
+  display: flex; align-items: center; gap: 14px;
   cursor: pointer;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 14px; padding: 10px;
-  transition: background 0.2s;
+  background: rgba(10,10,20,0.6);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px; padding: 12px;
+  position: relative; overflow: hidden;
+  transition: transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275),
+              box-shadow 0.4s ease,
+              border-color 0.3s ease;
+  transform-style: preserve-3d;
 }
-.trailer-item:active { background: rgba(255,255,255,0.08); }
+.trailer-item::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(229,9,20,0.04) 0%, transparent 60%);
+  border-radius: 18px;
+  opacity: 0; transition: opacity 0.3s;
+}
+.trailer-item:hover::before { opacity: 1; }
+.trailer-item:hover {
+  transform: perspective(800px) translateZ(20px) scale(1.01);
+  border-color: rgba(229,9,20,0.35);
+  box-shadow:
+    0 0 20px rgba(229,9,20,0.15),
+    0 0 50px rgba(229,9,20,0.07),
+    0 16px 40px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+}
+.trailer-item:active {
+  transform: perspective(800px) translateZ(5px) scale(0.99);
+}
 .trailer-thumb {
   position: relative; flex-shrink: 0;
-  width: 110px; height: 62px; border-radius: 10px; overflow: hidden;
+  width: 115px; height: 65px;
+  border-radius: 14px; overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
 }
 .trailer-thumb img {
   width: 100%; height: 100%; object-fit: cover;
+  filter: contrast(1.05) brightness(0.85);
+  transition: filter 0.4s ease, transform 0.4s ease;
+}
+.trailer-item:hover .trailer-thumb img {
+  filter: contrast(1.15) brightness(1.05);
+  transform: scale(1.06);
 }
 .trailer-play-ico {
   position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
-  background: rgba(0,0,0,0.45);
-  color: #fff; font-size: 1.2rem;
+  background: rgba(0,0,0,0.3);
+  transition: background 0.3s;
+}
+.trailer-play-ico::after {
+  content: '';
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.9);
+  background: rgba(229,9,20,0.75);
+  box-shadow: 0 0 12px rgba(229,9,20,0.6), 0 0 30px rgba(229,9,20,0.3);
+  display: flex; align-items: center; justify-content: center;
+  animation: playPulse 2s ease-in-out infinite;
+  clip-path: polygon(35% 20%, 80% 50%, 35% 80%);
+  background-image: linear-gradient(135deg, #ff4444, #e50914);
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s;
+}
+.trailer-item:hover .trailer-play-ico { background: rgba(0,0,0,0.15); }
+.trailer-item:hover .trailer-play-ico::after {
+  transform: scale(1.25) rotate(15deg);
+  box-shadow: 0 0 25px rgba(229,9,20,0.9), 0 0 50px rgba(229,9,20,0.5);
+  animation: none;
+}
+@keyframes playPulse {
+  0%,100% { box-shadow: 0 0 10px rgba(229,9,20,0.5), 0 0 25px rgba(229,9,20,0.2); transform: scale(1); }
+  50%      { box-shadow: 0 0 20px rgba(229,9,20,0.8), 0 0 45px rgba(229,9,20,0.4); transform: scale(1.08); }
 }
 .trailer-name {
-  flex: 1; font-size: 0.78rem; font-weight: 600;
-  color: var(--text2); line-height: 1.4;
+  flex: 1; font-size: 0.82rem; font-weight: 700;
+  color: #fff; line-height: 1.4;
+  font-family: 'Tajawal', sans-serif;
+  text-shadow: 0 0 15px rgba(255,255,255,0.1);
+  transition: text-shadow 0.3s;
+}
+.trailer-item:hover .trailer-name {
+  text-shadow: 0 0 20px rgba(255,255,255,0.25);
+}
+.trailer-name::after {
+  content: '4K';
+  display: inline-block;
+  margin-right: 8px;
+  font-size: 0.55rem;
+  font-weight: 900;
+  color: #00e5ff;
+  background: rgba(0,229,255,0.1);
+  border: 1px solid rgba(0,229,255,0.3);
+  border-radius: 4px;
+  padding: 1px 5px;
+  text-shadow: 0 0 8px rgba(0,229,255,0.6);
+  vertical-align: middle;
+  letter-spacing: 1px;
 }
 /* ── Unmute Overlay (Netflix style) ── */
 .trailer-unmute-overlay {
