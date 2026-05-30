@@ -934,6 +934,8 @@ async function loadHomePage() {
 { id: 'sec_genres_hub', title: 'الأنواع', endpoint: '', type: 'movie', isGenresHub: true },
 { id: 'sec_toprated', title: 'الأعلى تقييماً',    endpoint: '/movie/top_rated', type: 'movie' },
 { id: 'sec_tvseries', title: 'أحدث المسلسلات',    endpoint: '/tv/popular',      type: 'tv'    },
+{ id: 'sec_new_movies', title: 'الجديد على', type: 'movie', isProviderSection: true, providerType: 'movie' },
+{ id: 'sec_new_series', title: 'الجديد على', type: 'tv',    isProviderSection: true, providerType: 'tv'    },
 { id: 'sec_arabic_movies', title: 'الروائع العربية', endpoint: '/discover/movie', type: 'movie', params: { with_original_language: 'ar', sort_by: 'vote_average.desc', 'vote_count.gte': '100' } },
 { id: 'sec_arabic_series', title: 'الدراما العربية المشتعلة', endpoint: '/discover/tv', type: 'tv', params: { with_original_language: 'ar', sort_by: 'popularity.desc' } },
 { id: 'sec_action',   title: '💥 أفلام الأكشن',        endpoint: '/discover/movie', type: 'movie', params: { with_genres: '28', sort_by: 'popularity.desc' } },
@@ -1064,7 +1066,42 @@ async function loadHomePage() {
   </div>
 </div>`;
 
-  page.innerHTML = cwHTML + genresHubHTML + SECTIONS.filter(s => !s.isGenresHub).map(s => `
+  page.innerHTML = cwHTML + genresHubHTML + SECTIONS.filter(s => !s.isGenresHub).map(s => {
+    if (s.isProviderSection) {
+      const PROVIDERS = [
+        { id:8,    name:'Netflix',    logo:'https://image.tmdb.org/t/p/w92/t2yyOv40HZeVlLjYsCsPHnWLk4W.jpg' },
+        { id:337,  name:'Disney+',   logo:'https://image.tmdb.org/t/p/w92/7rwgEs15tFwyR9NPQ5vpzxTj19Q.jpg' },
+        { id:119,  name:'Prime',     logo:'https://image.tmdb.org/t/p/w92/emthp39XA2YScoYL1p0sdbAH2WA.jpg' },
+        { id:350,  name:'Apple TV+', logo:'https://image.tmdb.org/t/p/w92/6uhKBfmtzFqOcLousHwZuzcrScK.jpg' },
+        { id:1899, name:'Max',       logo:'https://image.tmdb.org/t/p/w92/Ajqyt5oPwwTHyszJpanIVBFDzYM.jpg' },
+        { id:531,  name:'Paramount+',logo:'https://image.tmdb.org/t/p/w92/h5DcR0J2EESLitnhR8xLG1QymTE.jpg' },
+        { id:15,   name:'Hulu',      logo:'https://image.tmdb.org/t/p/w92/zxrVdFjIjLqkfnwyghnfywTn3Lh.jpg' },
+        { id:386,  name:'Peacock',   logo:'https://image.tmdb.org/t/p/w92/hmMtHjLpPMKjBKqJoqP9bBgdoGQ.jpg' },
+      ];
+      const label = s.providerType === 'movie' ? 'أفلام' : 'مسلسلات';
+      return `
+    <div class="home-section" id="${s.id}">
+      <div class="section-header">
+        <span class="section-bar"></span>
+        <h2 class="section-title">${s.title} <span id="${s.id}_pname" style="color:var(--accent)">Netflix</span></h2>
+      </div>
+      <div class="provider-chips-row" id="${s.id}_chips">
+        ${PROVIDERS.map((p,i) => `
+          <div class="provider-chip-btn ${i===0?'active':''}" onclick="switchProviderSection('${s.id}',${p.id},'${p.name}','${s.providerType}',this)">
+            <img src="${p.logo}" onerror="this.style.display='none'">
+            <span>${p.name}</span>
+          </div>`).join('')}
+      </div>
+      <div class="otaku-slider-wrap">
+        <button class="otaku-arrow otaku-arrow-left" onclick="otakuSlide('${s.id}_row',-1)">‹</button>
+        <div class="movies-row" id="${s.id}_row">
+          ${Array(4).fill('<div class="movie-card skeleton-card"></div>').join('')}
+        </div>
+        <button class="otaku-arrow otaku-arrow-right" onclick="otakuSlide('${s.id}_row',1)">›</button>
+      </div>
+    </div>`;
+    }
+    return `
     <div class="home-section" id="${s.id}">
       <div class="section-header">
         <span class="section-bar"></span>
@@ -1078,8 +1115,8 @@ async function loadHomePage() {
         </div>
         <button class="otaku-arrow otaku-arrow-right" onclick="otakuSlide('${s.id}_row',1)">›</button>
       </div>
-    </div>`).join('');
-
+    </div>`;
+  }).join('');
   // كل قسم يتحمل بشكل مستقل
   SECTIONS.forEach(async s => {
     try {
