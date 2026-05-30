@@ -655,7 +655,10 @@ async function updateHeroInfo(movies, index) {
            onload="this.classList.add('loaded')"
            onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}';this.classList.add('loaded')">
       <div class="movie-overlay"><i class="ri-play-circle-fill" style="font-size:2.2rem;color:#fff;filter:drop-shadow(0 0 8px rgba(229,9,20,0.8))"></i></div>
-      ${movie.vote_average ? `<div class="mc-rating"><i class="ri-star-fill" style="color:#ffd600;font-size:0.7rem;vertical-align:middle"></i> ${movie.vote_average.toFixed(1)}</div>` : ''}
+    </div>
+    <div class="mc-info-bar">
+      <div class="mc-info-title">${title}</div>
+      <div class="mc-info-meta">${year ? `<span>${year}</span>` : ''}${rating ? `<span class="mc-star">★ ${rating}</span>` : ''}</div>
     </div>
   </div>`;
 }
