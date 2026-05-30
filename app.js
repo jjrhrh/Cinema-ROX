@@ -202,6 +202,8 @@ function closeSidebarNews() {
 }
 // ===== NAVIGATION =====
 function bnavGo(tab) {
+  window._navStack = [];
+  window._detailHistory = [];
   const hero = document.getElementById('heroSection');
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
 document.querySelectorAll('.dock-btn').forEach(b => {
@@ -314,6 +316,7 @@ function goBack() {
 window._navStack = [];
 
 function pushNav(restoreFn) {
+  if (window._navStack.length > 8) window._navStack.shift();
   window._navStack.push({ restore: restoreFn });
 }
 
