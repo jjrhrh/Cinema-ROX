@@ -5614,6 +5614,9 @@ const ROX_BACKGROUNDS = [
   { id: 'img5', name: 'كوكب', type: 'image', url: 'https://i.postimg.cc/P5TTgd63/2df1170c3061b5577ac12d132996ac9a.jpg' },
   { id: 'img6', name: 'بنفسجي دائري', type: 'image', url: 'https://i.postimg.cc/Dyq7pScb/a90a41e6237a8c67920a6972cc77ed5c.jpg' },
   { id: 'img7', name: 'أزرق هندسي', type: 'image', url: 'https://i.postimg.cc/gJnYg4MY/c0a17b3cecec65fd70e5e1c41f0ada59.jpg' },
+  { id: 'img8',  name: 'مجرة حمراء',  type: 'image', url: 'https://i.postimg.cc/T1Lhp0QC/red-galaxy.jpg' },
+  { id: 'img9',  name: 'ضباب سيان',   type: 'image', url: 'https://i.postimg.cc/T1Lhp0QC/cyan-nebula.jpg' },
+  { id: 'img10', name: 'أورورا',       type: 'image', url: 'https://i.postimg.cc/T1Lhp0QC/aurora.jpg' },
 ];
 
 function renderBgGrid() {
