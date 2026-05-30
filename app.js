@@ -1545,9 +1545,14 @@ const reviewsHTML = `
       <div class="seasons-glass">
         <div class="seasons-header">
           <h3 class="detail-section-title" style="margin:0">المواسم والحلقات</h3>
-          <select class="season-select" onchange="loadSeasonEps(${id},+this.value)">
-            ${tvSeasons.map(s=>`<option value="${s.season_number}">الموسم ${s.season_number} · ${s.episode_count} ح</option>`).join('')}
-          </select>
+          <div class=\"season-laser-list\">
+            ${tvSeasons.map((s,i)=>`
+              <div class=\"season-laser-row${i===0?' active':''}\" onclick=\"this.closest('.season-laser-list').querySelectorAll('.season-laser-row').forEach(r=>r.classList.remove('active'));this.classList.add('active');loadSeasonEps(${id},${s.season_number})\">
+                <span class=\"slr-indicator\"></span>
+                <span class=\"slr-name\">الموسم ${s.season_number}</span>
+                <span class=\"slr-eps\">${s.episode_count} ح</span>
+              </div>`).join('')}
+          </div>
         </div>
         <div class="eps-header-bar">
           <button class="eps-view-all-btn" onclick="openAllEpsTMDB(${id},${tvSeasons[0]?.season_number||1})">عرض الكل ›</button>
