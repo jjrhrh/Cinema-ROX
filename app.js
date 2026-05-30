@@ -766,7 +766,7 @@ async function loadOtakuPage() {
     { id: 'sec_otaku2', title: '⭐ الأعلى تقييماً', params: { with_genres:'16', with_origin_country:'JP', sort_by:'vote_average.desc', 'vote_count.gte':'200' } },
     { id: 'sec_otaku3', title: '🆕 موسم هذا العام', params: { with_genres:'16', with_origin_country:'JP', sort_by:'first_air_date.desc', 'first_air_date.gte': new Date().getFullYear()+'-01-01' } },
     { id: 'sec_otaku4', title: '🎬 أفلام أنمي',       params: { with_genres:'16', with_origin_country:'JP', sort_by:'vote_average.desc', 'vote_count.gte':'500' }, isMovie: true },
-    { id: 'sec_otaku5', title: '💀 الأنمي الداكن',     params: { with_genres:'16,27', with_origin_country:'JP', sort_by:'vote_average.desc', 'vote_count.gte':'100' } },
+    { id: 'sec_otaku5', title: '💀 الأنمي الداكن', params: { with_genres:'16', with_keywords:'210024|9715|180547', with_origin_country:'JP', sort_by:'vote_average.desc', 'vote_count.gte':'50' } },
     { id: 'sec_otaku6', title: '🏆 كلاسيكيات الأنمي',  params: { with_genres:'16', with_origin_country:'JP', sort_by:'vote_average.desc', 'vote_count.gte':'1000', 'first_air_date.lte':'2010-01-01' } },
   ];
   page.innerHTML = SECTIONS.map(s => `
@@ -889,7 +889,7 @@ async function loadOtakuHero() {
 
   const movies = await fetchMovies('/discover/tv', {
     type: 'tv', limit: 5, requirePoster: true,
-    params: { with_genres:'16', with_origin_country:'JP', sort_by:'popularity.desc' }
+    params: { with_genres:'16', with_origin_country:'JP', sort_by:'popularity.desc', without_keywords:'210024,158718', include_adult:'false' }
   });
   if (!movies.length) return;
 
