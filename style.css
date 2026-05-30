@@ -8379,8 +8379,8 @@ input[type=range].rox-slider::-webkit-slider-thumb {
 .plat-cust-gif:hover { opacity: 1; }
 .plat-cust-desc { font-size: 0.75rem; color: rgba(255,255,255,0.4); font-family: 'Tajawal', sans-serif; margin-top: 4px; } 
 .bg-grid {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
   margin-top: 10px;
   perspective: 800px;
@@ -8392,8 +8392,8 @@ input[type=range].rox-slider::-webkit-slider-thumb {
   justify-content: center;
   gap: 8px;
   padding: 0;
-  width: calc(33.33% - 8px);
-  aspect-ratio: 1/1;
+  width: 100%;
+  aspect-ratio: 1 / 1;
   background: rgba(10,10,22,0.7);
   backdrop-filter: blur(16px);
   border: 1px solid rgba(255,255,255,0.07);
