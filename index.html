@@ -142,85 +142,37 @@
       <div class="prem-section" id="psec-themes">
         <div class="prem-section-title">المظهر</div>
         <div class="prem-section-sub">خصّص المظهر البصري للتطبيق.</div>
-        <div class="prem-mode-row">
-          <button class="prem-mode-btn" data-mode="auto">تلقائي</button>
-          <button class="prem-mode-btn" data-mode="light">فاتح</button>
-          <button class="prem-mode-btn active" data-mode="dark">داكن</button>
-        </div>
-        <div class="prem-label">لون النيون</div>
-        <div class="prem-colors-row">
-          <div class="prem-color-orb" data-color="#3b82f6" style="--c:#3b82f6"></div>
-          <div class="prem-color-orb" data-color="#22c55e" style="--c:#22c55e"></div>
-          <div class="prem-color-orb" data-color="#eab308" style="--c:#eab308"></div>
-          <div class="prem-color-orb" data-color="#f97316" style="--c:#f97316"></div>
-          <div class="prem-color-orb" data-color="#ef4444" style="--c:#ef4444"></div>
-          <div class="prem-color-orb" data-color="#a855f7" style="--c:#a855f7"></div>
-          <div class="prem-color-orb" data-color="#ec4899" style="--c:#ec4899"></div>
-          <div class="prem-color-orb" data-color="#06b6d4" style="--c:#06b6d4"></div>
-          <div class="prem-color-orb active" data-color="#ff6b6b" style="--c:#ff6b6b"><span>Coral</span></div>
-        </div>
-        <div class="prem-label">زوايا الحواف</div>
-        <div class="prem-slider-wrap">
-          <span>4</span>
-          <input type="range" class="prem-slider" id="radiusSlider" min="4" max="16" value="12">
-          <span>16</span>
-        </div>
-        <div class="prem-label">الثيمات</div>
-<div class="prem-theme-grid" id="premThemeGrid"></div>
-        <div class="prem-slider-ticks"><span>4</span><span>8</span><span>12</span><span>16</span></div>
-        <div class="prem-toggle-row">
-          <label class="prem-toggle-wrap">
-            <input type="checkbox" checked id="togAnim">
-            <span class="prem-toggle-track"></span>
-          </label>
-          <div class="prem-toggle-body">
-            <div class="prem-toggle-title">حركة انسيابية سلسة</div>
-            <div class="prem-toggle-sub">تفعيل انتقالات سلسة لعناصر التصميم.</div>
+        <div id="appearanceMenu">
+          <div class="appear-item" onclick="showAppearSub('themes')">
+            <div class="appear-icon">🎨</div>
+            <div class="appear-body"><div class="appear-name">الثيمات</div><div class="appear-desc">لون الموقع الكامل</div></div>
+            <div class="appear-arrow">‹</div>
+          </div>
+          <div class="appear-item" onclick="showAppearSub('colors')">
+            <div class="appear-icon">🌈</div>
+            <div class="appear-body"><div class="appear-name">الألوان</div><div class="appear-desc">خصص كل لون</div></div>
+            <div class="appear-arrow">‹</div>
+          </div>
+          <div class="appear-item" onclick="showAppearSub('fonts')">
+            <div class="appear-icon">🔤</div>
+            <div class="appear-body"><div class="appear-name">الخط</div><div class="appear-desc">خط الموقع</div></div>
+            <div class="appear-arrow">‹</div>
+          </div>
+          <div class="appear-item" onclick="showAppearSub('backgrounds')">
+            <div class="appear-icon">🌌</div>
+            <div class="appear-body"><div class="appear-name">الخلفية</div><div class="appear-desc">خلفية متحركة</div></div>
+            <div class="appear-arrow">‹</div>
+          </div>
+          <div class="appear-item" onclick="showAppearSub('platforms')">
+            <div class="appear-icon">🎬</div>
+            <div class="appear-body"><div class="appear-name">المنصات</div><div class="appear-desc">GIF لكل منصة</div></div>
+            <div class="appear-arrow">‹</div>
           </div>
         </div>
-        <div class="prem-toggle-row">
-          <label class="prem-toggle-wrap">
-            <input type="checkbox" id="togRings">
-            <span class="prem-toggle-track"></span>
-          </label>
-          <div class="prem-toggle-body">
-            <div class="prem-toggle-title">الحلقات المضيئة</div>
-            <div class="prem-toggle-sub">إبراز العناصر المحددة بحلقة نيون.</div>
-          </div>
+        <div id="appearanceSub" style="display:none">
+          <button onclick="hideAppearSub()" class="appear-back-btn">← رجوع</button>
+          <div id="appearSubContent"></div>
         </div>
-        <div class="prem-toggle-row">
-          <label class="prem-toggle-wrap">
-            <input type="checkbox" id="togGrid">
-            <span class="prem-toggle-track"></span>
-          </label>
-          <div class="prem-toggle-body">
-            <div class="prem-toggle-title">خطوط الشبكة</div>
-            <div class="prem-toggle-sub">عرض شبكة تخطيط للمحاذاة الدقيقة.</div>
-          </div>
-        </div>
-        <div class="prem-label">الألوان المخصصة</div>
-        <div id="premColorCustomizer">
-          <div class="tpc-row">
-            <div class="tpc-label">🎨 اللون الرئيسي</div>
-            <input type="color" class="tpc-picker" id="premColorPicker" oninput="applyCustomColor(this.value)">
-          </div>
-          <div class="tpc-presets">
-            <div class="tpc-preset" style="background:#e50914" onclick="applyCustomColor('#e50914')"></div>
-            <div class="tpc-preset" style="background:#00e5ff" onclick="applyCustomColor('#00e5ff')"></div>
-            <div class="tpc-preset" style="background:#a855f7" onclick="applyCustomColor('#a855f7')"></div>
-            <div class="tpc-preset" style="background:#5DD62C" onclick="applyCustomColor('#5DD62C')"></div>
-            <div class="tpc-preset" style="background:#f5c518" onclick="applyCustomColor('#f5c518')"></div>
-            <div class="tpc-preset" style="background:#ff2d78" onclick="applyCustomColor('#ff2d78')"></div>
-            <div class="tpc-preset" style="background:#ff6b00" onclick="applyCustomColor('#ff6b00')"></div>
-            <div class="tpc-preset" style="background:#3b82f6" onclick="applyCustomColor('#3b82f6')"></div>
-          </div>
-        </div>
-        <div class="prem-label">الخط</div>
-        <div class="prem-font-grid" id="premFontGrid"></div>
-        <div class="prem-label">الخلفية</div>
-        <div class="prem-bg-grid" id="premBgGrid"></div>
-        <div class="prem-label">تخصيص المنصات</div>
-        <div class="prem-platforms-grid" id="premPlatformsGrid"></div>
       </div>
       <div class="prem-section hidden" id="psec-profile">
         <div class="prem-section-title">الحساب</div>
