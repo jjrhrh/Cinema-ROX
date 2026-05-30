@@ -288,13 +288,12 @@ function goBack() {
   window.removeEventListener('scroll', _platScrollHandler);
   window.removeEventListener('scroll', _genreScrollHandler);
   if (window._trailerTimer) { clearTimeout(window._trailerTimer); window._trailerTimer = null; }
-  if (window._detailHistory && window._detailHistory.length > 0) {
-  const prev = window._detailHistory.pop();
-  window._lastDetailId = null;
-  openDetail(prev.id, prev.type);
-  return;
-  }
   if (window._activeTrailerFrame) { window._activeTrailerFrame.src = ''; window._activeTrailerFrame = null; }
+  if (window._navStack && window._navStack.length > 0) {
+    const prev = window._navStack.pop();
+    prev.restore();
+    return;
+  }
   const hero = document.getElementById('heroSection');
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
@@ -304,14 +303,18 @@ function goBack() {
     if (hero) { hero.style.display = ''; hero.style.visibility = ''; }
     document.getElementById('studioBar').style.display = 'block';
     document.getElementById('newsSection').style.display = 'block';
-    document.getElementById('newsSectionTitle').textContent = '📰 أخبار الأنمي';
   } else {
     document.getElementById('bnavHome').classList.add('active');
     if (hero) { hero.style.display = ''; hero.style.visibility = ''; }
   }
   document.getElementById('platformsSection').style.display = '';
-  document.getElementById('platformsSection').style.display = '';
   window.scrollTo(0, 0);
+}
+
+window._navStack = [];
+
+function pushNav(restoreFn) {
+  window._navStack.push({ restore: restoreFn });
 }
 
 // ===== ROX MENU =====
@@ -1094,6 +1097,7 @@ function openAnimationHub() {
   const page = document.getElementById('detailPage');
   if (!page) return;
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  pushNav(() => bnavGo('home'));
   document.getElementById('heroSection').style.display = 'none';
   document.getElementById('newsSection').style.display = 'none';
   document.getElementById('platformsSection').style.display = 'none';
@@ -1193,6 +1197,7 @@ async function openBrowseAll(type, endpoint, title) {
   const page = document.getElementById('detailPage');
   if (!page) return;
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  pushNav(() => bnavGo('home'));
   document.getElementById('heroSection').style.display = 'none';
   document.getElementById('newsSection').style.display = 'none';
   document.getElementById('studioBar').style.display = 'none';
@@ -1280,6 +1285,12 @@ async function openDetail(id, type = 'movie') {
   if (window._lastDetailId && String(window._lastDetailId) !== String(id)) {
   window._detailHistory.push({ id: window._lastDetailId, type: window._lastDetailType });
   if (window._detailHistory.length > 10) window._detailHistory.shift();
+  }
+  if (!window._navStack?.find(n => n._isDetail)) {
+    pushNav(Object.assign(() => {
+      if (window._detailHistory?.length > 0) { const p = window._detailHistory.pop(); openDetail(p.id, p.type); }
+      else { window._navStack = []; goBack(); }
+    }, { _isDetail: true }));
   }
   window._lastDetailId = id;
   window._lastDetailType = type;
