@@ -8641,3 +8641,35 @@ input[type=range].rox-slider::-webkit-slider-thumb {
   flex-shrink: 0;
   padding: 14px 10px;
 } 
+.mc-info-bar {
+  padding: 6px 4px 2px;
+}
+.mc-info-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: Tajawal, sans-serif;
+  margin-bottom: 3px;
+}
+.mc-info-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.45);
+  font-family: Tajawal, sans-serif;
+}
+.mc-star {
+  color: #ffd600;
+  font-weight: 700;
+}
+.movie-poster-wrap {
+  border-radius: 16px !important;
+}
+.movie-card {
+  border-radius: 18px !important;
+  overflow: visible !important;
+} 
