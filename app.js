@@ -1171,8 +1171,6 @@ async function loadAnimResults() {
   const channels = window._animChannelsList || [];
   const ch = channels.find(c => c.id === chId);
 
-  const pages = [1,2,3,4,5];
-
   const fetchPage = async (ep, params, page) => {
     try {
       const r = await fetch(buildTMDBUrl(ep, {...params, page}));
@@ -1181,31 +1179,33 @@ async function loadAnimResults() {
     } catch { return []; }
   };
 
+  const pages = [1,2,3,4,5];
   let allResults = [];
 
   if (ch) {
-    const networkIds = ch.networkIds || [ch.networkId];
-    const fetchTasks = [];
-    for (const nid of networkIds) {
-      for (const pg of pages) {
-        if (tab !== 'movie') fetchTasks.push(fetchPage('/discover/tv', {with_genres:'16', with_networks: nid, sort_by:'popularity.desc'}, pg));
-        if (tab !== 'tv') fetchTasks.push(fetchPage('/discover/movie', {with_genres:'16', sort_by:'popularity.desc'}, pg));
+    const nid = ch.networkIds?.[0] ?? ch.networkId;
+    if (ch.tvOnly) {
+      if (tab === 'movie') {
+        grid.innerHTML = '<div style="color:rgba(255,255,255,0.4);padding:40px;text-align:center;font-family:Tajawal">هذه القناة مسلسلات فقط</div>';
+        return;
       }
+      const tasks = pages.map(pg => fetchPage('/discover/tv', { with_networks: nid, with_genres:'16', sort_by:'popularity.desc', without_keywords:'210024' }, pg));
+      allResults = (await Promise.all(tasks)).flat();
+    } else {
+      const tasks = [];
+      if (tab !== 'movie') pages.forEach(pg => tasks.push(fetchPage('/discover/tv', { with_networks: nid, with_genres:'16', sort_by:'popularity.desc' }, pg)));
+      if (tab !== 'tv') pages.forEach(pg => tasks.push(fetchPage('/discover/movie', { with_genres:'16', sort_by:'popularity.desc' }, pg)));
+      allResults = (await Promise.all(tasks)).flat();
     }
-    const res = await Promise.all(fetchTasks);
-    allResults = res.flat();
   } else {
-    const fetchTasks = [];
-    for (const pg of pages) {
-      if (tab !== 'movie') fetchTasks.push(fetchPage('/discover/tv', {with_genres:'16', sort_by:'popularity.desc'}, pg));
-      if (tab !== 'tv') fetchTasks.push(fetchPage('/discover/movie', {with_genres:'16', sort_by:'popularity.desc'}, pg));
-    }
-    const res = await Promise.all(fetchTasks);
-    allResults = res.flat();
+    const tasks = [];
+    if (tab !== 'movie') pages.forEach(pg => tasks.push(fetchPage('/discover/tv', { with_genres:'16', sort_by:'popularity.desc', without_origin_country:'JP' }, pg)));
+    if (tab !== 'tv') pages.forEach(pg => tasks.push(fetchPage('/discover/movie', { with_genres:'16', sort_by:'popularity.desc', without_origin_country:'JP' }, pg)));
+    allResults = (await Promise.all(tasks)).flat();
   }
 
   const seen = new Set();
-  const unique = allResults.filter(i => { if (seen.has(i.id)) return false; seen.add(i.id); return true; });
+  const unique = allResults.filter(i => { if(seen.has(i.id)) return false; seen.add(i.id); return true; });
   unique.sort((a,b) => b.popularity - a.popularity);
 
   if (!document.getElementById('animResultsGrid')) return;
