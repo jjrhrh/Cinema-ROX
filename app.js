@@ -1113,7 +1113,7 @@ function openAnimationHub() {
     { id:'disney',         name:'Disney Channel',  color:'#0d47a1', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Disney_Channel_2014_logo.svg/200px-Disney_Channel_2014_logo.svg.png', networkId: 54 },
     { id:'disneyjr',       name:'Disney Junior',   color:'#e91e63', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Disney_Junior_logo.svg/200px-Disney_Junior_logo.svg.png', networkId: 302 },
     { id:'disneyxd',       name:'Disney XD',       color:'#1565c0', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Disney_XD_2015_logo.svg/200px-Disney_XD_2015_logo.svg.png', networkId: 53 },
-    { id:'nickjr',         name:'Nick Jr',         color:'#ff6d00', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Nick_Jr._logo_%282009%29.svg/200px-Nick_Jr._logo_%282009%29.svg.png', networkId: 2739 },
+    { id:'nickjr',         name:'Nick Jr',         color:'#ff6d00', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Nick_Jr._logo_%282009%29.svg/200px-Nick_Jr._logo_%282009%29.svg.png', networkId: 174 },
     { id:'cbeebies',       name:'CBeebies',        color:'#ff5722', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/CBeebies_2022_logo.svg/200px-CBeebies_2022_logo.svg.png', networkId: 228 },
     { id:'cartoonito',     name:'Cartoonito',      color:'#ff9100', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Cartoonito_logo.svg/200px-Cartoonito_logo.svg.png', networkId: 2552 },
   ];
@@ -1173,7 +1173,7 @@ async function loadAnimResults(page = 1) {
   const ch = channels.find(c => c.id === chId);
   const tvParams = { with_genres: '16', sort_by: 'popularity.desc', page, 'vote_count.gte': '10' };
   const movParams = { with_genres: '16', sort_by: 'popularity.desc', page, 'vote_count.gte': '10' };
-  if (ch?.networkId) { tvParams.with_networks = ch.networkId; delete tvParams.with_genres; }
+  if (ch?.networkId) tvParams.with_networks = ch.networkId;
   let endpoints = [];
   if (ch) {
     endpoints = tab === 'movie' ? [] : ['/discover/tv'];
