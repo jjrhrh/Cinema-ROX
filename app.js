@@ -1153,8 +1153,9 @@ async function loadHomePage() {
   // كل قسم يتحمل بشكل مستقل
   SECTIONS.forEach(async s => {
     try {
-      if (s.isProviderSection) {
-        switchProviderSection(s.id, 8, 'Netflix', s.providerType, null);
+      if (s.isGenreFilter) {
+        const firstGenre = s.filterType === 'movie' ? {id:28, name:'أكشن'} : {id:18, name:'دراما'};
+        switchGenreSection(s.id, firstGenre.id, firstGenre.name, s.filterType, null);
         return;
       }
       const movies = await fetchMovies(s.endpoint, { type: s.type, params: s.params || {} });
@@ -1186,6 +1187,25 @@ async function loadHomePage() {
   card.onclick = () => openSurprise();
   page.appendChild(card);
   }
+  window.switchGenreSection = async function(secId, genreId, genreName, type, chipEl) {
+  if (chipEl) {
+    document.querySelectorAll(`#${secId}_chips .provider-chip-btn`).forEach(c => c.classList.remove('active'));
+    chipEl.classList.add('active');
+  }
+  const nameEl = document.getElementById(`${secId}_gname`);
+  if (nameEl) nameEl.textContent = genreName;
+  const row = document.getElementById(`${secId}_row`);
+  if (!row) return;
+  row.innerHTML = Array(4).fill('<div class="movie-card skeleton-card"></div>').join('');
+  const endpoint = type === 'movie' ? '/discover/movie' : '/discover/tv';
+  const movies = await fetchMovies(endpoint, { type, limit: 20, params: {
+    with_genres: String(genreId),
+    sort_by: 'popularity.desc'
+  }});
+  row.innerHTML = movies.length
+    ? movies.map((m,i) => buildMovieCard(m, type, '', i+1)).join('')
+    : '<div style="color:rgba(255,255,255,0.4);padding:20px">لا يوجد محتوى</div>';
+};
 }
 window.switchProviderSection = async function(secId, providerId, providerName, type, chipEl) {
   if (chipEl) {
