@@ -1138,7 +1138,7 @@ function openAnimationHub() {
         <button class="anim-tab" id="animTabMovies" onclick="switchAnimTab('movie',this)">أفلام</button>
         <button class="anim-tab" id="animTabSeries" onclick="switchAnimTab('tv',this)">مسلسلات</button>
       </div>
-      <div class="anim-channels-grid">${channelsHTML}</div>
+      <div class="anim-channels-scroll"><div class="anim-channels-row">${channelsHTML}</div></div>
       <div id="animResultsGrid" class="anim-results-grid"></div>
     </div>`;
 
