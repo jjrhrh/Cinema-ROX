@@ -8501,7 +8501,17 @@ input[type=range].rox-slider::-webkit-slider-thumb {
 .prem-nav-item span { flex:1; }
 .prem-nav-item em { font-style:normal; font-size:10px; font-weight:700; color:rgba(255,255,255,0.4); background:rgba(255,255,255,0.08); border-radius:999px; padding:1px 6px; }
 .prem-nav-item:hover { color:rgba(255,255,255,0.8); background:rgba(255,255,255,0.05); }
-.prem-nav-item.active { color:#fff; background:rgba(229,9,20,0.12); border:1px solid rgba(229,9,20,0.45); box-shadow:0 0 18px rgba(229,9,20,0.18),inset 0 0 12px rgba(229,9,20,0.06); }
+.prem-nav-item.active {
+  color: #fff;
+  background: rgba(229,9,20,0.14);
+  border: 1px solid rgba(229,9,20,0.6);
+  box-shadow:
+    0 0 20px rgba(229,9,20,0.25),
+    0 0 50px rgba(229,9,20,0.1),
+    inset 0 0 15px rgba(229,9,20,0.08),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+  transform: perspective(400px) translateZ(6px);
+}
 .prem-nav-item.active i { color:var(--accent); }
 .prem-main { flex:1; padding:26px 20px; overflow-y:auto; direction:rtl; }
 .prem-section { display:flex; flex-direction:column; gap:18px; }
