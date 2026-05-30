@@ -774,7 +774,7 @@ async function loadOtakuPage() {
       <div class="section-header">
         <span class="section-bar"></span>
         <h2 class="section-title otaku-sec-title">${s.title}</h2>
-        <button class="browse-all-btn" onclick="openOtakuAll('${s.id}','${s.title}','tv')">عرض الكل ›</button>
+        <button class="browse-all-btn" onclick="openOtakuAll('${s.id}','${s.title}','${s.isMovie?'movie':'tv'}')">عرض الكل ›</button>
       </div>
       <div class="otaku-slider-wrap">
         <button class="otaku-arrow otaku-arrow-left" onclick="otakuSlide('${s.id}_row',-1)">‹</button>
@@ -934,14 +934,14 @@ async function loadHomePage() {
 { id: 'sec_genres_hub', title: 'الأنواع', endpoint: '', type: 'movie', isGenresHub: true },
 { id: 'sec_toprated', title: 'الأعلى تقييماً',    endpoint: '/movie/top_rated', type: 'movie' },
 { id: 'sec_tvseries', title: 'أحدث المسلسلات',    endpoint: '/tv/popular',      type: 'tv'    },
-{ id: 'sec_new_movies', title: 'الجديد على', type: 'movie', isProviderSection: true, providerType: 'movie' },
-{ id: 'sec_new_series', title: 'الجديد على', type: 'tv',    isProviderSection: true, providerType: 'tv'    },
+{ id: 'sec_new_movies', title: '🎬 جديد الأفلام على', type: 'movie', isProviderSection: true, providerType: 'movie' },
+{ id: 'sec_new_series', title: '📺 جديد المسلسلات على', type: 'tv', isProviderSection: true, providerType: 'tv' },
 { id: 'sec_arabic_movies', title: 'الروائع العربية', endpoint: '/discover/movie', type: 'movie', params: { with_original_language: 'ar', sort_by: 'vote_average.desc', 'vote_count.gte': '100' } },
 { id: 'sec_arabic_series', title: 'الدراما العربية المشتعلة', endpoint: '/discover/tv', type: 'tv', params: { with_original_language: 'ar', sort_by: 'popularity.desc' } },
-{ id: 'sec_action',   title: '💥 أفلام الأكشن',        endpoint: '/discover/movie', type: 'movie', params: { with_genres: '28', sort_by: 'popularity.desc' } },
-{ id: 'sec_horror',   title: '👻 أفلام الرعب',          endpoint: '/discover/movie', type: 'movie', params: { with_genres: '27', sort_by: 'vote_average.desc', 'vote_count.gte': '200' } },
-{ id: 'sec_kids',     title: '🧒 للأطفال',              endpoint: '/discover/movie', type: 'movie', params: { with_genres: '16', without_origin_country: 'JP', sort_by: 'popularity.desc' } },
-{ id: 'sec_trending', title: '📈 الأكثر بحثاً اليوم',   endpoint: '/trending/all/day', type: 'movie' },
+{ id: 'sec_genre_movies', title: '🎭 أفلام حسب التصنيف', type: 'movie', isGenreFilter: true, filterType: 'movie' },
+{ id: 'sec_genre_series', title: '📡 مسلسلات حسب التصنيف', type: 'tv', isGenreFilter: true, filterType: 'tv' },
+{ id: 'sec_kids',     title: '🧒 للأطفال', endpoint: '/discover/movie', type: 'movie', params: { with_genres: '16', without_origin_country: 'JP', sort_by: 'popularity.desc' } },
+{ id: 'sec_trending', title: '📈 الأكثر بحثاً اليوم', endpoint: '/trending/all/day', type: 'movie' },
 { id: 'sec_docs', title: 'الوثائقيات المذهلة', endpoint: '/discover/movie', type: 'movie', params: { with_genres: '99', sort_by: 'vote_average.desc', 'vote_count.gte': '200' } },
 { id: 'sec_indie', title: 'مختارات السينما المستقلة', endpoint: '/discover/movie', type: 'movie', params: { with_genres: '18', sort_by: 'vote_average.desc', 'vote_count.gte': '500', with_original_language: 'en' } },
   ];
@@ -1067,6 +1067,39 @@ async function loadHomePage() {
 </div>`;
 
   page.innerHTML = cwHTML + genresHubHTML + SECTIONS.filter(s => !s.isGenresHub).map(s => {
+    if (s.isGenreFilter) {
+      const GENRES_MOVIE = [
+        { id:28, name:'أكشن' }, { id:27, name:'رعب' }, { id:35, name:'كوميديا' },
+        { id:18, name:'دراما' }, { id:878, name:'خيال علمي' }, { id:53, name:'إثارة' },
+        { id:10749, name:'رومانسي' }, { id:80, name:'جريمة' }, { id:99, name:'وثائقي' }, { id:14, name:'فانتازيا' },
+      ];
+      const GENRES_TV = [
+        { id:18, name:'دراما' }, { id:35, name:'كوميديا' }, { id:10765, name:'خيال علمي' },
+        { id:80, name:'جريمة' }, { id:9648, name:'غموض' }, { id:10759, name:'أكشن' },
+        { id:10768, name:'حرب' }, { id:99, name:'وثائقي' }, { id:10762, name:'أطفال' },
+      ];
+      const genres = s.filterType === 'movie' ? GENRES_MOVIE : GENRES_TV;
+      return `
+    <div class="home-section" id="${s.id}">
+      <div class="section-header">
+        <span class="section-bar"></span>
+        <h2 class="section-title">${s.title} — <span id="${s.id}_gname" style="color:var(--accent)">${genres[0].name}</span></h2>
+      </div>
+      <div class="provider-chips-row" id="${s.id}_chips">
+        ${genres.map((g,i) => `
+          <div class="provider-chip-btn ${i===0?'active':''}" onclick="switchGenreSection('${s.id}',${g.id},'${g.name}','${s.filterType}',this)">
+            <span>${g.name}</span>
+          </div>`).join('')}
+      </div>
+      <div class="otaku-slider-wrap">
+        <button class="otaku-arrow otaku-arrow-left" onclick="otakuSlide('${s.id}_row',-1)">‹</button>
+        <div class="movies-row" id="${s.id}_row">
+          ${Array(4).fill('<div class="movie-card skeleton-card"></div>').join('')}
+        </div>
+        <button class="otaku-arrow otaku-arrow-right" onclick="otakuSlide('${s.id}_row',1)">›</button>
+      </div>
+    </div>`;
+    }
     if (s.isProviderSection) {
       const PROVIDERS = [
         { id:8,    name:'Netflix',    logo:'https://image.tmdb.org/t/p/w92/t2yyOv40HZeVlLjYsCsPHnWLk4W.jpg' },
