@@ -5213,7 +5213,7 @@ function applyTheme(themeId, save = true) {
   if (t) {
     const label = document.getElementById('activeThemeLabel');
     const badge = document.getElementById('currentThemeName');
-    if (label) label.textContent = `${t.name} — ${t.desc}`;
+    if (label) label.textContent = t.name + ' — ' + t.desc;
     if (badge) badge.textContent = t.name;
   }
   if (save) {
