@@ -5601,12 +5601,12 @@ function selectPlatformGif(id, gif, el) {
   showToast('✅ تم تغيير GIF المنصة');
 }
 const ROX_BACKGROUNDS = [
-  { id: 'none', name: 'بلا خلفية', icon: '⬛' },
-  { id: 'stars', name: 'نجوم', icon: '✨' },
-  { id: 'grid', name: 'شبكة', icon: '🔲' },
-  { id: 'waves', name: 'موجات', icon: '🌊' },
-  { id: 'particles', name: 'جزيئات', icon: '🔮' },
-  { id: 'gradient', name: 'تدرج متحرك', icon: '🎨' },
+  { id: 'none',      name: 'بلا خلفية',   icon: `<svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="3" y1="3" x2="21" y2="21"/></svg>` },
+  { id: 'stars',     name: 'نجوم',         icon: `<svg viewBox="0 0 24 24" fill="none" stroke="#ffd600" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/><circle cx="12" cy="12" r="2" fill="#ffd600" opacity="0.4"/></svg>` },
+  { id: 'grid',      name: 'شبكة',         icon: `<svg viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>` },
+  { id: 'waves',     name: 'موجات',        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="#7c4dff" stroke-width="1.5"><path d="M2 12 Q6 6 10 12 Q14 18 18 12 Q20 9 22 12"/><path d="M2 17 Q6 11 10 17 Q14 23 18 17 Q20 14 22 17" opacity="0.4"/></svg>` },
+  { id: 'particles', name: 'جزيئات',       icon: `<svg viewBox="0 0 24 24" fill="none" stroke="#e040fb" stroke-width="1.5"><circle cx="5" cy="5" r="1.5" fill="#e040fb"/><circle cx="12" cy="8" r="1" fill="#e040fb" opacity="0.6"/><circle cx="19" cy="5" r="1.5" fill="#e040fb"/><circle cx="8" cy="14" r="1" fill="#e040fb" opacity="0.5"/><circle cx="16" cy="16" r="1.5" fill="#e040fb"/><circle cx="12" cy="20" r="1" fill="#e040fb" opacity="0.4"/><line x1="5" y1="5" x2="12" y2="8" opacity="0.2"/><line x1="12" y1="8" x2="19" y2="5" opacity="0.2"/><line x1="8" y1="14" x2="16" y2="16" opacity="0.2"/></svg>` },
+  { id: 'gradient',  name: 'تدرج متحرك',   icon: `<svg viewBox="0 0 24 24" fill="none" stroke-width="0"><defs><linearGradient id="ggrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#7c4dff"/><stop offset="50%" stop-color="#e50914"/><stop offset="100%" stop-color="#00e5ff"/></linearGradient></defs><rect width="24" height="24" rx="5" fill="url(#ggrad)" opacity="0.8"/><path d="M4 12 Q8 6 12 12 Q16 18 20 12" stroke="#fff" stroke-width="1.5" fill="none" opacity="0.6"/></svg>` },
   { id: 'img1', name: 'كوني 1', type: 'image', url: 'https://i.postimg.cc/Ss2h6Rs6/de44f31adbe78e9c0c8a3412a1fed621.jpg' },
   { id: 'img2', name: 'طبقات زرقاء', type: 'image', url: 'https://i.postimg.cc/s20zG7VF/417a1aa9056e366722d87d3715842f6c.jpg' },
   { id: 'img3', name: 'خط بنفسجي', type: 'image', url: 'https://i.postimg.cc/JhhmhPCX/dd4d3b0ed63a451fd4c792481cf0f5e3.jpg' },
@@ -5623,8 +5623,8 @@ function renderBgGrid() {
   grid.innerHTML = ROX_BACKGROUNDS.map(b => `
     <div class="bg-option ${current === b.id ? 'selected' : ''}" onclick="applyBackground('${b.id}')">
       ${b.type === 'image'
-        ? `<img src="${b.url}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;position:absolute;inset:0">`
-        : `<div class="bg-option-icon">${b.icon}</div>`}
+        ? `<img src="${b.url}" class="bg-option-img">`
+        : `<div class="bg-option-svg-icon">${b.icon}</div>`}
       <div class="bg-option-name">${b.name}</div>
     </div>
   `).join('');
