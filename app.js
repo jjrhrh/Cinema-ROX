@@ -1101,21 +1101,17 @@ function openAnimationHub() {
   window.scrollTo(0, 0);
 
   const ANIM_CHANNELS = [
-    { id:'semsem',    name:'Semsem',          color:'#ff6b35', icon:'https://i.postimg.cc/wBRwMBdW/semsem.png' },
-    { id:'hodhod',    name:'Hodhod Kids',     color:'#ffd600', icon:'https://i.postimg.cc/d1xhQp7j/hodhod.png' },
-    { id:'hodhodtv',  name:'Hodhod TV',       color:'#ff9800', icon:'https://i.postimg.cc/Y2LCQyzX/hodhodtv.png' },
-    { id:'tahatv',    name:'Taha TV',         color:'#4caf50', icon:'https://i.postimg.cc/rwcBqzBH/taha.png' },
-    { id:'ajyal',     name:'Ajyal',           color:'#e91e63', icon:'https://i.postimg.cc/Dz7VzB7y/ajyal.png' },
-    { id:'cbeebies',  name:'CBeebies',        color:'#ff5722', icon:'https://i.postimg.cc/sxJhJCmk/cbeebies.png' },
-    { id:'metvtoons', name:'MeTV Toons',      color:'#9c27b0', icon:'https://i.postimg.cc/jj6n2W9B/metv.png' },
-    { id:'univkids',  name:'Universal Kids',  color:'#2196f3', icon:'https://i.postimg.cc/y8F09MPg/univkids.png' },
-    { id:'discfam',   name:'Discovery Family',color:'#00bcd4', icon:'https://i.postimg.cc/hjZTT9TH/discfam.png' },
-    { id:'toonami',   name:'Toonami',         color:'#1565c0', icon:'https://i.postimg.cc/zvgk2r1H/toonami.png' },
-    { id:'cartoonito',name:'Cartoonito',      color:'#ff9100', icon:'https://i.postimg.cc/DyybvVjz/cartoonito.png' },
-    { id:'nickjr',    name:'Nick Jr',         color:'#ff6d00', icon:'https://i.postimg.cc/Kj2P5YcK/nickjr.png' },
-    { id:'nicktoons', name:'Nicktoons',       color:'#00e5ff', icon:'https://i.postimg.cc/L5SrFDnh/nicktoons.png' },
-    { id:'disneyxd',  name:'Disney XD',       color:'#0d47a1', icon:'https://i.postimg.cc/j2Dqfm8Y/disneyxd.png' },
-    { id:'disneyjr',  name:'Disney Junior',   color:'#e91e63', icon:'https://i.postimg.cc/kXnvQ7mk/disneyjr.png' },
+    { id:'cartoonnetwork', name:'Cartoon Network', color:'#ff6b00', icon:'https://i.postimg.cc/wBRwMBdW/semsem.png', networkId: 11 },
+    { id:'nickelodeon',    name:'Nickelodeon',     color:'#ff9800', icon:'https://i.postimg.cc/d1xhQp7j/hodhod.png', networkId: 13 },
+    { id:'disney',         name:'Disney Channel',  color:'#0d47a1', icon:'https://i.postimg.cc/Y2LCQyzX/hodhodtv.png', networkId: 54 },
+    { id:'disneyjr',       name:'Disney Junior',   color:'#e91e63', icon:'https://i.postimg.cc/kXnvQ7mk/disneyjr.png', networkId: 302 },
+    { id:'disneyxd',       name:'Disney XD',       color:'#1565c0', icon:'https://i.postimg.cc/j2Dqfm8Y/disneyxd.png', networkId: 2739 },
+    { id:'cartoonito',     name:'Cartoonito',      color:'#ff9100', icon:'https://i.postimg.cc/DyybvVjz/cartoonito.png', networkId: 2552 },
+    { id:'nickjr',         name:'Nick Jr',         color:'#ff6d00', icon:'https://i.postimg.cc/Kj2P5YcK/nickjr.png', networkId: 174 },
+    { id:'cbeebies',       name:'CBeebies',        color:'#ff5722', icon:'https://i.postimg.cc/sxJhJCmk/cbeebies.png', networkId: 228 },
+    { id:'semsem',         name:'Semsem',          color:'#ff6b35', icon:'https://i.postimg.cc/wBRwMBdW/semsem.png', keywords: 'سمسم' },
+    { id:'hodhod',         name:'Hodhod Kids',     color:'#ffd600', icon:'https://i.postimg.cc/d1xhQp7j/hodhod.png', keywords: 'هدهد' },
+    { id:'tahatv',         name:'Taha TV',         color:'#4caf50', icon:'https://i.postimg.cc/rwcBqzBH/taha.png', keywords: 'طه' },
   ];
 
   let activeChannel = null;
@@ -1144,6 +1140,7 @@ function openAnimationHub() {
     </div>`;
 
   window._animTab = 'all';
+  window._animChannelsList = ANIM_CHANNELS;
   window._animChannel = null;
   loadAnimResults();
 }
@@ -1168,7 +1165,11 @@ async function loadAnimResults() {
   if (!grid) return;
   grid.innerHTML = Array(8).fill('<div class="movie-card skeleton-card"></div>').join('');
   const tab = window._animTab || 'all';
+  const chId = window._animChannel;
+  const ANIM_CHANNELS = window._animChannelsList || [];
+  const ch = ANIM_CHANNELS.find(c => c.id === chId);
   const params = { with_genres: '16', sort_by: 'popularity.desc' };
+  if (ch?.networkId) params.with_networks = ch.networkId;
   const endpoints = tab === 'movie' ? ['/discover/movie'] :
                     tab === 'tv'    ? ['/discover/tv'] :
                     ['/discover/movie', '/discover/tv'];
@@ -1178,6 +1179,7 @@ async function loadAnimResults() {
   grid.innerHTML = all.length
     ? all.map((m,i) => buildMovieCard(m, m.media_type || (tab==='tv'?'tv':'movie'), '', i+1)).join('')
     : '<div style="color:rgba(255,255,255,0.4);padding:40px;text-align:center">لا توجد نتائج</div>';
+}
   requestIdleCallback(() => applyCardGlow(), { timeout: 1000 });
 }
 async function openBrowseAll(type, endpoint, title) {
