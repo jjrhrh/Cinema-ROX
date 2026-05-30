@@ -1806,6 +1806,158 @@ justify-content: flex-start;
   perspective: 800px;
   animation: seasonModalIn 0.4s cubic-bezier(0.22,1,0.36,1) both;
 }
+/* ── SEASONS LAYOUT ── */
+.seasons-layout {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  direction: rtl;
+}
+.season-laser-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+/* ── HOLO CARD ── */
+.season-holo-card {
+  width: 140px;
+  flex-shrink: 0;
+  background: rgba(10,10,25,0.7);
+  backdrop-filter: blur(24px) saturate(200%);
+  border: 1px solid rgba(229,9,20,0.25);
+  border-radius: 18px;
+  padding: 20px 14px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 0 30px rgba(229,9,20,0.15),
+    0 0 80px rgba(229,9,20,0.07),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+  animation: holoFloat 3s ease-in-out infinite;
+}
+@keyframes holoFloat {
+  0%,100% { transform: translateY(0px); }
+  50%      { transform: translateY(-6px); }
+}
+.shc-glow {
+  position: absolute;
+  top: -30px; left: 50%;
+  transform: translateX(-50%);
+  width: 100px; height: 100px;
+  background: radial-gradient(circle, rgba(229,9,20,0.4) 0%, transparent 70%);
+  animation: glowPulse 2s ease-in-out infinite;
+}
+@keyframes glowPulse {
+  0%,100% { opacity: 0.5; transform: translateX(-50%) scale(1); }
+  50%      { opacity: 1;   transform: translateX(-50%) scale(1.3); }
+}
+.shc-label {
+  font-size: 0.62rem;
+  font-family: 'Tajawal', sans-serif;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  position: relative;
+}
+.shc-num {
+  font-size: 1rem;
+  font-weight: 900;
+  font-family: 'Tajawal', sans-serif;
+  color: #fff;
+  text-shadow: 0 0 20px rgba(229,9,20,0.8), 0 0 40px rgba(229,9,20,0.4);
+  margin-bottom: 6px;
+  position: relative;
+}
+.shc-eps {
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: 'Cairo', sans-serif;
+  color: #00e5ff;
+  text-shadow: 0 0 12px rgba(0,229,255,0.7);
+  position: relative;
+}
+.shc-bar {
+  width: 60%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #e50914, transparent);
+  border-radius: 2px;
+  margin: 12px auto 0;
+  animation: barScan 2s linear infinite;
+  box-shadow: 0 0 8px #e50914;
+}
+@keyframes barScan {
+  0%   { opacity: 0.4; }
+  50%  { opacity: 1; }
+  100% { opacity: 0.4; }
+}
+/* ── SEASON ROWS UPGRADE ── */
+.season-laser-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.03);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+  transform-style: preserve-3d;
+  direction: rtl;
+}
+.season-laser-row:hover {
+  transform: perspective(500px) translateZ(8px) scale(1.02);
+  background: rgba(229,9,20,0.08);
+  border-color: rgba(229,9,20,0.3);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4), 0 0 20px rgba(229,9,20,0.15);
+}
+.season-laser-row.active {
+  transform: perspective(500px) translateZ(20px);
+  background: rgba(229,9,20,0.14);
+  border-color: rgba(229,9,20,0.6);
+  box-shadow:
+    0 0 15px rgba(229,9,20,0.3),
+    0 0 35px rgba(229,9,20,0.15),
+    0 12px 30px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.1);
+}
+.season-laser-row.active::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 3px; height: 100%;
+  background: linear-gradient(180deg, transparent, #e50914, #ff6b6b, #e50914, transparent);
+  border-radius: 0 12px 12px 0;
+  animation: laserPulse 1.5s ease-in-out infinite;
+  box-shadow: 0 0 10px #e50914, 0 0 20px rgba(229,9,20,0.5);
+}
+@keyframes laserPulse {
+  0%,100% { opacity: 0.6; }
+  50%      { opacity: 1; box-shadow: 0 0 15px #e50914, 0 0 30px rgba(229,9,20,0.7); }
+}
+.slr-indicator { display: none; }
+.slr-name {
+  flex: 1;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255,255,255,0.1);
+}
+.season-laser-row.active .slr-name {
+  text-shadow: 0 0 15px rgba(255,255,255,0.4);
+}
+.slr-eps {
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #00e5ff;
+  text-shadow: 0 0 10px rgba(0,229,255,0.5);
+    }
 @keyframes seasonModalIn {
   from { opacity:0; transform: perspective(800px) rotateX(8deg) translateY(20px) scale(0.97); }
   to   { opacity:1; transform: perspective(800px) rotateX(0deg) translateY(0) scale(1); }
