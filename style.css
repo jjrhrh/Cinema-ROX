@@ -8239,7 +8239,10 @@ input[type=range].rox-slider::-webkit-slider-thumb {
 #sec_arabic_movies,
 #sec_arabic_series,
 #sec_docs,
-#sec_indie {
+#sec_indie,
+#sec_popular,
+#sec_toprated,
+#sec_tvseries {
   background: rgba(10,10,18,0.6);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
