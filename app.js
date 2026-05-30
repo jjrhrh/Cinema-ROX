@@ -1224,7 +1224,7 @@ async function loadAnimResults() {
     }
   } else {
     const tasks = [];
-    if (tab !== 'movie') pages.forEach(pg => tasks.push(fetchPage('/discover/tv', { with_genres:'16', sort_by:'popularity.desc', without_origin_country:'JP' }, pg)));
+    if (tab !== 'movie') pages.forEach(pg => tasks.push(fetchPage('/discover/tv', { with_genres:'16', sort_by:'popularity.desc', without_origin_country:'JP', without_keywords:'210024' }, pg)));
     if (tab !== 'tv') pages.forEach(pg => tasks.push(fetchPage('/discover/movie', { with_genres:'16', sort_by:'popularity.desc', without_origin_country:'JP' }, pg)));
     allResults = (await Promise.all(tasks)).flat();
   }
