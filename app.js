@@ -1111,7 +1111,6 @@ function openAnimationHub() {
   window.scrollTo(0, 0);
 
   const ANIM_CHANNELS = [
-    // ── قنوات غربية ──
     { id:'cartoonnetwork', name:'Cartoon Network', color:'#ff6b00', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Cartoon_Network_2010_logo.svg/200px-Cartoon_Network_2010_logo.svg.png', networkIds:[11,2666], tvOnly:true },
     { id:'nickelodeon',    name:'Nickelodeon',     color:'#ff8c00', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Nickelodeon_2009_logo.svg/200px-Nickelodeon_2009_logo.svg.png', networkIds:[13,2297], tvOnly:true },
     { id:'disney',         name:'Disney Channel',  color:'#0d47a1', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Disney_Channel_2014_logo.svg/200px-Disney_Channel_2014_logo.svg.png', networkIds:[54,2739,302], tvOnly:true },
@@ -1123,11 +1122,9 @@ function openAnimationHub() {
     { id:'boomerang',      name:'Boomerang',       color:'#e53935', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Boomerang_logo_2015.svg/200px-Boomerang_logo_2015.svg.png', networkIds:[2555,74], tvOnly:true },
     { id:'pbs',            name:'PBS Kids',        color:'#1b5e20', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/PBS_Kids_Logo.svg/200px-PBS_Kids_Logo.svg.png', networkIds:[1104,359], tvOnly:true },
     { id:'cartoon',        name:'Cartoon',         color:'#7b1fa2', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Adult_Swim_2003_logo.svg/200px-Adult_Swim_2003_logo.svg.png', networkIds:[213], tvOnly:true },
-    // ── قنوات عربية ──
     { id:'mbc3',   name:'MBC 3',    color:'#1565c0', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/MBC3_logo.svg/200px-MBC3_logo.svg.png', networkIds:[2828], tvOnly:true },
     { id:'spacetoon', name:'Spacetoon', color:'#e91e63', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Spacetoon_Logo.png/200px-Spacetoon_Logo.png', networkIds:[3533], tvOnly:true },
     { id:'baraem',  name:'براعم',   color:'#43a047', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Baraem_logo.svg/200px-Baraem_logo.svg.png', networkIds:[4758], tvOnly:true },
-    // ── منصات ──
     { id:'netflix',    name:'Netflix',     color:'#e50914', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Netflix_2015_logo.svg/200px-Netflix_2015_logo.svg.png', providerId:8,   tvOnly:false },
     { id:'disney+',    name:'Disney+',     color:'#0d47a1', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Disney%2B_logo.svg/200px-Disney%2B_logo.svg.png', providerId:337, tvOnly:false },
     { id:'prime',      name:'Prime Video', color:'#00b0ff', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Amazon_Prime_Video_logo.svg/200px-Amazon_Prime_Video_logo.svg.png', providerId:119, tvOnly:false },
