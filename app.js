@@ -5501,6 +5501,13 @@ const ROX_BACKGROUNDS = [
   { id: 'waves', name: 'موجات', icon: '🌊' },
   { id: 'particles', name: 'جزيئات', icon: '🔮' },
   { id: 'gradient', name: 'تدرج متحرك', icon: '🎨' },
+  { id: 'img1', name: 'كوني 1', type: 'image', url: 'https://i.postimg.cc/Ss2h6Rs6/de44f31adbe78e9c0c8a3412a1fed621.jpg' },
+  { id: 'img2', name: 'طبقات زرقاء', type: 'image', url: 'https://i.postimg.cc/s20zG7VF/417a1aa9056e366722d87d3715842f6c.jpg' },
+  { id: 'img3', name: 'خط بنفسجي', type: 'image', url: 'https://i.postimg.cc/JhhmhPCX/dd4d3b0ed63a451fd4c792481cf0f5e3.jpg' },
+  { id: 'img4', name: 'نيون بنفسجي', type: 'image', url: 'https://i.postimg.cc/Dw6nFRHv/36c8e2c03a50cecae9e8aa770c9c832f.jpg' },
+  { id: 'img5', name: 'كوكب', type: 'image', url: 'https://i.postimg.cc/P5TTgd63/2df1170c3061b5577ac12d132996ac9a.jpg' },
+  { id: 'img6', name: 'بنفسجي دائري', type: 'image', url: 'https://i.postimg.cc/Dyq7pScb/a90a41e6237a8c67920a6972cc77ed5c.jpg' },
+  { id: 'img7', name: 'أزرق هندسي', type: 'image', url: 'https://i.postimg.cc/gJnYg4MY/c0a17b3cecec65fd70e5e1c41f0ada59.jpg' },
 ];
 
 function renderBgGrid() {
@@ -5509,7 +5516,9 @@ function renderBgGrid() {
   const current = localStorage.getItem('rox_bg') || 'none';
   grid.innerHTML = ROX_BACKGROUNDS.map(b => `
     <div class="bg-option ${current === b.id ? 'selected' : ''}" onclick="applyBackground('${b.id}')">
-      <div class="bg-option-icon">${b.icon}</div>
+      ${b.type === 'image'
+        ? `<img src="${b.url}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;position:absolute;inset:0">`
+        : `<div class="bg-option-icon">${b.icon}</div>`}
       <div class="bg-option-name">${b.name}</div>
     </div>
   `).join('');
@@ -5519,7 +5528,17 @@ function applyBackground(id) {
   localStorage.setItem('rox_bg', id);
   const el = document.getElementById('roxBgCanvas');
   if (el) el.remove();
+  const oldImg = document.getElementById('roxBgImg');
+  if (oldImg) oldImg.remove();
+  const bg = ROX_BACKGROUNDS.find(b => b.id === id);
   if (id === 'none') { renderBgGrid(); return; }
+  if (bg?.type === 'image') {
+    const imgBg = document.createElement('div');
+    imgBg.id = 'roxBgImg';
+    imgBg.style.cssText = `position:fixed;inset:0;z-index:0;pointer-events:none;background-image:url('${bg.url}');background-size:cover;background-position:center;opacity:0.18;`;
+    document.body.prepend(imgBg);
+    renderBgGrid(); return;
+  }
   const canvas = document.createElement('canvas');
   canvas.id = 'roxBgCanvas';
   canvas.style.cssText = 'position:fixed;inset:0;z-index:0;pointer-events:none;width:100vw;height:100vh;opacity:0.55;';
