@@ -1154,6 +1154,26 @@ async function loadHomePage() {
   page.appendChild(card);
   }
 }
+window.switchProviderSection = async function(secId, providerId, providerName, type, chipEl) {
+  if (chipEl) {
+    document.querySelectorAll(`#${secId}_chips .provider-chip-btn`).forEach(c => c.classList.remove('active'));
+    chipEl.classList.add('active');
+  }
+  const nameEl = document.getElementById(`${secId}_pname`);
+  if (nameEl) nameEl.textContent = providerName;
+  const row = document.getElementById(`${secId}_row`);
+  if (!row) return;
+  row.innerHTML = Array(4).fill('<div class="movie-card skeleton-card"></div>').join('');
+  const endpoint = type === 'movie' ? '/discover/movie' : '/discover/tv';
+  const movies = await fetchMovies(endpoint, { type, limit: 20, params: {
+    with_watch_providers: providerId,
+    watch_region: 'US',
+    sort_by: 'first_air_date.desc'
+  }});
+  row.innerHTML = movies.length
+    ? movies.map((m,i) => buildMovieCard(m, type, '', i+1)).join('')
+    : '<div style="color:rgba(255,255,255,0.4);padding:20px">لا يوجد محتوى</div>';
+};
 function openAnimationHub() {
   const page = document.getElementById('detailPage');
   if (!page) return;
