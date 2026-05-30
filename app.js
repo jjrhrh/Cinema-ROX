@@ -5533,11 +5533,12 @@ function applyBackground(id) {
   const bg = ROX_BACKGROUNDS.find(b => b.id === id);
   if (id === 'none') { renderBgGrid(); return; }
   if (bg?.type === 'image') {
-    const imgBg = document.createElement('div');
-    imgBg.id = 'roxBgImg';
-    imgBg.style.cssText = `position:fixed;inset:0;z-index:0;pointer-events:none;background-image:url('${bg.url}');background-size:cover;background-position:center;opacity:0.18;`;
-    document.body.prepend(imgBg);
-    renderBgGrid(); return;
+    let imgBg = document.getElementById('roxBgImg');
+    if (!imgBg) { imgBg = document.createElement('div'); imgBg.id = 'roxBgImg'; document.body.prepend(imgBg); }
+    imgBg.style.cssText = `position:fixed;inset:0;z-index:0;pointer-events:none;background-image:url('${bg.url}');background-size:cover;background-position:center;opacity:${(parseFloat(localStorage.getItem('rox_bg_opacity'))||0.18)};transition:opacity 0.3s;`;
+    renderBgGrid();
+    renderBgBrightness();
+    return;
   }
   const canvas = document.createElement('canvas');
   canvas.id = 'roxBgCanvas';
@@ -5554,7 +5555,34 @@ function applyBackground(id) {
   else if (id === 'gradient') roxBgGradient(ctx, canvas, accent);
   renderBgGrid();
 }
-
+function renderBgBrightness() {
+  const old = document.getElementById('bgBrightnessCtrl');
+  if (old) old.remove();
+  const bg = ROX_BACKGROUNDS.find(b => b.id === (localStorage.getItem('rox_bg')||'none'));
+  if (!bg || bg.type !== 'image') return;
+  const op = parseFloat(localStorage.getItem('rox_bg_opacity')) || 0.18;
+  const ctrl = document.createElement('div');
+  ctrl.id = 'bgBrightnessCtrl';
+  ctrl.innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;margin-top:14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:12px 16px;">
+      <button onclick="changeBgOpacity(-0.05)" style="width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;">−</button>
+      <div style="flex:1;height:4px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden;">
+        <div id="bgOpacityBar" style="height:100%;width:${Math.round(op/0.6*100)}%;background:var(--accent);border-radius:4px;transition:width 0.2s;"></div>
+      </div>
+      <button onclick="changeBgOpacity(+0.05)" style="width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;">+</button>
+    </div>`;
+  const grid = document.getElementById('bgGrid');
+  if (grid) grid.after(ctrl);
+}
+function changeBgOpacity(delta) {
+  let op = parseFloat(localStorage.getItem('rox_bg_opacity')) || 0.18;
+  op = Math.min(0.6, Math.max(0.04, op + delta));
+  localStorage.setItem('rox_bg_opacity', op.toFixed(2));
+  const imgBg = document.getElementById('roxBgImg');
+  if (imgBg) imgBg.style.opacity = op;
+  const bar = document.getElementById('bgOpacityBar');
+  if (bar) bar.style.width = Math.round(op/0.6*100) + '%';
+}
 function roxBgStars(ctx, canvas, accent) {
   const stars = Array.from({length: 120}, () => ({
     x: Math.random() * canvas.width,
