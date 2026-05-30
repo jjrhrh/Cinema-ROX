@@ -140,38 +140,40 @@
     </div>
     <div class="prem-main">
       <div class="prem-section" id="psec-themes">
-        <div class="prem-section-title">المظهر</div>
-        <div class="prem-section-sub">خصّص المظهر البصري للتطبيق.</div>
-        <div id="appearanceMenu">
-          <div class="appear-item" onclick="showAppearSub('themes')">
-            <div class="appear-icon">🎨</div>
-            <div class="appear-body"><div class="appear-name">الثيمات</div><div class="appear-desc">لون الموقع الكامل</div></div>
-            <div class="appear-arrow">‹</div>
-          </div>
-          <div class="appear-item" onclick="showAppearSub('colors')">
-            <div class="appear-icon">🌈</div>
-            <div class="appear-body"><div class="appear-name">الألوان</div><div class="appear-desc">خصص كل لون</div></div>
-            <div class="appear-arrow">‹</div>
-          </div>
-          <div class="appear-item" onclick="showAppearSub('fonts')">
-            <div class="appear-icon">🔤</div>
-            <div class="appear-body"><div class="appear-name">الخط</div><div class="appear-desc">خط الموقع</div></div>
-            <div class="appear-arrow">‹</div>
-          </div>
-          <div class="appear-item" onclick="showAppearSub('backgrounds')">
-            <div class="appear-icon">🌌</div>
-            <div class="appear-body"><div class="appear-name">الخلفية</div><div class="appear-desc">خلفية متحركة</div></div>
-            <div class="appear-arrow">‹</div>
-          </div>
-          <div class="appear-item" onclick="showAppearSub('platforms')">
-            <div class="appear-icon">🎬</div>
-            <div class="appear-body"><div class="appear-name">المنصات</div><div class="appear-desc">GIF لكل منصة</div></div>
-            <div class="appear-arrow">‹</div>
+        <div id="themeLevel1">
+          <div class="prem-section-title">المظهر</div>
+          <div class="prem-section-sub">خصّص المظهر البصري للتطبيق.</div>
+          <div class="theme-drill-list">
+            <div class="theme-drill-item" onclick="themeDrillDown('themes')">
+              <div class="theme-drill-icon" style="--di:#f5c518"><i class="ri-palette-fill"></i></div>
+              <div class="theme-drill-body"><div class="theme-drill-title">الثيمات</div><div class="theme-drill-sub">لون الموقع الكامل</div></div>
+              <i class="ri-arrow-left-s-line theme-drill-arrow"></i>
+            </div>
+            <div class="theme-drill-item" onclick="themeDrillDown('colors')">
+              <div class="theme-drill-icon" style="--di:#a855f7"><i class="ri-contrast-2-fill"></i></div>
+              <div class="theme-drill-body"><div class="theme-drill-title">الألوان</div><div class="theme-drill-sub">خصص كل لون</div></div>
+              <i class="ri-arrow-left-s-line theme-drill-arrow"></i>
+            </div>
+            <div class="theme-drill-item" onclick="themeDrillDown('bg')">
+              <div class="theme-drill-icon" style="--di:#6366f1"><i class="ri-landscape-fill"></i></div>
+              <div class="theme-drill-body"><div class="theme-drill-title">الخلفيات</div><div class="theme-drill-sub">خلفية متحركة</div></div>
+              <i class="ri-arrow-left-s-line theme-drill-arrow"></i>
+            </div>
+            <div class="theme-drill-item" onclick="themeDrillDown('font')">
+              <div class="theme-drill-icon" style="--di:#06b6d4"><i class="ri-text"></i></div>
+              <div class="theme-drill-body"><div class="theme-drill-title">الخط</div><div class="theme-drill-sub">خط الموقع</div></div>
+              <i class="ri-arrow-left-s-line theme-drill-arrow"></i>
+            </div>
+            <div class="theme-drill-item" onclick="themeDrillDown('platforms')">
+              <div class="theme-drill-icon" style="--di:#e50914"><i class="ri-movie-2-fill"></i></div>
+              <div class="theme-drill-body"><div class="theme-drill-title">المنصات</div><div class="theme-drill-sub">GIF لكل منصة</div></div>
+              <i class="ri-arrow-left-s-line theme-drill-arrow"></i>
+            </div>
           </div>
         </div>
-        <div id="appearanceSub" style="display:none">
-          <button onclick="hideAppearSub()" class="appear-back-btn">← رجوع</button>
-          <div id="appearSubContent"></div>
+        <div id="themeLevel2" style="display:none">
+          <button class="theme-back-btn" onclick="themeBack()"><i class="ri-arrow-right-line"></i> رجوع</button>
+          <div id="themeSubContent"></div>
         </div>
       </div>
       <div class="prem-section hidden" id="psec-profile">
