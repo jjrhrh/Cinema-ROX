@@ -1120,6 +1120,10 @@ async function loadHomePage() {
   // كل قسم يتحمل بشكل مستقل
   SECTIONS.forEach(async s => {
     try {
+      if (s.isProviderSection) {
+        switchProviderSection(s.id, 8, 'Netflix', s.providerType, null);
+        return;
+      }
       const movies = await fetchMovies(s.endpoint, { type: s.type, params: s.params || {} });
       const row = document.getElementById(`${s.id}_row`);
       const container = document.getElementById(s.id);
