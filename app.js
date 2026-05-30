@@ -1180,8 +1180,6 @@ async function loadAnimResults() {
     ? all.map((m,i) => buildMovieCard(m, m.media_type || (tab==='tv'?'tv':'movie'), '', i+1)).join('')
     : '<div style="color:rgba(255,255,255,0.4);padding:40px;text-align:center">لا توجد نتائج</div>';
 }
-  requestIdleCallback(() => applyCardGlow(), { timeout: 1000 });
-}
 async function openBrowseAll(type, endpoint, title) {
   const page = document.getElementById('detailPage');
   if (!page) return;
