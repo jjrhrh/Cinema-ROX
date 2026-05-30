@@ -9071,3 +9071,39 @@ input[type=range].rox-slider::-webkit-slider-thumb {
   overflow: hidden !important;
   background: transparent !important;
 }
+.provider-chips-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 0 16px 12px;
+  scrollbar-width: none;
+}
+.provider-chips-row::-webkit-scrollbar { display: none; }
+.provider-chip-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.05);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.25s ease;
+}
+.provider-chip-btn img {
+  width: 20px; height: 20px;
+  border-radius: 4px; object-fit: cover;
+}
+.provider-chip-btn span {
+  font-size: 0.72rem; font-weight: 700;
+  color: rgba(255,255,255,0.6);
+  font-family: 'Tajawal', sans-serif;
+  white-space: nowrap;
+}
+.provider-chip-btn.active {
+  border-color: var(--accent);
+  background: rgba(229,9,20,0.12);
+  box-shadow: 0 0 12px rgba(229,9,20,0.2);
+}
+.provider-chip-btn.active span { color: #fff; } 
