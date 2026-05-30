@@ -1108,14 +1108,14 @@ function openAnimationHub() {
   window.scrollTo(0, 0);
 
   const ANIM_CHANNELS = [
-    { id:'cartoonnetwork', name:'Cartoon Network', color:'#ff6b00', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Cartoon_Network_2010_logo.svg/200px-Cartoon_Network_2010_logo.svg.png', companyId: 2 },
-    { id:'nickelodeon',    name:'Nickelodeon',     color:'#ff8c00', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Nickelodeon_2009_logo.svg/200px-Nickelodeon_2009_logo.svg.png', companyId: 5 },
-    { id:'disney',         name:'Disney Channel',  color:'#0d47a1', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Disney_Channel_2014_logo.svg/200px-Disney_Channel_2014_logo.svg.png', networkId: 54 },
-    { id:'disneyjr',       name:'Disney Junior',   color:'#e91e63', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Disney_Junior_logo.svg/200px-Disney_Junior_logo.svg.png', networkId: 302 },
-    { id:'disneyxd',       name:'Disney XD',       color:'#1565c0', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Disney_XD_2015_logo.svg/200px-Disney_XD_2015_logo.svg.png', networkId: 53 },
-    { id:'nickjr',         name:'Nick Jr',         color:'#ff6d00', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Nick_Jr._logo_%282009%29.svg/200px-Nick_Jr._logo_%282009%29.svg.png', networkId: 174 },
-    { id:'cbeebies',       name:'CBeebies',        color:'#ff5722', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/CBeebies_2022_logo.svg/200px-CBeebies_2022_logo.svg.png', networkId: 228 },
-    { id:'cartoonito',     name:'Cartoonito',      color:'#ff9100', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Cartoonito_logo.svg/200px-Cartoonito_logo.svg.png', networkId: 2552 },
+    { id:'cartoonnetwork', name:'Cartoon Network', color:'#ff6b00', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Cartoon_Network_2010_logo.svg/200px-Cartoon_Network_2010_logo.svg.png', networkId: 11, tvOnly: true },
+    { id:'nickelodeon',    name:'Nickelodeon',     color:'#ff8c00', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Nickelodeon_2009_logo.svg/200px-Nickelodeon_2009_logo.svg.png', networkId: 13, tvOnly: true },
+    { id:'disney',         name:'Disney Channel',  color:'#0d47a1', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Disney_Channel_2014_logo.svg/200px-Disney_Channel_2014_logo.svg.png', networkId: 54, tvOnly: true },
+    { id:'disneyjr',       name:'Disney Junior',   color:'#e91e63', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Disney_Junior_logo.svg/200px-Disney_Junior_logo.svg.png', networkId: 302, tvOnly: true },
+    { id:'disneyxd',       name:'Disney XD',       color:'#1565c0', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Disney_XD_2015_logo.svg/200px-Disney_XD_2015_logo.svg.png', networkId: 2739, tvOnly: true },
+    { id:'nickjr',         name:'Nick Jr',         color:'#ff6d00', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Nick_Jr._logo_%282009%29.svg/200px-Nick_Jr._logo_%282009%29.svg.png', networkId: 174, tvOnly: true },
+    { id:'cbeebies',       name:'CBeebies',        color:'#ff5722', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/CBeebies_2022_logo.svg/200px-CBeebies_2022_logo.svg.png', networkId: 228, tvOnly: true },
+    { id:'cartoonito',     name:'Cartoonito',      color:'#ff9100', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Cartoonito_logo.svg/200px-Cartoonito_logo.svg.png', networkId: 2552, tvOnly: true },
   ];
 
   const channelsHTML = ANIM_CHANNELS.map(ch => `
@@ -1163,25 +1163,24 @@ window.filterAnimChannel = function(chId) {
   loadAnimResults();
 };
 
-async function loadAnimResults(page = 1) {
+async function loadAnimResults() {
   const grid = document.getElementById('animResultsGrid');
   if (!grid) return;
-  if (page === 1) grid.innerHTML = Array(8).fill('<div class="movie-card skeleton-card"></div>').join('');
+  grid.innerHTML = Array(8).fill('<div class="movie-card skeleton-card"></div>').join('');
   const tab = window._animTab || 'all';
   const chId = window._animChannel;
   const channels = window._animChannelsList || [];
   const ch = channels.find(c => c.id === chId);
-  const tvParams = { with_genres: '16', sort_by: 'popularity.desc', page, 'vote_count.gte': '10' };
-  const movParams = { with_genres: '16', sort_by: 'popularity.desc', page, 'vote_count.gte': '10' };
+  const tvParams = { with_genres: '16', sort_by: 'popularity.desc' };
+  const movParams = { with_genres: '16', sort_by: 'popularity.desc' };
   if (ch?.networkId) tvParams.with_networks = ch.networkId;
-  if (ch?.companyId) { tvParams.with_companies = ch.companyId; movParams.with_companies = ch.companyId; }
   let endpoints = [];
-  if (ch) {
+  if (ch?.tvOnly) {
     endpoints = tab === 'movie' ? [] : ['/discover/tv'];
   } else {
     endpoints = tab === 'movie' ? ['/discover/movie'] :
                 tab === 'tv'   ? ['/discover/tv'] :
-                ['/discover/tv', '/discover/movie'];
+                ['/discover/movie', '/discover/tv'];
   }
   if (!endpoints.length) {
     grid.innerHTML = '<div style="color:rgba(255,255,255,0.4);padding:40px;text-align:center">هذه القناة مسلسلات فقط</div>';
@@ -1193,25 +1192,9 @@ async function loadAnimResults(page = 1) {
   }));
   const all = results.flat().sort((a,b) => b.popularity - a.popularity);
   if (!grid) return;
-  if (page === 1) {
-    grid.innerHTML = all.length
-      ? all.map((m,i) => buildMovieCard(m, m.media_type || (tab==='tv'?'tv':'movie'), '', i+1)).join('')
-      : '<div style="color:rgba(255,255,255,0.4);padding:40px;text-align:center">لا توجد نتائج</div>';
-  } else {
-    grid.insertAdjacentHTML('beforeend', all.map((m,i) => buildMovieCard(m, m.media_type || (tab==='tv'?'tv':'movie'), '', i+1)).join(''));
-  }
-  window._animPage = page;
-  if (all.length > 0 && !window._animScrollBound) {
-    window._animScrollBound = true;
-    window.addEventListener('scroll', function animScroll() {
-      if (!document.getElementById('animResultsGrid')) { window.removeEventListener('scroll', animScroll); window._animScrollBound = false; return; }
-      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 300) {
-        window.removeEventListener('scroll', animScroll);
-        window._animScrollBound = false;
-        loadAnimResults((window._animPage || 1) + 1);
-      }
-    });
-  }
+  grid.innerHTML = all.length
+    ? all.map((m,i) => buildMovieCard(m, m.media_type || (tab==='tv'?'tv':'movie'), '', i+1)).join('')
+    : '<div style="color:rgba(255,255,255,0.4);padding:40px;text-align:center">لا توجد نتائج</div>';
 }
 async function openBrowseAll(type, endpoint, title) {
   const page = document.getElementById('detailPage');
@@ -4978,6 +4961,8 @@ function toggleProfileDropdown() {
         <div onclick="bnavGo('library');document.getElementById('profileDropdown').style.display='none'" style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;cursor:pointer;color:#fff;font-family:Tajawal;font-size:13px;" onmouseover="this.style.background='rgba(255,255,255,0.07)'" onmouseout="this.style.background=''">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> مكتبتي
         </div>
+        <div onclick="openThemePanel()" style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;cursor:pointer;color:#fff;font-family:Tajawal;font-size:13px;justify-content:space-between;" onmouseover="this.style.background='rgba(255,255,255,0.07)'" onmouseout="this.style.background=''"><div style="display:flex;align-items:center;gap:10px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20"/><path d="M12 2C6.5 2 2 6.5 2 12"/></svg> الثيمات</div><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div>
+        </div>`;
   }
   drop.style.display = 'block';
   setTimeout(() => document.addEventListener('click', function h(e) {
@@ -5849,27 +5834,6 @@ if (grid) {
       </div>
     </div>`).join('');
 }
-  const premColorPicker = document.getElementById('premColorPicker');
-  if (premColorPicker) {
-    const saved = localStorage.getItem('rox_custom_color');
-    if (saved) premColorPicker.value = saved;
-  }
-  const fontGrid = document.getElementById('premFontGrid');
-  if (fontGrid) {
-    fontGrid.innerHTML = ROX_FONTS.map(f => `
-      <div class="font-option ${roxCurrentFont === f.id ? 'selected' : ''}" onclick="applyFont('${f.id}');document.querySelectorAll('#premFontGrid .font-option').forEach(c=>c.classList.remove('selected'));this.classList.add('selected')">
-        <div class="font-option-preview" style="font-family:'${f.id}',sans-serif">${f.preview}</div>
-        <div class="font-option-body">
-          <div class="font-option-name">${f.name}</div>
-          <div class="font-option-sample" style="font-family:'${f.id}',sans-serif">${f.sample}</div>
-        </div>
-        <div class="font-option-radio"></div>
-      </div>`).join('');
-  }
-  const bgGrid = document.getElementById('premBgGrid');
-  if (bgGrid) renderBgGrid();
-  const platGrid = document.getElementById('premPlatformsGrid');
-  if (platGrid) renderPlatformsGrid('premPlatformsGrid');
   // ===== SECURITY =====
 const tog2FA = document.getElementById('tog2FA');
 if (tog2FA) {
