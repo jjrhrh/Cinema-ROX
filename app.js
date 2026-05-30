@@ -1543,15 +1543,23 @@ const reviewsHTML = `
 
     const seasonsHTML = tvSeasons.length ? `
       <div class="seasons-glass">
-        <div class="seasons-header">
-          <h3 class="detail-section-title" style="margin:0">المواسم والحلقات</h3>
-          <div class=\"season-laser-list\">
+        <h3 class="detail-section-title" style="margin:0 0 14px 0">المواسم والحلقات</h3>
+        <div class="seasons-layout">
+          <div class="season-laser-list">
             ${tvSeasons.map((s,i)=>`
-              <div class=\"season-laser-row${i===0?' active':''}\" onclick=\"this.closest('.season-laser-list').querySelectorAll('.season-laser-row').forEach(r=>r.classList.remove('active'));this.classList.add('active');loadSeasonEps(${id},${s.season_number})\">
-                <span class=\"slr-indicator\"></span>
-                <span class=\"slr-name\">الموسم ${s.season_number}</span>
-                <span class=\"slr-eps\">${s.episode_count} ح</span>
+              <div class="season-laser-row${i===0?' active':''}"
+                onclick="this.closest('.season-laser-list').querySelectorAll('.season-laser-row').forEach(r=>r.classList.remove('active'));this.classList.add('active');loadSeasonEps(${id},${s.season_number});document.getElementById('season-info-num').textContent='الموسم '+${s.season_number};document.getElementById('season-info-eps').textContent='${s.episode_count} حلقة';">
+                <span class="slr-indicator"></span>
+                <span class="slr-name">الموسم ${s.season_number}</span>
+                <span class="slr-eps">${s.episode_count} ح</span>
               </div>`).join('')}
+          </div>
+          <div class="season-holo-card">
+            <div class="shc-glow"></div>
+            <div class="shc-label">موسم نشط</div>
+            <div class="shc-num" id="season-info-num">الموسم ${tvSeasons[0]?.season_number||1}</div>
+            <div class="shc-eps" id="season-info-eps">${tvSeasons[0]?.episode_count||0} حلقة</div>
+            <div class="shc-bar"></div>
           </div>
         </div>
         <div class="eps-header-bar">
