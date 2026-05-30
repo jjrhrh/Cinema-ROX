@@ -8619,3 +8619,7 @@ input[type=range].rox-slider::-webkit-slider-thumb {
 .theme-back-btn{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#fff;padding:10px 16px;border-radius:12px;font-family:Tajawal;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:18px;transition:all .2s;}
 .theme-back-btn:active{background:rgba(255,255,255,0.1);}
 .bg-grid-wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px;} 
+.bg-option{position:relative;overflow:hidden;aspect-ratio:1;border-radius:12px;background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.08);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:6px;transition:all .2s;}
+.bg-option.selected{border-color:var(--accent);box-shadow:0 0 12px var(--accent);}
+.bg-option-icon{font-size:22px;margin-bottom:4px;}
+.bg-option-name{font-size:10px;font-family:Tajawal;color:#fff;font-weight:700;position:relative;z-index:1;text-shadow:0 1px 4px rgba(0,0,0,0.8);} 
