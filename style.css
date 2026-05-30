@@ -8623,3 +8623,21 @@ input[type=range].rox-slider::-webkit-slider-thumb {
 .bg-option.selected{border-color:var(--accent);box-shadow:0 0 12px var(--accent);}
 .bg-option-icon{font-size:22px;margin-bottom:4px;}
 .bg-option-name{font-size:10px;font-family:Tajawal;color:#fff;font-weight:700;position:relative;z-index:1;text-shadow:0 1px 4px rgba(0,0,0,0.8);} 
+.anim-channels-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 12px 16px;
+  -webkit-overflow-scrolling: touch;
+}
+.anim-channels-scroll::-webkit-scrollbar { display: none; }
+.anim-channels-row {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  width: max-content;
+}
+.anim-channels-row .anim-ch-card {
+  width: 110px;
+  flex-shrink: 0;
+  padding: 14px 10px;
+} 
