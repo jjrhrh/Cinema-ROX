@@ -1220,6 +1220,7 @@ async function loadAnimResults() {
       if (tab !== 'movie') pages.forEach(pg => tasks.push(fetchPage('/discover/tv', { with_networks: nid, with_genres:'16', sort_by:'popularity.desc' }, pg)));
       if (tab !== 'tv') pages.forEach(pg => tasks.push(fetchPage('/discover/movie', { with_genres:'16', sort_by:'popularity.desc' }, pg)));
       allResults = (await Promise.all(tasks)).flat();
+}
     }
   } else {
     const tasks = [];
