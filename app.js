@@ -765,6 +765,9 @@ async function loadOtakuPage() {
     { id: 'sec_otaku1', title: '🔥 الأكثر شعبية',   params: { with_genres:'16', with_origin_country:'JP', sort_by:'popularity.desc' } },
     { id: 'sec_otaku2', title: '⭐ الأعلى تقييماً', params: { with_genres:'16', with_origin_country:'JP', sort_by:'vote_average.desc', 'vote_count.gte':'200' } },
     { id: 'sec_otaku3', title: '🆕 موسم هذا العام', params: { with_genres:'16', with_origin_country:'JP', sort_by:'first_air_date.desc', 'first_air_date.gte': new Date().getFullYear()+'-01-01' } },
+    { id: 'sec_otaku4', title: '🎬 أفلام أنمي',       params: { with_genres:'16', with_origin_country:'JP', sort_by:'vote_average.desc', 'vote_count.gte':'500' }, isMovie: true },
+    { id: 'sec_otaku5', title: '💀 الأنمي الداكن',     params: { with_genres:'16,27', with_origin_country:'JP', sort_by:'vote_average.desc', 'vote_count.gte':'100' } },
+    { id: 'sec_otaku6', title: '🏆 كلاسيكيات الأنمي',  params: { with_genres:'16', with_origin_country:'JP', sort_by:'vote_average.desc', 'vote_count.gte':'1000', 'first_air_date.lte':'2010-01-01' } },
   ];
   page.innerHTML = SECTIONS.map(s => `
     <div class="home-section otaku-section" id="${s.id}">
@@ -781,7 +784,9 @@ async function loadOtakuPage() {
     </div>`).join('');
   for (const s of SECTIONS) {
     try {
-      const animes = await fetchMovies('/discover/tv', { type:'tv', limit:20, params: { ...s.params, include_adult: false, without_genres: '10749' } });
+      const ep = s.isMovie ? '/discover/movie' : '/discover/tv';
+      const tp = s.isMovie ? 'movie' : 'tv';
+      const animes = await fetchMovies(ep, { type:tp, limit:20, params: { ...s.params, include_adult: false } });
       const BLOCKED_KEYWORDS = ['overflow','ishuzoku','to love','high school dxd','monster musume','keijo','prison school','interspecies','yuragi'];
       const filtered = animes.filter(m => {
         const name = (m.name || m.original_name || '').toLowerCase();
@@ -817,7 +822,12 @@ async function openOtakuAll(secId, title, type) {
 
   const params = SECTION_PARAMS[secId] || { with_genres:'16', with_origin_country:'JP', sort_by:'popularity.desc' };
   const endpoint = type === 'movie' ? '/discover/movie' : '/discover/tv';
-  const movies = await fetchMovies(endpoint, { type, limit: 30, params });
+  const BLOCKED = ['overflow','ishuzoku','to love','high school dxd','monster musume','keijo','prison school','interspecies','yuragi','ecchi','hentai','seikon','highschool dxd'];
+  let movies = await fetchMovies(endpoint, { type, limit: 60, params });
+  movies = movies.filter(m => {
+    const name = (m.name||m.title||m.original_name||m.original_title||'').toLowerCase();
+    return !BLOCKED.some(k => name.includes(k));
+  }).slice(0, 30);
 
   page.innerHTML = `
     <div style="padding:16px">
@@ -926,6 +936,10 @@ async function loadHomePage() {
 { id: 'sec_tvseries', title: 'أحدث المسلسلات',    endpoint: '/tv/popular',      type: 'tv'    },
 { id: 'sec_arabic_movies', title: 'الروائع العربية', endpoint: '/discover/movie', type: 'movie', params: { with_original_language: 'ar', sort_by: 'vote_average.desc', 'vote_count.gte': '100' } },
 { id: 'sec_arabic_series', title: 'الدراما العربية المشتعلة', endpoint: '/discover/tv', type: 'tv', params: { with_original_language: 'ar', sort_by: 'popularity.desc' } },
+{ id: 'sec_action',   title: '💥 أفلام الأكشن',        endpoint: '/discover/movie', type: 'movie', params: { with_genres: '28', sort_by: 'popularity.desc' } },
+{ id: 'sec_horror',   title: '👻 أفلام الرعب',          endpoint: '/discover/movie', type: 'movie', params: { with_genres: '27', sort_by: 'vote_average.desc', 'vote_count.gte': '200' } },
+{ id: 'sec_kids',     title: '🧒 للأطفال',              endpoint: '/discover/movie', type: 'movie', params: { with_genres: '16', without_origin_country: 'JP', sort_by: 'popularity.desc' } },
+{ id: 'sec_trending', title: '📈 الأكثر بحثاً اليوم',   endpoint: '/trending/all/day', type: 'movie' },
 { id: 'sec_docs', title: 'الوثائقيات المذهلة', endpoint: '/discover/movie', type: 'movie', params: { with_genres: '99', sort_by: 'vote_average.desc', 'vote_count.gte': '200' } },
 { id: 'sec_indie', title: 'مختارات السينما المستقلة', endpoint: '/discover/movie', type: 'movie', params: { with_genres: '18', sort_by: 'vote_average.desc', 'vote_count.gte': '500', with_original_language: 'en' } },
   ];
@@ -1055,7 +1069,7 @@ async function loadHomePage() {
       <div class="section-header">
         <span class="section-bar"></span>
         <h2 class="section-title">${s.title}</h2>
-        <button class="browse-all-btn" onclick="openBrowseAll('${s.type}','${s.endpoint}','${s.title}')">عرض الكل ›</button>
+        <button class="browse-all-btn" onclick="openBrowseAll('${s.type}','${s.endpoint}','${s.title}',${JSON.stringify(s.params||{})})">عرض الكل ›</button>
       </div>
       <div class="otaku-slider-wrap">
         <button class="otaku-arrow otaku-arrow-left" onclick="otakuSlide('${s.id}_row',-1)">‹</button>
@@ -1238,7 +1252,7 @@ async function loadAnimResults() {
     ? unique.map((m,i) => buildMovieCard(m, m.media_type, '', i+1)).join('')
     : '<div style="color:rgba(255,255,255,0.4);padding:40px;text-align:center;font-family:Tajawal">لا توجد نتائج</div>';
 }
-async function openBrowseAll(type, endpoint, title) {
+async function openBrowseAll(type, endpoint, title, extraParams = {}) {
   const page = document.getElementById('detailPage');
   if (!page) return;
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -1247,9 +1261,11 @@ async function openBrowseAll(type, endpoint, title) {
   document.getElementById('newsSection').style.display = 'none';
   document.getElementById('studioBar').style.display = 'none';
   page.classList.add('active');
+  document.getElementById('platformsSection').style.display = 'none';
+  document.getElementById('filterBar')?.style.setProperty('display','none');
   page.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
   window.scrollTo(0, 0);
-  const movies = await fetchMovies(endpoint, { type, limit: 30, requireBackdrop: true });
+  const movies = await fetchMovies(endpoint, { type, limit: 30, params: extraParams });
   page.innerHTML = `
     <div style="padding:16px">
       <button class="detail-btn" onclick="goBack()" style="margin-bottom:16px">← رجوع</button>
