@@ -1108,14 +1108,32 @@ function openAnimationHub() {
   window.scrollTo(0, 0);
 
   const ANIM_CHANNELS = [
-    { id:'cartoonnetwork', name:'Cartoon Network', color:'#ff6b00', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Cartoon_Network_2010_logo.svg/200px-Cartoon_Network_2010_logo.svg.png', networkIds:[11,2666], keywords:'16', tvOnly:true },
-    { id:'nickelodeon',    name:'Nickelodeon',     color:'#ff8c00', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Nickelodeon_2009_logo.svg/200px-Nickelodeon_2009_logo.svg.png', networkIds:[13,2297], keywords:'16', tvOnly:true },
-    { id:'disney',         name:'Disney Channel',  color:'#0d47a1', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Disney_Channel_2014_logo.svg/200px-Disney_Channel_2014_logo.svg.png', networkIds:[54,2739,302], keywords:'16', tvOnly:true },
-    { id:'disneyjr',       name:'Disney Junior',   color:'#e91e63', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Disney_Junior_logo.svg/200px-Disney_Junior_logo.svg.png', networkIds:[302,3061], keywords:'16', tvOnly:true },
-    { id:'disneyxd',       name:'Disney XD',       color:'#1565c0', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Disney_XD_2015_logo.svg/200px-Disney_XD_2015_logo.svg.png', networkIds:[2739,1825], keywords:'16', tvOnly:true },
-    { id:'nickjr',         name:'Nick Jr',         color:'#ff6d00', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Nick_Jr._logo_%282009%29.svg/200px-Nick_Jr._logo_%282009%29.svg.png', networkIds:[174,3353], keywords:'16', tvOnly:true },
-    { id:'cbeebies',       name:'CBeebies',        color:'#ff5722', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/CBeebies_2022_logo.svg/200px-CBeebies_2022_logo.svg.png', networkIds:[228,1485], keywords:'16', tvOnly:true },
-    { id:'cartoonito',     name:'Cartoonito',      color:'#ff9100', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Cartoonito_logo.svg/200px-Cartoonito_logo.svg.png', networkIds:[2552,11], keywords:'16', tvOnly:true },
+    // ── قنوات غربية ──
+    { id:'cartoonnetwork', name:'Cartoon Network', color:'#ff6b00', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Cartoon_Network_2010_logo.svg/200px-Cartoon_Network_2010_logo.svg.png', networkIds:[11,2666], tvOnly:true },
+    { id:'nickelodeon',    name:'Nickelodeon',     color:'#ff8c00', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Nickelodeon_2009_logo.svg/200px-Nickelodeon_2009_logo.svg.png', networkIds:[13,2297], tvOnly:true },
+    { id:'disney',         name:'Disney Channel',  color:'#0d47a1', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Disney_Channel_2014_logo.svg/200px-Disney_Channel_2014_logo.svg.png', networkIds:[54,2739,302], tvOnly:true },
+    { id:'disneyjr',       name:'Disney Junior',   color:'#e91e63', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Disney_Junior_logo.svg/200px-Disney_Junior_logo.svg.png', networkIds:[302,3061], tvOnly:true },
+    { id:'disneyxd',       name:'Disney XD',       color:'#1565c0', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Disney_XD_2015_logo.svg/200px-Disney_XD_2015_logo.svg.png', networkIds:[2739,1825], tvOnly:true },
+    { id:'nickjr',         name:'Nick Jr',         color:'#ff6d00', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Nick_Jr._logo_%282009%29.svg/200px-Nick_Jr._logo_%282009%29.svg.png', networkIds:[174,3353], tvOnly:true },
+    { id:'cbeebies',       name:'CBeebies',        color:'#ff5722', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/CBeebies_2022_logo.svg/200px-CBeebies_2022_logo.svg.png', networkIds:[228,1485], tvOnly:true },
+    { id:'cartoonito',     name:'Cartoonito',      color:'#ff9100', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Cartoonito_logo.svg/200px-Cartoonito_logo.svg.png', networkIds:[2552,11], tvOnly:true },
+    { id:'boomerang',      name:'Boomerang',       color:'#e53935', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Boomerang_logo_2015.svg/200px-Boomerang_logo_2015.svg.png', networkIds:[2555,74], tvOnly:true },
+    { id:'pbs',            name:'PBS Kids',        color:'#1b5e20', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/PBS_Kids_Logo.svg/200px-PBS_Kids_Logo.svg.png', networkIds:[1104,359], tvOnly:true },
+    { id:'cartoon',        name:'Cartoon',         color:'#7b1fa2', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Adult_Swim_2003_logo.svg/200px-Adult_Swim_2003_logo.svg.png', networkIds:[213], tvOnly:true },
+    // ── قنوات عربية ──
+    { id:'mbc3',   name:'MBC 3',    color:'#1565c0', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/MBC3_logo.svg/200px-MBC3_logo.svg.png', networkIds:[2828], tvOnly:true },
+    { id:'spacetoon', name:'Spacetoon', color:'#e91e63', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Spacetoon_Logo.png/200px-Spacetoon_Logo.png', networkIds:[3533], tvOnly:true },
+    { id:'baraem',  name:'براعم',   color:'#43a047', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Baraem_logo.svg/200px-Baraem_logo.svg.png', networkIds:[4758], tvOnly:true },
+    // ── منصات ──
+    { id:'netflix',    name:'Netflix',     color:'#e50914', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Netflix_2015_logo.svg/200px-Netflix_2015_logo.svg.png', providerId:8,   tvOnly:false },
+    { id:'disney+',    name:'Disney+',     color:'#0d47a1', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Disney%2B_logo.svg/200px-Disney%2B_logo.svg.png', providerId:337, tvOnly:false },
+    { id:'prime',      name:'Prime Video', color:'#00b0ff', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Amazon_Prime_Video_logo.svg/200px-Amazon_Prime_Video_logo.svg.png', providerId:119, tvOnly:false },
+    { id:'appletv',    name:'Apple TV+',   color:'#555555', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Apple_TV_Plus_Logo.svg/200px-Apple_TV_Plus_Logo.svg.png', providerId:350, tvOnly:false },
+    { id:'hulu',       name:'Hulu',        color:'#1ce783', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Hulu_Logo.svg/200px-Hulu_Logo.svg.png', providerId:15,  tvOnly:false },
+    { id:'max',        name:'Max',         color:'#002be7', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/HBO_Max_Logo.svg/200px-HBO_Max_Logo.svg.png', providerId:1899,tvOnly:false },
+    { id:'paramount',  name:'Paramount+',  color:'#0064ff', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Paramount_Plus_logo.svg/200px-Paramount_Plus_logo.svg.png', providerId:531, tvOnly:false },
+    { id:'peacock',    name:'Peacock',     color:'#ff6d00', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/NBCUniversal_Peacock_Logo.svg/200px-NBCUniversal_Peacock_Logo.svg.png', providerId:386, tvOnly:false },
+    { id:'crunchyroll', name:'Crunchyroll', color:'#f47521', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Crunchyroll_Logo.svg/200px-Crunchyroll_Logo.svg.png', providerId:283, tvOnly:false },
   ];
 
   const channelsHTML = ANIM_CHANNELS.map(ch => `
@@ -1183,6 +1201,12 @@ async function loadAnimResults() {
   let allResults = [];
 
   if (ch) {
+    if (ch.providerId) {
+      const tasks = [];
+      if (tab !== 'movie') pages.forEach(pg => tasks.push(fetchPage('/discover/tv',    { with_watch_providers: ch.providerId, watch_region:'US', with_genres:'16', sort_by:'popularity.desc', without_keywords:'210024' }, pg)));
+      if (tab !== 'tv')    pages.forEach(pg => tasks.push(fetchPage('/discover/movie', { with_watch_providers: ch.providerId, watch_region:'US', with_genres:'16', sort_by:'popularity.desc', without_keywords:'210024' }, pg)));
+      allResults = (await Promise.all(tasks)).flat();
+    } else {
     const nid = ch.networkIds?.[0] ?? ch.networkId;
     if (ch.tvOnly) {
       if (tab === 'movie') {
