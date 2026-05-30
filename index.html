@@ -198,6 +198,29 @@
             <div class="prem-toggle-sub">عرض شبكة تخطيط للمحاذاة الدقيقة.</div>
           </div>
         </div>
+        <div class="prem-label">الألوان المخصصة</div>
+        <div id="premColorCustomizer">
+          <div class="tpc-row">
+            <div class="tpc-label">🎨 اللون الرئيسي</div>
+            <input type="color" class="tpc-picker" id="premColorPicker" oninput="applyCustomColor(this.value)">
+          </div>
+          <div class="tpc-presets">
+            <div class="tpc-preset" style="background:#e50914" onclick="applyCustomColor('#e50914')"></div>
+            <div class="tpc-preset" style="background:#00e5ff" onclick="applyCustomColor('#00e5ff')"></div>
+            <div class="tpc-preset" style="background:#a855f7" onclick="applyCustomColor('#a855f7')"></div>
+            <div class="tpc-preset" style="background:#5DD62C" onclick="applyCustomColor('#5DD62C')"></div>
+            <div class="tpc-preset" style="background:#f5c518" onclick="applyCustomColor('#f5c518')"></div>
+            <div class="tpc-preset" style="background:#ff2d78" onclick="applyCustomColor('#ff2d78')"></div>
+            <div class="tpc-preset" style="background:#ff6b00" onclick="applyCustomColor('#ff6b00')"></div>
+            <div class="tpc-preset" style="background:#3b82f6" onclick="applyCustomColor('#3b82f6')"></div>
+          </div>
+        </div>
+        <div class="prem-label">الخط</div>
+        <div class="prem-font-grid" id="premFontGrid"></div>
+        <div class="prem-label">الخلفية</div>
+        <div class="prem-bg-grid" id="premBgGrid"></div>
+        <div class="prem-label">تخصيص المنصات</div>
+        <div class="prem-platforms-grid" id="premPlatformsGrid"></div>
       </div>
       <div class="prem-section hidden" id="psec-profile">
         <div class="prem-section-title">الحساب</div>
