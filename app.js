@@ -1312,18 +1312,69 @@ function applyDynamicColor(rgb) {
   document.documentElement.style.setProperty('--dynamic-glow', `rgba(${rgb},0.45)`);
 }
 function calcSeasonEnd(detail) {
-  const total = detail.number_of_episodes || 0;
-  const aired = detail.last_episode_to_air?.episode_number || 0;
-  const next  = detail.next_episode_to_air?.air_date || null;
-  const remaining = total - aired;
-  if (!total || !aired) return null;
-  let endDate = null;
-  if (next) {
-    const d = new Date(next);
-    d.setDate(d.getDate() + (remaining - 1) * 7);
-    endDate = d.toLocaleDateString('ar-SA', { day:'numeric', month:'long', year:'numeric' });
+  const status   = detail.status || '';
+  const total    = detail.number_of_episodes || 0;
+  const seasons  = (detail.seasons||[]).filter(s=>s.season_number>0);
+  const lastSeason = seasons[seasons.length-1];
+  const lastSeasonEps   = lastSeason?.episode_count || 0;
+  const lastSeasonNum   = lastSeason?.season_number || 1;
+  const aired    = detail.last_episode_to_air?.episode_number || 0;
+  const airedSeason = detail.last_episode_to_air?.season_number || 0;
+  const next     = detail.next_episode_to_air;
+
+  // مسلسل منتهي نهائياً
+  if (status === 'Ended' || status === 'Canceled') {
+    return {
+      mode: 'ended',
+      label: status === 'Canceled' ? '🚫 تم إلغاء المسلسل' : '🏁 انتهى المسلسل نهائياً',
+      sub: `${seasons.length} موسم · ${total} حلقة إجمالاً`,
+      pct: 100,
+      aired: total, total
+    };
   }
-  return { total, aired, remaining, endDate, pct: Math.round((aired/total)*100) };
+
+  // الموسم الحالي اكتمل ولا يوجد حلقة قادمة
+  if (airedSeason === lastSeasonNum && aired >= lastSeasonEps && !next) {
+    return {
+      mode: 'season_done',
+      label: `✅ الموسم ${lastSeasonNum} اكتمل`,
+      sub: `ننتظر الإعلان عن الموسم ${lastSeasonNum + 1}`,
+      pct: 100,
+      aired: lastSeasonEps, total: lastSeasonEps
+    };
+  }
+
+  // حلقة قادمة معروفة
+  if (next) {
+    const remaining = lastSeasonEps - aired;
+    const nextDate  = new Date(next.air_date);
+    let endDate = null;
+    if (remaining > 1) {
+      const ed = new Date(nextDate);
+      ed.setDate(ed.getDate() + (remaining - 1) * 7);
+      endDate = ed.toLocaleDateString('ar-SA', { day:'numeric', month:'long', year:'numeric' });
+    }
+    const nextFmt = nextDate.toLocaleDateString('ar-SA', { day:'numeric', month:'long' });
+    return {
+      mode: 'airing',
+      label: `📡 الموسم ${airedSeason} يُعرض الآن`,
+      sub: `الحلقة ${next.episode_number} — ${nextFmt}`,
+      pct: Math.round((aired / lastSeasonEps) * 100),
+      aired, total: lastSeasonEps,
+      remaining, endDate
+    };
+  }
+
+  // مستمر لكن بدون تاريخ
+  if (!total || !aired) return null;
+  const remaining = total - aired;
+  return {
+    mode: 'unknown',
+    label: `📺 الموسم ${airedSeason} جارٍ`,
+    sub: 'موعد الحلقات القادمة غير محدد',
+    pct: Math.round((aired / total) * 100),
+    aired, total, remaining, endDate: null
+  };
 }
 // ===== DETAIL PAGE =====
 async function openDetail(id, type = 'movie') {
@@ -1761,19 +1812,19 @@ const reviewsHTML = `
           </div>
         </div>` : ''}
 ${type === 'tv' && (() => { const s = calcSeasonEnd(detail); if (!s) return ''; return `
-<div class="detail-section season-forecast-box">
-  <div class="sf-header">
-    <svg class="sf-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-    <span>توقع نهاية الموسم</span>
+<div class=\"detail-section season-forecast-box sf-mode-${s.mode}\">
+  <div class=\"sf-header\">
+    <svg class=\"sf-ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><polyline points=\"12 6 12 12 16 14\"/></svg>
+    <span>${s.label}</span>
   </div>
-  <div class="sf-track">
-    <div class="sf-fill" style="width:${s.pct}%"></div>
+  <div class=\"sf-track\">
+    <div class=\"sf-fill\" style=\"width:${s.pct}%\"></div>
   </div>
-  <div class="sf-row">
-    <span class="sf-chip">${s.aired} / ${s.total} حلقة</span>
-    <span class="sf-chip sf-chip-red">باقي ${s.remaining} حلقة</span>
+  <div class=\"sf-row\">
+    <span class=\"sf-chip\">${s.aired} / ${s.total} حلقة</span>
+    ${s.remaining > 0 ? `<span class=\"sf-chip sf-chip-red\">باقي ${s.remaining} حلقة</span>` : ''}
   </div>
-  ${s.endDate ? `<div class="sf-date">تنتهي تقريباً — ${s.endDate}</div>` : '<div class="sf-date">موعد النهاية غير محدد بعد</div>'}
+  <div class=\"sf-date\">${s.sub}${s.endDate ? ` — ينتهي تقريباً ${s.endDate}` : ''}</div>
 </div>`;})()}
         <!-- متوفر على -->
         ${providers.length ? `<div class="detail-section">
