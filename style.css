@@ -8540,3 +8540,69 @@ input[type=range].rox-slider::-webkit-slider-thumb {
   box-shadow: 0 0 0 1.5px rgba(229,9,20,0.5), 0 8px 30px rgba(229,9,20,0.4) !important;
   transform: translateY(-5px) scale(1.03) !important;
 } 
+.anim-channels-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 16px;
+}
+
+.anim-ch-card {
+  position: relative;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 20px 16px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.25s;
+}
+
+.anim-ch-card.active {
+  border-color: var(--ch-color);
+  background: rgba(255,255,255,0.08);
+  box-shadow: 0 0 20px rgba(0,0,0,0.4);
+}
+
+.anim-ch-card-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.anim-ch-logo {
+  width: 80px;
+  height: 40px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+.anim-ch-card.active .anim-ch-logo {
+  filter: none;
+}
+
+.anim-ch-name {
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+  font-weight: 600;
+  text-align: center;
+}
+
+.anim-ch-card.active .anim-ch-name {
+  color: #fff;
+}
+
+.anim-ch-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, var(--ch-color) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.anim-ch-card.active .anim-ch-glow {
+  opacity: 0.12;
+} 
