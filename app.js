@@ -5213,7 +5213,7 @@ function applyTheme(themeId, save = true) {
   if (t) {
     const label = document.getElementById('activeThemeLabel');
     const badge = document.getElementById('currentThemeName');
-    if (label) label.textContent = t.name + ' — ' + t.desc;
+    if (label) label.textContent = `${t.name} — ${t.desc}`;
     if (badge) badge.textContent = t.name;
   }
   if (save) {
@@ -6069,55 +6069,3 @@ document.addEventListener('scroll', () => {
     el.style.transform = `scale(1.15) translateX(${offset * 12}px)`;
   });
 }, { passive: true });
-function showAppearSub(section) {
-  document.getElementById('appearanceMenu').style.display = 'none';
-  document.getElementById('appearanceSub').style.display = 'block';
-  const content = document.getElementById('appearSubContent');
-  if (section === 'themes') {
-    content.innerHTML = '<div class="theme-grid" id="appearThemeGrid"></div>';
-    const grid = document.getElementById('appearThemeGrid');
-    grid.innerHTML = ROX_THEMES.map(t => `
-      <div class="theme-card ${roxCurrentTheme === t.id ? 'selected' : ''}" style="--theme-card-accent:${t.accent}" onclick="applyTheme('${t.id}');document.querySelectorAll('#appearThemeGrid .theme-card').forEach(c=>c.classList.remove('selected'));this.classList.add('selected')">
-        <div class="theme-card-preview" style="background:${t.bg}">
-          <div class="theme-card-bar" style="background:${t.accent}"></div>
-          <div class="theme-card-bar2" style="background:${t.accent}"></div>
-          <div class="theme-card-dots">
-            <div class="theme-card-dot" style="background:${t.bg2}"></div>
-            <div class="theme-card-dot" style="background:${t.accent}"></div>
-            <div class="theme-card-dot" style="background:${t.card}"></div>
-          </div>
-          <div class="theme-card-check">✓</div>
-        </div>
-        <div class="theme-card-foot" style="background:${t.bg2}">
-          <div class="theme-card-name">${t.name}</div>
-          <div class="theme-card-desc">${t.desc}</div>
-        </div>
-      </div>`).join('');
-  } else if (section === 'colors') {
-    content.innerHTML = '<div class="tpc-wrap" id="appearColors"></div>';
-    renderColorCustomizer();
-    const w = document.getElementById('appearColors');
-    if (w) w.innerHTML = document.getElementById('colorCustomizer')?.innerHTML || '';
-  } else if (section === 'fonts') {
-    content.innerHTML = '<div class="font-grid" id="appearFontGrid"></div>';
-    const grid = document.getElementById('appearFontGrid');
-    grid.innerHTML = ROX_FONTS.map(f => `
-      <div class="font-option ${roxCurrentFont === f.id ? 'selected' : ''}" onclick="applyFont('${f.id}');document.querySelectorAll('#appearFontGrid .font-option').forEach(c=>c.classList.remove('selected'));this.classList.add('selected')">
-        <div class="font-option-preview" style="font-family:'${f.id}',sans-serif">${f.preview}</div>
-        <div class="font-option-body"><div class="font-option-name">${f.name}</div><div class="font-option-sample" style="font-family:'${f.id}',sans-serif">${f.sample}</div></div>
-        <div class="font-option-radio"></div>
-      </div>`).join('');
-  } else if (section === 'backgrounds') {
-    content.innerHTML = '<div class="bg-grid" id="appearBgGrid"></div>';
-    renderBgGrid('appearBgGrid');
-  } else if (section === 'platforms') {
-    content.innerHTML = '<div class="plat-customizer" id="appearPlatGrid"></div>';
-    const wrap = document.getElementById('appearPlatGrid');
-    if (wrap) { document.getElementById('platformCustomizer').innerHTML && (wrap.innerHTML = ''); renderPlatformCustomizer(); wrap.innerHTML = document.getElementById('platformCustomizer')?.innerHTML || ''; }
-  }
-}
-
-function hideAppearSub() {
-  document.getElementById('appearanceMenu').style.display = 'block';
-  document.getElementById('appearanceSub').style.display = 'none';
-}
