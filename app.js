@@ -1110,6 +1110,9 @@ async function loadHomePage() {
         { id:531,  name:'Paramount+',logo:'https://image.tmdb.org/t/p/w92/h5DcR0J2EESLitnhR8xLG1QymTE.jpg' },
         { id:15,   name:'Hulu',      logo:'https://image.tmdb.org/t/p/w92/zxrVdFjIjLqkfnwyghnfywTn3Lh.jpg' },
         { id:386,  name:'Peacock',   logo:'https://image.tmdb.org/t/p/w92/hmMtHjLpPMKjBKqJoqP9bBgdoGQ.jpg' },
+        { id:283,  name:'Crunchyroll', logo:'https://image.tmdb.org/t/p/w92/mABONFPl50oXOiZnMfkFY6M7fj1.jpg' },
+        { id:2,    name:'Apple iTunes', logo:'https://image.tmdb.org/t/p/w92/peURlLlr8jggOwK53fJ5wdQl05y.jpg' },
+        { id:3,    name:'Google Play', logo:'https://image.tmdb.org/t/p/w92/8z7rC8uIDaTM91X0ZfkRf04ydj2.jpg' },
       ];
       const label = s.providerType === 'movie' ? 'أفلام' : 'مسلسلات';
       return `
