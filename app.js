@@ -5778,6 +5778,44 @@ function clearCache() {
 // تشغيل النظام عند تحميل الصفحة
 document.addEventListener('DOMContentLoaded', () => { initThemeSystem(); renderPlatformsGrid(); renderBgGrid(); const savedBg = localStorage.getItem('rox_bg'); if (savedBg && savedBg !== 'none') applyBackground(savedBg); });
 if (document.readyState !== 'loading') initThemeSystem();
+function themeDrillDown(sub) {
+  const L1 = document.getElementById('themeLevel1');
+  const L2 = document.getElementById('themeLevel2');
+  const cnt = document.getElementById('themeSubContent');
+  if (!L1||!L2||!cnt) return;
+  L1.style.opacity='0'; L1.style.transform='translateX(20px)'; L1.style.transition='all 0.25s';
+  setTimeout(()=>{ L1.style.display='none'; L2.style.display='block'; L2.style.opacity='0'; L2.style.transform='translateX(-20px)'; L2.style.transition='all 0.25s';
+    const titles={themes:'الثيمات',colors:'الألوان',bg:'الخلفيات',font:'الخط',platforms:'المنصات'};
+    const subHtml = {
+      themes:`<div class="prem-section-title">${titles.themes}</div><div class="prem-theme-grid" id="premThemeGrid2"></div>`,
+      colors:`<div class="prem-section-title">${titles.colors}</div>
+        <div class="prem-label">لون النيون</div>
+        <div class="prem-colors-row">
+          ${['#e50914','#a855f7','#22c55e','#06b6d4','#f5c518','#ff2d78','#3b82f6','#f97316','#ec4899'].map(c=>`<div class="prem-color-orb" data-color="${c}" style="--c:${c}" onclick="applyCustomColor('${c}');document.querySelectorAll('.prem-color-orb').forEach(o=>o.classList.remove('active'));this.classList.add('active')"></div>`).join('')}
+        </div>
+        <div class="prem-label" style="margin-top:14px">لون مخصص</div>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:8px">
+          <input type="color" class="tpc-picker" value="#e50914" oninput="applyCustomColor(this.value)" style="width:48px;height:48px;border-radius:12px;border:none;cursor:pointer;background:none">
+          <span style="font-size:12px;color:rgba(255,255,255,0.4);font-family:Tajawal">اختر أي لون تريده</span>
+        </div>`,
+      bg:`<div class="prem-section-title">${titles.bg}</div><div class="bg-grid-wrap" id="bgGrid"></div>`,
+      font:`<div class="prem-section-title">${titles.font}</div><div class="font-grid" id="fontGrid2"></div>`,
+      platforms:`<div class="prem-section-title">${titles.platforms}</div><div id="platformCustomizer2"></div>`
+    };
+    cnt.innerHTML = subHtml[sub]||'';
+    requestAnimationFrame(()=>{ L2.style.opacity='1'; L2.style.transform='translateX(0)'; });
+    if (sub==='themes'){ const g=document.getElementById('premThemeGrid2'); if(g) g.innerHTML=ROX_THEMES.map(t=>`<div class="prem-theme-card ${roxCurrentTheme===t.id?'selected':''}" onclick="applyTheme('${t.id}');document.querySelectorAll('.prem-theme-card').forEach(c=>c.classList.remove('selected'));this.classList.add('selected')" style="--theme-card-accent:${t.accent}"><div class="prem-theme-preview" style="background:${t.bg}"><div class="prem-theme-bar" style="background:${t.accent}"></div><div class="prem-theme-bar2" style="background:${t.accent}"></div></div><div class="prem-theme-foot" style="background:${t.bg2}"><div class="prem-theme-name">${t.name}</div><div class="prem-theme-desc">${t.desc}</div></div></div>`).join(''); }
+    if (sub==='bg') renderBgGrid();
+    if (sub==='font'){ const fg=document.getElementById('fontGrid2'); if(fg) fg.innerHTML=ROX_FONTS.map(f=>`<div class="font-option ${roxCurrentFont===f.id?'selected':''}" onclick="applyFont('${f.id}')"><div class="font-option-preview" style="font-family:'${f.id}',sans-serif">${f.preview}</div><div class="font-option-body"><div class="font-option-name">${f.name}</div><div class="font-option-sample" style="font-family:'${f.id}',sans-serif">${f.sample}</div></div><div class="font-option-radio"></div></div>`).join(''); }
+    if (sub==='platforms'){ const pc=document.getElementById('platformCustomizer2'); if(pc){ pc.innerHTML=ROX_PLATFORMS.map(p=>`<div class="plat-cust-item"><div class="plat-cust-name" style="color:${p.color}">${p.name}</div><div class="plat-cust-gifs">${p.gifs.map(g=>`<img src="${g}" class="plat-cust-gif ${getPlatformGif(p.id)===g?'selected':''}" onclick="selectPlatformGif('${p.id}','${g}',this)" loading="lazy">`).join('')}</div></div>`).join(''); } }
+  },250);
+}
+function themeBack() {
+  const L1=document.getElementById('themeLevel1'); const L2=document.getElementById('themeLevel2');
+  if(!L1||!L2) return;
+  L2.style.opacity='0'; L2.style.transform='translateX(-20px)'; L2.style.transition='all 0.25s';
+  setTimeout(()=>{ L2.style.display='none'; L1.style.display='block'; L1.style.opacity='0'; L1.style.transform='translateX(20px)'; requestAnimationFrame(()=>{ L1.style.opacity='1'; L1.style.transform='translateX(0)'; L1.style.transition='all 0.25s'; }); },250);
+      }
 function initPremSettings() {
   document.querySelectorAll('.prem-nav-item').forEach(btn => {
     btn.addEventListener('click', () => {
