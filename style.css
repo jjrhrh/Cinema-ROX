@@ -8383,6 +8383,7 @@ input[type=range].rox-slider::-webkit-slider-thumb {
   flex-wrap: wrap;
   gap: 10px;
   margin-top: 10px;
+  perspective: 800px;
 }
 .bg-option {
   display: flex;
