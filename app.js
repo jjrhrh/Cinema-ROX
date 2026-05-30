@@ -1101,25 +1101,23 @@ function openAnimationHub() {
   window.scrollTo(0, 0);
 
   const ANIM_CHANNELS = [
-    { id:'cartoonnetwork', name:'Cartoon Network', color:'#ff6b00', icon:'https://i.postimg.cc/wBRwMBdW/semsem.png', networkId: 11 },
-    { id:'nickelodeon',    name:'Nickelodeon',     color:'#ff9800', icon:'https://i.postimg.cc/d1xhQp7j/hodhod.png', networkId: 13 },
-    { id:'disney',         name:'Disney Channel',  color:'#0d47a1', icon:'https://i.postimg.cc/Y2LCQyzX/hodhodtv.png', networkId: 54 },
-    { id:'disneyjr',       name:'Disney Junior',   color:'#e91e63', icon:'https://i.postimg.cc/kXnvQ7mk/disneyjr.png', networkId: 302 },
-    { id:'disneyxd',       name:'Disney XD',       color:'#1565c0', icon:'https://i.postimg.cc/j2Dqfm8Y/disneyxd.png', networkId: 2739 },
-    { id:'cartoonito',     name:'Cartoonito',      color:'#ff9100', icon:'https://i.postimg.cc/DyybvVjz/cartoonito.png', networkId: 2552 },
-    { id:'nickjr',         name:'Nick Jr',         color:'#ff6d00', icon:'https://i.postimg.cc/Kj2P5YcK/nickjr.png', networkId: 174 },
-    { id:'cbeebies',       name:'CBeebies',        color:'#ff5722', icon:'https://i.postimg.cc/sxJhJCmk/cbeebies.png', networkId: 228 },
-    { id:'semsem',         name:'Semsem',          color:'#ff6b35', icon:'https://i.postimg.cc/wBRwMBdW/semsem.png', keywords: 'سمسم' },
-    { id:'hodhod',         name:'Hodhod Kids',     color:'#ffd600', icon:'https://i.postimg.cc/d1xhQp7j/hodhod.png', keywords: 'هدهد' },
-    { id:'tahatv',         name:'Taha TV',         color:'#4caf50', icon:'https://i.postimg.cc/rwcBqzBH/taha.png', keywords: 'طه' },
+    { id:'cartoonnetwork', name:'Cartoon Network', color:'#ff6b00', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Cartoon_Network_2010_logo.svg/200px-Cartoon_Network_2010_logo.svg.png', networkId: 11, tvOnly: true },
+    { id:'nickelodeon',    name:'Nickelodeon',     color:'#ff8c00', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Nickelodeon_2009_logo.svg/200px-Nickelodeon_2009_logo.svg.png', networkId: 13, tvOnly: true },
+    { id:'disney',         name:'Disney Channel',  color:'#0d47a1', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Disney_Channel_2014_logo.svg/200px-Disney_Channel_2014_logo.svg.png', networkId: 54, tvOnly: true },
+    { id:'disneyjr',       name:'Disney Junior',   color:'#e91e63', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Disney_Junior_logo.svg/200px-Disney_Junior_logo.svg.png', networkId: 302, tvOnly: true },
+    { id:'disneyxd',       name:'Disney XD',       color:'#1565c0', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Disney_XD_2015_logo.svg/200px-Disney_XD_2015_logo.svg.png', networkId: 2739, tvOnly: true },
+    { id:'nickjr',         name:'Nick Jr',         color:'#ff6d00', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Nick_Jr._logo_%282009%29.svg/200px-Nick_Jr._logo_%282009%29.svg.png', networkId: 174, tvOnly: true },
+    { id:'cbeebies',       name:'CBeebies',        color:'#ff5722', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/CBeebies_2022_logo.svg/200px-CBeebies_2022_logo.svg.png', networkId: 228, tvOnly: true },
+    { id:'cartoonito',     name:'Cartoonito',      color:'#ff9100', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Cartoonito_logo.svg/200px-Cartoonito_logo.svg.png', networkId: 2552, tvOnly: true },
   ];
 
-  let activeChannel = null;
-
   const channelsHTML = ANIM_CHANNELS.map(ch => `
-    <div class="anim-ch-chip ${activeChannel===ch.id?'active':''}" id="animch_${ch.id}"
-         onclick="filterAnimChannel('${ch.id}')" style="--ch-color:${ch.color}">
-      <span>${ch.name}</span>
+    <div class="anim-ch-card" id="animch_${ch.id}" onclick="filterAnimChannel('${ch.id}')" style="--ch-color:${ch.color}">
+      <div class="anim-ch-card-inner">
+        <img src="${ch.logo}" onerror="this.style.display='none'" class="anim-ch-logo">
+        <span class="anim-ch-name">${ch.name}</span>
+      </div>
+      <div class="anim-ch-glow"></div>
     </div>`).join('');
 
   page.innerHTML = `
@@ -1133,10 +1131,8 @@ function openAnimationHub() {
         <button class="anim-tab" id="animTabMovies" onclick="switchAnimTab('movie',this)">أفلام</button>
         <button class="anim-tab" id="animTabSeries" onclick="switchAnimTab('tv',this)">مسلسلات</button>
       </div>
-      <div class="anim-channels-scroll">${channelsHTML}</div>
-      <div id="animResultsGrid" class="anim-results-grid">
-        ${Array(8).fill('<div class="movie-card skeleton-card"></div>').join('')}
-      </div>
+      <div class="anim-channels-grid">${channelsHTML}</div>
+      <div id="animResultsGrid" class="anim-results-grid"></div>
     </div>`;
 
   window._animTab = 'all';
@@ -1155,7 +1151,7 @@ window.switchAnimTab = function(tab, el) {
 window.filterAnimChannel = function(chId) {
   const prev = window._animChannel;
   window._animChannel = prev === chId ? null : chId;
-  document.querySelectorAll('.anim-ch-chip').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.anim-ch-card').forEach(c => c.classList.remove('active'));
   if (window._animChannel) document.getElementById('animch_' + window._animChannel)?.classList.add('active');
   loadAnimResults();
 };
@@ -1166,14 +1162,27 @@ async function loadAnimResults() {
   grid.innerHTML = Array(8).fill('<div class="movie-card skeleton-card"></div>').join('');
   const tab = window._animTab || 'all';
   const chId = window._animChannel;
-  const ANIM_CHANNELS = window._animChannelsList || [];
-  const ch = ANIM_CHANNELS.find(c => c.id === chId);
-  const params = { with_genres: '16', sort_by: 'popularity.desc' };
-  if (ch?.networkId) params.with_networks = ch.networkId;
-  const endpoints = tab === 'movie' ? ['/discover/movie'] :
-                    tab === 'tv'    ? ['/discover/tv'] :
-                    ['/discover/movie', '/discover/tv'];
-  const results = await Promise.all(endpoints.map(ep => fetchMovies(ep, { type: ep.includes('tv')?'tv':'movie', params })));
+  const channels = window._animChannelsList || [];
+  const ch = channels.find(c => c.id === chId);
+  const tvParams = { with_genres: '16', sort_by: 'popularity.desc' };
+  const movParams = { with_genres: '16', sort_by: 'popularity.desc' };
+  if (ch?.networkId) tvParams.with_networks = ch.networkId;
+  let endpoints = [];
+  if (ch?.tvOnly) {
+    endpoints = tab === 'movie' ? [] : ['/discover/tv'];
+  } else {
+    endpoints = tab === 'movie' ? ['/discover/movie'] :
+                tab === 'tv'   ? ['/discover/tv'] :
+                ['/discover/movie', '/discover/tv'];
+  }
+  if (!endpoints.length) {
+    grid.innerHTML = '<div style="color:rgba(255,255,255,0.4);padding:40px;text-align:center">هذه القناة مسلسلات فقط</div>';
+    return;
+  }
+  const results = await Promise.all(endpoints.map(ep => {
+    const p = ep.includes('tv') ? tvParams : movParams;
+    return fetchMovies(ep, { type: ep.includes('tv')?'tv':'movie', params: p });
+  }));
   const all = results.flat().sort((a,b) => b.popularity - a.popularity);
   if (!grid) return;
   grid.innerHTML = all.length
