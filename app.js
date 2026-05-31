@@ -5234,23 +5234,52 @@ function showRoxSourcesLoading() {
 }
 
 async function fetchRoxSources(type, id, season, ep, lang) {
-  const apiUrl = `/api/stream?type=${type}&id=${id}&season=${season || 1}&ep=${ep || 1}&lang=${lang}`;
-  const [serverRes, clientRes] = await Promise.allSettled([
-    fetch(apiUrl).then(r => r.json()).then(d => d.sources || []),
-    roxClientScrape(type, id, season || 1, ep || 1, lang === 'dub')
-  ]);
-  const all = [];
-  const seen = new Set();
-  [serverRes, clientRes].forEach(r => {
-    if (r.status !== 'fulfilled') return;
-    (r.value || []).forEach(src => {
-      if (!src?.url || seen.has(src.url)) return;
-      seen.add(src.url);
-      all.push(src);
-    });
-  });
+  const s = String(season || 1);
+  const e = String(ep || 1);
+  const isDub = lang === 'dub';
+  const proxies = [
+    'https://api.allorigins.win/raw?url=',
+    'https://api.codetabs.com/v1/proxy?quest='
+  ];
+  const embedSources = [
+    { name: 'VidSrc', url: type==='movie' ? `https://vidsrc.xyz/embed/movie/${id}` : `https://vidsrc.xyz/embed/tv/${id}/${s}/${e}`, type:'embed', lang:'مترجم' },
+    { name: 'VidLink', url: type==='movie' ? `https://vidlink.pro/movie/${id}` : `https://vidlink.pro/tv/${id}/${s}/${e}`, type:'embed', lang:'مترجم' },
+    { name: 'AutoEmbed', url: type==='movie' ? `https://autoembed.co/movie/tmdb/${id}` : `https://autoembed.co/tv/tmdb/${id}-${s}-${e}`, type:'embed', lang:'مترجم' },
+    { name: 'RiveStream', url: type==='movie' ? `https://www.rivestream.app/embed?type=movie&id=${id}` : `https://www.rivestream.app/embed?type=tv&id=${id}&season=${s}&episode=${e}`, type:'embed', lang:'مترجم' },
+    { name: 'Videasy', url: type==='movie' ? `https://player.videasy.net/movie/${id}` : `https://player.videasy.net/tv/${id}/${s}/${e}`, type:'embed', lang:'مترجم' },
+    ...(isDub ? [
+      { name: 'Videasy DUB', url: type==='movie' ? `https://player.videasy.net/movie/${id}` : `https://player.videasy.net/tv/${id}/${s}/${e}?dubbing=true`, type:'embed', lang:'مدبلج' },
+      { name: 'RiveDUB', url: type==='movie' ? `https://www.rivestream.app/embed?type=movie&id=${id}&lang=dub` : `https://www.rivestream.app/embed?type=tv&id=${id}&season=${s}&episode=${e}&lang=dub`, type:'embed', lang:'مدبلج' }
+    ] : [])
+  ];
+  const directTargets = [
+    type==='movie' ? `https://vidsrc.cc/v2/embed/movie/${id}` : `https://vidsrc.cc/v2/embed/tv/${id}/${s}/${e}`,
+    type==='movie' ? `https://multiembed.mov/directstream.php?video_id=${id}&tmdb=1` : `https://multiembed.mov/directstream.php?video_id=${id}&tmdb=1&s=${s}&e=${e}`
+  ];
+  const directSources = [];
+  for (const target of directTargets) {
+    for (const proxy of proxies) {
+      try {
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), 5000);
+        const r = await fetch(proxy + encodeURIComponent(target), { signal: ctrl.signal });
+        clearTimeout(timer);
+        if (!r.ok) continue;
+        const html = await r.text();
+        const m3u8 = [...new Set((html.match(/https?:\/\/[^"'\s<>\\]+\.m3u8[^"'\s<>\\]*/g)||[]))];
+        const mp4 = [...new Set((html.match(/https?:\/\/[^"'\s<>\\]+\.mp4[^"'\s<>\\]*/g)||[]))];
+        [...m3u8,...mp4].slice(0,3).forEach(u => {
+          if (/gstatic|googleapis|placeholder/.test(u)) return;
+          directSources.push({ name:`Direct ${u.includes('.m3u8')?'HLS':'MP4'}`, url:u, type:u.includes('.m3u8')?'hls':'mp4', lang:isDub?'مدبلج':'مترجم', quality:'auto', direct:true });
+        });
+        if (directSources.length) break;
+      } catch(_) {}
+    }
+    if (directSources.length >= 3) break;
+  }
+  const all = [...directSources, ...embedSources];
   window._roxSources = all;
-  renderRoxSourceSheet(all.length ? all : []);
+  renderRoxSourceSheet(all);
 }
 
 function renderRoxSourceSheet(sources) {
