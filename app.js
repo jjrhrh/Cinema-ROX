@@ -5234,15 +5234,23 @@ function showRoxSourcesLoading() {
 }
 
 async function fetchRoxSources(type, id, season, ep, lang) {
-  try {
-    const url = `/api/stream?type=${type}&id=${id}&season=${season || 1}&ep=${ep || 1}&lang=${lang}`;
-    const r = await fetch(url);
-    const data = await r.json();
-    window._roxSources = data.sources || [];
-    renderRoxSourceSheet(window._roxSources);
-  } catch (e) {
-    renderRoxSourceSheet([]);
-  }
+  const apiUrl = `/api/stream?type=${type}&id=${id}&season=${season || 1}&ep=${ep || 1}&lang=${lang}`;
+  const [serverRes, clientRes] = await Promise.allSettled([
+    fetch(apiUrl).then(r => r.json()).then(d => d.sources || []),
+    roxClientScrape(type, id, season || 1, ep || 1, lang === 'dub')
+  ]);
+  const all = [];
+  const seen = new Set();
+  [serverRes, clientRes].forEach(r => {
+    if (r.status !== 'fulfilled') return;
+    (r.value || []).forEach(src => {
+      if (!src?.url || seen.has(src.url)) return;
+      seen.add(src.url);
+      all.push(src);
+    });
+  });
+  window._roxSources = all;
+  renderRoxSourceSheet(all.length ? all : []);
 }
 
 function renderRoxSourceSheet(sources) {
