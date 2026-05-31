@@ -2776,6 +2776,15 @@ window.roxPingServer = async function(url, dotId) {
     dot.title = 'تعذر الاتصال';
   }
 };
+window.roxGetFavs = () => JSON.parse(localStorage.getItem('rox_fav_srvs') || '[]');
+window.roxSetFav = function(name) {
+  let favs = roxGetFavs();
+  if (favs.includes(name)) favs = favs.filter(f => f !== name);
+  else favs.push(name);
+  localStorage.setItem('rox_fav_srvs', JSON.stringify(favs));
+};
+window.roxGetLastSrv = () => localStorage.getItem('rox_last_srv') || '';
+window.roxSetLastSrv = name => localStorage.setItem('rox_last_srv', name);
 window.roxShowTab = function(tab, btn) {
   document.querySelectorAll('.rox-srv-list').forEach(el => el.style.display='none');
   document.querySelectorAll('.rox-tab').forEach(b => b.classList.remove('active'));
@@ -2783,16 +2792,26 @@ window.roxShowTab = function(tab, btn) {
   btn.classList.add('active');
   const map = {vip: window._vipSrvs, pro: window._proSrvs, free: window._freeSrvs};
   const list = map[tab] || [];
+  const favs = roxGetFavs();
+  const lastSrv = roxGetLastSrv();
   const container = document.getElementById('content-' + tab);
   container.innerHTML = list.map((s,i) => {
     const dotId = 'ping-' + tab + '-' + i;
+    const isFav = favs.includes(s.name);
+    const isLast = lastSrv === s.name;
     return `
-    <div class="rox-srv-row ${s.active?'rox-srv-active':''} ${tab==='vip'&&i<5?'rox-srv-elite':''}" draggable="true" data-tab="${tab}" data-idx="${i}" onclick="wsSelectServerNew(this,'${s.url||''}','${s.name}',${!!s.rox})">
+    <div class="rox-srv-row ${s.active?'rox-srv-active':''} ${tab==='vip'&&i<5?'rox-srv-elite':''} ${isLast?'rox-srv-last':''}" draggable="true" data-tab="${tab}" data-idx="${i}" data-name="${s.name}" onclick="wsSelectServerNew(this,'${s.url||''}','${s.name}',${!!s.rox})">
       <div class="rox-drag-handle" onclick="event.stopPropagation()"><i class="ri-menu-line"></i></div>
       <div class="rox-srv-num">${i+1}</div>
       ${s.icon}
-      <div class="rox-srv-info"><div class="srv-name">${s.name}</div><div class="srv-desc">${s.desc}</div></div>
+      <div class="rox-srv-info">
+        <div class="srv-name">${s.name} ${isLast?'<span class="rox-last-badge">آخر استخدام</span>':''}</div>
+        <div class="srv-desc">${s.desc}</div>
+      </div>
       <div class="rox-ping-wrap"><span id="${dotId}" class="rox-ping-dot pinging" title="جارٍ القياس..."></span></div>
+      <div class="rox-fav-btn ${isFav?'fav-active':''}" onclick="event.stopPropagation();roxSetFav('${s.name}');roxShowTab('${tab}',document.querySelector('.rox-tab.active'))">
+        <i class="${isFav?'ri-heart-fill':'ri-heart-line'}"></i>
+      </div>
       <i class="ri-play-circle-fill rox-srv-play"></i>
     </div>`;
   }).join('');
