@@ -9135,3 +9135,31 @@ input[type=range].rox-slider::-webkit-slider-thumb {
 .rox-drag-handle:active { cursor:grabbing; color:rgba(255,255,255,0.7); }
 .rox-dragging { opacity:0.4; border:1px dashed var(--accent) !important; }
 .rox-drag-over { border-color:var(--accent) !important; background:rgba(229,9,20,0.08) !important; transform:scale(1.01); } 
+.rox-srv-elite {
+  border-color: rgba(255,215,0,0.5) !important;
+  background: linear-gradient(135deg, rgba(255,215,0,0.08), rgba(255,160,0,0.04)) !important;
+  box-shadow: 0 0 14px rgba(255,215,0,0.12), inset 0 0 20px rgba(255,215,0,0.04);
+  position: relative;
+  overflow: hidden;
+}
+.rox-srv-elite::before {
+  content: '★ ELITE';
+  position: absolute;
+  top: 6px;
+  left: 8px;
+  font-size: 8px;
+  font-weight: 900;
+  color: rgba(255,215,0,0.7);
+  letter-spacing: 1px;
+}
+.rox-srv-elite .rox-srv-num {
+  background: linear-gradient(135deg, #ffd700, #ff8c00);
+  color: #000;
+  font-weight: 900;
+}
+.rox-srv-elite .srv-name { color: #ffd700; }
+.rox-srv-elite .rox-srv-play { color: #ffd700; }
+.rox-srv-elite.rox-srv-active {
+  border-color: #ffd700 !important;
+  box-shadow: 0 0 22px rgba(255,215,0,0.35) !important;
+} 
