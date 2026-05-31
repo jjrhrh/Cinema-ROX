@@ -2760,6 +2760,22 @@ setTimeout(() => {
       }).catch(()=>{ row.closest('.suggestions-section').style.display='none'; });
   }, 1000);
 window._vipSrvs = null; window._proSrvs = null; window._freeSrvs = null;
+window.roxPingServer = async function(url, dotId) {
+  const dot = document.getElementById(dotId);
+  if (!dot) return;
+  dot.className = 'rox-ping-dot pinging';
+  const start = Date.now();
+  try {
+    const domain = new URL(url).origin;
+    await fetch(domain + '/favicon.ico', { method:'HEAD', mode:'no-cors', cache:'no-store', signal: AbortSignal.timeout(4000) });
+    const ms = Date.now() - start;
+    dot.className = 'rox-ping-dot ' + (ms < 800 ? 'ping-green' : ms < 2000 ? 'ping-yellow' : 'ping-red');
+    dot.title = ms + 'ms';
+  } catch(e) {
+    dot.className = 'rox-ping-dot ping-red';
+    dot.title = 'تعذر الاتصال';
+  }
+};
 window.roxShowTab = function(tab, btn) {
   document.querySelectorAll('.rox-srv-list').forEach(el => el.style.display='none');
   document.querySelectorAll('.rox-tab').forEach(b => b.classList.remove('active'));
@@ -2768,50 +2784,21 @@ window.roxShowTab = function(tab, btn) {
   const map = {vip: window._vipSrvs, pro: window._proSrvs, free: window._freeSrvs};
   const list = map[tab] || [];
   const container = document.getElementById('content-' + tab);
-  container.innerHTML = list.map((s,i) => `
+  container.innerHTML = list.map((s,i) => {
+    const dotId = 'ping-' + tab + '-' + i;
+    return `
     <div class="rox-srv-row ${s.active?'rox-srv-active':''} ${tab==='vip'&&i<5?'rox-srv-elite':''}" draggable="true" data-tab="${tab}" data-idx="${i}" onclick="wsSelectServerNew(this,'${s.url||''}','${s.name}',${!!s.rox})">
       <div class="rox-drag-handle" onclick="event.stopPropagation()"><i class="ri-menu-line"></i></div>
       <div class="rox-srv-num">${i+1}</div>
       ${s.icon}
       <div class="rox-srv-info"><div class="srv-name">${s.name}</div><div class="srv-desc">${s.desc}</div></div>
+      <div class="rox-ping-wrap"><span id="${dotId}" class="rox-ping-dot pinging" title="جارٍ القياس..."></span></div>
       <i class="ri-play-circle-fill rox-srv-play"></i>
-    </div>`).join('');
+    </div>`;
+  }).join('');
   roxInitDrag(container, tab);
-};
-window.roxInitDrag = function(container, tab) {
-  let dragEl = null;
-  container.querySelectorAll('.rox-srv-row').forEach(row => {
-    row.addEventListener('dragstart', e => {
-      dragEl = row;
-      setTimeout(() => row.classList.add('rox-dragging'), 0);
-      e.dataTransfer.effectAllowed = 'move';
-    });
-    row.addEventListener('dragend', () => {
-      row.classList.remove('rox-dragging');
-      container.querySelectorAll('.rox-srv-row').forEach(r => r.classList.remove('rox-drag-over'));
-      const map = {vip: window._vipSrvs, pro: window._proSrvs, free: window._freeSrvs};
-      const newOrder = [...container.querySelectorAll('.rox-srv-row')].map(r => {
-        const idx = parseInt(r.dataset.idx);
-        return map[tab][idx];
-      });
-      map[tab].splice(0, map[tab].length, ...newOrder);
-      container.querySelectorAll('.rox-srv-row').forEach((r,i) => {
-        r.dataset.idx = i;
-        r.querySelector('.rox-srv-num').textContent = i+1;
-      });
-      dragEl = null;
-    });
-    row.addEventListener('dragover', e => {
-      e.preventDefault();
-      if (!dragEl || dragEl === row) return;
-      container.querySelectorAll('.rox-srv-row').forEach(r => r.classList.remove('rox-drag-over'));
-      row.classList.add('rox-drag-over');
-      const rows = [...container.querySelectorAll('.rox-srv-row')];
-      const dragIdx = rows.indexOf(dragEl);
-      const overIdx = rows.indexOf(row);
-      if (dragIdx < overIdx) row.after(dragEl); else row.before(dragEl);
-    });
-    row.addEventListener('dragleave', () => row.classList.remove('rox-drag-over'));
+  list.forEach((s, i) => {
+    if (s.url) setTimeout(() => roxPingServer(s.url, 'ping-' + tab + '-' + i), i * 120);
   });
 };
 window.wsSelectServerNew = function(el, url, name, isRox) {
