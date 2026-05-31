@@ -5295,11 +5295,12 @@ function showRoxSourcesLoading() {
 async function fetchRoxSources(type, id, season, ep, lang) {
   const endpoints = [
     `https://dreamy-torte-f9b6b2.netlify.app/.netlify/functions/stream?type=${type}&id=${id}&season=${season||1}&ep=${ep||1}&lang=${lang}`,
-    `https://cinema-rox.vercel.app/api/stream?type=${type}&id=${id}&season=${season||1}&ep=${ep||1}&lang=${lang}`
+    `https://cinema-rox.vercel.app/api/stream?type=${type}&id=${id}&season=${season||1}&ep=${ep||1}&lang=${lang}&repos=${encodeURIComponent(JSON.stringify(getRepos().map(r=>r.url)))}`
   ];
   for (const endpoint of endpoints) {
     try {
-      const nr = await fetch(endpoint, { signal: AbortSignal.timeout(12000) });
+      const timeout = endpoint.includes('netlify') ? 5000 : 12000;
+const nr = await fetch(endpoint, { signal: AbortSignal.timeout(timeout) });
       if (nr.ok) { const nd = await nr.json(); if (nd.sources?.length) { window._roxSources = nd.sources; renderRoxSourceSheet(nd.sources); return; } }
     } catch(_) {}
   }
