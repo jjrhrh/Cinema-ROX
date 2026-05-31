@@ -137,6 +137,7 @@
       <div class="prem-nav-item active" data-sec="themes"><i class="ri-palette-line"></i><span>المظهر</span></div>
       <div class="prem-nav-item" data-sec="subscription"><i class="ri-vip-crown-line"></i><span>الاشتراكات</span></div>
       <div class="prem-nav-item" data-sec="devtools"><i class="ri-code-s-slash-line"></i><span>أدوات المطور</span></div>
+      <div class="prem-nav-item" data-sec="repos" onclick="renderReposSettings()"><i class="ri-database-2-line"></i><span>المستودعات</span></div>
     </div>
     <div class="prem-main">
       <div class="prem-section" id="psec-themes">
@@ -250,6 +251,11 @@
           <div class="prem-glass-cell" style="margin-top:6px;cursor:pointer" onclick="this.querySelector('span').textContent='⏳ جاري الفحص...';setTimeout(()=>this.querySelector('span').textContent='Backup Server: 88ms',1500)"><i class="ri-wifi-line" style="color:#eab308"></i><span>Backup Server: اضغط للفحص</span></div>
           <button class="prem-action-btn" style="margin-top:16px;background:rgba(229,9,20,0.15);border:1px solid rgba(229,9,20,0.3);color:#ff6b6b" onclick="clearCache()"><i class="ri-delete-bin-line"></i> مسح الكاش</button>
         </div>
+      </div>
+      <div class="prem-section hidden" id="psec-repos">
+        <div class="prem-section-title">📦 المستودعات</div>
+        <div class="prem-section-sub">أضف مستودعات سيرفرات مثل NUVIO لتظهر في قائمة السيرفرات.</div>
+        <div id="reposSettingsContainer"></div>
       </div>
     </div>
   </div>
