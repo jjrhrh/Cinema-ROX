@@ -1218,12 +1218,14 @@ async function loadHomePage() {
   if (!row) return;
   row.innerHTML = Array(4).fill('<div class="movie-card skeleton-card"></div>').join('');
   const endpoint = type === 'movie' ? '/discover/movie' : '/discover/tv';
-  const movies = await fetchMovies(endpoint, { type, limit: 100, params: {
-    with_genres: String(genreId),
-    sort_by: 'popularity.desc',
-    include_adult: 'false',
-    without_keywords: '158718,9840,10539'
-  }});
+  const baseParams = { with_genres: String(genreId), sort_by: 'popularity.desc', include_adult: 'false', without_keywords: '158718,9840,10539' };
+  const pages = await Promise.all([1,2,3,4,5].map(pg =>
+    fetch(buildTMDBUrl(endpoint, { ...baseParams, page: pg }))
+      .then(r => r.json()).then(d => (d.results||[]).filter(i=>i.poster_path).map(i=>({...i,media_type:type})))
+      .catch(()=>[])
+  ));
+  const seen = new Set();
+  const movies = pages.flat().filter(i => { if(seen.has(i.id)) return false; seen.add(i.id); return true; }).slice(0,100);
   row.innerHTML = movies.length
     ? movies.map((m,i) => buildMovieCard(m, type, '', i+1)).join('')
     : '<div style="color:rgba(255,255,255,0.4);padding:20px">لا يوجد محتوى</div>';
@@ -1415,7 +1417,13 @@ async function openBrowseAll(type, endpoint, title, extraParams = {}) {
     page.innerHTML = `<div style="padding:16px"><button onclick="goBack()">← رجوع</button><p style="color:#fff;margin-top:16px">تعذر تحميل المحتوى</p></div>`;
     return;
   }
-  const movies = await fetchMovies(ep, { type: type||'movie', limit: 50, params: extraParams||{} });
+  const browsePages = await Promise.all([1,2,3].map(pg =>
+    fetch(buildTMDBUrl(ep, { ...(extraParams||{}), page: pg, include_adult: 'false' }))
+      .then(r => r.json()).then(d => (d.results||[]).filter(i=>i.poster_path).map(i=>({...i,media_type:type||'movie'})))
+      .catch(()=>[])
+  ));
+  const seenIds = new Set();
+  const movies = browsePages.flat().filter(i => { if(seenIds.has(i.id)) return false; seenIds.add(i.id); return true; }).slice(0,60);
   page.innerHTML = `
     <div style="padding:16px">
       <button class="detail-btn" onclick="goBack()" style="margin-bottom:16px">← رجوع</button>
