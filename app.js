@@ -5220,6 +5220,76 @@ function selectRoxSource(i) {
   window.scrollTo(0, 0);
   showToast('▶ ' + s.name);
 }
+function getRepos() {
+  try { return JSON.parse(localStorage.getItem('rox_repos') || '[]'); } catch { return []; }
+}
+function saveRepos(repos) {
+  localStorage.setItem('rox_repos', JSON.stringify(repos));
+}
+
+async function addRepo(url) {
+  if (!url) return;
+  url = url.trim();
+  try {
+    const r = await fetch(url);
+    const m = await r.json();
+    if (!m.name && !m.id) { showToast('❌ رابط غير صالح'); return; }
+    const repos = getRepos();
+    if (repos.find(r => r.url === url)) { showToast('⚠️ المستودع موجود مسبقاً'); return; }
+    repos.push({ url, name: m.name || m.id || url, logo: m.logo || '', description: m.description || '' });
+    saveRepos(repos);
+    renderReposSettings();
+    showToast('✅ تمت إضافة المستودع');
+  } catch { showToast('❌ فشل تحميل المستودع'); }
+}
+
+function removeRepo(url) {
+  const repos = getRepos().filter(r => r.url !== url);
+  saveRepos(repos);
+  renderReposSettings();
+  showToast('🗑️ تم حذف المستودع');
+}
+
+function renderReposSettings() {
+  const container = document.getElementById('reposSettingsContainer');
+  if (!container) return;
+  const repos = getRepos();
+  container.innerHTML = `
+    <div style="display:flex;gap:8px;margin-bottom:14px">
+      <input id="repoUrlInput" type="url" placeholder="https://...manifest.json"
+        style="flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:10px 12px;color:#fff;font-family:Tajawal,sans-serif;font-size:0.85rem;outline:none">
+      <button onclick="addRepo(document.getElementById('repoUrlInput').value)"
+        style="background:#e50914;border:none;border-radius:12px;padding:10px 16px;color:#fff;font-family:Tajawal,sans-serif;font-size:0.85rem;cursor:pointer;font-weight:700">إضافة</button>
+    </div>
+    ${repos.length ? repos.map(r => `
+      <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.05);border-radius:14px;padding:10px 12px;margin-bottom:8px">
+        ${r.logo ? `<img src="${r.logo}" style="width:32px;height:32px;border-radius:8px;object-fit:contain">` : `<div style="width:32px;height:32px;border-radius:8px;background:#333;display:flex;align-items:center;justify-content:center;font-size:1rem">📦</div>`}
+        <div style="flex:1;min-width:0">
+          <div style="color:#fff;font-size:0.88rem;font-weight:700;font-family:Tajawal,sans-serif">${r.name}</div>
+          <div style="color:rgba(255,255,255,0.4);font-size:0.72rem;font-family:Tajawal,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.url}</div>
+        </div>
+        <button onclick="removeRepo('${r.url}')" style="background:rgba(229,9,20,0.15);border:1px solid rgba(229,9,20,0.3);border-radius:8px;padding:6px 10px;color:#e50914;cursor:pointer;font-size:0.8rem">حذف</button>
+      </div>`).join('') : `<div style="color:rgba(255,255,255,0.3);text-align:center;padding:20px;font-family:Tajawal,sans-serif;font-size:0.85rem">لا توجد مستودعات مضافة</div>`}`;
+}
+
+async function getRepoSources(type, id, season, ep) {
+  const repos = getRepos();
+  if (!repos.length) return [];
+  const all = [];
+  for (const repo of repos) {
+    try {
+      const r = await fetch(repo.url);
+      const manifest = await r.json();
+      const streamUrl = manifest.streamUrl || manifest.stream_url;
+      if (!streamUrl) continue;
+      const url = type === 'movie'
+        ? streamUrl.replace('{type}', 'movie').replace('{id}', id)
+        : streamUrl.replace('{type}', 'tv').replace('{id}', id).replace('{season}', season || 1).replace('{episode}', ep || 1);
+      all.push({ name: repo.name, url, type: 'embed', lang: 'متعدد', quality: 'auto', logo: repo.logo });
+    } catch {}
+  }
+  return all;
+}
 function showRoxSourcesLoading() {
   const existing = document.getElementById('roxSourceSheet');
   if (existing) existing.remove();
@@ -5286,52 +5356,68 @@ async function fetchRoxSources(type, id, season, ep, lang) {
   renderRoxSourceSheet(all);
 }
 
-function renderRoxSourceSheet(sources) {
+async function renderRoxSourceSheet(sources) {
   const sheet = document.getElementById('roxSourceSheet');
   if (!sheet) return;
-  if (!sources.length) {
+
+  const repoSources = await getRepoSources(
+    window._roxCurrentMeta?.type,
+    window._roxCurrentMeta?.id,
+    window._roxCurrentMeta?.season,
+    window._roxCurrentMeta?.ep
+  );
+
+  const allSources = [...sources, ...repoSources];
+
+  if (!allSources.length) {
     sheet.innerHTML = `<div style="text-align:center;padding:30px;color:rgba(255,255,255,0.4);font-family:Tajawal;">لا توجد سيرفرات متاحة حالياً</div>`;
     setTimeout(() => sheet.remove(), 3000);
     return;
   }
-  const dubSources = sources.filter(s => s.lang === 'مدبلج');
-  const subSources = sources.filter(s => s.lang !== 'مدبلج');
 
-  const buildGroup = (label, list) => {
-    if (!list.length) return '';
-    return `<div style="margin-bottom:14px;">
-      <div style="font-size:11px;font-weight:800;color:rgba(255,255,255,0.35);letter-spacing:1px;margin-bottom:8px;font-family:Tajawal;">${label}</div>
-      ${list.map((s, i) => `
-        <div onclick="selectRoxSourceNew(${sources.indexOf(s)})" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;margin-bottom:6px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.07);border-radius:14px;cursor:pointer;transition:all 0.2s;">
-          <div style="display:flex;align-items:center;gap:10px;">
-            <div style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#e50914,#7a0000);display:flex;align-items:center;justify-content:center;font-size:14px;">▶</div>
-            <div>
-              <div style="font-size:13px;font-weight:700;color:#fff;font-family:Tajawal;">${s.name}</div>
-              <div style="font-size:11px;color:rgba(255,255,255,0.4);font-family:Tajawal;">${s.lang} · ${s.quality || 'auto'}</div>
-            </div>
-          </div>
-          <div style="font-size:10px;padding:3px 8px;border-radius:20px;background:rgba(229,9,20,0.15);color:#e50914;font-family:Tajawal;font-weight:700;">${s.direct ? 'MP4/HLS' : 'EMBED'}</div>
-        </div>`).join('')}
+  const roxSrc = { name: '🎬 مشغلي ROX', url: null, type: 'rox', lang: 'متعدد', quality: 'HD', direct: true };
+  const dubSources = allSources.filter(s => s.lang === 'مدبلج');
+  const subSources = allSources.filter(s => s.lang !== 'مدبلج');
+  window._roxSources = [roxSrc, ...allSources];
+
+  const buildItem = (s, i) => `
+    <div onclick="selectRoxSourceNew(${i})"
+      style="display:flex;align-items:center;gap:10px;padding:12px 14px;margin-bottom:6px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.07);border-radius:14px;cursor:pointer;transition:all 0.2s"
+      id="srvItem_${i}">
+      <div style="width:34px;height:34px;border-radius:10px;background:${s.type==='rox'?'linear-gradient(135deg,#00e5ff,#0064ff)':'linear-gradient(135deg,#e50914,#7a0000)'};display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        ${s.logo ? `<img src="${s.logo}" style="width:24px;height:24px;object-fit:contain;border-radius:6px">` : `<span style="font-size:14px">${s.type==='rox'?'🎬':'▶'}</span>`}
+      </div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:700;color:#fff;font-family:Tajawal,sans-serif">${s.name}</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.4);font-family:Tajawal,sans-serif">${s.lang} · ${s.quality || 'auto'}</div>
+      </div>
+      <div style="font-size:10px;padding:3px 8px;border-radius:20px;background:rgba(229,9,20,0.15);color:#e50914;font-family:Tajawal,sans-serif;font-weight:700">${s.direct?'DIRECT':'EMBED'}</div>
     </div>`;
-  };
 
   sheet.innerHTML = `
-    <div style="width:36px;height:4px;background:rgba(255,255,255,0.15);border-radius:10px;margin:0 auto 16px;"></div>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-      <div style="font-size:15px;font-weight:900;color:#fff;font-family:Tajawal;">🎬 اختر السيرفر</div>
-      <div style="display:flex;gap:8px;">
-        <button onclick="window._roxLang='sub';showRoxSourcesLoading()" style="padding:5px 12px;border-radius:20px;border:1px solid ${window._roxLang!=='dub'?'#e50914':'rgba(255,255,255,0.1)'};background:${window._roxLang!=='dub'?'rgba(229,9,20,0.2)':'transparent'};color:#fff;font-family:Tajawal;font-size:12px;font-weight:700;cursor:pointer;">مترجم</button>
-        <button onclick="window._roxLang='dub';showRoxSourcesLoading()" style="padding:5px 12px;border-radius:20px;border:1px solid ${window._roxLang==='dub'?'#e50914':'rgba(255,255,255,0.1)'};background:${window._roxLang==='dub'?'rgba(229,9,20,0.2)':'transparent'};color:#fff;font-family:Tajawal;font-size:12px;font-weight:700;cursor:pointer;">مدبلج</button>
-        <button onclick="document.getElementById('roxSourceSheet')?.remove()" style="padding:5px 10px;border-radius:20px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:rgba(255,255,255,0.5);font-size:16px;cursor:pointer;">✕</button>
+    <div style="width:36px;height:4px;background:rgba(255,255,255,0.15);border-radius:10px;margin:0 auto 16px"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div style="font-size:15px;font-weight:900;color:#fff;font-family:Tajawal">🎬 اختر السيرفر</div>
+      <div style="display:flex;gap:8px">
+        <button onclick="window._roxLang='sub';showRoxSourcesLoading()" style="padding:5px 12px;border-radius:20px;border:1px solid ${window._roxLang!=='dub'?'#e50914':'rgba(255,255,255,0.1)'};background:${window._roxLang!=='dub'?'rgba(229,9,20,0.2)':'transparent'};color:#fff;font-family:Tajawal;font-size:12px;font-weight:700;cursor:pointer">مترجم</button>
+        <button onclick="window._roxLang='dub';showRoxSourcesLoading()" style="padding:5px 12px;border-radius:20px;border:1px solid ${window._roxLang==='dub'?'#e50914':'rgba(255,255,255,0.1)'};background:${window._roxLang==='dub'?'rgba(229,9,20,0.2)':'transparent'};color:#fff;font-family:Tajawal;font-size:12px;font-weight:700;cursor:pointer">مدبلج</button>
+        <button onclick="document.getElementById('roxSourceSheet')?.remove()" style="padding:5px 10px;border-radius:20px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:rgba(255,255,255,0.5);font-size:16px;cursor:pointer">✕</button>
       </div>
     </div>
-    ${buildGroup('— مدبلج —', dubSources)}
-    ${buildGroup('— مترجم / متعدد —', subSources)}`;
+    ${buildItem(roxSrc, 0)}
+    <div style="height:1px;background:rgba(255,255,255,0.08);margin:10px 0"></div>
+    ${dubSources.length ? `<div style="font-size:11px;font-weight:800;color:rgba(255,255,255,0.35);letter-spacing:1px;margin-bottom:8px;font-family:Tajawal">— مدبلج —</div>${dubSources.map(s => buildItem(s, window._roxSources.indexOf(s))).join('')}` : ''}
+    ${subSources.length ? `<div style="font-size:11px;font-weight:800;color:rgba(255,255,255,0.35);letter-spacing:1px;margin-bottom:8px;margin-top:${dubSources.length?'10px':'0'};font-family:Tajawal">— مترجم / متعدد —</div>${subSources.map(s => buildItem(s, window._roxSources.indexOf(s))).join('')}` : ''}`;
 }
-
-function selectRoxSourceNew(i) {
+  function selectRoxSourceNew(i) {
   const s = (window._roxSources || [])[i];
   if (!s) return;
+  if (s.type === 'rox') {
+    const sheet = document.getElementById('roxSourceSheet');
+    if (sheet) sheet.remove();
+    showToast('🎬 مشغل ROX — اختر مصدراً مباشراً من القائمة');
+    return;
+  }
   const sheet = document.getElementById('roxSourceSheet');
   if (sheet) sheet.remove();
   if (s.type === 'embed') {
