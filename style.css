@@ -9163,3 +9163,10 @@ input[type=range].rox-slider::-webkit-slider-thumb {
   border-color: #ffd700 !important;
   box-shadow: 0 0 22px rgba(255,215,0,0.35) !important;
 } 
+.rox-ping-wrap { display:flex; align-items:center; justify-content:center; width:20px; }
+.rox-ping-dot { width:10px; height:10px; border-radius:50%; display:inline-block; flex-shrink:0; transition:background 0.4s ease; position:relative; }
+.rox-ping-dot.pinging { background:rgba(255,255,255,0.2); animation:ping-pulse 1s infinite; }
+.rox-ping-dot.ping-green { background:#00e676; box-shadow:0 0 8px rgba(0,230,118,0.6); }
+.rox-ping-dot.ping-yellow { background:#ffd600; box-shadow:0 0 8px rgba(255,214,0,0.6); }
+.rox-ping-dot.ping-red { background:#ff1744; box-shadow:0 0 8px rgba(255,23,68,0.5); }
+@keyframes ping-pulse { 0%,100%{opacity:1} 50%{opacity:0.3} } 
