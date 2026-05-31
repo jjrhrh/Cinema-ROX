@@ -2769,7 +2769,7 @@ window.roxShowTab = function(tab, btn) {
   const list = map[tab] || [];
   const container = document.getElementById('content-' + tab);
   container.innerHTML = list.map((s,i) => `
-    <div class="rox-srv-row ${s.active?'rox-srv-active':''}" draggable="true" data-tab="${tab}" data-idx="${i}" onclick="wsSelectServerNew(this,'${s.url||''}','${s.name}',${!!s.rox})">
+    <div class="rox-srv-row ${s.active?'rox-srv-active':''} ${tab==='vip'&&i<5?'rox-srv-elite':''}" draggable="true" data-tab="${tab}" data-idx="${i}" onclick="wsSelectServerNew(this,'${s.url||''}','${s.name}',${!!s.rox})">
       <div class="rox-drag-handle" onclick="event.stopPropagation()"><i class="ri-menu-line"></i></div>
       <div class="rox-srv-num">${i+1}</div>
       ${s.icon}
