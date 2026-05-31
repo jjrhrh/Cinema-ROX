@@ -1071,12 +1071,20 @@ async function loadHomePage() {
       const GENRES_MOVIE = [
         { id:28, name:'أكشن' }, { id:27, name:'رعب' }, { id:35, name:'كوميديا' },
         { id:18, name:'دراما' }, { id:878, name:'خيال علمي' }, { id:53, name:'إثارة' },
-        { id:10749, name:'رومانسي' }, { id:80, name:'جريمة' }, { id:99, name:'وثائقي' }, { id:14, name:'فانتازيا' },
+        { id:10749, name:'رومانسي' }, { id:80, name:'جريمة' }, { id:99, name:'وثائقي' },
+        { id:14, name:'فانتازيا' }, { id:16, name:'رسوم متحركة' }, { id:12, name:'مغامرات' },
+        { id:36, name:'تاريخي' }, { id:10402, name:'موسيقى' }, { id:9648, name:'غموض' },
+        { id:10752, name:'حرب' }, { id:37, name:'غرب أمريكي' }, { id:10770, name:'تلفزيوني' },
+        { id:10751, name:'عائلي' }, { id:10749, name:'رومانسي' }, { id:2, name:'خيال' },
       ];
       const GENRES_TV = [
         { id:18, name:'دراما' }, { id:35, name:'كوميديا' }, { id:10765, name:'خيال علمي' },
         { id:80, name:'جريمة' }, { id:9648, name:'غموض' }, { id:10759, name:'أكشن' },
         { id:10768, name:'حرب' }, { id:99, name:'وثائقي' }, { id:10762, name:'أطفال' },
+        { id:16, name:'رسوم متحركة' }, { id:10764, name:'ريالتي' }, { id:10767, name:'حوارية' },
+        { id:10763, name:'أخبار' }, { id:10766, name:'مسلسلات' }, { id:37, name:'غرب أمريكي' },
+        { id:10751, name:'عائلي' }, { id:10749, name:'رومانسي' }, { id:36, name:'تاريخي' },
+        { id:10402, name:'موسيقى' }, { id:14, name:'فانتازيا' }, { id:12, name:'مغامرات' },
       ];
       const genres = s.filterType === 'movie' ? GENRES_MOVIE : GENRES_TV;
       return `
@@ -1102,17 +1110,26 @@ async function loadHomePage() {
     }
     if (s.isProviderSection) {
       const PROVIDERS = [
-        { id:8,    name:'Netflix',    logo:'https://image.tmdb.org/t/p/w92/t2yyOv40HZeVlLjYsCsPHnWLk4W.jpg' },
-        { id:337,  name:'Disney+',   logo:'https://image.tmdb.org/t/p/w92/7rwgEs15tFwyR9NPQ5vpzxTj19Q.jpg' },
-        { id:119,  name:'Prime',     logo:'https://image.tmdb.org/t/p/w92/emthp39XA2YScoYL1p0sdbAH2WA.jpg' },
-        { id:350,  name:'Apple TV+', logo:'https://image.tmdb.org/t/p/w92/6uhKBfmtzFqOcLousHwZuzcrScK.jpg' },
-        { id:1899, name:'Max',       logo:'https://image.tmdb.org/t/p/w92/Ajqyt5oPwwTHyszJpanIVBFDzYM.jpg' },
-        { id:531,  name:'Paramount+',logo:'https://image.tmdb.org/t/p/w92/h5DcR0J2EESLitnhR8xLG1QymTE.jpg' },
-        { id:15,   name:'Hulu',      logo:'https://image.tmdb.org/t/p/w92/zxrVdFjIjLqkfnwyghnfywTn3Lh.jpg' },
-        { id:386,  name:'Peacock',   logo:'https://image.tmdb.org/t/p/w92/hmMtHjLpPMKjBKqJoqP9bBgdoGQ.jpg' },
-        { id:283,  name:'Crunchyroll', logo:'https://image.tmdb.org/t/p/w92/mABONFPl50oXOiZnMfkFY6M7fj1.jpg' },
+        { id:8,    name:'Netflix',      logo:'https://image.tmdb.org/t/p/w92/t2yyOv40HZeVlLjYsCsPHnWLk4W.jpg' },
+        { id:337,  name:'Disney+',      logo:'https://image.tmdb.org/t/p/w92/7rwgEs15tFwyR9NPQ5vpzxTj19Q.jpg' },
+        { id:119,  name:'Prime',        logo:'https://image.tmdb.org/t/p/w92/emthp39XA2YScoYL1p0sdbAH2WA.jpg' },
+        { id:350,  name:'Apple TV+',    logo:'https://image.tmdb.org/t/p/w92/6uhKBfmtzFqOcLousHwZuzcrScK.jpg' },
+        { id:1899, name:'Max',          logo:'https://image.tmdb.org/t/p/w92/Ajqyt5oPwwTHyszJpanIVBFDzYM.jpg' },
+        { id:531,  name:'Paramount+',   logo:'https://image.tmdb.org/t/p/w92/h5DcR0J2EESLitnhR8xLG1QymTE.jpg' },
+        { id:15,   name:'Hulu',         logo:'https://image.tmdb.org/t/p/w92/zxrVdFjIjLqkfnwyghnfywTn3Lh.jpg' },
+        { id:386,  name:'Peacock',      logo:'https://image.tmdb.org/t/p/w92/hmMtHjLpPMKjBKqJoqP9bBgdoGQ.jpg' },
+        { id:283,  name:'Crunchyroll',  logo:'https://image.tmdb.org/t/p/w92/mABONFPl50oXOiZnMfkFY6M7fj1.jpg' },
+        { id:384,  name:'HBO',          logo:'https://image.tmdb.org/t/p/w92/gJ3yVMWouaVj6iHd59TISJ1VgXR.jpg' },
         { id:2,    name:'Apple iTunes', logo:'https://image.tmdb.org/t/p/w92/peURlLlr8jggOwK53fJ5wdQl05y.jpg' },
-        { id:3,    name:'Google Play', logo:'https://image.tmdb.org/t/p/w92/8z7rC8uIDaTM91X0ZfkRf04ydj2.jpg' },
+        { id:3,    name:'Google Play',  logo:'https://image.tmdb.org/t/p/w92/8z7rC8uIDaTM91X0ZfkRf04ydj2.jpg' },
+        { id:192,  name:'YouTube',      logo:'https://image.tmdb.org/t/p/w92/6muL0jM6bC7FtRMFDDrkLGCjDNW.jpg' },
+        { id:188,  name:'Starz',        logo:'https://image.tmdb.org/t/p/w92/6MKHuFGBNFCMh4iFYMFyGDHKYGi.jpg' },
+        { id:37,   name:'Showtime',     logo:'https://image.tmdb.org/t/p/w92/rCRvHVoJSz1Gj0CJbMfPKPzJwKo.jpg' },
+        { id:43,   name:'Starz Play',   logo:'https://image.tmdb.org/t/p/w92/6MKHuFGBNFCMh4iFYMFyGDHKYGi.jpg' },
+        { id:444,  name:'Shahid',       logo:'https://image.tmdb.org/t/p/w92/fqevmgSLmRCxvMZxF4Dtho8i78n.jpg' },
+        { id:629,  name:'OSN+',         logo:'https://image.tmdb.org/t/p/w92/fqevmgSLmRCxvMZxF4Dtho8i78n.jpg' },
+        { id:613,  name:'Anghami',      logo:'https://image.tmdb.org/t/p/w92/fqevmgSLmRCxvMZxF4Dtho8i78n.jpg' },
+        { id:11,   name:'MUBI',         logo:'https://image.tmdb.org/t/p/w92/fqevmgSLmRCxvMZxF4Dtho8i78n.jpg' },
       ];
       const label = s.providerType === 'movie' ? 'أفلام' : 'مسلسلات';
       return `
@@ -1203,7 +1220,9 @@ async function loadHomePage() {
   const endpoint = type === 'movie' ? '/discover/movie' : '/discover/tv';
   const movies = await fetchMovies(endpoint, { type, limit: 20, params: {
     with_genres: String(genreId),
-    sort_by: 'popularity.desc'
+    sort_by: 'popularity.desc',
+    include_adult: 'false',
+    without_keywords: '158718,9840,10539'
   }});
   row.innerHTML = movies.length
     ? movies.map((m,i) => buildMovieCard(m, type, '', i+1)).join('')
@@ -1382,7 +1401,8 @@ async function openBrowseAll(type, endpoint, title, extraParams = {}) {
   document.getElementById('filterBar')?.style.setProperty('display','none');
   page.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
   window.scrollTo(0, 0);
-  const movies = await fetchMovies(endpoint, { type, limit: 30, params: extraParams });
+  const ep = endpoint || (type === 'movie' ? '/discover/movie' : '/discover/tv');
+  const movies = await fetchMovies(ep, { type, limit: 30, params: extraParams });
   page.innerHTML = `
     <div style="padding:16px">
       <button class="detail-btn" onclick="goBack()" style="margin-bottom:16px">← رجوع</button>
@@ -1808,7 +1828,7 @@ const reviewsHTML = `
       <button class="dp-action-watch" id="mainWatchBtn_${id}"
         onclick="openWatchPage(${id},'${type}',${(() => {
           const p = getProgress(id);
-          return p ? `${p.season},${p.episode + 1}` : `1,1`;
+          return p ? `${p.season},${p.episode}` : `1,1`;
         })()})">
         <svg viewBox="0 0 24 24" fill="currentColor" class="dp-act-svg"><polygon points="5 3 19 12 5 21 5 3"/></svg>
         ${(() => { const p = getProgress(id); return p ? `أكمل المشاهدة — ح${p.episode + 1}` : 'شاهد الآن'; })()}
