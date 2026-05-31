@@ -2470,7 +2470,7 @@ async function openWatchPage(id, type, season = 1, episode = 1, resumeSec = 0, r
   page.classList.add('active');
   page.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
   window.scrollTo(0, 0);
-  window._roxCurrentMeta = { type, id, season, episode };
+  window._roxCurrentMeta = { type, id, season, episode, ep: episode };
 window._roxLang = window._roxLang || 'sub';
 window._roxSources = [];
   try {
