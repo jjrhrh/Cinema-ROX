@@ -1218,7 +1218,7 @@ async function loadHomePage() {
   if (!row) return;
   row.innerHTML = Array(4).fill('<div class="movie-card skeleton-card"></div>').join('');
   const endpoint = type === 'movie' ? '/discover/movie' : '/discover/tv';
-  const movies = await fetchMovies(endpoint, { type, limit: 20, params: {
+  const movies = await fetchMovies(endpoint, { type, limit: 100, params: {
     with_genres: String(genreId),
     sort_by: 'popularity.desc',
     include_adult: 'false',
@@ -1239,11 +1239,13 @@ window.switchProviderSection = async function(secId, providerId, providerName, t
   const row = document.getElementById(`${secId}_row`);
   if (!row) return;
   row.innerHTML = Array(4).fill('<div class="movie-card skeleton-card"></div>').join('');
-  const endpoint = type === 'movie' ? '/discover/movie' : '/discover/tv';
-  const movies = await fetchMovies(endpoint, { type, limit: 20, params: {
-    with_watch_providers: providerId,
+  const isMovie = type === 'movie';
+  const endpoint = isMovie ? '/discover/movie' : '/discover/tv';
+  const movies = await fetchMovies(endpoint, { type: isMovie ? 'movie' : 'tv', limit: 20, params: {
+    with_watch_providers: String(providerId),
     watch_region: 'US',
-    sort_by: 'first_air_date.desc'
+    sort_by: isMovie ? 'popularity.desc' : 'first_air_date.desc',
+    include_adult: 'false'
   }});
   row.innerHTML = movies.length
     ? movies.map((m,i) => buildMovieCard(m, type, '', i+1)).join('')
@@ -1539,8 +1541,9 @@ function calcSeasonEnd(detail) {
 // ===== DETAIL PAGE =====
 async function openDetail(id, type = 'movie') {
   if (window._lastDetailId && String(window._lastDetailId) !== String(id)) {
-  window._detailHistory.push({ id: window._lastDetailId, type: window._lastDetailType });
-  if (window._detailHistory.length > 10) window._detailHistory.shift();
+    if (!window._detailHistory) window._detailHistory = [];
+    window._detailHistory.push({ id: window._lastDetailId, type: window._lastDetailType });
+    if (window._detailHistory.length > 3) window._detailHistory.shift();
   }
   if (!window._navStack?.find(n => n._isDetail)) {
     pushNav(Object.assign(() => {
@@ -2935,7 +2938,8 @@ function openContinueAll() {
     </div>`;
 }
 function cwResume(id, type, seconds, server, serverUrl) {
-  openWatchPage(id, type, 1, 1, seconds, serverUrl);
+  const p = getProgress(id);
+  openWatchPage(id, type, p?.season || 1, p?.episode || 1, seconds, serverUrl);
 }
 // ===== LIBRARY HELPERS =====
 function libKey(base) {
