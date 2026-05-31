@@ -2834,6 +2834,49 @@ window.wsSelectServerNew = function(el, url, name, isRox) {
     if (isRox) { loadRox(null); } else { document.getElementById('wsFrame').src = url; }
   }
 }
+window.roxInitDrag = function(container, tab) {
+  let dragEl = null;
+  container.querySelectorAll('.rox-srv-row').forEach(row => {
+    const handle = row.querySelector('.rox-drag-handle');
+    if (handle) {
+      handle.addEventListener('mousedown', () => { row.draggable = true; });
+      handle.addEventListener('touchstart', () => { row.draggable = true; }, {passive:true});
+    }
+    row.addEventListener('dragstart', e => {
+      dragEl = row;
+      setTimeout(() => row.classList.add('rox-dragging'), 0);
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    row.addEventListener('dragend', () => {
+      row.classList.remove('rox-dragging');
+      row.draggable = false;
+      container.querySelectorAll('.rox-srv-row').forEach(r => r.classList.remove('rox-drag-over'));
+      const map = {vip: window._vipSrvs, pro: window._proSrvs, free: window._freeSrvs};
+      const newOrder = [...container.querySelectorAll('.rox-srv-row')].map(r => {
+        const idx = parseInt(r.dataset.idx);
+        return map[tab][idx];
+      });
+      map[tab].splice(0, map[tab].length, ...newOrder);
+      container.querySelectorAll('.rox-srv-row').forEach((r,i) => {
+        r.dataset.idx = i;
+        r.querySelector('.rox-srv-num').textContent = i+1;
+      });
+      dragEl = null;
+    });
+    row.addEventListener('dragover', e => {
+      e.preventDefault();
+      if (!dragEl || dragEl === row) return;
+      container.querySelectorAll('.rox-srv-row').forEach(r => r.classList.remove('rox-drag-over'));
+      row.classList.add('rox-drag-over');
+      const rows = [...container.querySelectorAll('.rox-srv-row')];
+      const dragIdx = rows.indexOf(dragEl);
+      const overIdx = rows.indexOf(row);
+      if (dragIdx < overIdx) row.after(dragEl); else row.before(dragEl);
+    });
+    row.addEventListener('dragleave', () => row.classList.remove('rox-drag-over'));
+    row.addEventListener('mouseup', () => { row.draggable = false; });
+  });
+};
 window.wsSelectServerNew = function(el, url, name, isRox) {
   document.querySelectorAll('.rox-srv-row, .mini-server-node').forEach(n => n.classList.remove('rox-srv-active','mini-active'));
   el.classList.add('rox-srv-active');
