@@ -2470,6 +2470,9 @@ async function openWatchPage(id, type, season = 1, episode = 1, resumeSec = 0, r
   page.classList.add('active');
   page.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
   window.scrollTo(0, 0);
+  window._roxCurrentMeta = { type, id, season, episode };
+window._roxLang = window._roxLang || 'sub';
+window._roxSources = [];
   try {
     const ep = type === 'tv' ? `/tv/${id}` : `/movie/${id}`;
     const [det] = await Promise.all([fetch(buildTMDBUrl(ep, {append_to_response:'release_dates,content_ratings'})).then(r => r.json())]);
@@ -5180,7 +5183,7 @@ function showRoxSources() {
     return;
   }
   const sources = window._roxSources || [];
-  if (!sources.length) return showToast('لا توجد سيرفرات متاحة');
+  if (!sources.length) { showRoxSourcesLoading(); return; }
   const sheet = document.createElement('div');
   sheet.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#1a1a2e;border-radius:20px 20px 0 0;padding:20px;z-index:9999;max-height:60vh;overflow-y:auto';
   sheet.innerHTML = `<h3 style="color:#fff;margin:0 0 14px;font-family:Tajawal">📡 اختر السيرفر</h3>` +
@@ -5217,6 +5220,91 @@ function selectRoxSource(i) {
   window.scrollTo(0, 0);
   showToast('▶ ' + s.name);
 }
+function showRoxSourcesLoading() {
+  const existing = document.getElementById('roxSourceSheet');
+  if (existing) existing.remove();
+  const sheet = document.createElement('div');
+  sheet.id = 'roxSourceSheet';
+  sheet.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#0d0d0d;border-radius:22px 22px 0 0;padding:20px 16px 40px;z-index:99999;border-top:1px solid rgba(229,9,20,0.3);';
+  sheet.innerHTML = `<div style="text-align:center;padding:30px 0;color:rgba(255,255,255,0.5);font-family:Tajawal;font-size:14px;"><div style="width:36px;height:36px;border:3px solid rgba(229,9,20,0.3);border-top-color:#e50914;border-radius:50%;margin:0 auto 14px;animation:spin 0.8s linear infinite;"></div>جاري تحميل السيرفرات...</div>`;
+  document.body.appendChild(sheet);
+  window._roxSheet = sheet;
+  const meta = window._roxCurrentMeta || {};
+  fetchRoxSources(meta.type, meta.id, meta.season, meta.ep, window._roxLang || 'sub');
+}
+
+async function fetchRoxSources(type, id, season, ep, lang) {
+  try {
+    const url = `/api/stream?type=${type}&id=${id}&season=${season || 1}&ep=${ep || 1}&lang=${lang}`;
+    const r = await fetch(url);
+    const data = await r.json();
+    window._roxSources = data.sources || [];
+    renderRoxSourceSheet(window._roxSources);
+  } catch (e) {
+    renderRoxSourceSheet([]);
+  }
+}
+
+function renderRoxSourceSheet(sources) {
+  const sheet = document.getElementById('roxSourceSheet');
+  if (!sheet) return;
+  if (!sources.length) {
+    sheet.innerHTML = `<div style="text-align:center;padding:30px;color:rgba(255,255,255,0.4);font-family:Tajawal;">لا توجد سيرفرات متاحة حالياً</div>`;
+    setTimeout(() => sheet.remove(), 3000);
+    return;
+  }
+  const dubSources = sources.filter(s => s.lang === 'مدبلج');
+  const subSources = sources.filter(s => s.lang !== 'مدبلج');
+
+  const buildGroup = (label, list) => {
+    if (!list.length) return '';
+    return `<div style="margin-bottom:14px;">
+      <div style="font-size:11px;font-weight:800;color:rgba(255,255,255,0.35);letter-spacing:1px;margin-bottom:8px;font-family:Tajawal;">${label}</div>
+      ${list.map((s, i) => `
+        <div onclick="selectRoxSourceNew(${sources.indexOf(s)})" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;margin-bottom:6px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.07);border-radius:14px;cursor:pointer;transition:all 0.2s;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#e50914,#7a0000);display:flex;align-items:center;justify-content:center;font-size:14px;">▶</div>
+            <div>
+              <div style="font-size:13px;font-weight:700;color:#fff;font-family:Tajawal;">${s.name}</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.4);font-family:Tajawal;">${s.lang} · ${s.quality || 'auto'}</div>
+            </div>
+          </div>
+          <div style="font-size:10px;padding:3px 8px;border-radius:20px;background:rgba(229,9,20,0.15);color:#e50914;font-family:Tajawal;font-weight:700;">${s.direct ? 'MP4/HLS' : 'EMBED'}</div>
+        </div>`).join('')}
+    </div>`;
+  };
+
+  sheet.innerHTML = `
+    <div style="width:36px;height:4px;background:rgba(255,255,255,0.15);border-radius:10px;margin:0 auto 16px;"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <div style="font-size:15px;font-weight:900;color:#fff;font-family:Tajawal;">🎬 اختر السيرفر</div>
+      <div style="display:flex;gap:8px;">
+        <button onclick="window._roxLang='sub';showRoxSourcesLoading()" style="padding:5px 12px;border-radius:20px;border:1px solid ${window._roxLang!=='dub'?'#e50914':'rgba(255,255,255,0.1)'};background:${window._roxLang!=='dub'?'rgba(229,9,20,0.2)':'transparent'};color:#fff;font-family:Tajawal;font-size:12px;font-weight:700;cursor:pointer;">مترجم</button>
+        <button onclick="window._roxLang='dub';showRoxSourcesLoading()" style="padding:5px 12px;border-radius:20px;border:1px solid ${window._roxLang==='dub'?'#e50914':'rgba(255,255,255,0.1)'};background:${window._roxLang==='dub'?'rgba(229,9,20,0.2)':'transparent'};color:#fff;font-family:Tajawal;font-size:12px;font-weight:700;cursor:pointer;">مدبلج</button>
+        <button onclick="document.getElementById('roxSourceSheet')?.remove()" style="padding:5px 10px;border-radius:20px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:rgba(255,255,255,0.5);font-size:16px;cursor:pointer;">✕</button>
+      </div>
+    </div>
+    ${buildGroup('— مدبلج —', dubSources)}
+    ${buildGroup('— مترجم / متعدد —', subSources)}`;
+}
+
+function selectRoxSourceNew(i) {
+  const s = (window._roxSources || [])[i];
+  if (!s) return;
+  const sheet = document.getElementById('roxSourceSheet');
+  if (sheet) sheet.remove();
+  if (s.type === 'embed') {
+    const frame = document.getElementById('wsFrame');
+    const wrap = document.getElementById('roxPlayerWrap');
+    if (frame) { frame.style.display = 'block'; frame.src = s.url; }
+    if (wrap) wrap.style.display = 'none';
+    document.getElementById('wsOverlay') && (document.getElementById('wsOverlay').style.display = 'none');
+  } else {
+    loadRox(s.url);
+  }
+  window.scrollTo(0, 0);
+  showToast('▶ ' + s.name);
+      }
 function toggleProfileDropdown() {
   const drop = document.getElementById('profileDropdown');
   if (!drop) return;
