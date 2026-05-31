@@ -2728,31 +2728,15 @@ page.innerHTML = `
   </div>
   <div class="ws-section">
     <h3 class="ws-stitle"><i class="ri-broadcast-line" style="color:#ff2a2a"></i> مصادر المشاهدة</h3>
-    <div class="subscription-grid">
-      <div class="sub-card free-card" onclick="toggleVault('free')">
-        <h4><i class="ri-global-line" style="color:#eab308"></i> العامة FREE</h4>
-        <p>مشاهدة مجانية</p>
-        <div class="vault-content" id="content-free"></div>
-        <button class="sub-btn free-btn">شاهد الآن</button>
-      </div>
-      <div class="sub-card pro-card" onclick="toggleVault('pro')">
-        <h4><i class="ri-flashlight-fill" style="color:#a855f7"></i> السريعة PRO</h4>
-        <p>جودة عالية وسرعة أكبر</p>
-        <div class="vault-content" id="content-pro"></div>
-        <button class="sub-btn pro-btn">اشترك الآن</button>
-      </div>
-      <div class="sub-card vip-card" onclick="toggleVault('vip')">
-        <h4><i class="ri-vip-crown-fill" style="color:#ffd700"></i> الفاخرة VIP</h4>
-        <p>أفضل جودة • بدون إعلانات</p>
-        <div class="vault-content" id="content-vip"></div>
-        <button class="sub-btn vip-btn">اشترك الآن</button>
-      </div>
+    <div class="rox-srv-tabs">
+      <button class="rox-tab active" onclick="roxShowTab('free',this)"><i class="ri-global-line"></i> مجاني</button>
+      <button class="rox-tab" onclick="roxShowTab('pro',this)"><i class="ri-flashlight-fill"></i> PRO</button>
+      <button class="rox-tab" onclick="roxShowTab('vip',this)"><i class="ri-vip-crown-fill"></i> VIP</button>
     </div>
+    <div class="rox-srv-list" id="content-free"></div>
+    <div class="rox-srv-list" id="content-pro" style="display:none"></div>
+    <div class="rox-srv-list" id="content-vip" style="display:none"></div>
     <p class="ws-note">إذا لم يعمل السيرفر جرب آخر</p>
-  </div>
-  <div class="suggestions-section">
-    <h3 class="ws-stitle">⭐ قد يعجبك أيضاً</h3>
-    <div class="suggestions-scroll-row" id="suggestions-row-${id}"></div>
   </div>
   ${prodHTML?`<div class="ws-section"><h3 class="ws-stitle">📊 بيانات الإنتاج</h3><div class="ws-prod-grid">${prodHTML}</div></div>`:''}`;
   } catch(e) {
@@ -2776,31 +2760,20 @@ setTimeout(() => {
       }).catch(()=>{ row.closest('.suggestions-section').style.display='none'; });
   }, 1000);
 window._vipSrvs = null; window._proSrvs = null; window._freeSrvs = null;
-window.toggleVault = function(vaultId) {
-  const content = document.getElementById('content-' + vaultId);
-  if (!content) return;
-  const isOpen = content.classList.contains('open');
-  if (isOpen) return;
-  document.querySelectorAll('.vault-content').forEach(v => {
-    v.classList.remove('open');
-    v.style.maxHeight = '0';
-    v.style.padding = '0';
-  });
-  document.querySelectorAll('.sub-card').forEach(c => c.classList.remove('vault-open'));
-  content.classList.add('open');
-  content.style.maxHeight = '500px';
-  content.style.padding = '10px';
-  content.closest('.sub-card')?.classList.add('vault-open');
+window.roxShowTab = function(tab, btn) {
+  document.querySelectorAll('.rox-srv-list').forEach(el => el.style.display='none');
+  document.querySelectorAll('.rox-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('content-' + tab).style.display='flex';
+  btn.classList.add('active');
   const map = {vip: window._vipSrvs, pro: window._proSrvs, free: window._freeSrvs};
-  const list = map[vaultId] || [];
-  content.innerHTML = list.map(s => `
-    <div class="mini-server-node ${s.active?'mini-active':''}" onclick="wsSelectServerNew(this,'${s.url||''}','${s.name}',${!!s.rox})">
+  const list = map[tab] || [];
+  document.getElementById('content-' + tab).innerHTML = list.map(s => `
+    <div class="rox-srv-row ${s.active?'rox-srv-active':''}" onclick="wsSelectServerNew(this,'${s.url||''}','${s.name}',${!!s.rox})">
       ${s.icon}
-      <div class="mini-name">${s.name}</div>
-      <div class="mini-desc">${s.desc}</div>
-      <div class="ping-dot"></div>
+      <div class="rox-srv-info"><div class="srv-name">${s.name}</div><div class="srv-desc">${s.desc}</div></div>
+      <i class="ri-play-circle-fill rox-srv-play"></i>
     </div>`).join('');
-}
+};
 window.wsSelectServerNew = function(el, url, name, isRox) {
   document.querySelectorAll('.mini-server-node').forEach(n => n.classList.remove('mini-active'));
   el.classList.add('mini-active');
