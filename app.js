@@ -1411,7 +1411,11 @@ async function openBrowseAll(type, endpoint, title, extraParams = {}) {
   page.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
   window.scrollTo(0, 0);
   const ep = endpoint || (type === 'movie' ? '/discover/movie' : '/discover/tv');
-  const movies = await fetchMovies(ep, { type, limit: 30, params: extraParams });
+  if (!ep || ep === 'undefined') {
+    page.innerHTML = `<div style="padding:16px"><button onclick="goBack()">← رجوع</button><p style="color:#fff;margin-top:16px">تعذر تحميل المحتوى</p></div>`;
+    return;
+  }
+  const movies = await fetchMovies(ep, { type: type||'movie', limit: 50, params: extraParams||{} });
   page.innerHTML = `
     <div style="padding:16px">
       <button class="detail-btn" onclick="goBack()" style="margin-bottom:16px">← رجوع</button>
