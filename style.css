@@ -9127,3 +9127,11 @@ input[type=range].rox-slider::-webkit-slider-thumb {
 .srv-desc { font-size:11px; color:rgba(255,255,255,0.4); margin-top:2px; }
 .rox-srv-play { font-size:22px; color:var(--accent); margin-right:auto; }
 .style-icon { font-size:20px; flex-shrink:0; } 
+.rox-srv-num { width:24px; height:24px; border-radius:50%; background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.5); font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.rox-srv-active .rox-srv-num { background:var(--accent); color:#fff; }
+.rox-srv-active { background:rgba(229,9,20,0.15) !important; border-color:rgba(229,9,20,0.5) !important; }
+.rox-srv-active .rox-srv-play { color:#fff; } 
+.rox-drag-handle { width:28px; height:28px; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.3); font-size:18px; cursor:grab; flex-shrink:0; touch-action:none; }
+.rox-drag-handle:active { cursor:grabbing; color:rgba(255,255,255,0.7); }
+.rox-dragging { opacity:0.4; border:1px dashed var(--accent) !important; }
+.rox-drag-over { border-color:var(--accent) !important; background:rgba(229,9,20,0.08) !important; transform:scale(1.01); } 
