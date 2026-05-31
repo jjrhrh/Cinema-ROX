@@ -8639,7 +8639,16 @@ input[type=range].rox-slider::-webkit-slider-thumb {
 #sec_tvseries,
 #sec_otaku1,
 #sec_otaku2,
-#sec_otaku3 {
+#sec_otaku3,
+#sec_new_movies,
+#sec_new_series,
+#sec_genre_movies,
+#sec_genre_series,
+#sec_kids,
+#sec_trending,
+#sec_otaku4,
+#sec_otaku5,
+#sec_otaku6 {
   background: rgba(10,10,18,0.6);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
