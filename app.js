@@ -1178,6 +1178,10 @@ async function loadHomePage() {
         switchGenreSection(s.id, firstGenre.id, firstGenre.name, s.filterType, null);
         return;
       }
+      if (s.isProviderSection) {
+        switchProviderSection(s.id, 8, 'Netflix', s.providerType || s.type, null);
+        return;
+      }
       const movies = await fetchMovies(s.endpoint, { type: s.type, params: s.params || {} });
       const row = document.getElementById(`${s.id}_row`);
       const container = document.getElementById(s.id);
