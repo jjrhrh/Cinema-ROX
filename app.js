@@ -5177,23 +5177,12 @@ function hubFilterMatches() {
   }).join('');
 }
 function showRoxSources() {
-  if (window._roxSheet) {
-    document.body.removeChild(window._roxSheet);
-    window._roxSheet = null;
-    return;
-  }
+  const existing = document.getElementById('roxSourceSheet');
+  if (existing) { existing.remove(); window._roxSheet = null; return; }
+  if (window._roxSheet) { window._roxSheet.remove(); window._roxSheet = null; return; }
   const sources = window._roxSources || [];
   if (!sources.length) { showRoxSourcesLoading(); return; }
-  const sheet = document.createElement('div');
-  sheet.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#1a1a2e;border-radius:20px 20px 0 0;padding:20px;z-index:9999;max-height:60vh;overflow-y:auto';
-  sheet.innerHTML = `<h3 style="color:#fff;margin:0 0 14px;font-family:Tajawal">📡 اختر السيرفر</h3>` +
-    sources.map((s, i) => `
-      <div onclick="selectRoxSource(${i})" style="background:rgba(255,255,255,0.07);border-radius:10px;padding:12px;margin-bottom:8px;cursor:pointer;font-family:Tajawal;color:#fff">
-        <div style="font-weight:700">${s.name}</div>
-        <div style="font-size:0.75rem;opacity:0.5">${s.quality || 'auto'} · ${s.lang || ''}</div>
-      </div>`).join('');
-  document.body.appendChild(sheet);
-  window._roxSheet = sheet;
+  showRoxSourcesLoading();
 }
 function selectRoxSource(i) {
   const s = (window._roxSources || [])[i];
@@ -5295,7 +5284,7 @@ function showRoxSourcesLoading() {
   if (existing) existing.remove();
   const sheet = document.createElement('div');
   sheet.id = 'roxSourceSheet';
-  sheet.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#0d0d0d;border-radius:22px 22px 0 0;padding:20px 16px 40px;z-index:99999;border-top:1px solid rgba(229,9,20,0.3);';
+  sheet.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#0d0d0d;border-radius:22px 22px 0 0;padding:20px 16px 40px;z-index:9998;border-top:1px solid rgba(229,9,20,0.3);';
   sheet.innerHTML = `<div style="text-align:center;padding:30px 0;color:rgba(255,255,255,0.5);font-family:Tajawal;font-size:14px;"><div style="width:36px;height:36px;border:3px solid rgba(229,9,20,0.3);border-top-color:#e50914;border-radius:50%;margin:0 auto 14px;animation:spin 0.8s linear infinite;"></div>جاري تحميل السيرفرات...</div>`;
   document.body.appendChild(sheet);
   window._roxSheet = sheet;
@@ -5415,7 +5404,8 @@ async function renderRoxSourceSheet(sources) {
   if (s.type === 'rox') {
     const sheet = document.getElementById('roxSourceSheet');
     if (sheet) sheet.remove();
-    showToast('🎬 مشغل ROX — اختر مصدراً مباشراً من القائمة');
+    window._roxSheet = null;
+    showRoxSourcesLoading();
     return;
   }
   const sheet = document.getElementById('roxSourceSheet');
