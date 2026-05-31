@@ -5234,6 +5234,10 @@ function showRoxSourcesLoading() {
 }
 
 async function fetchRoxSources(type, id, season, ep, lang) {
+  try {
+    const nr = await fetch(`https://dreamy-torte-f9b6b2.netlify.app/.netlify/functions/stream?type=${type}&id=${id}&season=${season||1}&ep=${ep||1}&lang=${lang}`, { signal: AbortSignal.timeout(12000) });
+    if (nr.ok) { const nd = await nr.json(); if (nd.sources?.length) { window._roxSources = nd.sources; renderRoxSourceSheet(nd.sources); return; } }
+  } catch(_) {}
   const s = String(season || 1);
   const e = String(ep || 1);
   const isDub = lang === 'dub';
