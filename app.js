@@ -2767,16 +2767,17 @@ window.roxShowTab = function(tab, btn) {
   btn.classList.add('active');
   const map = {vip: window._vipSrvs, pro: window._proSrvs, free: window._freeSrvs};
   const list = map[tab] || [];
-  document.getElementById('content-' + tab).innerHTML = list.map(s => `
+  document.getElementById('content-' + tab).innerHTML = list.map((s,i) => `
     <div class="rox-srv-row ${s.active?'rox-srv-active':''}" onclick="wsSelectServerNew(this,'${s.url||''}','${s.name}',${!!s.rox})">
+      <div class="rox-srv-num">${i+1}</div>
       ${s.icon}
       <div class="rox-srv-info"><div class="srv-name">${s.name}</div><div class="srv-desc">${s.desc}</div></div>
       <i class="ri-play-circle-fill rox-srv-play"></i>
     </div>`).join('');
 };
 window.wsSelectServerNew = function(el, url, name, isRox) {
-  document.querySelectorAll('.mini-server-node').forEach(n => n.classList.remove('mini-active'));
-  el.classList.add('mini-active');
+  document.querySelectorAll('.rox-srv-row, .mini-server-node').forEach(n => n.classList.remove('rox-srv-active','mini-active'));
+  el.classList.add('rox-srv-active');
   const sw = document.getElementById('wsSwitchOverlay');
   if (sw) {
     sw.style.display = 'flex';
