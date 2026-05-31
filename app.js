@@ -2834,6 +2834,21 @@ window.wsSelectServerNew = function(el, url, name, isRox) {
     if (isRox) { loadRox(null); } else { document.getElementById('wsFrame').src = url; }
   }
 }
+window.wsSelectServerNew = function(el, url, name, isRox) {
+  document.querySelectorAll('.rox-srv-row, .mini-server-node').forEach(n => n.classList.remove('rox-srv-active','mini-active'));
+  el.classList.add('rox-srv-active');
+  if (name) roxSetLastSrv(name);
+  const sw = document.getElementById('wsSwitchOverlay');
+  if (sw) {
+    sw.style.display = 'flex';
+    setTimeout(() => {
+      if (isRox) { loadRox(null); } else { document.getElementById('wsFrame').src = url; }
+      setTimeout(() => { sw.style.display = 'none'; }, 1800);
+    }, 400);
+  } else {
+    if (isRox) { loadRox(null); } else { document.getElementById('wsFrame').src = url; }
+  }
+}
 window.wsStartStream = function() {
   const overlay = document.getElementById('wsOverlay');
   if (overlay) overlay.style.display = 'none';
