@@ -5294,8 +5294,8 @@ function showRoxSourcesLoading() {
 
 async function fetchRoxSources(type, id, season, ep, lang) {
   const endpoints = [
-    `https://cinema-rox.vercel.app/api/stream?type=${type}&id=${id}&season=${season||1}&ep=${ep||1}&lang=${lang}`,
-    `https://dreamy-torte-f9b6b2.netlify.app/.netlify/functions/stream?type=${type}&id=${id}&season=${season||1}&ep=${ep||1}&lang=${lang}`
+    `https://dreamy-torte-f9b6b2.netlify.app/.netlify/functions/stream?type=${type}&id=${id}&season=${season||1}&ep=${ep||1}&lang=${lang}`,
+    `https://cinema-rox.vercel.app/api/stream?type=${type}&id=${id}&season=${season||1}&ep=${ep||1}&lang=${lang}`
   ];
   for (const endpoint of endpoints) {
     try {
