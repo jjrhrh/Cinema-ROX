@@ -2767,13 +2767,52 @@ window.roxShowTab = function(tab, btn) {
   btn.classList.add('active');
   const map = {vip: window._vipSrvs, pro: window._proSrvs, free: window._freeSrvs};
   const list = map[tab] || [];
-  document.getElementById('content-' + tab).innerHTML = list.map((s,i) => `
-    <div class="rox-srv-row ${s.active?'rox-srv-active':''}" onclick="wsSelectServerNew(this,'${s.url||''}','${s.name}',${!!s.rox})">
+  const container = document.getElementById('content-' + tab);
+  container.innerHTML = list.map((s,i) => `
+    <div class="rox-srv-row ${s.active?'rox-srv-active':''}" draggable="true" data-tab="${tab}" data-idx="${i}" onclick="wsSelectServerNew(this,'${s.url||''}','${s.name}',${!!s.rox})">
+      <div class="rox-drag-handle" onclick="event.stopPropagation()"><i class="ri-menu-line"></i></div>
       <div class="rox-srv-num">${i+1}</div>
       ${s.icon}
       <div class="rox-srv-info"><div class="srv-name">${s.name}</div><div class="srv-desc">${s.desc}</div></div>
       <i class="ri-play-circle-fill rox-srv-play"></i>
     </div>`).join('');
+  roxInitDrag(container, tab);
+};
+window.roxInitDrag = function(container, tab) {
+  let dragEl = null;
+  container.querySelectorAll('.rox-srv-row').forEach(row => {
+    row.addEventListener('dragstart', e => {
+      dragEl = row;
+      setTimeout(() => row.classList.add('rox-dragging'), 0);
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    row.addEventListener('dragend', () => {
+      row.classList.remove('rox-dragging');
+      container.querySelectorAll('.rox-srv-row').forEach(r => r.classList.remove('rox-drag-over'));
+      const map = {vip: window._vipSrvs, pro: window._proSrvs, free: window._freeSrvs};
+      const newOrder = [...container.querySelectorAll('.rox-srv-row')].map(r => {
+        const idx = parseInt(r.dataset.idx);
+        return map[tab][idx];
+      });
+      map[tab].splice(0, map[tab].length, ...newOrder);
+      container.querySelectorAll('.rox-srv-row').forEach((r,i) => {
+        r.dataset.idx = i;
+        r.querySelector('.rox-srv-num').textContent = i+1;
+      });
+      dragEl = null;
+    });
+    row.addEventListener('dragover', e => {
+      e.preventDefault();
+      if (!dragEl || dragEl === row) return;
+      container.querySelectorAll('.rox-srv-row').forEach(r => r.classList.remove('rox-drag-over'));
+      row.classList.add('rox-drag-over');
+      const rows = [...container.querySelectorAll('.rox-srv-row')];
+      const dragIdx = rows.indexOf(dragEl);
+      const overIdx = rows.indexOf(row);
+      if (dragIdx < overIdx) row.after(dragEl); else row.before(dragEl);
+    });
+    row.addEventListener('dragleave', () => row.classList.remove('rox-drag-over'));
+  });
 };
 window.wsSelectServerNew = function(el, url, name, isRox) {
   document.querySelectorAll('.rox-srv-row, .mini-server-node').forEach(n => n.classList.remove('rox-srv-active','mini-active'));
