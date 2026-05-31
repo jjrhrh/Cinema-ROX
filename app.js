@@ -1374,11 +1374,11 @@ async function loadAnimResults() {
         grid.innerHTML = '<div style="color:rgba(255,255,255,0.4);padding:40px;text-align:center;font-family:Tajawal">هذه القناة مسلسلات فقط</div>';
         return;
       }
-      const tasks = pages.map(pg => fetchPage('/discover/tv', { with_networks: nid, with_genres:'16', sort_by:'popularity.desc', without_keywords:'210024' }, pg));
+      const tasks = pages.map(pg => fetchPage('/discover/tv', { with_networks: nid, sort_by:'popularity.desc' }, pg));
       allResults = (await Promise.all(tasks)).flat();
     } else {
       const tasks = [];
-      if (tab !== 'movie') pages.forEach(pg => tasks.push(fetchPage('/discover/tv', { with_networks: nid, with_genres:'16', sort_by:'popularity.desc' }, pg)));
+      if (tab !== 'movie') pages.forEach(pg => tasks.push(fetchPage('/discover/tv', { with_networks: nid, sort_by:'popularity.desc' }, pg)));
       if (tab !== 'tv') pages.forEach(pg => tasks.push(fetchPage('/discover/movie', { with_genres:'16', sort_by:'popularity.desc' }, pg)));
       allResults = (await Promise.all(tasks)).flat();
 }
