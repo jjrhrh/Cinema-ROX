@@ -2526,7 +2526,7 @@ async function openWatchPage(id, type, season = 1, episode = 1, resumeSec = 0, r
   document.getElementById('cyberDock').style.display = 'none';
   window._watchFromPage = document.querySelector('.page.active')?.id || 'home';
   page.classList.add('active');
-  page.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
+  page.innerHTML = roxLoader('جاري التحميل...');
   window.scrollTo(0, 0);
   window._roxCurrentMeta = { type, id, season, episode, ep: episode };
 window._roxLang = window._roxLang || 'sub';
