@@ -366,6 +366,8 @@ function goBack() {
       if (prev.newsSection) document.getElementById('newsSection').style.display = 'block';
       return;
     }
+    window._lastDetailId = null;
+    window._lastDetailType = null;
     openDetail(prev.id, prev.type);
     return;
   }
