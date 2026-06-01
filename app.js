@@ -6870,3 +6870,129 @@ function loadHomePage() {
       .then(d => { if (d.results) buildLuxeHero(d.results); });
   }
 }
+const _origOpenDetail = openDetail;
+async function openDetail(id, type = 'movie') {
+  if (!document.body.classList.contains('theme-luxe')) {
+    return _origOpenDetail(id, type);
+  }
+  if (window._lastDetailId && String(window._lastDetailId) !== String(id)) {
+    if (!window._detailHistory) window._detailHistory = [];
+    window._detailHistory.push({ id: window._lastDetailId, type: window._lastDetailType });
+    if (window._detailHistory.length > 1) window._detailHistory.shift();
+  }
+  if (!window._navStack?.find(n => n._isDetail)) {
+    pushNav(Object.assign(() => {
+      if (window._detailHistory?.length > 0) { const p = window._detailHistory.pop(); openDetail(p.id, p.type); }
+      else { window._navStack = []; goBack(); }
+    }, { _isDetail: true }));
+  }
+  window._lastDetailId = id;
+  window._lastDetailType = type;
+  document.getElementById('newsSection').style.display = 'none';
+  document.getElementById('studioBar').style.display = 'none';
+  document.getElementById('filterBar')?.style.setProperty('display','none');
+  document.getElementById('platformsSection').style.display = 'none';
+  const page = document.getElementById('detailPage');
+  if (!page) return;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  page.classList.add('active');
+  const hero = document.getElementById('heroSection');
+  if (hero) hero.style.display = 'none';
+  window.scrollTo(0, 0);
+  page.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#050508;"><div style="width:48px;height:48px;border:3px solid rgba(0,212,255,0.2);border-top-color:#00d4ff;border-radius:50%;animation:spin 0.8s linear infinite;"></div></div>`;
+  try {
+    const ep = type === 'tv' ? `/tv/${id}` : `/movie/${id}`;
+    const safeJson = async (url) => { try { const r = await fetch(url); return r.ok ? r.json() : {}; } catch { return {}; } };
+    const [detail, arDetail, videos, credits, simData] = await Promise.all([
+      safeJson(buildTMDBUrl(ep)),
+      safeJson(buildTMDBUrl(ep, { language: 'ar' })),
+      safeJson(buildTMDBUrl(`${ep}/videos`)),
+      safeJson(buildTMDBUrl(`${ep}/credits`)),
+      safeJson(buildTMDBUrl(`${ep}/similar`)),
+    ]);
+    const title = type === 'movie' ? (arDetail.title || detail.title || '') : (arDetail.name || detail.name || '');
+    const overview = arDetail.overview || detail.overview || '';
+    const backdrop = detail.backdrop_path ? `https://image.tmdb.org/t/p/original${detail.backdrop_path}` : '';
+    const poster = detail.poster_path ? `https://image.tmdb.org/t/p/w500${detail.poster_path}` : CONFIG.IMAGES.PLACEHOLDER;
+    const rating = detail.vote_average ? detail.vote_average.toFixed(1) : '';
+    const year = (detail.release_date || detail.first_air_date || '').slice(0,4);
+    const runtime = detail.runtime ? `${detail.runtime} د` : (detail.episode_run_time?.[0] ? `${detail.episode_run_time[0]} د` : '');
+    const genres = (arDetail.genres || detail.genres || []).slice(0,4);
+    const cast = (credits.cast || []).slice(0,10);
+    const trailer = (videos.results || []).find(v => v.type === 'Trailer' && v.site === 'YouTube') || (videos.results || [])[0];
+    const similar = (simData.results || []).slice(0,10);
+    const seasons = type === 'tv' ? (detail.seasons || []).filter(s => s.season_number > 0).slice(0,10) : [];
+
+    page.innerHTML = `
+    <div class="luxe-detail">
+      <div class="luxe-detail-hero">
+        <img class="luxe-detail-hero-bg" src="${backdrop}" onerror="this.style.opacity=0">
+        <div class="luxe-detail-hero-overlay"></div>
+        <button class="luxe-detail-back" onclick="goBack()"><i class="ri-arrow-right-line"></i></button>
+        <div class="luxe-detail-hero-bottom">
+          <div class="luxe-detail-poster-wrap">
+            <img class="luxe-detail-poster" src="${poster}" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+          </div>
+          <div class="luxe-detail-hero-info">
+            <div class="luxe-detail-title">${title}</div>
+            <div class="luxe-detail-badges">
+              ${rating ? `<span class="luxe-db-rating">★ ${rating}</span>` : ''}
+              ${year ? `<span class="luxe-db">${year}</span>` : ''}
+              ${runtime ? `<span class="luxe-db">${runtime}</span>` : ''}
+              ${type === 'tv' ? `<span class="luxe-db">${detail.number_of_seasons || ''} موسم</span>` : ''}
+            </div>
+            <div class="luxe-detail-genres">${genres.map(g=>`<span class="luxe-genre">${g.name}</span>`).join('')}</div>
+          </div>
+        </div>
+      </div>
+      <div class="luxe-detail-body">
+        <div class="luxe-detail-actions">
+          <button class="luxe-action-play" onclick="openBestStream(${id},'${type}',1,1)"><i class="ri-play-fill"></i> شاهد الآن</button>
+          ${trailer ? `<button class="luxe-action-trailer" onclick="openTrailerModal('${trailer.key}')"><i class="ri-film-line"></i> الإعلان</button>` : ''}
+          <button class="luxe-action-icon" onclick="toggleLib({id:${id},title:'${title.replace(/'/g,"\\'")}',poster_path:'${detail.poster_path||''}',type:'${type}'},'rox_watchlist')"><i class="ri-bookmark-line"></i></button>
+        </div>
+        ${overview ? `<div class="luxe-detail-section"><div class="luxe-detail-section-title">القصة</div><div class="luxe-detail-overview">${overview}</div></div>` : ''}
+        ${cast.length ? `
+        <div class="luxe-detail-section">
+          <div class="luxe-detail-section-title">أبطال العمل</div>
+          <div class="luxe-cast-row">
+            ${cast.map(c=>`
+            <div class="luxe-cast-card" onclick="openActorPage(${c.id})">
+              <img src="${c.profile_path ? 'https://image.tmdb.org/t/p/w185'+c.profile_path : CONFIG.IMAGES.PLACEHOLDER}" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+              <div class="luxe-cast-name">${c.name}</div>
+              <div class="luxe-cast-char">${(c.character||'').slice(0,20)}</div>
+            </div>`).join('')}
+          </div>
+        </div>` : ''}
+        ${seasons.length ? `
+        <div class="luxe-detail-section">
+          <div class="luxe-detail-section-title">المواسم</div>
+          <div class="luxe-seasons-row">
+            ${seasons.map(s=>`
+            <div class="luxe-season-card" onclick="openSeasonDetail(${id},${s.season_number})">
+              <img src="${s.poster_path ? 'https://image.tmdb.org/t/p/w200'+s.poster_path : CONFIG.IMAGES.PLACEHOLDER}" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+              <div class="luxe-season-info">
+                <div class="luxe-season-name">${s.name}</div>
+                <div class="luxe-season-eps">${s.episode_count} حلقة</div>
+              </div>
+            </div>`).join('')}
+          </div>
+        </div>` : ''}
+        ${similar.length ? `
+        <div class="luxe-detail-section">
+          <div class="luxe-detail-section-title">قد يعجبك</div>
+          <div class="luxe-similar-row">
+            ${similar.map(m=>`
+            <div class="luxe-similar-card" onclick="openDetail(${m.id},'${type}')">
+              <img src="${m.poster_path ? 'https://image.tmdb.org/t/p/w300'+m.poster_path : CONFIG.IMAGES.PLACEHOLDER}" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+              <div class="luxe-similar-title">${(m.title||m.name||'').slice(0,20)}</div>
+              ${m.vote_average ? `<div class="luxe-similar-rating">★ ${m.vote_average.toFixed(1)}</div>` : ''}
+            </div>`).join('')}
+          </div>
+        </div>` : ''}
+      </div>
+    </div>`;
+  } catch(e) {
+    page.innerHTML = `<div style="padding:40px;text-align:center;color:#fff;font-family:Tajawal;">حدث خطأ في التحميل</div>`;
+  }
+}
