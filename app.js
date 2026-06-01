@@ -858,7 +858,7 @@ async function openOtakuAll(secId, title, type) {
   document.getElementById('newsSection').style.display = 'none';
   document.getElementById('studioBar').style.display = 'none';
   page.classList.add('active');
-  page.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
+  page.innerHTML = roxLoader('جاري التحميل...');
   window.scrollTo(0, 0);
 
   const SECTION_PARAMS = {
