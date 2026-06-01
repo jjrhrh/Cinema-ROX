@@ -1632,7 +1632,7 @@ async function openDetail(id, type = 'movie') {
   if (hero) hero.style.display = 'none';
   window.scrollTo(0, 0);
   page.style.backgroundImage = '';
-  page.innerHTML = '<div class="loading">⏳ جاري تحميل التفاصيل...</div>';
+  page.innerHTML = roxLoader('جاري تحميل التفاصيل...');
 document.querySelectorAll('img[data-src]').forEach(img => {
   if ('IntersectionObserver' in window) {
     new IntersectionObserver(([e], o) => {
