@@ -2296,7 +2296,6 @@ ${type === 'tv' && (() => { const s = calcSeasonEnd(detail); if (!s) return ''; 
         <button class="detail-btn detail-btn-watch" onclick="goBack()">← رجوع</button>
       </div>`;
   }
-    window._goingBack = false;
 }
 async function openAllEps(tvId, seasonNum) {
   const page = document.getElementById('detailPage');
