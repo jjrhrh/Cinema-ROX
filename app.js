@@ -2287,7 +2287,8 @@ function playTrailer(key) {
   const overlay = document.getElementById('trailerOverlay');
   const frame   = document.getElementById('trailerFrame');
   if (!overlay || !frame) return;
-  frame.src = `${CONFIG.VIDEO.YOUTUBE_NOCOOKIE}${key}?autoplay=1&rel=0&modestbranding=1`;
+  frame.src = `https://piped.video/embed/${key}?autoplay=1&rel=0`;
+frame.onerror = () => { frame.src = `https://www.youtube-nocookie.com/embed/${key}?autoplay=1&rel=0`; };
   overlay.classList.remove('hidden');
   document.getElementById('closeTrailer')?.addEventListener('click', () => {
     overlay.classList.add('hidden');
@@ -2859,6 +2860,7 @@ window.roxInitDrag = function(container, tab) {
       map[tab].splice(0, map[tab].length, ...newOrder);
       container.querySelectorAll('.rox-srv-row').forEach((r,i) => {
         r.dataset.idx = i;
+        if (tab === 'vip') r.classList.toggle('rox-srv-elite', i < 5);
         r.querySelector('.rox-srv-num').textContent = i+1;
       });
       dragEl = null;
