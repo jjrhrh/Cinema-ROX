@@ -6823,3 +6823,41 @@ function buildMovieCard(movie, type, extraClass = '') {
     <div class="luxe-card-play"><i class="ri-play-fill"></i></div>
   </div>`;
 }
+const _origLoadHero = typeof loadHeroSwiper === 'function' ? loadHeroSwiper : null;
+
+function buildLuxeHero(items) {
+  const hero = document.getElementById('heroSection') || document.getElementById('hero');
+  if (!hero) return;
+  const item = items[Math.floor(Math.random() * Math.min(items.length, 5))];
+  if (!item) return;
+  const title = item.title || item.name || '';
+  const backdrop = item.backdrop_path ? `https://image.tmdb.org/t/p/original${item.backdrop_path}` : '';
+  const overview = (item.overview || '').slice(0, 140);
+  const rating = item.vote_average ? item.vote_average.toFixed(1) : '';
+  const year = (item.release_date || item.first_air_date || '').slice(0, 4);
+  const type = item.title ? 'movie' : 'tv';
+  hero.innerHTML = `
+  <div class="luxe-hero" onclick="openDetail(${item.id},'${type}')">
+    <div class="luxe-hero-bg">
+      <img src="${backdrop}" onerror="this.style.display='none'">
+      <div class="luxe-hero-overlay"></div>
+    </div>
+    <div class="luxe-hero-content">
+      <div class="luxe-hero-badges">
+        ${rating ? `<span class="luxe-hero-badge">★ ${rating}</span>` : ''}
+        ${year ? `<span class="luxe-hero-badge">${year}</span>` : ''}
+        <span class="luxe-hero-badge">${type === 'tv' ? 'مسلسل' : 'فيلم'}</span>
+      </div>
+      <div class="luxe-hero-title">${title}</div>
+      <div class="luxe-hero-overview">${overview}${overview.length >= 140 ? '...' : ''}</div>
+      <div class="luxe-hero-actions">
+        <button class="luxe-hero-btn-play" onclick="event.stopPropagation();openDetail(${item.id},'${type}')">
+          <i class="ri-play-fill"></i> شاهد الآن
+        </button>
+        <button class="luxe-hero-btn-info" onclick="event.stopPropagation();openDetail(${item.id},'${type}')">
+          <i class="ri-information-line"></i> التفاصيل
+        </button>
+      </div>
+    </div>
+  </div>`;
+}
