@@ -6787,3 +6787,39 @@ function switchVersion(v) {
     document.body.classList.add('theme-luxe');
   }
 })();
+const _origBuildCard = buildMovieCard;
+function buildMovieCard(movie, type, extraClass = '') {
+  if (!document.body.classList.contains('theme-luxe')) {
+    return _origBuildCard(movie, type, extraClass);
+  }
+  const title = type === 'movie'
+    ? (movie.title || movie.original_title)
+    : (movie.name || movie.original_name);
+  const img = movie.backdrop_path
+    ? `https://image.tmdb.org/t/p/w780${movie.backdrop_path}`
+    : (movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : CONFIG.IMAGES.PLACEHOLDER);
+  const poster = movie.poster_path ? `https://image.tmdb.org/t/p/w200${movie.poster_path}` : CONFIG.IMAGES.PLACEHOLDER;
+  const year = (movie.release_date || movie.first_air_date || '').slice(0,4);
+  const rating = movie.vote_average ? movie.vote_average.toFixed(1) : '';
+  const overview = (movie.overview || '').slice(0, 80);
+  return `
+  <div class="luxe-card ${extraClass}" data-id="${movie.id}" data-type="${type}" onclick="openDetail(this.dataset.id,this.dataset.type)">
+    <div class="luxe-card-backdrop">
+      <img src="${img}" loading="lazy" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+      <div class="luxe-card-fade"></div>
+    </div>
+    <div class="luxe-card-poster">
+      <img src="${poster}" loading="lazy" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
+    </div>
+    <div class="luxe-card-body">
+      <div class="luxe-card-title">${title}</div>
+      <div class="luxe-card-meta">
+        ${year ? `<span>${year}</span>` : ''}
+        ${rating ? `<span class="luxe-card-rating">★ ${rating}</span>` : ''}
+        <span class="luxe-card-type">${type === 'tv' ? 'مسلسل' : 'فيلم'}</span>
+      </div>
+      ${overview ? `<div class="luxe-card-overview">${overview}...</div>` : ''}
+    </div>
+    <div class="luxe-card-play"><i class="ri-play-fill"></i></div>
+  </div>`;
+}
