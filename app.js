@@ -1463,7 +1463,7 @@ async function openBrowseAll(type, endpoint, title, extraParams = {}) {
   page.classList.add('active');
   document.getElementById('platformsSection').style.display = 'none';
   document.getElementById('filterBar')?.style.setProperty('display','none');
-  page.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
+  page.innerHTML = roxLoader('جاري التحميل...');
   window.scrollTo(0, 0);
   const ep = endpoint || (type === 'movie' ? '/discover/movie' : '/discover/tv');
   if (!ep || ep === 'undefined') {
