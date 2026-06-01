@@ -222,6 +222,8 @@ function roxLoader(msg = '') {
   </div>
   <style>
     @keyframes roxDot { 0%,100%{transform:translateY(0);opacity:0.3} 50%{transform:translateY(-8px);opacity:1} }
+    @keyframes roxDot { 0%,100%{transform:translateY(0);opacity:0.3} 50%{transform:translateY(-8px);opacity:1} }
+    @keyframes roxPulse2 { 0%,100%{transform:scale(1);opacity:0.5} 50%{transform:scale(1.4);opacity:1} }
   </style>`;
 }
 function openSidebarNews(type) {
