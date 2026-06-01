@@ -199,11 +199,20 @@ function roxLoader(msg = '') {
   return `<div class="loading">
     <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:16px">
       <div style="position:relative;width:64px;height:64px">
-        <svg viewBox="0 0 64 64" style="width:64px;height:64px;animation:spin 1.2s linear infinite">
-          <circle cx="32" cy="32" r="28" fill="none" stroke="rgba(229,9,20,0.15)" stroke-width="3"/>
-          <path d="M32 4 A28 28 0 0 1 60 32" fill="none" stroke="#e50914" stroke-width="3" stroke-linecap="round"/>
+        <svg viewBox="0 0 80 80" style="width:80px;height:80px;animation:spin 1.8s linear infinite;filter:drop-shadow(0 0 12px rgba(229,9,20,0.8))">
+          <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(229,9,20,0.08)" stroke-width="2"/>
+          <circle cx="40" cy="40" r="34" fill="none" stroke="url(#roxGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="60 154"/>
+          <circle cx="40" cy="40" r="26" fill="none" stroke="rgba(229,9,20,0.15)" stroke-width="1.5"/>
+          <circle cx="40" cy="40" r="26" fill="none" stroke="rgba(229,9,20,0.6)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="30 133" style="animation:spin 0.9s linear infinite reverse"/>
+          <defs>
+            <linearGradient id="roxGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#ff6b6b"/>
+              <stop offset="100%" style="stop-color:#e50914"/>
+            </linearGradient>
+          </defs>
         </svg>
-        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#e50914;letter-spacing:1px">ROX</div>
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff;letter-spacing:3px;text-shadow:0 0 20px rgba(229,9,20,1)">ROX</div>
+        <div style="position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,rgba(229,9,20,0.15) 0%,transparent 70%);animation:roxPulse2 2s ease-in-out infinite"></div>
       </div>
       <div style="font-size:13px;color:rgba(255,255,255,0.5);font-family:Tajawal,sans-serif;letter-spacing:1px">${msg || 'جاري التحميل...'}</div>
       <div style="display:flex;gap:6px">
