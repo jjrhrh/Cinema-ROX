@@ -9209,3 +9209,7 @@ input[type=range].rox-slider::-webkit-slider-thumb {
 .rox-last-badge { background:rgba(0,230,118,0.15); color:#00e676; font-size:9px; font-weight:800; padding:2px 6px; border-radius:999px; border:1px solid rgba(0,230,118,0.3); margin-right:4px; vertical-align:middle; }
 .rox-srv-last { border-color:rgba(0,230,118,0.3) !important; }
 .rox-srv-last .rox-srv-num { background:rgba(0,230,118,0.2); color:#00e676; } 
+.cw-card--sq { flex-direction: column; width: 100%; min-width: unset; }
+.cw-card--sq .cw-thumb-wrap { width: 100%; height: 130px; }
+.cw-card--sq .cw-thumb { width: 100%; height: 100%; object-fit: cover; border-radius: 8px 8px 0 0; }
+.cw-card--sq .cw-info { padding: 5px 6px 6px; } 
