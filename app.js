@@ -5918,7 +5918,7 @@ async function openPlatformPage(platId, tab = 'all', page = 1) {
     document.getElementById('studioBar').style.display = 'none';
     document.getElementById('platformsSection').style.display = 'none';
     detailPage.classList.add('active');
-    detailPage.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
+    detailPage.innerHTML = roxLoader('جاري التحميل...');
     window.scrollTo(0, 0);
   }
 
