@@ -2234,7 +2234,7 @@ ${type === 'tv' && (() => { const s = calcSeasonEnd(detail); if (!s) return ''; 
 async function openAllEps(tvId, seasonNum) {
   const page = document.getElementById('detailPage');
   if (!page) return;
-  page.innerHTML = '<div class="loading">⏳ جاري تحميل الحلقات...</div>';
+  page.innerHTML = roxLoader('جاري تحميل الحلقات...');
   try {
     const data = await fetch(buildTMDBUrl(`/tv/${tvId}/season/${seasonNum}`)).then(r=>r.json());
     page.innerHTML = `
