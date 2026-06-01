@@ -434,6 +434,15 @@ async function openAnimeJikan(malId, encodedTitle) {
   document.getElementById('studioBar').style.display   = 'none';
   page.classList.add('active');
   page.innerHTML = '<div class="loading">⏳ جاري تحميل التفاصيل...</div>';
+  document.querySelectorAll('img[data-src]').forEach(img => {
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(([e], o) => {
+      if (e.isIntersecting) { img.src = img.dataset.src; o.disconnect(); }
+    }, { rootMargin: '200px' }).observe(img);
+  } else {
+    img.src = img.dataset.src;
+  }
+});
   window.scrollTo(0,0);
   try {
     const [detRes, tmdbRes, epsRes] = await Promise.all([
@@ -1624,7 +1633,15 @@ async function openDetail(id, type = 'movie') {
   window.scrollTo(0, 0);
   page.style.backgroundImage = '';
   page.innerHTML = '<div class="loading">⏳ جاري تحميل التفاصيل...</div>';
-
+document.querySelectorAll('img[data-src]').forEach(img => {
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(([e], o) => {
+      if (e.isIntersecting) { img.src = img.dataset.src; o.disconnect(); }
+    }, { rootMargin: '200px' }).observe(img);
+  } else {
+    img.src = img.dataset.src;
+  }
+});
   try {
     const ep = type === 'tv' ? `/tv/${id}` : `/movie/${id}`;
     const safeJson = async (url) => {
