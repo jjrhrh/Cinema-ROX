@@ -3358,7 +3358,7 @@ async function loadLibraryPage() {
     page.innerHTML = `<div class="prof-wrap"><div class="prof-logo">Cinema<span style="color:var(--accent)">ROX</span></div><p class="prof-sub">🔐 سجّل دخولك لعرض مكتبتك</p><button class="prof-google-btn" onclick="bnavGo('profile')">تسجيل الدخول</button></div>`;
     return;
   }
-  page.innerHTML = '<div class="loading">⏳ جاري تحميل المكتبة...</div>';
+  page.innerHTML = roxLoader('جاري تحميل المكتبة...');
 
   const watchlist  = getLib('rox_watchlist');
   const watchlater = getLib('rox_watchlater');
