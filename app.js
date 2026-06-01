@@ -224,6 +224,15 @@ document.querySelectorAll('.dock-btn').forEach(b => {
     if (hero) { hero.style.display = ''; hero.style.visibility = ''; }
     loadHeroSwiper();
     loadHomePage();
+    const _savedNav = JSON.parse(sessionStorage.getItem('rox_nav') || 'null');
+    sessionStorage.removeItem('rox_nav');
+    if (_savedNav) {
+      if (_savedNav.page === 'detail' && _savedNav.detailId) {
+        setTimeout(() => openDetail(_savedNav.detailId, _savedNav.detailType), 800);
+      } else if (_savedNav.activeTab && _savedNav.activeTab !== 'home') {
+        setTimeout(() => bnavGo(_savedNav.activeTab), 500);
+      }
+    }
     window.scrollTo(0, 0);
     return;
   }
@@ -1265,6 +1274,8 @@ function openAnimationHub() {
   document.getElementById('heroSection').style.display = 'none';
   document.getElementById('newsSection').style.display = 'none';
   document.getElementById('platformsSection').style.display = 'none';
+  document.getElementById('filterBar')?.style.setProperty('display', 'none');
+  document.querySelectorAll('.home-section').forEach(s => s.style.display = 'none');
   page.classList.add('active');
   window.scrollTo(0, 0);
 
@@ -4258,15 +4269,16 @@ if ('serviceWorker' in navigator) {
 history.replaceState({ rox: true }, '');
 history.pushState({ rox: true }, '');
 
-window.addEventListener('popstate', function () {
-  history.pushState({ rox: true }, '');
-  const wp = document.getElementById('watchPage');
+window.addEventListener('beforeunload', function() {
   const dp = document.getElementById('detailPage');
-  if (wp?.classList.contains('active')) {
-    wsGoBack();
-  } else if (dp?.classList.contains('active')) {
-    goBack();
-  }
+  const wp = document.getElementById('watchPage');
+  sessionStorage.setItem('rox_nav', JSON.stringify({
+    page:       dp?.classList.contains('active') ? 'detail' :
+                wp?.classList.contains('active') ? 'watch'  : 'tab',
+    detailId:   window._lastDetailId   || null,
+    detailType: window._lastDetailType || 'movie',
+    activeTab:  window._activeTab      || 'home'
+  }));
 });
 // ===== FILTER PANEL TOGGLE =====
 function toggleFilterPanel() {
