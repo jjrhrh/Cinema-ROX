@@ -340,11 +340,8 @@ function goBack() {
   window.removeEventListener('scroll', _genreScrollHandler);
   if (window._trailerTimer) { clearTimeout(window._trailerTimer); window._trailerTimer = null; }
   if (window._activeTrailerFrame) { window._activeTrailerFrame.src = ''; window._activeTrailerFrame = null; }
-  if (window._navStack && window._navStack.length > 0) {
-    const prev = window._navStack.pop();
-    prev.restore();
-    return;
-  }
+  window._navStack = [];
+  window._detailHistory = [];
   const hero = document.getElementById('heroSection');
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
