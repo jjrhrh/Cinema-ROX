@@ -1681,6 +1681,7 @@ async function openDetail(id, type = 'movie') {
     });
   }
 
+  window._goingBack = false;
   window._lastDetailId = id;
   window._lastDetailType = type;
   document.getElementById('newsSection').style.display = 'none';
