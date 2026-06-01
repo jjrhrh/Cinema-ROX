@@ -220,7 +220,7 @@ function openSidebarNews(type) {
   const title = document.getElementById('newsPanelTitle');
   const feed  = document.getElementById('newsPanelFeed');
   title.textContent = type === 'anime' ? '🎌 أخبار الأنمي' : '🎬 أخبار الأفلام والمسلسلات';
-  feed.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
+  feed.innerHTML = roxLoader('جاري التحميل...');
   panel.classList.add('open');
   const url = type === 'anime' ? CONFIG.NEWS.ANIME : CONFIG.NEWS.CINEMA;
   loadNewsSection('newsPanelFeed', url, type === 'anime' ? 'purple' : 'red');
