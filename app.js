@@ -2300,7 +2300,7 @@ async function loadSeasonEps(tvId, seasonNum) {
 async function openEpisodeDetail(tvId, seasonNum, epNum, allEps) {
   const page = document.getElementById('detailPage');
   if (!page) return;
-  page.innerHTML = '<div class="loading">⏳ جاري تحميل الحلقة...</div>';
+  page.innerHTML = roxLoader('جاري تحميل الحلقة...');
   try {
     const data = await fetch(buildTMDBUrl(`/tv/${tvId}/season/${seasonNum}/episode/${epNum}`)).then(r=>r.json());
     const img = data.still_path ? `${CONFIG.IMAGES.BACKDROP}${data.still_path}` : CONFIG.IMAGES.PLACEHOLDER;
