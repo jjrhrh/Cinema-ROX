@@ -294,9 +294,6 @@ const btnMap = { home:'bnavHome', search:'bnavSearch', library:'bnavLibrary', se
   if (tab === 'settings') { initThemeSystem(); initPremSettings(); }
   document.getElementById('platformsSection').style.display = (tab === 'home') ? '' : 'none';
   if (tab === 'otaku') { if(hero){hero.style.display='';hero.style.visibility='';} _otakuOn=true; document.getElementById('htmlRoot').classList.add('otaku-mode'); document.getElementById('bnavOtaku').classList.add('active'); loadOtakuPage(); loadNewsSection('newsFeed',CONFIG.NEWS.ANIME,'purple'); document.getElementById('newsSectionTitle').textContent='📰 أخبار الأنمي'; document.getElementById('newsSection').style.display='block'; document.getElementById('studioBar').style.display='block'; }
-  window._lastDetailId = null;
-  window._lastDetailType = null;
-  window._detailStack = [];
   window.scrollTo(0,0);
 }
 function testNotifAlert() {
@@ -369,7 +366,6 @@ function goBack() {
       if (prev.newsSection) document.getElementById('newsSection').style.display = 'block';
       return;
     }
-    window._goingBack = true;
     openDetail(prev.id, prev.type);
     return;
   }
@@ -1656,11 +1652,10 @@ function calcSeasonEnd(detail) {
 // ===== DETAIL PAGE =====
 async function openDetail(id, type = 'movie') {
   if (!window._detailStack) window._detailStack = [];
-  if (!window._goingBack) {
-    const _fromDetail = document.getElementById('detailPage')?.classList.contains('active');
-    if (_fromDetail && window._lastDetailId && String(window._lastDetailId) !== String(id)) {
-      window._detailStack.push({ id: window._lastDetailId, type: window._lastDetailType });
-    } else if (!_fromDetail) {
+
+  if (window._lastDetailId && String(window._lastDetailId) !== String(id)) {
+    window._detailStack.push({ id: window._lastDetailId, type: window._lastDetailType });
+  } else if (!window._lastDetailId) {
     const activePage = document.querySelector('.page.active');
     const pageId = activePage?.id || 'homePage';
     const hero = document.getElementById('heroSection');
@@ -1681,7 +1676,6 @@ async function openDetail(id, type = 'movie') {
     });
   }
 
-  window._goingBack = false;
   window._lastDetailId = id;
   window._lastDetailType = type;
   document.getElementById('newsSection').style.display = 'none';
