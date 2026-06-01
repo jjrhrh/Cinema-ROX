@@ -3474,7 +3474,7 @@ const TRAKT_REDIRECT = location.origin + location.pathname;
 async function libShowAll(listKey) {
   const page = document.getElementById('libraryPage');
   const items = getLib(listKey);
-  page.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
+  page.innerHTML = roxLoader('جاري التحميل...');
   const cards = await Promise.all(items.map(async item => {
     try {
       const ep = (item.type==='tv'||item.type==='anime') ? `/tv/${item.id}` : `/movie/${item.id}`;
