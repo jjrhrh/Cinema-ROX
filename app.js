@@ -369,6 +369,7 @@ function goBack() {
       if (prev.newsSection) document.getElementById('newsSection').style.display = 'block';
       return;
     }
+    window._goingBack = true;
     openDetail(prev.id, prev.type);
     return;
   }
@@ -1655,11 +1656,11 @@ function calcSeasonEnd(detail) {
 // ===== DETAIL PAGE =====
 async function openDetail(id, type = 'movie') {
   if (!window._detailStack) window._detailStack = [];
-  const _fromDetail = document.getElementById('detailPage')?.classList.contains('active');
-
-  if (_fromDetail && window._lastDetailId && String(window._lastDetailId) !== String(id)) {
-    window._detailStack.push({ id: window._lastDetailId, type: window._lastDetailType });
-  } else if (!_fromDetail) {
+  if (!window._goingBack) {
+    const _fromDetail = document.getElementById('detailPage')?.classList.contains('active');
+    if (_fromDetail && window._lastDetailId && String(window._lastDetailId) !== String(id)) {
+      window._detailStack.push({ id: window._lastDetailId, type: window._lastDetailType });
+    } else if (!_fromDetail) {
     const activePage = document.querySelector('.page.active');
     const pageId = activePage?.id || 'homePage';
     const hero = document.getElementById('heroSection');
