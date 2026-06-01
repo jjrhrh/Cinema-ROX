@@ -6861,3 +6861,12 @@ function buildLuxeHero(items) {
     </div>
   </div>`;
 }
+const _origLoadHomePage = loadHomePage;
+function loadHomePage() {
+  _origLoadHomePage();
+  if (document.body.classList.contains('theme-luxe')) {
+    fetch(buildTMDBUrl('/trending/all/week'))
+      .then(r => r.json())
+      .then(d => { if (d.results) buildLuxeHero(d.results); });
+  }
+}
