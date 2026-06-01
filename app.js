@@ -6763,3 +6763,27 @@ document.addEventListener('scroll', () => {
     el.style.transform = `scale(1.15) translateX(${offset * 12}px)`;
   });
 }, { passive: true });
+function toggleVersionPanel() {
+  const panel = document.getElementById('versionPanel');
+  const overlay = document.getElementById('versionOverlay');
+  const open = panel.style.display === 'none';
+  panel.style.display = open ? 'block' : 'none';
+  overlay.style.display = open ? 'block' : 'none';
+}
+
+function switchVersion(v) {
+  toggleVersionPanel();
+  if (v === 'luxe') {
+    document.body.classList.add('theme-luxe');
+    localStorage.setItem('rox_version', 'luxe');
+  } else {
+    document.body.classList.remove('theme-luxe');
+    localStorage.setItem('rox_version', 'original');
+  }
+}
+
+(function() {
+  if (localStorage.getItem('rox_version') === 'luxe') {
+    document.body.classList.add('theme-luxe');
+  }
+})();
