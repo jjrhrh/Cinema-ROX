@@ -433,7 +433,7 @@ async function openAnimeJikan(malId, encodedTitle) {
   document.getElementById('newsSection').style.display = 'none';
   document.getElementById('studioBar').style.display   = 'none';
   page.classList.add('active');
-  page.innerHTML = '<div class="loading">⏳ جاري تحميل التفاصيل...</div>';
+  page.innerHTML = roxLoader('جاري تحميل التفاصيل...');
   document.querySelectorAll('img[data-src]').forEach(img => {
   if ('IntersectionObserver' in window) {
     new IntersectionObserver(([e], o) => {
