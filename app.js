@@ -286,7 +286,7 @@ const btnMap = { home:'bnavHome', search:'bnavSearch', library:'bnavLibrary', se
     hero.style.display = (tab === 'home' || tab === 'otaku') ? '' : 'none';
     hero.style.visibility = (tab === 'home' || tab === 'otaku') ? '' : 'hidden';
   }
-  if (tab === 'home') { loadHeroSwiper(); loadHomePage(); loadNewsSection('newsFeed', CONFIG.NEWS.CINEMA, 'red'); const _t=document.getElementById('newsSectionTitle'); if(_t) _t.textContent='📰 أخبار السينما الحية'; }
+  if (tab === 'home') { loadHeroSwiper(); if (!window._homeLoaded) { loadHomePage(); window._homeLoaded = true; } loadNewsSection('newsFeed', CONFIG.NEWS.CINEMA, 'red'); const _t=document.getElementById('newsSectionTitle'); if(_t) _t.textContent='📰 أخبار السينما الحية'; }
   if (tab === 'library') loadLibraryPage();
   if (tab === 'search') { initSearchDiscovery(); const inp = document.getElementById('searchInput2'); if(inp) { inp.value=''; setTimeout(()=>inp.focus(),200); } }
   if (tab === 'profile') loadProfilePage();
@@ -334,6 +334,41 @@ function unmuteTrailer(id) {
 }
 
 function goBack() {
+  if (window._detailStack && window._detailStack.length > 0) {
+    const prev = window._detailStack.pop();
+    if (prev.type === '__page_snapshot__') {
+      window._platInfinite = null;
+      window._genreInfinite = null;
+      window.removeEventListener('scroll', _platScrollHandler);
+      window.removeEventListener('scroll', _genreScrollHandler);
+      if (window._trailerTimer) { clearTimeout(window._trailerTimer); window._trailerTimer = null; }
+      if (window._activeTrailerFrame) { window._activeTrailerFrame.src = ''; window._activeTrailerFrame = null; }
+      window._navStack = [];
+      window._detailHistory = [];
+      window._lastDetailId = null;
+      window._lastDetailType = null;
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
+      const target = document.getElementById(prev.pageId);
+      if (target) {
+        target.classList.add('active');
+        if (prev.html) target.innerHTML = prev.html;
+        if (prev.scrollY !== undefined) setTimeout(() => window.scrollTo(0, prev.scrollY), 50);
+      }
+      const hero = document.getElementById('heroSection');
+      if (prev.heroVisible && hero) { hero.style.display = ''; hero.style.visibility = ''; }
+      else if (hero) hero.style.display = 'none';
+      const platSec = document.getElementById('platformsSection');
+      if (platSec) platSec.style.display = prev.platVisible ? '' : 'none';
+      const navBtn = document.getElementById(prev.navBtn);
+      if (navBtn) navBtn.classList.add('active');
+      if (prev.studioBar) document.getElementById('studioBar').style.display = 'block';
+      if (prev.newsSection) document.getElementById('newsSection').style.display = 'block';
+      return;
+    }
+    openDetail(prev.id, prev.type);
+    return;
+  }
   window._platInfinite = null;
   window._genreInfinite = null;
   window.removeEventListener('scroll', _platScrollHandler);
@@ -342,17 +377,20 @@ function goBack() {
   if (window._activeTrailerFrame) { window._activeTrailerFrame.src = ''; window._activeTrailerFrame = null; }
   window._navStack = [];
   window._detailHistory = [];
+  window._detailStack = [];
+  window._lastDetailId = null;
+  window._lastDetailType = null;
   const hero = document.getElementById('heroSection');
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('homePage').classList.add('active');
   if (_otakuOn) {
-    document.getElementById('bnavOtaku').classList.add('active');
+    document.getElementById('bnavOtaku')?.classList.add('active');
     if (hero) { hero.style.display = ''; hero.style.visibility = ''; }
     document.getElementById('studioBar').style.display = 'block';
     document.getElementById('newsSection').style.display = 'block';
   } else {
-    document.getElementById('bnavHome').classList.add('active');
+    document.getElementById('bnavHome')?.classList.add('active');
     if (hero) { hero.style.display = ''; hero.style.visibility = ''; }
   }
   document.getElementById('platformsSection').style.display = '';
@@ -1613,17 +1651,31 @@ function calcSeasonEnd(detail) {
 }
 // ===== DETAIL PAGE =====
 async function openDetail(id, type = 'movie') {
+  if (!window._detailStack) window._detailStack = [];
+
   if (window._lastDetailId && String(window._lastDetailId) !== String(id)) {
-    if (!window._detailHistory) window._detailHistory = [];
-    window._detailHistory.push({ id: window._lastDetailId, type: window._lastDetailType });
-    if (window._detailHistory.length > 1) window._detailHistory.shift();
+    window._detailStack.push({ id: window._lastDetailId, type: window._lastDetailType });
+  } else if (!window._lastDetailId) {
+    const activePage = document.querySelector('.page.active');
+    const pageId = activePage?.id || 'homePage';
+    const hero = document.getElementById('heroSection');
+    const platSec = document.getElementById('platformsSection');
+    const studioBar = document.getElementById('studioBar');
+    const newsSection = document.getElementById('newsSection');
+    const activeNav = document.querySelector('.bnav-btn.active');
+    window._detailStack.push({
+      type: '__page_snapshot__',
+      pageId: pageId,
+      html: activePage ? activePage.innerHTML : '',
+      scrollY: window.scrollY,
+      heroVisible: hero ? (hero.style.display !== 'none') : false,
+      platVisible: platSec ? (platSec.style.display !== 'none') : false,
+      navBtn: activeNav?.id || 'bnavHome',
+      studioBar: studioBar ? (studioBar.style.display === 'block') : false,
+      newsSection: newsSection ? (newsSection.style.display === 'block') : false,
+    });
   }
-  if (!window._navStack?.find(n => n._isDetail)) {
-    pushNav(Object.assign(() => {
-      if (window._detailHistory?.length > 0) { const p = window._detailHistory.pop(); openDetail(p.id, p.type); }
-      else { window._navStack = []; goBack(); }
-    }, { _isDetail: true }));
-  }
+
   window._lastDetailId = id;
   window._lastDetailType = type;
   document.getElementById('newsSection').style.display = 'none';
@@ -3003,7 +3055,7 @@ function cwGetAll() {
 function cwDelete(id) {
   const list = cwGetAll().filter(i => String(i.id) !== String(id));
   localStorage.setItem(CW_KEY, JSON.stringify(list));
-  loadHomePage();
+  window._homeLoaded = false; loadHomePage();
 }
 async function checkNewEpisodes() {
   const alerts = getLib('rox_alerts');
@@ -3066,12 +3118,16 @@ function showNewEpisodesCard(updates) {
   render();
 }
 function cwRender() {
-  loadHomePage();
+  window._homeLoaded = false; loadHomePage();
 }
 function openContinueAll() {
   const items = cwGetAll();
   const page = document.getElementById('homePage');
   if (!page) return;
+  const platSec = document.getElementById('platformsSection');
+  if (platSec) platSec.style.display = 'none';
+  const hero = document.getElementById('heroSection');
+  if (hero) hero.style.display = 'none';
   page.innerHTML = `
     <div style="padding:16px 12px 80px">
       <div class="section-header" style="margin-bottom:16px">
@@ -3079,20 +3135,19 @@ function openContinueAll() {
         <h2 class="section-title">مواصلة المشاهدة</h2>
         <button class="browse-all-btn" onclick="loadHomePage()">‹ رجوع</button>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
         ${items.map(i => {
           const pct = Math.min(Math.round(i.seconds/7200*100),100);
           const barColor = pct < 40 ? '#00e5ff' : pct < 70 ? '#ffd600' : '#e50914';
-          return `<div class="cw-card" onclick="cwResume(${i.id},'${i.type}',${i.seconds},'${i.server||''}','${i.serverUrl||''}')">
+          return `<div class="cw-card cw-card--sq" onclick="cwResume(${i.id},'${i.type}',${i.seconds},'${i.server||''}','${i.serverUrl||''}')">
             <div class="cw-thumb-wrap">
               <img class="cw-thumb" src="${i.poster}" onerror="this.src='${CONFIG.IMAGES.PLACEHOLDER}'">
               <div class="cw-play-icon"><div class="cw-play-circle"><i class="ri-play-fill"></i></div></div>
               <div class="cw-bar-wrap"><div class="cw-bar" style="width:${pct}%;background:${barColor}"></div></div>
             </div>
             <div class="cw-info">
-              <div class="cw-title">${i.title}</div>
-              <div class="cw-meta">${i.type==='tv'?(i.season?`الموسم ${i.season} الحلقة ${i.episode||1}`:'مسلسل'):'فيلم'}</div>
-              <div class="cw-pct">${pct}%</div>
+              <div class="cw-title" style="font-size:0.72rem">${i.title}</div>
+              <div class="cw-meta" style="font-size:0.65rem">${i.type==='tv'?(i.season?`م${i.season} ح${i.episode||1}`:'مسلسل'):'فيلم'}</div>
             </div>
             <button class="cw-del" onclick="event.stopPropagation();cwDelete('${i.id}');openContinueAll()">✕</button>
           </div>`;
