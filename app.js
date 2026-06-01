@@ -4,12 +4,22 @@ const _gProvider = new firebase.auth.GoogleAuthProvider();
 function checkAuthOnLoad() {
   const loader = document.createElement('div');
   loader.id = 'authLoader';
-  loader.style.cssText = 'position:fixed;inset:0;background:#0a0a0f;z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;';
+  loader.style.cssText = 'position:fixed;inset:0;background:#050508;z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;overflow:hidden;';
   loader.innerHTML = `
-    <div style="font-size:36px;font-weight:900;letter-spacing:4px;background:linear-gradient(135deg,#fff 0%,#e50914 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">ROX</div>
-    <div style="width:40px;height:3px;background:#1c1c1e;border-radius:10px;overflow:hidden;">
-      <div id="loaderBar" style="height:100%;width:0%;background:linear-gradient(90deg,#e50914,#ff6b6b);border-radius:10px;transition:width 0.1s;"></div>
-    </div>`;
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,rgba(229,9,20,0.18) 0%,rgba(0,0,0,0) 65%),radial-gradient(ellipse at 80% 80%,rgba(0,100,255,0.08) 0%,transparent 50%);"></div>
+    <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 80px,rgba(255,255,255,0.015) 80px,rgba(255,255,255,0.015) 81px),repeating-linear-gradient(90deg,transparent,transparent 80px,rgba(255,255,255,0.015) 80px,rgba(255,255,255,0.015) 81px);"></div>
+    <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:20px;">
+      <div style="position:relative">
+        <div style="font-size:64px;font-weight:900;letter-spacing:12px;background:linear-gradient(135deg,#fff 0%,#ffaaaa 40%,#e50914 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 40px rgba(229,9,20,0.5));animation:roxPulse 2s ease-in-out infinite">ROX</div>
+        <div style="position:absolute;inset:0;font-size:64px;font-weight:900;letter-spacing:12px;background:linear-gradient(135deg,#fff 0%,#e50914 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:blur(20px);opacity:0.5;animation:roxPulse 2s ease-in-out infinite reverse"></div>
+      </div>
+      <div style="font-size:11px;letter-spacing:6px;color:rgba(255,255,255,0.3);text-transform:uppercase;font-family:Tajawal,sans-serif">Cinema Experience</div>
+      <div style="width:120px;height:2px;background:rgba(255,255,255,0.06);border-radius:10px;overflow:hidden;margin-top:8px">
+        <div id="loaderBar" style="height:100%;width:0%;background:linear-gradient(90deg,transparent,#e50914,#ff6b6b,#e50914,transparent);border-radius:10px;transition:width 0.15s;box-shadow:0 0 20px rgba(229,9,20,0.8)"></div>
+      </div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.2);letter-spacing:2px;font-family:Tajawal,sans-serif">جاري التحميل...</div>
+    </div>
+    <style>@keyframes roxPulse{0%,100%{filter:drop-shadow(0 0 30px rgba(229,9,20,0.4))}50%{filter:drop-shadow(0 0 60px rgba(229,9,20,0.8))}}</style>`;
   document.body.appendChild(loader);
   document.body.style.overflow = 'hidden';
   document.documentElement.style.overflow = 'hidden';
@@ -228,7 +238,7 @@ document.querySelectorAll('.dock-btn').forEach(b => {
     sessionStorage.removeItem('rox_nav');
     if (_savedNav) {
       if (_savedNav.page === 'detail' && _savedNav.detailId) {
-        setTimeout(() => openDetail(_savedNav.detailId, _savedNav.detailType), 800);
+        setTimeout(() => openDetail(_savedNav.detailId, _savedNav.detailType), 1200);
       } else if (_savedNav.activeTab && _savedNav.activeTab !== 'home') {
         setTimeout(() => bnavGo(_savedNav.activeTab), 500);
       }
@@ -1570,7 +1580,7 @@ async function openDetail(id, type = 'movie') {
   if (window._lastDetailId && String(window._lastDetailId) !== String(id)) {
     if (!window._detailHistory) window._detailHistory = [];
     window._detailHistory.push({ id: window._lastDetailId, type: window._lastDetailType });
-    if (window._detailHistory.length > 3) window._detailHistory.shift();
+    if (window._detailHistory.length > 1) window._detailHistory.shift();
   }
   if (!window._navStack?.find(n => n._isDetail)) {
     pushNav(Object.assign(() => {
