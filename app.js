@@ -3568,7 +3568,7 @@ function addToLib(key, item) {
 async function openAllEpsTMDB(id, season) {
   const page = document.getElementById('detailPage');
   if (!page) return;
-  page.innerHTML = '<div class="loading">⏳ جاري تحميل الحلقات...</div>';
+  page.innerHTML = roxLoader('جاري تحميل الحلقات...');
   try {
     const d = await fetch(buildTMDBUrl(`/tv/${id}/season/${season}`)).then(r=>r.json());
     const eps = d.episodes || [];
