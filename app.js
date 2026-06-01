@@ -893,7 +893,7 @@ async function openStudio(name, id) {
   document.getElementById('newsSection').style.display = 'none';
   document.getElementById('studioBar').style.display = 'none';
   page.classList.add('active');
-  page.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
+  page.innerHTML = roxLoader('جاري التحميل...');
   window.scrollTo(0, 0);
   const [movRes, tvRes] = await Promise.all([
     fetchMovies('/discover/movie', { type:'movie', limit:10, params:{ with_companies: String(id), sort_by:'popularity.desc', include_adult: 'false' }}),
