@@ -1681,7 +1681,6 @@ async function openDetail(id, type = 'movie') {
     });
   }
 
-  window._goingBack = false;
   window._lastDetailId = id;
   window._lastDetailType = type;
   document.getElementById('newsSection').style.display = 'none';
@@ -2296,6 +2295,7 @@ ${type === 'tv' && (() => { const s = calcSeasonEnd(detail); if (!s) return ''; 
         <button class="detail-btn detail-btn-watch" onclick="goBack()">← رجوع</button>
       </div>`;
   }
+    window._goingBack = false;
 }
 async function openAllEps(tvId, seasonNum) {
   const page = document.getElementById('detailPage');
