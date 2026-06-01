@@ -1653,6 +1653,8 @@ function calcSeasonEnd(detail) {
 }
 // ===== DETAIL PAGE =====
 async function openDetail(id, type = 'movie') {
+  if (!window._roxCache) window._roxCache = {};
+  const _cacheKey = `${type}_${id}`;
   if (!window._detailStack) window._detailStack = [];
 
   if (window._lastDetailId && String(window._lastDetailId) !== String(id)) {
@@ -1709,18 +1711,27 @@ document.querySelectorAll('img[data-src]').forEach(img => {
     const safeJson = async (url) => {
       try { const r = await fetch(url); return r.ok ? r.json() : {}; } catch { return {}; }
     };
-    const [detail, arDetail, videos, credits, revData, simData, recData, imgData, kwData, wpData] = await Promise.all([
-      safeJson(buildTMDBUrl(ep)),
-      safeJson(buildTMDBUrl(ep, { language: 'ar' })),
-      safeJson(buildTMDBUrl(`${ep}/videos`)),
-      safeJson(buildTMDBUrl(`${ep}/credits`)),
-      safeJson(buildTMDBUrl(`${ep}/reviews`)),
-      safeJson(buildTMDBUrl(`${ep}/similar`)),
-      safeJson(buildTMDBUrl(`${ep}/recommendations`)),
-      safeJson(buildTMDBUrl(`${ep}/images`)),
-      safeJson(buildTMDBUrl(`${ep}/keywords`)),
-      safeJson(buildTMDBUrl(`${ep}/watch/providers`)),
-    ]);
+    let detail, arDetail, videos, credits, revData, simData, recData, imgData, kwData, wpData;
+    if (window._roxCache[_cacheKey]) {
+      ({ detail, arDetail, videos, credits, revData, simData, recData, imgData, kwData, wpData } = window._roxCache[_cacheKey]);
+    } else {
+      [detail, arDetail, videos, credits, revData, simData, recData, imgData, kwData, wpData] = await Promise.all([
+        safeJson(buildTMDBUrl(ep)),
+        safeJson(buildTMDBUrl(ep, { language: 'ar' })),
+        safeJson(buildTMDBUrl(`${ep}/videos`)),
+        safeJson(buildTMDBUrl(`${ep}/credits`)),
+        safeJson(buildTMDBUrl(`${ep}/reviews`)),
+        safeJson(buildTMDBUrl(`${ep}/similar`)),
+        safeJson(buildTMDBUrl(`${ep}/recommendations`)),
+        safeJson(buildTMDBUrl(`${ep}/images`)),
+        safeJson(buildTMDBUrl(`${ep}/keywords`)),
+        safeJson(buildTMDBUrl(`${ep}/watch/providers`)),
+      ]);
+      if (Object.keys(window._roxCache).length >= 20) {
+        delete window._roxCache[Object.keys(window._roxCache)[0]];
+      }
+      window._roxCache[_cacheKey] = { detail, arDetail, videos, credits, revData, simData, recData, imgData, kwData, wpData };
+    }
     let keywords = (kwData.keywords || kwData.results || []).slice(0, 8);
 if (keywords.length) {
   try {
